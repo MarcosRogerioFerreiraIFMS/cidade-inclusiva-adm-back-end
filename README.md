@@ -8,3 +8,5 @@
 - git branch -M main
 - git remote add origin https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
 - git push -u origin main
+
+## Tecnologia para o Desenvolvimento

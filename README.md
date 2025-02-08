@@ -10,7 +10,10 @@
 - git push -u origin main
 
 ## Tecnologia deDesenvolvimento
-### NodeJS
+
+<div align="center">
+  <img src="/nodejs-new-pantone-black.png" width="10%">
+</div>
 
 ([Node JS](https://nodejs.org/pt))
 

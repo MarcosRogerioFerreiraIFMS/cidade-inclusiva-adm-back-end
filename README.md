@@ -9,4 +9,11 @@
 - git remote add origin https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
 - git push -u origin main
 
-## Tecnologia para o Desenvolvimento
+## Tecnologia deDesenvolvimento
+### NodeJS
+
+([Node JS](https://nodejs.org/pt))
+
+> Node.js® é uma ambiente de execução de JavaScript disponível para várias plataformas, de código aberto e gratuita, que permite os programadores criar servidores, aplicações da Web, ferramentas de linha de comando e programas de automação de tarefas.
+### ExpressJS
+### Typescript

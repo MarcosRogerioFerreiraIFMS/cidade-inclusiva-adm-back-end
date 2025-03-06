@@ -2,6 +2,12 @@
 
 Este projeto é o back-end do Cidade Inclusiva, uma iniciativa para melhorar a mobilidade urbana de cadeirantes.
 
+## Documentação de Apoio
+
+| Descrição	| Link |
+|-----------|------|
+| Desenvolvimento do Plano de Trabalho |	[Plano de Trabalho](https://docs.google.com/document/d/1nRhvRcXlDFgf7TtoWgm3VRqlIvhKTE5sb9miVpVaVKU/edit?tab=t.0) |
+
 ## Tecnologias Utilizadas
 
 | Tecnologia | Descrição | Link de Acesso |

@@ -6,3 +6,6 @@ dist/
 
 # Environment variables
 .env
+
+# Prisma
+dev.db*

@@ -6,7 +6,12 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch ./src/app.ts",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "studio": "prisma studio",
+    "push": "prisma db push",
+    "pull": "prisma db pull",
+    "migrate": "prisma migrate dev",
+    "seed": "prisma db seed"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +24,13 @@
     "dotenv": "^16.4.7",
     "eslint": "^9.21.0",
     "globals": "^16.0.0",
+    "prisma": "^6.4.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
+    "@prisma/client": "^6.4.1",
     "express": "^4.21.2"
   }
 }

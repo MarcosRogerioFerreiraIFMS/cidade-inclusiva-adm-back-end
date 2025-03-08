@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // provider = "sqlite"
+  // url      = "file:./dev.db"
+  provider = "mysql"
+  url      = "mysql://root@localhost:3306/mobilidade"
+}
+
+model Usuario {
+  id          String       @id @default(uuid())
+  nome        String
+  telefone    String?
+  foto        String?
+  email       String       @unique
+  senha       String
+  comentarios Comentario[]
+  mobilidades Mobilidade[]
+}
+
+model Motorista {
+  id       String    @id @default(uuid())
+  nome     String
+  telefone String?
+  email    String    @unique
+  foto     String?
+  veiculos Veiculo[]
+}
+
+model Veiculo {
+  id          String    @id @default(uuid())
+  placa       String    @unique
+  marca       String
+  modelo      String
+  motoristaId String
+  motorista   Motorista @relation(fields: [motoristaId], references: [id])
+}
+
+model Comentario {
+  id         String  @id @default(uuid())
+  like       Int     @default(0)
+  comentario String
+  usuarioId  String
+  usuario    Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+model Noticia {
+  id          String           @id @default(uuid())
+  titulo      String
+  conteudo    String
+  data        DateTime         @default(now())
+  url         String?
+  foto        String?
+  categoriaId String
+  categoria   CategoriaNoticia @relation(fields: [categoriaId], references: [id])
+}
+
+model CategoriaNoticia {
+  id       String    @id @default(uuid())
+  nome     String    @unique
+  noticias Noticia[]
+}
+
+model Profissional {
+  id          String                @id @default(uuid())
+  nome        String
+  foto        String?
+  telefone    String?
+  email       String                @unique
+  categoriaId String
+  categoria   CategoriaProfissional @relation(fields: [categoriaId], references: [id])
+}
+
+model CategoriaProfissional {
+  id            String         @id @default(uuid())
+  nome          String         @unique
+  profissionais Profissional[]
+}
+
+model Acessibilidade {
+  id          String                  @id @default(uuid())
+  nome        String
+  foto        String?
+  telefone    String?
+  email       String?
+  enderecoId  String
+  endereco    Endereco                @relation(fields: [enderecoId], references: [id])
+  categoriaId String
+  categoria   CategoriaAcessibilidade @relation(fields: [categoriaId], references: [id])
+}
+
+model CategoriaAcessibilidade {
+  id              String           @id @default(uuid())
+  nome            String           @unique
+  acessibilidades Acessibilidade[]
+}
+
+model ServicoManutencao {
+  id             String          @id @default(uuid())
+  nome           String
+  telefone       String?
+  email          String?
+  logo           String?
+  foto           String?
+  enderecoId     String
+  endereco       Endereco        @relation(fields: [enderecoId], references: [id])
+  especialidades Especialidade[]
+}
+
+model Especialidade {
+  id        String              @id @default(uuid())
+  descricao String
+  servicos  ServicoManutencao[]
+}
+
+model Mobilidade {
+  id         String   @id @default(uuid())
+  latitude   Float
+  longitude  Float
+  ocorrencia String
+  data       DateTime @default(now())
+  status     String
+  usuarioId  String
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  enderecoId String
+  endereco   Endereco @relation(fields: [enderecoId], references: [id])
+}
+
+model Endereco {
+  id              String              @id @default(uuid())
+  rua             String
+  numero          String
+  bairro          String
+  cep             String
+  estado          String
+  mobilidades     Mobilidade[]
+  acessibilidades Acessibilidade[]
+  servicos        ServicoManutencao[]
+}
+
+model Recurso {
+  id             String @id @default(uuid())
+  acessibilidade String
+  descricao      String
+}
+
+model RegraValidacao {
+  id    String @id @default(uuid())
+  campo String
+  tipo  String
+}

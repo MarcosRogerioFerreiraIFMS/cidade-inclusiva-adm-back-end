@@ -65,9 +65,45 @@ Para rodar o projeto localmente, siga os passos abaixo:
 
 O servidor será iniciado em `http://localhost:5555`.
 
+### Montar Banco de Dados
+
+**Atenção:** É crucial montar o banco de dados corretamente, pois problemas nesta etapa podem impedir o funcionamento do seed.
+
+Para montar o banco de dados, execute o comando abaixo:
+
+```sh
+pnpm migrate
+```
+
+### Executar Seed do Prisma
+
+Depois de montar o banco de dados, é importante verificar se todas as migrações foram aplicadas corretamente. Para isso, execute o comando abaixo:
+
+```sh
+pnpm status
+```
+
+Este comando exibirá o status das migrações e ajudará a identificar se há alguma pendente ou com problemas.
+Para popular o banco de dados com dados iniciais utilizando o Prisma, execute o comando abaixo:
+
+```sh
+pnpm seed
+```
 
 <p align="center">
   <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js logo">
 </p>
 
 > Node.js® é um ambiente de execução de JavaScript disponível para várias plataformas, de código aberto e gratuito, que permite aos programadores criar servidores, aplicações web, ferramentas de linha de comando e programas de automação de tarefas.
+
+<p align="center">
+    <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/prisma/prisma-original-wordmark.svg" alt="Prisma logo">
+</p>
+
+> Prisma é um ORM (Object-Relational Mapping) para Node.js e TypeScript que facilita o acesso ao banco de dados, permitindo consultas eficientes e seguras, além de migrações e gerenciamento de esquemas de forma intuitiva.
+
+<p align="center">
+    <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="ExpressJS logo">
+</p>
+
+> ExpressJS é um framework para Node.js que facilita a criação de aplicações web e APIs, fornecendo uma série de funcionalidades robustas para o desenvolvimento de servidores e serviços web.

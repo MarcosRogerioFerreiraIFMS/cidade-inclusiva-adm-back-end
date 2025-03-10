@@ -2,15 +2,16 @@
   "name": "cidade-inclusiva-adm-back-end",
   "version": "1.0.0",
   "description": "API do sistema Cidade Inclusiva",
-  "main": "dist/app.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch ./src/app.ts",
-    "start": "node dist/app.js",
+    "start": "node dist/src/app.js",
     "studio": "prisma studio",
     "push": "prisma db push",
     "pull": "prisma db pull",
     "migrate": "prisma migrate dev",
+    "status": "prisma migrate status",
     "seed": "prisma db seed"
   },
   "prisma": {

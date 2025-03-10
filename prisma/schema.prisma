@@ -3,10 +3,8 @@ generator client {
 }
 
 datasource db {
-  // provider = "sqlite"
-  // url      = "file:./dev.db"
-  provider = "mysql"
-  url      = "mysql://root@localhost:3306/mobilidade"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Usuario {
@@ -35,7 +33,7 @@ model Veiculo {
   marca       String
   modelo      String
   motoristaId String
-  motorista   Motorista @relation(fields: [motoristaId], references: [id])
+  motorista   Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
 }
 
 model Comentario {
@@ -43,7 +41,7 @@ model Comentario {
   like       Int     @default(0)
   comentario String
   usuarioId  String
-  usuario    Usuario @relation(fields: [usuarioId], references: [id])
+  usuario    Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }
 
 model Noticia {
@@ -54,7 +52,7 @@ model Noticia {
   url         String?
   foto        String?
   categoriaId String
-  categoria   CategoriaNoticia @relation(fields: [categoriaId], references: [id])
+  categoria   CategoriaNoticia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 }
 
 model CategoriaNoticia {
@@ -70,7 +68,7 @@ model Profissional {
   telefone    String?
   email       String                @unique
   categoriaId String
-  categoria   CategoriaProfissional @relation(fields: [categoriaId], references: [id])
+  categoria   CategoriaProfissional @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 }
 
 model CategoriaProfissional {
@@ -86,9 +84,9 @@ model Acessibilidade {
   telefone    String?
   email       String?
   enderecoId  String
-  endereco    Endereco                @relation(fields: [enderecoId], references: [id])
+  endereco    Endereco                @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
   categoriaId String
-  categoria   CategoriaAcessibilidade @relation(fields: [categoriaId], references: [id])
+  categoria   CategoriaAcessibilidade @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 }
 
 model CategoriaAcessibilidade {
@@ -105,7 +103,7 @@ model ServicoManutencao {
   logo           String?
   foto           String?
   enderecoId     String
-  endereco       Endereco        @relation(fields: [enderecoId], references: [id])
+  endereco       Endereco        @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
   especialidades Especialidade[]
 }
 
@@ -123,9 +121,9 @@ model Mobilidade {
   data       DateTime @default(now())
   status     String
   usuarioId  String
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   enderecoId String
-  endereco   Endereco @relation(fields: [enderecoId], references: [id])
+  endereco   Endereco @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
 }
 
 model Endereco {

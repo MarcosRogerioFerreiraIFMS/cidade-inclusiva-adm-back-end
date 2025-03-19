@@ -12,7 +12,8 @@
     "pull": "prisma db pull",
     "migrate": "prisma migrate dev",
     "status": "prisma migrate status",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "first": "pnpm install && pnpm migrate && pnpm dev"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"

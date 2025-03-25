@@ -1,13 +1,16 @@
+import cors from 'cors'
 import 'dotenv/config'
 import express from 'express'
-import { routes } from './routes/Routes'
+import NoticiaRoutes from './routes/NoticiaRoutes'
 
 const app = express()
 const port = process.env.PORT || 5555
 
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(routes)
+
+app.use('/noticias', NoticiaRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' })

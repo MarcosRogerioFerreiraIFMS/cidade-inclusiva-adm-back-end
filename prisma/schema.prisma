@@ -34,6 +34,8 @@ model Veiculo {
   modelo      String
   motoristaId String
   motorista   Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
+
+  @@unique([placa, motoristaId])
 }
 
 model Comentario {
@@ -45,14 +47,15 @@ model Comentario {
 }
 
 model Noticia {
-  id          String           @id @default(uuid())
-  titulo      String
-  conteudo    String
-  data        DateTime         @default(now())
-  url         String?
-  foto        String?
-  categoriaId String
-  categoria   CategoriaNoticia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid())
+  titulo         String
+  conteudo       String
+  data           DateTime         @default(now())
+  dataPublicacao DateTime         @default(now())
+  url            String?
+  foto           String?
+  categoriaId    String
+  categoria      CategoriaNoticia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 }
 
 model CategoriaNoticia {
@@ -64,8 +67,8 @@ model CategoriaNoticia {
 model Profissional {
   id          String                @id @default(uuid())
   nome        String
-  foto        String?
-  telefone    String?
+  foto        String
+  telefone    String
   email       String                @unique
   categoriaId String
   categoria   CategoriaProfissional @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
@@ -113,13 +116,19 @@ model Especialidade {
   servicos  ServicoManutencao[]
 }
 
+enum Status {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
 model Mobilidade {
   id         String   @id @default(uuid())
   latitude   Float
   longitude  Float
   ocorrencia String
   data       DateTime @default(now())
-  status     String
+  status     Status
   usuarioId  String
   usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   enderecoId String

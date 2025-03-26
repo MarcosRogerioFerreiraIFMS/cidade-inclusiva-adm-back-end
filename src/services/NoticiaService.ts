@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export class NoticiaService {
   async criarNoticia(
     dados: Omit<Noticia, 'id' | 'data'> & { categoria: string }
-  ): Promise<Noticia> {
+  ): Promise<void> {
     try {
       const validacao = noticiaSchema.safeParse(dados)
       if (!validacao.success) {
@@ -14,7 +14,13 @@ export class NoticiaService {
           campo: erro.path.join('.'),
           mensagem: erro.message
         }))
-        throw new Error(JSON.stringify(erros))
+
+        throw new Error(
+          JSON.stringify({
+            mensagem: 'Erro de validação',
+            erros
+          })
+        )
       }
 
       let categoria = await prisma.categoriaNoticia.findUnique({
@@ -27,7 +33,7 @@ export class NoticiaService {
         })
       }
 
-      const noticia = await prisma.noticia.create({
+      await prisma.noticia.create({
         data: {
           titulo: dados.titulo,
           conteudo: dados.conteudo,
@@ -36,11 +42,13 @@ export class NoticiaService {
           categoriaId: categoria.id
         }
       })
-
-      return noticia
     } catch (error: unknown) {
       console.error('Erro ao criar notícia:', error)
-      throw new Error('Erro ao criar notícia no banco de dados.')
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao criar notícia no banco de dados.'
+      )
     }
   }
 

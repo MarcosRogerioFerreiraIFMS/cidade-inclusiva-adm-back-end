@@ -9,19 +9,21 @@ const noticiaService = new NoticiaService()
 export class NoticiaController {
   async criar(req: Request, res: Response): Promise<void> {
     try {
-      const noticia: Noticia = await noticiaService.criarNoticia(req.body)
-      res.status(HttpStatus.CREATED).json(noticia)
+      await noticiaService.criarNoticia(req.body)
+      res.status(HttpStatus.CREATED).json({
+        mensagem: 'Notícia criada com sucesso!'
+      })
     } catch (erro: unknown) {
       if (erro instanceof z.ZodError) {
         const erros = erro.errors.map((err) => ({
           campo: err.path.join('.'),
           mensagem: err.message
         }))
-        res.status(HttpStatus.BAD_REQUEST).json({ erros })
+        res.status(HttpStatus.BAD_REQUEST).json(erros)
       } else if (erro instanceof Error) {
         try {
           const erros = JSON.parse(erro.message)
-          res.status(HttpStatus.BAD_REQUEST).json({ erros })
+          res.status(HttpStatus.BAD_REQUEST).json(erros)
         } catch {
           res.status(HttpStatus.BAD_REQUEST).json({ erro: erro.message })
         }

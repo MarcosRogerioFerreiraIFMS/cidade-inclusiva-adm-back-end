@@ -5,7 +5,10 @@ const prisma = new PrismaClient()
 
 export class NoticiaService {
   async criarNoticia(
-    dados: Omit<Noticia, 'id' | 'data'> & { categoria: string }
+    dados: Omit<Noticia, 'id' | 'data' | 'dataPublicacao'> & {
+      categoria: string
+      dataPublicacao?: string
+    }
   ): Promise<void> {
     try {
       const validacao = noticiaSchema.safeParse(dados)
@@ -33,13 +36,18 @@ export class NoticiaService {
         })
       }
 
+      const dataPublicacao = dados.dataPublicacao
+        ? new Date(dados.dataPublicacao)
+        : new Date()
+
       await prisma.noticia.create({
         data: {
           titulo: dados.titulo,
           conteudo: dados.conteudo,
           url: dados.url,
           foto: dados.foto,
-          categoriaId: categoria.id
+          categoriaId: categoria.id,
+          dataPublicacao
         }
       })
     } catch (error: unknown) {
@@ -75,7 +83,12 @@ export class NoticiaService {
 
   async atualizarNoticia(
     id: string,
-    dados: Partial<Omit<Noticia, 'id' | 'data'> & { categoria?: string }>
+    dados: Partial<
+      Omit<Noticia, 'id' | 'data' | 'dataPublicacao'> & {
+        categoria?: string
+        dataPublicacao?: string
+      }
+    >
   ): Promise<Noticia> {
     try {
       const validacao = noticiaUpdateSchema.safeParse(dados)
@@ -98,6 +111,10 @@ export class NoticiaService {
         }
       }
 
+      const dataPublicacao = dados.dataPublicacao
+        ? new Date(dados.dataPublicacao)
+        : undefined
+
       return await prisma.noticia.update({
         where: { id },
         data: {
@@ -105,7 +122,8 @@ export class NoticiaService {
           conteudo: dados.conteudo,
           url: dados.url,
           foto: dados.foto,
-          categoriaId: categoria?.id
+          categoriaId: categoria?.id,
+          dataPublicacao
         }
       })
     } catch (error: unknown) {

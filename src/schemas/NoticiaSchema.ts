@@ -55,7 +55,8 @@ export const noticiaSchema = z.object({
     )
     .refine((categoria) => isNaN(Number(categoria)), {
       message: 'Categoria deve ser uma string'
-    })
+    }),
+  dataPublicacao: z.string().datetime().optional()
 })
 
 export const noticiaUpdateSchema = noticiaSchema.partial()

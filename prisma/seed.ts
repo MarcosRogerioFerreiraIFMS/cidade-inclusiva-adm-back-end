@@ -11,11 +11,11 @@ async function main() {
     await tx.endereco.deleteMany()
     await tx.endereco.createMany({
       data: Array.from({ length: 10 }).map((_, i) => ({
-        rua: `Rua ${i + 1}`,
-        numero: `${100 + i}`,
-        bairro: `Bairro ${i + 1}`,
-        cep: `00000-00${i}`,
-        estado: 'Estado X'
+        rua: `Avenida Paulista`,
+        numero: `${1000 + i}`,
+        bairro: `Bela Vista`,
+        cep: `01310-000`,
+        estado: 'SP'
       }))
     })
     const enderecos = await tx.endereco.findMany()
@@ -24,11 +24,11 @@ async function main() {
     await tx.usuario.deleteMany()
     await tx.usuario.createMany({
       data: Array.from({ length: 10 }).map((_, i) => ({
-        nome: `Usuario ${i + 1}`,
-        telefone: `99999-000${i}`,
-        foto: `https://foto-usuario${i + 1}.jpg`,
-        email: `usuario${i + 1}@teste.com`,
-        senha: `senha${i + 1}`
+        nome: `José da Silva ${i + 1}`,
+        telefone: `1198765432${i}`,
+        foto: `https://randomuser.me/api/portraits/men/${i + 1}.jpg`,
+        email: `jose.silva${i + 1}@example.com`,
+        senha: `senha123${i + 1}`
       }))
     })
     const usuarios = await tx.usuario.findMany()
@@ -37,10 +37,10 @@ async function main() {
     await tx.motorista.deleteMany()
     await tx.motorista.createMany({
       data: Array.from({ length: 10 }).map((_, i) => ({
-        nome: `Motorista ${i + 1}`,
-        telefone: `88888-000${i}`,
-        email: `motorista${i + 1}@teste.com`,
-        foto: `https://foto-motorista${i + 1}.jpg`
+        nome: `Maria Souza ${i + 1}`,
+        telefone: `1199876543${i}`,
+        email: `maria.souza${i + 1}@example.com`,
+        foto: `https://randomuser.me/api/portraits/women/${i + 1}.jpg`
       }))
     })
     const motoristas = await tx.motorista.findMany()
@@ -49,9 +49,9 @@ async function main() {
     await tx.veiculo.deleteMany()
     await tx.veiculo.createMany({
       data: motoristas.map((m: any, i: any) => ({
-        placa: `ABC-000${i}`,
-        marca: `Marca ${i + 1}`,
-        modelo: `Modelo ${i + 1}`,
+        placa: `ABC1D3${i}`,
+        marca: `Fiat`,
+        modelo: `Uno`,
         motoristaId: m.id
       }))
     })
@@ -59,9 +59,9 @@ async function main() {
     // 5. Comentários (referenciam Usuário)
     await tx.comentario.deleteMany()
     await tx.comentario.createMany({
-      data: usuarios.map((u: any, i: any) => ({
-        like: i,
-        comentario: `Comentário ${i + 1}`,
+      data: usuarios.map((u: any) => ({
+        like: Math.floor(Math.random() * 100),
+        comentario: `Amei a iniciativa!`,
         usuarioId: u.id
       }))
     })
@@ -69,8 +69,8 @@ async function main() {
     // 6. CategoriaNoticia
     await tx.categoriaNoticia.deleteMany()
     await tx.categoriaNoticia.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        nome: `CategoriaNoticia ${i + 1}`
+      data: Array.from({ length: 3 }).map((_, i) => ({
+        nome: [`Mobilidade Urbana`, `Acessibilidade`, `Eventos Inclusivos`][i]
       }))
     })
     const categoriasNoticia = await tx.categoriaNoticia.findMany()
@@ -78,11 +78,11 @@ async function main() {
     // 7. Notícias (referenciam CategoriaNoticia)
     await tx.noticia.deleteMany()
     await tx.noticia.createMany({
-      data: categoriasNoticia.map((c: any, i: any) => ({
-        titulo: `Notícia ${i + 1}`,
-        conteudo: `Conteúdo da notícia ${i + 1}`,
-        url: `https://noticia${i + 1}.com`,
-        foto: `https://foto-noticia${i + 1}.jpg`,
+      data: categoriasNoticia.map((c: any) => ({
+        titulo: `Nova rampa de acesso na Av. Paulista`,
+        conteudo: `Instalação de rampa facilita acesso de cadeirantes.`,
+        url: `https://www.cidadeinclusiva.com.br/noticias/`,
+        foto: `https://source.unsplash.com/random`,
         categoriaId: c.id
       }))
     })
@@ -90,8 +90,8 @@ async function main() {
     // 8. CategoriaProfissional
     await tx.categoriaProfissional.deleteMany()
     await tx.categoriaProfissional.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        nome: `CategoriaProfissional ${i + 1}`
+      data: Array.from({ length: 3 }).map((_, i) => ({
+        nome: [`Advogado`, `Psicólogo`, `Terapeuta Ocupacional`][i]
       }))
     })
     const categoriasProfissional = await tx.categoriaProfissional.findMany()
@@ -100,10 +100,10 @@ async function main() {
     await tx.profissional.deleteMany()
     await tx.profissional.createMany({
       data: categoriasProfissional.map((c: any, i: any) => ({
-        nome: `Profissional ${i + 1}`,
-        foto: `https://foto-profissional${i + 1}.jpg`,
-        telefone: `77777-000${i}`,
-        email: `profissional${i + 1}@teste.com`,
+        nome: `Ana Paula ${i + 1}`,
+        foto: `https://randomuser.me/api/portraits/women/${i + 10}.jpg`,
+        telefone: `1197777666${i}`,
+        email: `ana.paula${i + 1}@example.com`,
         categoriaId: c.id
       }))
     })
@@ -111,8 +111,8 @@ async function main() {
     // 10. CategoriaAcessibilidade
     await tx.categoriaAcessibilidade.deleteMany()
     await tx.categoriaAcessibilidade.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        nome: `CategoriaAcess ${i + 1}`
+      data: Array.from({ length: 3 }).map((_, i) => ({
+        nome: [`Rampas`, `Elevadores`, `Sinalização Tátil`][i]
       }))
     })
     const categoriasAcessibilidade = await tx.categoriaAcessibilidade.findMany()
@@ -121,10 +121,10 @@ async function main() {
     await tx.acessibilidade.deleteMany()
     await tx.acessibilidade.createMany({
       data: categoriasAcessibilidade.map((cat: any, i: any) => ({
-        nome: `Acessibilidade ${i + 1}`,
-        foto: `https://foto-acessibilidade${i + 1}.jpg`,
-        telefone: `66666-000${i}`,
-        email: `acess${i + 1}@teste.com`,
+        nome: `Rampa de acesso`,
+        foto: `https://source.unsplash.com/random`,
+        telefone: `1133334444`,
+        email: `contato@acessibilidade.com`,
         enderecoId: enderecos[i % enderecos.length].id,
         categoriaId: cat.id
       }))
@@ -133,8 +133,8 @@ async function main() {
     // 12. Especialidades
     await tx.especialidade.deleteMany()
     await tx.especialidade.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        descricao: `Especialidade ${i + 1}`
+      data: Array.from({ length: 3 }).map((_, i) => ({
+        descricao: [`Elétrica`, `Hidráulica`, `Pintura`][i]
       }))
     })
     const especialidades = await tx.especialidade.findMany()
@@ -142,14 +142,14 @@ async function main() {
     // 13. Serviços de Manutenção (referenciam Endereco, podem ter várias Especialidades)
     await tx.servicoManutencao.deleteMany()
     // Criar um serviço por especialidade, referenciando o mesmo endereço (ex: i mod length)
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 3; i++) {
       await tx.servicoManutencao.create({
         data: {
-          nome: `Servico ${i + 1}`,
-          telefone: `55555-000${i}`,
-          email: `manutencao${i + 1}@teste.com`,
-          logo: `https://logo${i + 1}.jpg`,
-          foto: `https://foto-servico${i + 1}.jpg`,
+          nome: `Manutenção ${i + 1}`,
+          telefone: `1122223333`,
+          email: `servico@manutencao.com`,
+          logo: `https://source.unsplash.com/random`,
+          foto: `https://source.unsplash.com/random`,
           enderecoId: enderecos[i % enderecos.length].id,
           especialidades: { connect: [{ id: especialidades[i].id }] }
         }
@@ -159,11 +159,11 @@ async function main() {
     // 14. Mobilidades (referenciam Usuario e Endereco)
     await tx.mobilidade.deleteMany()
     await tx.mobilidade.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        latitude: Number(`-23.${i + 1}1234`),
-        longitude: Number(`-46.${i + 1}5678`),
-        ocorrencia: `Ocorrência ${i + 1}`,
-        status: 'Em aberto',
+      data: Array.from({ length: 3 }).map((_, i) => ({
+        latitude: Number(`-23.550520`),
+        longitude: Number(`-46.633309`),
+        ocorrencia: `Buraco na calçada`,
+        status: 'PENDENTE',
         usuarioId: usuarios[i % usuarios.length].id,
         enderecoId: enderecos[i % enderecos.length].id
       }))
@@ -172,18 +172,18 @@ async function main() {
     // 15. Recursos
     await tx.recurso.deleteMany()
     await tx.recurso.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        acessibilidade: `Recurso Acess ${i + 1}`,
-        descricao: `Descrição do recurso ${i + 1}`
+      data: Array.from({ length: 3 }).map(() => ({
+        acessibilidade: `Rampa`,
+        descricao: `Rampa de acesso para cadeirantes`
       }))
     })
 
     // 16. Regras de Validação
     await tx.regraValidacao.deleteMany()
     await tx.regraValidacao.createMany({
-      data: Array.from({ length: 10 }).map((_, i) => ({
-        campo: `campo${i + 1}`,
-        tipo: `tipo${i + 1}`
+      data: Array.from({ length: 3 }).map(() => ({
+        campo: `nome`,
+        tipo: `string`
       }))
     })
   })

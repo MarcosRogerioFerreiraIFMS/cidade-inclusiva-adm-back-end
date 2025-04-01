@@ -1,5 +1,6 @@
 import { Noticia, PrismaClient } from '@prisma/client'
 import { noticiaSchema, noticiaUpdateSchema } from '../schemas/NoticiaSchema'
+import { NoticiaListar } from '../types/NoticiaTypes'
 
 const prisma = new PrismaClient()
 
@@ -60,9 +61,27 @@ export class NoticiaService {
     }
   }
 
-  async listarNoticias(): Promise<Noticia[]> {
+  async listarNoticias(): Promise<NoticiaListar[]> {
     try {
-      return await prisma.noticia.findMany({ include: { categoria: true } })
+      const noticias = await prisma.noticia.findMany({
+        include: { categoria: true }
+      })
+
+      if (!noticias || noticias.length === 0) {
+        return []
+      }
+
+      const noticiasMapeadas = noticias.map((noticia) => ({
+        id: noticia.id,
+        titulo: noticia.titulo,
+        conteudo: noticia.conteudo,
+        url: noticia.url,
+        foto: noticia.foto,
+        dataPublicacao: noticia.dataPublicacao.toISOString(),
+        categoria: noticia.categoria.nome
+      }))
+
+      return noticiasMapeadas
     } catch (error: unknown) {
       console.error('Erro ao listar notícias:', error)
       throw new Error('Erro ao listar notícias do banco de dados.')

@@ -37,7 +37,7 @@ export class NoticiaController {
 
   async listarTodas(req: Request, res: Response): Promise<void> {
     try {
-      const noticias: Noticia[] = await noticiaService.listarNoticias()
+      const noticias = await noticiaService.listarNoticias()
       res.status(HttpStatus.OK).json(noticias)
     } catch (erro: unknown) {
       console.error('Erro ao listar notícias:', erro)

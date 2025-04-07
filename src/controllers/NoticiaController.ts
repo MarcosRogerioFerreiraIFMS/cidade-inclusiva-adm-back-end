@@ -1,4 +1,3 @@
-import { Noticia } from '@prisma/client'
 import { Request, Response } from 'express'
 import { z } from 'zod'
 import { NoticiaService } from '../services/NoticiaService'
@@ -50,7 +49,7 @@ export class NoticiaController {
   async obterPorId(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params
-      const noticia: Noticia | null = await noticiaService.obterNoticiaPorId(id)
+      const noticia = await noticiaService.obterNoticiaPorId(id)
 
       if (!noticia) {
         res

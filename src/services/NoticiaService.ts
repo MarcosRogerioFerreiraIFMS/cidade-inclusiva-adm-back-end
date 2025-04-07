@@ -88,12 +88,26 @@ export class NoticiaService {
     }
   }
 
-  async obterNoticiaPorId(id: string): Promise<Noticia | null> {
+  async obterNoticiaPorId(id: string): Promise<NoticiaListar | null> {
     try {
-      return await prisma.noticia.findUnique({
+      const noticia = await prisma.noticia.findUnique({
         where: { id },
         include: { categoria: true }
       })
+
+      if (!noticia) {
+        return null
+      }
+
+      return {
+        id: noticia.id,
+        titulo: noticia.titulo,
+        conteudo: noticia.conteudo,
+        url: noticia.url,
+        foto: noticia.foto,
+        dataPublicacao: noticia.dataPublicacao.toISOString(),
+        categoria: noticia.categoria.nome
+      }
     } catch (error: unknown) {
       console.error('Erro ao obter notícia por ID:', error)
       throw new Error('Erro ao obter notícia do banco de dados.')

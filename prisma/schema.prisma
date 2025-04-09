@@ -52,8 +52,8 @@ model Noticia {
   conteudo       String
   data           DateTime         @default(now())
   dataPublicacao DateTime         @default(now())
-  url            String?
-  foto           String?
+  url            String?          @default("")
+  foto           String?          @default("")
   categoriaId    String
   categoria      CategoriaNoticia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 }

@@ -45,8 +45,8 @@ export class NoticiaService {
         data: {
           titulo: dados.titulo,
           conteudo: dados.conteudo,
-          url: dados.url,
-          foto: dados.foto,
+          url: dados.url || '',
+          foto: dados.foto || '',
           categoriaId: categoria.id,
           dataPublicacao
         }

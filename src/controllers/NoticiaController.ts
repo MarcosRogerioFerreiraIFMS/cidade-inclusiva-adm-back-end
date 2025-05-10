@@ -79,7 +79,15 @@ export class NoticiaController {
         return
       }
 
+      if (!req.body) {
+        res
+          .status(HttpStatus.OK)
+          .json({ mensagem: 'Nenhum dado para atualizar' })
+        return
+      }
+
       await noticiaService.atualizarNoticia(id, req.body)
+
       res
         .status(HttpStatus.OK)
         .json({ mensagem: 'Notícia atualizada com sucesso' })

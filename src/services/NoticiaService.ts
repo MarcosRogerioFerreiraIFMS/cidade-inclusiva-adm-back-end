@@ -161,7 +161,11 @@ export class NoticiaService {
       })
     } catch (error: unknown) {
       console.error('Erro ao atualizar notícia:', error)
-      throw new Error('Erro ao atualizar notícia no banco de dados.')
+      throw new Error(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao atualizar notícia no banco de dados.'
+      )
     }
   }
 

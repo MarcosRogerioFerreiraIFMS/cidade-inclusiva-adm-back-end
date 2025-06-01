@@ -58,12 +58,14 @@ export class TransporteService {
       )
     }
 
+    const dataToUpdate = { ...dados }
+    if (dados.foto === undefined) {
+      delete dataToUpdate.foto
+    }
+
     return prisma.motorista.update({
       where: { id },
-      data: {
-        ...dados,
-        foto: dados.foto !== undefined ? dados.foto : ''
-      }
+      data: dataToUpdate
     })
   }
 

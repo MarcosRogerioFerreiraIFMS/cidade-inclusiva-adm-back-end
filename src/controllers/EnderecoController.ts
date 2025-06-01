@@ -59,9 +59,9 @@ export class EnderecoController {
         return
       }
 
-      if (!req.body) {
+      if (!req.body || Object.keys(req.body).length === 0) {
         res
-          .status(HttpStatus.OK)
+          .status(HttpStatus.BAD_REQUEST)
           .json({ mensagem: 'Nenhum dado para atualizar' })
         return
       }

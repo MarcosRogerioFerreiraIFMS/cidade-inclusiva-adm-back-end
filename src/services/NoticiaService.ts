@@ -46,7 +46,7 @@ export class NoticiaService {
           titulo: dados.titulo,
           conteudo: dados.conteudo,
           url: dados.url || '',
-          foto: dados.foto || '',
+          foto: dados.foto?.trim() || '',
           categoriaId: categoria.id,
           dataPublicacao
         }
@@ -154,7 +154,7 @@ export class NoticiaService {
           titulo: dados.titulo,
           conteudo: dados.conteudo,
           url: dados.url !== undefined ? dados.url : '',
-          foto: dados.foto !== undefined ? dados.foto : '',
+          foto: dados.foto !== undefined ? dados.foto?.trim() : '',
           categoriaId: categoria?.id,
           dataPublicacao
         }

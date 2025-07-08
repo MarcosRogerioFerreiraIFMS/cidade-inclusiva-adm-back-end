@@ -4,10 +4,21 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 ## 📚 Documentação de Apoio
 
-| 📄 **Descrição** | 🔗 **Link** |
-|------------------|-------------|
-| 📝 Desenvolvimento do Plano de Trabalho | [Plano de Trabalho](https://docs.google.com/document/d/1nRhvRcXlDFgf7TtoWgm3VRqlIvhKTE5sb9miVpVaVKU/edit?tab=t.0) |
-| 🗂️ Esquema do Banco de Dados | [SCHEMA.md](SCHEMA.md) |
+| 📄 Descrição | 🔗 Link |
+|:---|:---|
+| 📝 Desenvolvimento do Plano de Trabalho | [Plano de Trabalho](https://docs.google.com/document/d/1nRhvRcXlDFgf7TtoWgm3VRqlIvhKTE5sb9miVpVaVKU/edit?usp=sharing) |
+| 📄 Documentação do Projeto Mobile | [Documentação Cidade Inclusiva](https://docs.google.com/document/d/1VxejBnzkMbvmlPWUQOMgSNrHDl5ugXdu/edit?usp=sharing) |
+| 🎨 Protótipo Inicial no Figma | [Figma](https://www.figma.com/design/sHp0ryMHBTla6oVVEYJSOv) |
+| 📱 Protótipo Mobile no Vercel | [Cidade Inclusiva - Mobile](https://fundect-pictec3-mobile-cidade-inclusiva.vercel.app/login) |
+| 🛠️ Modelagem UML do Projeto | [Cidade Inclusiva - UML](https://app.diagrams.net/#G1c72Gns79DE7laBVADoPoukr65F1AaNS-) |
+| 📂 Repositório Mobile no GitHub | [Cidade Inclusiva - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva) |
+
+## 📑 Documentação do Projeto
+
+| 📄 Descrição | 🔗 Link |
+|:---|:---|
+| 🗂️ Esquema do Banco de Dados | [SCHEMA.md](docs/SCHEMA.md) |
+| 🗂️ Documentação da Estrutura de Pastas | [FOLDERS.md](docs/FOLDERS.md) |
 
 ## 🛠️ Tecnologias Utilizadas
 

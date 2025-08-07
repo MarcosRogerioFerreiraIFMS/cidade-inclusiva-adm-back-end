@@ -1,126 +1,75 @@
-import { Request, Response } from 'express'
-import { z } from 'zod'
-import { NoticiaService } from '../services/NoticiaService'
-import { HttpStatus } from '../utils/HttpStatus'
-
-const noticiaService = new NoticiaService()
+import { NextFunction, Request, Response } from 'express'
+import { INoticiaService } from '../interfaces/services/INoticiaService'
+import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class NoticiaController {
-  async criar(req: Request, res: Response): Promise<void> {
+  constructor(private noticiaService: INoticiaService) {}
+
+  create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      await noticiaService.criarNoticia(req.body)
-      res.status(HttpStatus.CREATED).json({
-        mensagem: 'Notícia criada com sucesso!'
-      })
-    } catch (erro: unknown) {
-      if (erro instanceof z.ZodError) {
-        const erros = erro.errors.map((err) => ({
-          campo: err.path.join('.'),
-          mensagem: err.message
-        }))
-        res.status(HttpStatus.BAD_REQUEST).json(erros)
-      } else if (erro instanceof Error) {
-        try {
-          const erros = JSON.parse(erro.message)
-          res.status(HttpStatus.BAD_REQUEST).json(erros)
-        } catch {
-          res.status(HttpStatus.BAD_REQUEST).json({ erro: erro.message })
-        }
-      } else {
-        res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ erro: 'Erro interno do servidor' })
-      }
+      const noticia = await this.noticiaService.create(req.body)
+      HandleSuccess.created(res, noticia, 'Notícia criada com sucesso')
+    } catch (error: unknown) {
+      next(error)
     }
   }
 
-  async listarTodas(req: Request, res: Response): Promise<void> {
-    try {
-      const noticias = await noticiaService.listarNoticias()
-      res.status(HttpStatus.OK).json(noticias)
-    } catch (erro: unknown) {
-      console.error('Erro ao listar notícias:', erro)
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ erro: 'Erro ao listar notícias' })
-    }
-  }
-
-  async obterPorId(req: Request, res: Response): Promise<void> {
+  findById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params
-      const noticia = await noticiaService.obterNoticiaPorId(id)
-
-      if (!noticia) {
-        res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ erro: 'Notícia não encontrada' })
-        return
-      }
-
-      res.status(HttpStatus.OK).json(noticia)
-    } catch (erro: unknown) {
-      console.error('Erro ao obter notícia por ID:', erro)
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ erro: 'Erro ao obter notícia' })
+      const noticia = await this.noticiaService.findById(id)
+      HandleSuccess.found(res, noticia)
+    } catch (error: unknown) {
+      next(error)
     }
   }
 
-  async atualizar(req: Request, res: Response): Promise<void> {
+  update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params
-
-      const noticia = await noticiaService.obterNoticiaPorId(id)
-      if (!noticia) {
-        res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ erro: 'Notícia não encontrada' })
-        return
-      }
-
-      if (!req.body || Object.keys(req.body).length === 0) {
-        res
-          .status(HttpStatus.BAD_REQUEST)
-          .json({ mensagem: 'Nenhum dado para atualizar' })
-        return
-      }
-
-      await noticiaService.atualizarNoticia(id, req.body)
-
-      res
-        .status(HttpStatus.OK)
-        .json({ mensagem: 'Notícia atualizada com sucesso' })
-    } catch (erro: unknown) {
-      if (erro instanceof Error) {
-        res.status(HttpStatus.BAD_REQUEST).json({ erro: erro.message })
-      } else {
-        res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ erro: 'Erro interno do servidor' })
-      }
+      const noticia = await this.noticiaService.update(id, req.body)
+      HandleSuccess.updated(res, noticia, 'Notícia atualizada com sucesso')
+    } catch (error: unknown) {
+      next(error)
     }
   }
 
-  async deletar(req: Request, res: Response): Promise<void> {
+  delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { id } = req.params
+      await this.noticiaService.delete(id)
+      HandleSuccess.deleted(res, 'Notícia deletada com sucesso')
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
 
-      const noticia = await noticiaService.obterNoticiaPorId(id)
-      if (!noticia) {
-        res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ erro: 'Notícia não encontrada' })
-        return
-      }
-
-      await noticiaService.deletarNoticia(id)
-      res.status(HttpStatus.NO_CONTENT).send()
-    } catch (erro: unknown) {
-      console.error('Erro ao deletar notícia:', erro)
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ erro: 'Erro ao deletar a notícia' })
+  findAll = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const noticias = await this.noticiaService.findAll()
+      HandleSuccess.list(res, noticias)
+    } catch (error: unknown) {
+      next(error)
     }
   }
 }

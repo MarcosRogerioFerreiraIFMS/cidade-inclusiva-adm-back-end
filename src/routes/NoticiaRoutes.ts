@@ -1,13 +1,36 @@
 import { Router } from 'express'
-import { NoticiaController } from '../controllers/NoticiaController'
+import { NoticiaDependencies } from '../dependencies/NoticiaDependencies'
+import {
+  validateRequiredBody,
+  validateUUID
+} from '../middlewares/validationMiddleware'
 
-const router = Router()
-const controller = new NoticiaController()
+const NoticiaRoutes = Router()
 
-router.post('/', controller.criar)
-router.get('/', controller.listarTodas)
-router.get('/:id', controller.obterPorId)
-router.put('/:id', controller.atualizar)
-router.delete('/:id', controller.deletar)
+NoticiaRoutes.post(
+  '/',
+  validateRequiredBody(['titulo', 'conteudo', 'categoria']),
+  NoticiaDependencies.controller.create
+)
 
-export default router
+NoticiaRoutes.get('/', NoticiaDependencies.controller.findAll)
+
+NoticiaRoutes.get(
+  '/:id',
+  validateUUID('id'),
+  NoticiaDependencies.controller.findById
+)
+
+NoticiaRoutes.put(
+  '/:id',
+  validateUUID('id'),
+  NoticiaDependencies.controller.update
+)
+
+NoticiaRoutes.delete(
+  '/:id',
+  validateUUID('id'),
+  NoticiaDependencies.controller.delete
+)
+
+export { NoticiaRoutes }

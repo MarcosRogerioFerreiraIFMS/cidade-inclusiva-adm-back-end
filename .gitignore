@@ -12,3 +12,9 @@ dev.db*
 
 # npm
 package-lock.json
+
+# temp
+temp/
+
+# vscode
+.vscode/

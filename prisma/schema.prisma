@@ -7,154 +7,29 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Usuario {
-  id          String       @id @default(uuid())
-  nome        String
-  telefone    String?
-  foto        String?
-  email       String       @unique
-  senha       String
-  comentarios Comentario[]
-  mobilidades Mobilidade[]
-}
-
-model Motorista {
-  id       String    @id @default(uuid())
-  nome     String
-  telefone String?
-  email    String    @unique
-  foto     String?
-  veiculos Veiculo[]
-}
-
-model Veiculo {
-  id          String    @id @default(uuid())
-  placa       String    @unique
-  marca       String
-  modelo      String
-  motoristaId String
-  motorista   Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
-
-  @@unique([placa, motoristaId])
-}
-
-model Comentario {
-  id         String  @id @default(uuid())
-  like       Int     @default(0)
-  comentario String
-  usuarioId  String
-  usuario    Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-}
-
 model Noticia {
   id             String           @id @default(uuid())
   titulo         String
   conteudo       String
-  data           DateTime         @default(now())
   dataPublicacao DateTime         @default(now())
+  categoria      CategoriaNoticia
   url            String?          @default("")
   foto           String?          @default("")
-  categoriaId    String
-  categoria      CategoriaNoticia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  criadoEm       DateTime         @default(now())
+  atualizadoEm   DateTime         @updatedAt
 }
 
-model CategoriaNoticia {
-  id       String    @id @default(uuid())
-  nome     String    @unique
-  noticias Noticia[]
-}
-
-model Profissional {
-  id          String                @id @default(uuid())
-  nome        String
-  foto        String
-  telefone    String
-  email       String                @unique
-  categoriaId String
-  categoria   CategoriaProfissional @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
-}
-
-model CategoriaProfissional {
-  id            String         @id @default(uuid())
-  nome          String         @unique
-  profissionais Profissional[]
-}
-
-model Acessibilidade {
-  id          String                  @id @default(uuid())
-  nome        String
-  foto        String?
-  telefone    String?
-  email       String?
-  enderecoId  String
-  endereco    Endereco                @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
-  categoriaId String
-  categoria   CategoriaAcessibilidade @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
-}
-
-model CategoriaAcessibilidade {
-  id              String           @id @default(uuid())
-  nome            String           @unique
-  acessibilidades Acessibilidade[]
-}
-
-model ServicoManutencao {
-  id             String          @id @default(uuid())
-  nome           String
-  telefone       String?
-  email          String?
-  logo           String?
-  foto           String?
-  enderecoId     String
-  endereco       Endereco        @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
-  especialidades Especialidade[]
-}
-
-model Especialidade {
-  id        String              @id @default(uuid())
-  descricao String
-  servicos  ServicoManutencao[]
-}
-
-enum Status {
-  PENDENTE
-  EM_ANDAMENTO
-  CONCLUIDO
-}
-
-model Mobilidade {
-  id         String   @id @default(uuid())
-  latitude   Float
-  longitude  Float
-  ocorrencia String
-  data       DateTime @default(now())
-  status     Status
-  usuarioId  String
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  enderecoId String
-  endereco   Endereco @relation(fields: [enderecoId], references: [id], onDelete: Cascade)
-}
-
-model Endereco {
-  id              String              @id @default(uuid())
-  rua             String
-  numero          String
-  bairro          String
-  cep             String
-  estado          String
-  mobilidades     Mobilidade[]
-  acessibilidades Acessibilidade[]
-  servicos        ServicoManutencao[]
-}
-
-model Recurso {
-  id             String @id @default(uuid())
-  acessibilidade String
-  descricao      String
-}
-
-model RegraValidacao {
-  id    String @id @default(uuid())
-  campo String
-  tipo  String
+enum CategoriaNoticia {
+  DIREITOS
+  BENEFICIOS
+  OPORTUNIDADES
+  TECNOLOGIA
+  TRABALHO
+  SAUDE
+  EDUCACAO
+  CULTURA
+  EVENTOS
+  ESPORTE
+  ACESSIBILIDADE
+  OUTROS
 }

@@ -46,15 +46,19 @@ A subpasta `dtos` dentro de `src` contém os Data Transfer Objects (DTOs) da apl
 
 A subpasta `enums` dentro de `src` contém as definições de enums da aplicação, que são utilizados para representar conjuntos de valores nomeados. Os enums ajudam a tornar o código mais legível e a evitar erros ao trabalhar com valores fixos.
 
+### 📂 /src/dependencies
+
+A subpasta `dependencies` dentro de `src` contém as instâncias de Controllers, Services, Repositories e DAOs que são injetadas na aplicação. Essa abordagem permite uma melhor organização do código e facilita a injeção de dependências, promovendo a testabilidade e a manutenção do sistema.
+
 ### 📂 /src/interfaces
 
-A subpasta `interfaces` dentro de `src` contém as definições de interfaces da aplicação, que são utilizadas para definir contratos entre diferentes partes do código. As interfaces ajudam a garantir que os objetos implementem as propriedades e métodos esperados, promovendo a consistência e a reutilização de código.
+A subpasta `interfaces` dentro de `src` contém as definições de interfaces da aplicação, que são utilizadas para definir contratos entre diferentes partes do código. As interfaces ajudam a garantir que os objetos implementem as propriedades e métodos esperados, promovendo a consistência e a reutilização de código. Camadas como `repositories`, `daos` e `services` utilizam essas interfaces para definir a estrutura esperada de seus métodos, facilitando a implementação e a integração entre as diferentes partes do sistema.
 
 #### Tipos de Interfaces
 
-- **Interfaces de DAOS (`src/interfaces/daos`)**: Definem os métodos que os DAOs devem implementar para acessar e manipular os dados. Essas interfaces garantem que os DAOs sigam um contrato específico, facilitando a manutenção e a testabilidade do código.
+- **Interfaces de Acesso (`src/interfaces/access`)**: Definem os contratos para as operações de acesso a dados, como criação, leitura, atualização e exclusão (CRUD). Essas interfaces são implementadas pelos DAOs e Repositories, garantindo que as operações de acesso a dados sejam consistentes e seguras.
 
-- **Interfaces de Repositórios (`src/interfaces/repositories`)**: Definem os métodos que os repositórios devem implementar para acessar e manipular os dados. Essas interfaces ajudam a desacoplar a lógica de negócios da camada de persistência, promovendo a reutilização de código e facilitando a testabilidade.
+- **Interfaces de Serviços (`src/interfaces/services`)**: Definem os contratos para os serviços da aplicação, que encapsulam a lógica de negócios. Essas interfaces ajudam a garantir que os serviços implementem os métodos necessários para interagir com os DAOs e Repositories, promovendo a separação de responsabilidades e a testabilidade.
 
 ### 📂 /src/lib
 
@@ -62,13 +66,17 @@ A subpasta `lib` dentro de `src` contém bibliotecas e módulos reutilizáveis q
 
 ### 📂 /src/mappers
 
-A subpasta `mappers` dentro de `src` contém os mapeadores da aplicação, que são responsáveis por converter dados entre diferentes formatos ou estruturas. Os mapeadores ajudam a transformar objetos de domínio em DTOs e vice-versa, facilitando a comunicação entre as camadas da aplicação.
+A subpasta `mappers` dentro de `src` contém os mapeadores da aplicação, responsáveis por converter dados entre diferentes formatos ou estruturas. Eles facilitam a transformação de objetos de domínio em DTOs e vice-versa, promovendo a comunicação entre as camadas da aplicação.
 
 #### Tipos de Mapeadores
 
-- **Mapeadores de Entrada (`src/mappers/input`)**: Responsáveis por transformar os dados recebidos nas requisições em DTOs. Garantem que os dados estejam no formato esperado antes de serem processados pelos controladores e serviços, facilitando a validação e padronização das informações de entrada.
+- **Mapeadores de Entrada (`src/mappers/input`)**: Transformam os dados recebidos nas requisições em DTOs. Garantem que os dados estejam no formato esperado antes de serem processados pelos controladores e serviços, facilitando a validação e padronização das informações de entrada.
 
-- **Mapeadores de Saída (`src/mappers/output`)**: Responsáveis por converter os DTOs gerados pelos serviços em formatos adequados para as respostas da API. Asseguram que os dados enviados ao cliente estejam estruturados corretamente e de acordo com as especificações da interface pública do sistema.
+- **Mapeadores de Saída (`src/mappers/output`)**: Convertem os DTOs gerados pelos serviços em formatos adequados para as respostas da API. Asseguram que os dados enviados ao cliente estejam estruturados corretamente e de acordo com as especificações da interface pública do sistema.
+
+### 📂 /src/middlewares
+
+A subpasta `middlewares` dentro de `src` reúne funções intermediárias usadas para autenticação, verificação de permissões e manipulação das requisições e respostas. Elas executam ações antes de chegar aos controladores, podendo modificar dados ou interromper o fluxo conforme necessário.
 
 ### 📂 /src/repositories
 
@@ -86,10 +94,10 @@ A subpasta `schemas` dentro de `src` contém os esquemas de validação da aplic
 
 A subpasta `services` dentro de `src` contém os serviços da aplicação, que encapsulam a lógica de negócios e a interação com o banco de dados, promovendo a reutilização de código e a separação de responsabilidades.
 
+### 📂 /src/types
+
+A subpasta `types` dentro de `src` contém definições de tipos personalizados que são utilizados em toda a aplicação, especialmente em conjunto com o Prisma ORM. Esses tipos ajudam a garantir a consistência e a segurança dos dados manipulados pela aplicação.
+
 ### 📂 /src/utils
 
 A subpasta `utils` dentro de `src` contém funções e utilitários auxiliares que podem ser utilizados em toda a aplicação, como formatação de dados, validações e manipulação de strings.
-
-### 📂 /src/middlewares
-
-A subpasta `middlewares` dentro de `src` contém os middlewares da aplicação, que são funções que têm acesso ao objeto de requisição (req), ao objeto de resposta (res) e à próxima função middleware na cadeia (next). Os middlewares são usados para executar código, modificar a requisição e a resposta, encerrar a requisição ou chamar o próximo middleware na pilha.

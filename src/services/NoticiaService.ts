@@ -1,180 +1,66 @@
-import { Noticia, PrismaClient } from '@prisma/client'
-import { noticiaSchema, noticiaUpdateSchema } from '../schemas/NoticiaSchema'
-import { NoticiaListar } from '../types/NoticiaTypes'
+import { NoticiaResponseDTO } from '../dtos/response/NoticiaResponseDTO'
+import { HttpStatus } from '../enums/HttpStatus'
+import { INoticiaAccess } from '../interfaces/access/INoticiaAccess'
+import { INoticiaService } from '../interfaces/services/INoticiaService'
+import {
+  toCreateNoticiaDTO,
+  toUpdateNoticiaDTO
+} from '../mappers/input/noticiaInputMapper'
+import {
+  toNoticiaResponseDTO,
+  toNoticiasResponseDTO
+} from '../mappers/output/noticiaOutputMapper'
+import { HttpError } from '../utils/HttpError'
 
-const prisma = new PrismaClient()
+export class NoticiaService implements INoticiaService {
+  constructor(private noticiaRepository: INoticiaAccess) {}
 
-export class NoticiaService {
-  async criarNoticia(
-    dados: Omit<Noticia, 'id' | 'data' | 'dataPublicacao'> & {
-      categoria: string
-      dataPublicacao?: string
-    }
-  ): Promise<void> {
-    try {
-      const validacao = noticiaSchema.safeParse(dados)
-      if (!validacao.success) {
-        const erros = validacao.error.errors.map((erro) => ({
-          campo: erro.path.join('.'),
-          mensagem: erro.message
-        }))
-
-        throw new Error(
-          JSON.stringify({
-            mensagem: 'Erro de validação',
-            erros
-          })
-        )
-      }
-
-      let categoria = await prisma.categoriaNoticia.findUnique({
-        where: { nome: dados.categoria }
-      })
-
-      if (!categoria) {
-        categoria = await prisma.categoriaNoticia.create({
-          data: { nome: dados.categoria }
-        })
-      }
-
-      const dataPublicacao = dados.dataPublicacao
-        ? new Date(dados.dataPublicacao)
-        : new Date()
-
-      await prisma.noticia.create({
-        data: {
-          titulo: dados.titulo,
-          conteudo: dados.conteudo,
-          url: dados.url || '',
-          foto: dados.foto?.trim() || '',
-          categoriaId: categoria.id,
-          dataPublicacao
-        }
-      })
-    } catch (error: unknown) {
-      console.error('Erro ao criar notícia:', error)
-      throw new Error(
-        error instanceof Error
-          ? error.message
-          : 'Erro ao criar notícia no banco de dados.'
-      )
-    }
+  async create(data: unknown): Promise<NoticiaResponseDTO> {
+    return toNoticiaResponseDTO(
+      await this.noticiaRepository.create(await toCreateNoticiaDTO(data))
+    )
   }
 
-  async listarNoticias(): Promise<NoticiaListar[]> {
-    try {
-      const noticias = await prisma.noticia.findMany({
-        include: { categoria: true }
-      })
+  async findById(id: string): Promise<NoticiaResponseDTO> {
+    const noticia = await this.noticiaRepository.findById(id)
 
-      if (!noticias || noticias.length === 0) {
-        return []
-      }
-
-      const noticiasMapeadas = noticias.map((noticia) => ({
-        id: noticia.id,
-        titulo: noticia.titulo,
-        conteudo: noticia.conteudo,
-        url: noticia.url,
-        foto: noticia.foto,
-        dataPublicacao: noticia.dataPublicacao.toISOString(),
-        categoria: noticia.categoria.nome
-      }))
-
-      return noticiasMapeadas
-    } catch (error: unknown) {
-      console.error('Erro ao listar notícias:', error)
-      throw new Error('Erro ao listar notícias do banco de dados.')
+    if (!noticia) {
+      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
     }
+
+    return toNoticiaResponseDTO(noticia)
   }
 
-  async obterNoticiaPorId(id: string): Promise<NoticiaListar | null> {
-    try {
-      const noticia = await prisma.noticia.findUnique({
-        where: { id },
-        include: { categoria: true }
-      })
-
-      if (!noticia) {
-        return null
-      }
-
-      return {
-        id: noticia.id,
-        titulo: noticia.titulo,
-        conteudo: noticia.conteudo,
-        url: noticia.url,
-        foto: noticia.foto,
-        dataPublicacao: noticia.dataPublicacao.toISOString(),
-        categoria: noticia.categoria.nome
-      }
-    } catch (error: unknown) {
-      console.error('Erro ao obter notícia por ID:', error)
-      throw new Error('Erro ao obter notícia do banco de dados.')
+  async update(id: string, data: unknown): Promise<NoticiaResponseDTO> {
+    const existingNoticia = await this.noticiaRepository.findById(id)
+    if (!existingNoticia) {
+      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
     }
+
+    const noticia = await this.noticiaRepository.update(
+      id,
+      await toUpdateNoticiaDTO(data)
+    )
+
+    return toNoticiaResponseDTO(noticia)
   }
 
-  async atualizarNoticia(
-    id: string,
-    dados: Partial<
-      Omit<Noticia, 'id' | 'data' | 'dataPublicacao'> & {
-        categoria?: string
-        dataPublicacao?: string
-      }
-    >
-  ): Promise<Noticia> {
-    try {
-      const validacao = noticiaUpdateSchema.safeParse(dados)
-      if (!validacao.success) {
-        throw new Error(
-          validacao.error.errors.map((err) => err.message).join(', ')
-        )
-      }
-
-      let categoria
-      if (dados.categoria) {
-        categoria = await prisma.categoriaNoticia.findUnique({
-          where: { nome: dados.categoria }
-        })
-
-        if (!categoria) {
-          categoria = await prisma.categoriaNoticia.create({
-            data: { nome: dados.categoria }
-          })
-        }
-      }
-
-      const dataPublicacao = dados.dataPublicacao
-        ? new Date(dados.dataPublicacao)
-        : undefined
-
-      return await prisma.noticia.update({
-        where: { id },
-        data: {
-          titulo: dados.titulo,
-          conteudo: dados.conteudo,
-          url: dados.url !== undefined ? dados.url : '',
-          foto: dados.foto !== undefined ? dados.foto?.trim() : '',
-          categoriaId: categoria?.id,
-          dataPublicacao
-        }
-      })
-    } catch (error: unknown) {
-      console.error('Erro ao atualizar notícia:', error)
-      throw new Error(
-        error instanceof Error
-          ? error.message
-          : 'Erro ao atualizar notícia no banco de dados.'
-      )
+  async delete(id: string): Promise<void> {
+    const noticia = await this.noticiaRepository.findById(id)
+    if (!noticia) {
+      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
     }
+
+    await this.noticiaRepository.delete(id)
   }
 
-  async deletarNoticia(id: string): Promise<Noticia> {
-    try {
-      return await prisma.noticia.delete({ where: { id } })
-    } catch (error: unknown) {
-      console.error('Erro ao deletar notícia:', error)
-      throw new Error('Erro ao deletar notícia do banco de dados.')
+  async findAll(): Promise<NoticiaResponseDTO[]> {
+    const noticias = await this.noticiaRepository.findAll()
+
+    if (!noticias || noticias.length === 0) {
+      return []
     }
+
+    return toNoticiasResponseDTO(noticias)
   }
 }

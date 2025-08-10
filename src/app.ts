@@ -1,7 +1,8 @@
 import cors from 'cors'
 import 'dotenv/config'
 import express, { Request, Response } from 'express'
-import { HttpStatus } from './enums/HttpStatus'
+import { ROUTES } from './config/routePaths'
+import { HttpStatusCode } from './enums/HttpStatusCode'
 import { globalErrorHandler } from './middlewares/errorMiddleware'
 import { requestTimeout } from './middlewares/timeoutMiddleware'
 import { NoticiaRoutes } from './routes/NoticiaRoutes'
@@ -13,10 +14,10 @@ app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
-app.use('/noticias', NoticiaRoutes)
+app.use(ROUTES.NOTICIA, NoticiaRoutes)
 
 app.use((_req: Request, res: Response) => {
-  res.status(HttpStatus.NOT_FOUND).json({ error: 'Rota não encontradaa.' })
+  res.status(HttpStatusCode.NOT_FOUND).json({ error: 'Rota não encontrada.' })
 })
 
 app.use(globalErrorHandler)

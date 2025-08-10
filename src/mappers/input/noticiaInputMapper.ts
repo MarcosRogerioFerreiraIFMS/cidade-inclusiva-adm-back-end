@@ -1,6 +1,6 @@
 import { NoticiaCreateDTO } from '../../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../../dtos/update/NoticiaUpdateDTO'
-import { HttpStatus } from '../../enums/HttpStatus'
+import { HttpStatusCode } from '../../enums/HttpStatusCode'
 import {
   createNoticiaSchema,
   updateNoticiaSchema
@@ -11,7 +11,7 @@ export function toCreateNoticiaDTO(input: unknown): Promise<NoticiaCreateDTO> {
   if (typeof input !== 'object' || input === null) {
     throw new HttpError(
       'Dados inválidos para criação da notícia.',
-      HttpStatus.BAD_REQUEST
+      HttpStatusCode.BAD_REQUEST
     )
   }
 
@@ -22,7 +22,7 @@ export function toUpdateNoticiaDTO(input: unknown): Promise<NoticiaUpdateDTO> {
   if (typeof input !== 'object' || input === null) {
     throw new HttpError(
       'Dados inválidos para atualização da notícia.',
-      HttpStatus.BAD_REQUEST
+      HttpStatusCode.BAD_REQUEST
     )
   }
 

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { PrismaClient } = require('@prisma/client')
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -7,8 +6,10 @@ async function main() {
   // Limpar dados existentes
   await prisma.noticia.deleteMany()
 
+  console.log('🌱 Iniciando seed do banco de dados...')
+
   // Criar notícias de exemplo
-  await prisma.noticia.createMany({
+  const noticias = await prisma.noticia.createMany({
     data: [
       {
         titulo:
@@ -72,6 +73,8 @@ async function main() {
       }
     ]
   })
+
+  console.log(`✅ Seed concluído! ${noticias.count} notícias criadas.`)
 }
 
 main()

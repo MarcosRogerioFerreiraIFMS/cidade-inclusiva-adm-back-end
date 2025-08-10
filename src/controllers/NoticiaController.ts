@@ -54,7 +54,7 @@ export class NoticiaController {
     try {
       const { id } = req.params
       await this.noticiaService.delete(id)
-      HandleSuccess.deleted(res, 'Notícia deletada com sucesso')
+      HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)
     }

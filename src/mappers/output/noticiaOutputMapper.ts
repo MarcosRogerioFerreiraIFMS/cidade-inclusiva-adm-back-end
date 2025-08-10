@@ -1,5 +1,6 @@
 import { Noticia } from '@prisma/client'
 import { NoticiaResponseDTO } from '../../dtos/response/NoticiaResponseDTO'
+import { capitalizeWords } from '../../utils/stringUtils'
 
 export function toNoticiaResponseDTO(noticia: Noticia): NoticiaResponseDTO {
   return {
@@ -7,9 +8,9 @@ export function toNoticiaResponseDTO(noticia: Noticia): NoticiaResponseDTO {
     titulo: noticia.titulo,
     conteudo: noticia.conteudo,
     dataPublicacao: noticia.dataPublicacao,
-    categoria: noticia.categoria,
-    foto: noticia.foto || null,
-    url: noticia.url || null
+    categoria: capitalizeWords(noticia.categoria),
+    foto: noticia.foto,
+    url: noticia.url
   }
 }
 

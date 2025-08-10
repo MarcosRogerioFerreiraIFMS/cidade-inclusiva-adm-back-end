@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from '../utils/HttpError'
 
 export const requestTimeout = (timeoutMs: number = 30000) => {
@@ -8,7 +8,7 @@ export const requestTimeout = (timeoutMs: number = 30000) => {
       if (!res.headersSent) {
         const error = new HttpError(
           'Tempo limite da requisição excedido',
-          HttpStatus.SERVICE_UNAVAILABLE
+          HttpStatusCode.SERVICE_UNAVAILABLE
         )
         next(error)
       }

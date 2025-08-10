@@ -1,7 +1,8 @@
 import { Response } from 'express'
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 
 interface SuccessResponse<T = unknown> {
+  success: true
   data?: T
   message?: string
   total?: number
@@ -22,7 +23,8 @@ export class HandleSuccess {
     data: T,
     message = 'Recurso criado com sucesso'
   ): Response<SuccessResponse<T>> {
-    return res.status(HttpStatus.CREATED).json({
+    return res.status(HttpStatusCode.CREATED).json({
+      success: true,
       data,
       message
     })
@@ -33,7 +35,7 @@ export class HandleSuccess {
     data?: T,
     message?: string
   ): Response<SuccessResponse<T>> {
-    const response: SuccessResponse<T> = {}
+    const response: SuccessResponse<T> = { success: true }
 
     if (data !== undefined) {
       response.data = data
@@ -43,7 +45,7 @@ export class HandleSuccess {
       response.message = message
     }
 
-    return res.status(HttpStatus.OK).json(response)
+    return res.status(HttpStatusCode.OK).json(response)
   }
 
   public static found<T>(
@@ -51,13 +53,13 @@ export class HandleSuccess {
     data: T,
     message?: string
   ): Response<SuccessResponse<T>> {
-    const response: SuccessResponse<T> = { data }
+    const response: SuccessResponse<T> = { success: true, data }
 
     if (message) {
       response.message = message
     }
 
-    return res.status(HttpStatus.OK).json(response)
+    return res.status(HttpStatusCode.OK).json(response)
   }
 
   public static updated<T>(
@@ -65,19 +67,15 @@ export class HandleSuccess {
     data: T,
     message = 'Recurso atualizado com sucesso'
   ): Response<SuccessResponse<T>> {
-    return res.status(HttpStatus.OK).json({
+    return res.status(HttpStatusCode.OK).json({
+      success: true,
       data,
       message
     })
   }
 
-  public static deleted(
-    res: Response,
-    message = 'Recurso deletado com sucesso'
-  ): Response<SuccessResponse> {
-    return res.status(HttpStatus.NO_CONTENT).json({
-      message
-    })
+  public static deleted(res: Response): Response {
+    return res.status(HttpStatusCode.NO_CONTENT).send()
   }
 
   public static list<T>(
@@ -86,6 +84,7 @@ export class HandleSuccess {
     message?: string
   ): Response<SuccessResponse<T[]>> {
     const response: SuccessResponse<T[]> = {
+      success: true,
       data,
       total: data.length
     }
@@ -94,7 +93,7 @@ export class HandleSuccess {
       response.message = message
     }
 
-    return res.status(HttpStatus.OK).json(response)
+    return res.status(HttpStatusCode.OK).json(response)
   }
 
   public static paginatedList<T>(
@@ -107,6 +106,7 @@ export class HandleSuccess {
     const totalPages = Math.ceil(total / limit)
 
     const response: SuccessResponse<T[]> = {
+      success: true,
       data,
       total,
       page,
@@ -118,17 +118,18 @@ export class HandleSuccess {
       response.message = message
     }
 
-    return res.status(HttpStatus.OK).json(response)
+    return res.status(HttpStatusCode.OK).json(response)
   }
 
   public static custom<T>(
     res: Response,
-    statusCode: HttpStatus,
+    statusCode: HttpStatusCode,
     data?: T,
     message?: string,
     additionalFields?: Record<string, unknown>
   ): Response<SuccessResponse<T> & Record<string, unknown>> {
     const response: SuccessResponse<T> & Record<string, unknown> = {
+      success: true,
       ...additionalFields
     }
 
@@ -146,14 +147,15 @@ export class HandleSuccess {
   public static message(
     res: Response,
     message: string,
-    statusCode = HttpStatus.OK
+    statusCode = HttpStatusCode.OK
   ): Response<SuccessResponse> {
     return res.status(statusCode).json({
+      success: true,
       message
     })
   }
 
   public static noContent(res: Response): Response {
-    return res.status(HttpStatus.NO_CONTENT).send()
+    return res.status(HttpStatusCode.NO_CONTENT).send()
   }
 }

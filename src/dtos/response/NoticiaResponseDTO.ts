@@ -1,5 +1,3 @@
-import { CategoriaNoticia } from '@prisma/client'
-
 export interface NoticiaResponseDTO {
   id: string
   foto: string | null
@@ -7,5 +5,5 @@ export interface NoticiaResponseDTO {
   conteudo: string
   url: string | null
   dataPublicacao: Date
-  categoria: CategoriaNoticia
+  categoria: string
 }

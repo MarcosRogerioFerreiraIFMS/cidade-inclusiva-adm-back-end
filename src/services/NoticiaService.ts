@@ -1,5 +1,5 @@
 import { NoticiaResponseDTO } from '../dtos/response/NoticiaResponseDTO'
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { INoticiaAccess } from '../interfaces/access/INoticiaAccess'
 import { INoticiaService } from '../interfaces/services/INoticiaService'
 import {
@@ -25,7 +25,7 @@ export class NoticiaService implements INoticiaService {
     const noticia = await this.noticiaRepository.findById(id)
 
     if (!noticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
+      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
     }
 
     return toNoticiaResponseDTO(noticia)
@@ -34,7 +34,7 @@ export class NoticiaService implements INoticiaService {
   async update(id: string, data: unknown): Promise<NoticiaResponseDTO> {
     const existingNoticia = await this.noticiaRepository.findById(id)
     if (!existingNoticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
+      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
     }
 
     const noticia = await this.noticiaRepository.update(
@@ -48,7 +48,7 @@ export class NoticiaService implements INoticiaService {
   async delete(id: string): Promise<void> {
     const noticia = await this.noticiaRepository.findById(id)
     if (!noticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatus.NOT_FOUND)
+      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
     }
 
     await this.noticiaRepository.delete(id)

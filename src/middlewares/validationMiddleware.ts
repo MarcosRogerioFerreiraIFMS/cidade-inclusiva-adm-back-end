@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from '../utils/HttpError'
 
 export const validateUUID = (paramName: string = 'id') => {
@@ -7,9 +7,11 @@ export const validateUUID = (paramName: string = 'id') => {
     const paramValue = req.params[paramName]
 
     if (!paramValue) {
-      throw new HttpError(
-        `Parâmetro ${paramName} é obrigatório`,
-        HttpStatus.BAD_REQUEST
+      return next(
+        new HttpError(
+          `Parâmetro ${paramName} é obrigatório`,
+          HttpStatusCode.BAD_REQUEST
+        )
       )
     }
 
@@ -17,9 +19,11 @@ export const validateUUID = (paramName: string = 'id') => {
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
     if (!uuidRegex.test(paramValue)) {
-      throw new HttpError(
-        `${paramName} deve ser um UUID válido`,
-        HttpStatus.BAD_REQUEST
+      return next(
+        new HttpError(
+          `${paramName} deve ser um UUID válido`,
+          HttpStatusCode.BAD_REQUEST
+        )
       )
     }
 
@@ -38,9 +42,11 @@ export const validateRequiredBody = (requiredFields: string[]) => {
     )
 
     if (missingFields.length > 0) {
-      throw new HttpError(
-        `Campos obrigatórios ausentes: ${missingFields.join(', ')}`,
-        HttpStatus.BAD_REQUEST
+      return next(
+        new HttpError(
+          `Campos obrigatórios ausentes: ${missingFields.join(', ')}`,
+          HttpStatusCode.BAD_REQUEST
+        )
       )
     }
 

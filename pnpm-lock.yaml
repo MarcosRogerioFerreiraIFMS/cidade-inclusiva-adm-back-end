@@ -36,6 +36,9 @@ importers:
       '@types/node':
         specifier: ^22.15.29
         version: 22.15.29
+      '@types/semver':
+        specifier: ^7.7.0
+        version: 7.7.0
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -48,6 +51,9 @@ importers:
       prisma:
         specifier: ^6.8.2
         version: 6.8.2(typescript@5.8.3)
+      semver:
+        specifier: ^7.7.2
+        version: 7.7.2
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.15.29)(typescript@5.8.3)
@@ -374,6 +380,9 @@ packages:
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
+
+  '@types/semver@7.7.0':
+    resolution: {integrity: sha512-k107IF4+Xr7UHjwDc7Cfd6PRQfbdkiRabXGRjo07b4WyPahFBZCZ1sE+BNxYIJPPg73UkfOsVOLwqVc/6ETrIA==}
 
   '@types/send@0.17.4':
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
@@ -1424,6 +1433,8 @@ snapshots:
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
+
+  '@types/semver@7.7.0': {}
 
   '@types/send@0.17.4':
     dependencies:

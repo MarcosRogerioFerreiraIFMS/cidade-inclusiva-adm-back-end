@@ -1,14 +1,24 @@
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 
 export class HttpError extends Error {
-  statusCode: HttpStatus
+  statusCode: HttpStatusCode
 
   constructor(
     message: string,
-    statusCode: HttpStatus = HttpStatus.BAD_REQUEST
+    statusCode: HttpStatusCode = HttpStatusCode.INTERNAL_SERVER_ERROR
   ) {
     super(message)
+    this.name = 'HttpError'
     this.statusCode = statusCode
     Object.setPrototypeOf(this, HttpError.prototype)
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      statusCode: this.statusCode,
+      stack: this.stack
+    }
   }
 }

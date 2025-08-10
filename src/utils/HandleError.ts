@@ -1,8 +1,9 @@
 import { Response } from 'express'
-import { HttpStatus } from '../enums/HttpStatus'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from './HttpError'
 
 interface ErrorResponse {
+  success: false
   error: string
   details?: string | Record<string, unknown> | Array<Record<string, unknown>>
 }
@@ -40,7 +41,8 @@ export class HandleError {
   ): Response<ErrorResponse> {
     if (!err) {
       console.error('Erro inesperado: Nenhum erro fornecido')
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
         error: 'Erro interno do servidor'
       })
     }
@@ -108,7 +110,8 @@ export class HandleError {
       }
     })
 
-    return res.status(HttpStatus.BAD_REQUEST).json({
+    return res.status(HttpStatusCode.BAD_REQUEST).json({
+      success: false,
       error: 'Erro de validação',
       details: errors
     })
@@ -134,7 +137,8 @@ export class HandleError {
       }
     }
 
-    return res.status(HttpStatus.BAD_REQUEST).json({
+    return res.status(HttpStatusCode.BAD_REQUEST).json({
+      success: false,
       error: 'JSON inválido',
       details: errorDetails,
       message: 'Verifique a sintaxe do JSON enviado'
@@ -148,49 +152,56 @@ export class HandleError {
     switch (prismaErr.code) {
       case 'P2002':
         console.error('Erro de duplicação:', prismaErr.message)
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          success: false,
           error: 'Recurso já existe',
           details: 'Já existe um registro com esses dados únicos'
         })
 
       case 'P2025':
         console.error('Registro não encontrado:', prismaErr.message)
-        return res.status(HttpStatus.NOT_FOUND).json({
+        return res.status(HttpStatusCode.NOT_FOUND).json({
+          success: false,
           error: 'Registro não encontrado',
           details: 'O registro solicitado não foi encontrado no banco de dados'
         })
 
       case 'P2003':
         console.error('Violação de chave estrangeira:', prismaErr.message)
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          success: false,
           error: 'Erro de relacionamento',
           details: 'Violação de constraint de chave estrangeira'
         })
 
       case 'P2021':
         console.error('Tabela não existe:', prismaErr.message)
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+          success: false,
           error: 'Erro interno do servidor',
           details: 'Estrutura do banco de dados inválida'
         })
 
       case 'P2000':
         console.error('Valor muito longo:', prismaErr.message)
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          success: false,
           error: 'Dados inválidos',
           details: 'Um ou mais campos excedem o tamanho máximo permitido'
         })
 
       case 'P2006':
         console.error('Valor inválido:', prismaErr.message)
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        return res.status(HttpStatusCode.BAD_REQUEST).json({
+          success: false,
           error: 'Dados inválidos',
           details: 'Valor fornecido é inválido para o campo especificado'
         })
 
       default:
         console.error('Erro do Prisma:', prismaErr.code, prismaErr.message)
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+          success: false,
           error: 'Erro interno do servidor',
           details: 'Erro na operação do banco de dados'
         })
@@ -219,10 +230,11 @@ export class HandleError {
       )
     }
 
-    const statusCode = httpErr.statusCode || HttpStatus.BAD_REQUEST
+    const statusCode = httpErr.statusCode || HttpStatusCode.BAD_REQUEST
     const message = httpErr.message || 'Erro inesperado'
 
     return res.status(statusCode).json({
+      success: false,
       error: message
     })
   }
@@ -232,7 +244,8 @@ export class HandleError {
     err: unknown
   ): Response<ErrorResponse> {
     console.error('Erro inesperado:', err)
-    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      success: false,
       error: 'Erro interno do servidor'
     })
   }

@@ -9,8 +9,8 @@ export function toNoticiaResponseDTO(noticia: Noticia): NoticiaResponseDTO {
     conteudo: noticia.conteudo,
     dataPublicacao: noticia.dataPublicacao,
     categoria: capitalizeWords(noticia.categoria),
-    foto: noticia.foto,
-    url: noticia.url
+    foto: noticia.foto ?? '',
+    url: noticia.url ?? ''
   }
 }
 

@@ -1,0 +1,132 @@
+import { NextFunction, Request, Response } from 'express'
+import { IComentarioService } from '../interfaces/services/IComentarioService'
+import { HandleSuccess } from '../utils/HandleSuccess'
+
+export class ComentarioController {
+  constructor(private comentarioService: IComentarioService) {}
+
+  create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const comentario = await this.comentarioService.create(req.body)
+      HandleSuccess.created(res, comentario, 'Comentário criado com sucesso')
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  findById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { id } = req.params
+      const comentario = await this.comentarioService.findById(id)
+      HandleSuccess.found(res, comentario)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { id } = req.params
+      const comentario = await this.comentarioService.update(id, req.body)
+      HandleSuccess.updated(
+        res,
+        comentario,
+        'Comentário atualizado com sucesso'
+      )
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { id } = req.params
+      await this.comentarioService.delete(id)
+      HandleSuccess.deleted(res)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  findAll = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const comentarios = await this.comentarioService.findAll()
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  findByEntidade = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { entidadeId, entidadeTipo } = req.params
+
+      const comentarios = await this.comentarioService.findByEntidade(
+        entidadeId,
+        entidadeTipo
+      )
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  findVisibleByEntidade = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { entidadeId, entidadeTipo } = req.params
+      const comentarios = await this.comentarioService.findVisibleByEntidade(
+        entidadeId,
+        entidadeTipo
+      )
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  incrementLikes = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { id } = req.params
+      const { increment } = req.body
+      const comentario = await this.comentarioService.incrementLikes(
+        id,
+        increment
+      )
+      HandleSuccess.updated(res, comentario, 'Likes atualizados com sucesso')
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+}

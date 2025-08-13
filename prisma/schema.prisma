@@ -13,10 +13,36 @@ model Noticia {
   conteudo       String
   dataPublicacao DateTime         @default(now())
   categoria      CategoriaNoticia
-  url            String?          @default("")
-  foto           String?          @default("")
+  url            String?
+  foto           String?
   criadoEm       DateTime         @default(now())
   atualizadoEm   DateTime         @updatedAt
+}
+
+model Profissional {
+  id            String                    @id @default(uuid())
+  nome          String
+  foto          String?
+  telefone      String
+  email         String                    @unique
+  especialidade EspecialidadeProfissional
+  comentarios   Comentario[]              @relation("ProfissionalComentarios")
+  criadoEm      DateTime                  @default(now())
+  atualizadoEm  DateTime                  @updatedAt
+}
+
+model Comentario {
+  id           String        @id @default(uuid())
+  likes        Int           @default(0)
+  conteudo     String
+  visivel      Boolean       @default(true)
+  entidadeId   String
+  entidadeTipo TipoEntidade
+  profissional Profissional? @relation("ProfissionalComentarios", fields: [entidadeId], references: [id], onDelete: Cascade)
+  criadoEm     DateTime      @default(now())
+  atualizadoEm DateTime      @updatedAt
+
+  @@index([entidadeId, entidadeTipo])
 }
 
 enum CategoriaNoticia {
@@ -32,4 +58,18 @@ enum CategoriaNoticia {
   ESPORTE
   ACESSIBILIDADE
   OUTROS
+}
+
+enum EspecialidadeProfissional {
+  CUIDADOR
+  SECRETARIO_DO_LAR
+  ENFERMEIRO
+  MEDICO
+  FISIOTERAPEUTA
+  PSICOLOGO
+  OUTROS
+}
+
+enum TipoEntidade {
+  PROFISSIONAL
 }

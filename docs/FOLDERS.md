@@ -94,10 +94,6 @@ A subpasta `schemas` dentro de `src` contém os esquemas de validação da aplic
 
 A subpasta `services` dentro de `src` contém os serviços da aplicação, que encapsulam a lógica de negócios e a interação com o banco de dados, promovendo a reutilização de código e a separação de responsabilidades.
 
-### 📂 /src/types
-
-A subpasta `types` dentro de `src` contém definições de tipos personalizados que são utilizados em toda a aplicação, especialmente em conjunto com o Prisma ORM. Esses tipos ajudam a garantir a consistência e a segurança dos dados manipulados pela aplicação.
-
 ### 📂 /src/utils
 
 A subpasta `utils` dentro de `src` contém funções e utilitários auxiliares que podem ser utilizados em toda a aplicação, como formatação de dados, validações e manipulação de strings.

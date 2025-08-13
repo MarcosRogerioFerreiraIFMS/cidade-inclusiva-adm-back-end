@@ -2,6 +2,14 @@
 
 O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend desenvolvida para gerenciar e fornecer suporte à iniciativa **Cidade Inclusiva**, que visa melhorar a mobilidade urbana para cadeirantes. Este projeto utiliza tecnologias modernas para garantir eficiência, segurança e escalabilidade, permitindo que os administradores gerenciem dados e funcionalidades de forma intuitiva e confiável.
 
+## 📋 Informações do Projeto
+
+- **Nome:** cidade-inclusiva-adm-back-end
+- **Versão:** 1.0.0
+- **Descrição:** API do sistema Cidade Inclusiva
+- **Node.js:** >=20.0.0 (versão mínima requerida)
+- **Ponto de entrada:** dist/src/server.js
+
 ## 📚 Documentação de Apoio
 
 | 📄 Descrição | 🔗 Link |
@@ -13,6 +21,62 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | 🛠️ Modelagem UML do Projeto | [Cidade Inclusiva - UML](https://app.diagrams.net/#G1c72Gns79DE7laBVADoPoukr65F1AaNS-) |
 | 📂 Repositório Mobile no GitHub | [Cidade Inclusiva - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva) |
 
+## ⚡ Scripts Disponíveis
+
+### 🚀 Scripts de Execução
+
+| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
+|---------------|------------------|-------------------|
+| `dev` | Inicia o servidor em modo de desenvolvimento com hot-reload usando tsx | `pnpm dev` |
+| `start` | Inicia o servidor em modo de produção (requer build) | `pnpm start` |
+| `build` | Compila o código TypeScript para JavaScript na pasta `dist/` | `pnpm build` |
+| `first` | **Script completo**: instala dependências, executa migrações e inicia o dev | `pnpm first` |
+
+### 🗄️ Scripts do Banco de Dados (Prisma)
+
+| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
+|---------------|------------------|-------------------|
+| `migrate` | Executa as migrações do banco de dados em modo desenvolvimento | `pnpm migrate` |
+| `seed` | Popula o banco de dados com dados iniciais definidos em `prisma/seed.ts` | `pnpm seed` |
+| `studio` | Abre o Prisma Studio para visualizar e editar dados do banco | `pnpm studio` |
+| `push` | Aplica mudanças do schema diretamente no banco (sem criar migrações) | `pnpm push` |
+| `pull` | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma` | `pnpm pull` |
+| `status` | Mostra o status das migrações do banco de dados | `pnpm status` |
+
+### 🔧 Scripts de Sistema
+
+| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
+|---------------|------------------|-------------------|
+| `preinstall` | **Script automático**: verifica se a versão do Node.js é compatível (≥20.0.0) | *Executado automaticamente* |
+
+### 📝 Explicação Detalhada dos Scripts
+
+#### 🔄 Scripts Automáticos
+
+- **`preinstall`**: Este script é executado automaticamente pelo pnpm antes de instalar qualquer dependência. Ele verifica se a versão do Node.js é compatível (≥20.0.0) usando o arquivo `scripts/check-node-version.ts`.
+
+#### 🚀 Scripts de Desenvolvimento
+
+- **`dev`**: Utiliza o `tsx` em modo watch para monitorar mudanças no código TypeScript e reiniciar automaticamente o servidor. Ideal para desenvolvimento.
+- **`build`**: Compila todo o código TypeScript para JavaScript, criando os arquivos na pasta `dist/`.
+- **`start`**: Executa a versão compilada da aplicação (arquivo `dist/src/server.js`). Usado em produção.
+
+#### 🎯 Script Completo
+
+- **`first`**: Um script conveniente que executa três comandos em sequência:
+  1. `pnpm install` - Instala todas as dependências
+  2. `pnpm migrate` - Executa as migrações do banco
+  3. `pnpm dev` - Inicia o servidor de desenvolvimento
+
+#### 🗃️ Scripts do Prisma
+
+- **`migrate`**: Executa `prisma migrate dev` para aplicar migrações pendentes ao banco de dados de desenvolvimento.
+- **`seed`**: Executa o arquivo `prisma/seed.ts` para popular o banco com dados iniciais.
+- **`studio`**: Abre uma interface web para visualizar e editar dados do banco de dados.
+- **`push`**: Aplica mudanças do schema diretamente no banco sem criar arquivos de migração.
+- **`pull`**: Sincroniza o schema do Prisma com a estrutura atual do banco de dados.
+- **`status`**: Mostra informações sobre o estado das migrações.
+
 ## 📑 Documentação do Projeto
 
 | 📄 Descrição | 🔗 Link |
@@ -22,135 +86,162 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 ## 🛠️ Tecnologias Utilizadas
 
+### 🚀 Tecnologias Principais
+
 | 🚀 **Tecnologia** | 📖 **Descrição** | 🔗 **Link de Acesso** |
 |-------------------|------------------|-----------------------|
-| 🟢 Node.js       | Ambiente de execução de JavaScript para várias plataformas. | [Node.js](https://nodejs.org/pt) |
-| ⚡ ExpressJS     | Framework para Node.js que facilita a criação de aplicações web e APIs. | [ExpressJS](https://expressjs.com/pt-br/) |
-| 🟦 TypeScript    | Superset do JavaScript que adiciona tipos estáticos ao código. | [TypeScript](https://www.typescriptlang.org/) |
-| 🌀 Prisma        | ORM (Object-Relational Mapping) para Node.js e TypeScript. | [Prisma](https://www.prisma.io/) |
-| 🔒 JWT           | Método para representar claims entre duas partes. | [JWT](https://jwt.io/) |
-| 🔑 bcryptjs      | Biblioteca para hashing de senhas. | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
-| ⚙️ pnpm          | Gerenciador de pacotes rápido e eficiente para JavaScript. | [pnpm](https://pnpm.io/) |
+| 🟢 Node.js       | Ambiente de execução de JavaScript para várias plataformas (≥20.0.0) | [Node.js](https://nodejs.org/pt) |
+| ⚡ ExpressJS     | Framework para Node.js que facilita a criação de aplicações web e APIs | [ExpressJS](https://expressjs.com/pt-br/) |
+| 🟦 TypeScript    | Superset do JavaScript que adiciona tipos estáticos ao código | [TypeScript](https://www.typescriptlang.org/) |
+| 🌀 Prisma        | ORM (Object-Relational Mapping) para Node.js e TypeScript | [Prisma](https://www.prisma.io/) |
+| ⚙️ pnpm          | Gerenciador de pacotes rápido e eficiente para JavaScript | [pnpm](https://pnpm.io/) |
 
-### 🧹 Ferramentas de Linting
+### 📦 Dependências de Produção
 
-Lista de ferramentas de linting utilizadas no projeto:
+| 📚 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
+|-------------------|------------------|-------------|
+| `@prisma/client` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
+| `axios` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
+| `cors` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
+| `express` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
+| `zod` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
 
-| 🛠️ **Ferramenta** | 📖 **Descrição** | 🔗 **Link de Acesso** |
-|--------------------|------------------|-----------------------|
-| 🛡️ ESLint        | Ferramenta de linting para identificar e corrigir problemas em código JavaScript/TypeScript. | [ESLint](https://eslint.org/) |
-| ✨ Prettier      | Ferramenta de formatação de código que garante um estilo consistente. | [Prettier](https://prettier.io/) |
+### 🛠️ Dependências de Desenvolvimento
+
+| 🏫 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
+|-------------------|------------------|-------------|
+| `@eslint/js` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
+| `@types/*` | Definições de tipos TypeScript para várias bibliotecas | [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
+| `dotenv` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
+| `eslint` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
+| `prisma` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
+| `semver` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
+| `tsx` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
+| `typescript` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
+| `typescript-eslint` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
 
 ## 🚀 Como Rodar o Projeto
 
-### 🌟 Método Simplificado: Um Comando para Tudo
+### ⚡ Método Rápido: Um Comando para Tudo
+
+Este é o método mais simples e recomendado para iniciantes:
 
 1. **Clone o repositório:**
 
-    ```sh
+    ```bash
     git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
     ```
 
 2. **Acesse o diretório do projeto:**
 
-    ```sh
+    ```bash
     cd cidade-inclusiva-adm-back-end
     ```
 
-3. **Finalize com um único comando**
+3. **Instale o pnpm (se não tiver):**
 
-    Caso não tenha o pnpm instalado, execute:
-
-    ```sh
+    ```bash
     npm install -g pnpm
     ```
 
-    Em seguida, com o comando abaixo, você pode preparar e rodar o projeto com apenas uma linha:
+4. **Execute o comando completo:**
 
-    ```sh
+    ```bash
     pnpm first
     ```
 
-Este comando realiza automaticamente as seguintes etapas:
+✨ **O que o comando `pnpm first` faz automaticamente:**
 
-1. **📦 Instala todas as dependências do projeto:**  
-    O comando instala automaticamente todas as bibliotecas e pacotes necessários para o funcionamento do projeto.
+1. 📦 **Instala todas as dependências** (`pnpm install`)
+2. 🗄️ **Configura o banco de dados** (`pnpm migrate`)
+3. 🌱 **Popula com dados iniciais** (seed automático)
+4. 🚀 **Inicia o servidor de desenvolvimento** (`pnpm dev`)
 
-2. **🗄️ Monta o banco de dados:**  
-    Configura o banco de dados aplicando todas as migrações definidas no projeto.
+**Resultado:** Servidor disponível em `http://localhost:5555` 🎉
 
-3. **🌱 Executa o seed:**  
-    Popula o banco de dados com os dados iniciais necessários para o funcionamento da aplicação.
+### 🛠️ Método Manual: Controle Total
 
-4. **🚀 Inicia o servidor de desenvolvimento:**  
-    Levanta o servidor localmente, tornando a aplicação acessível em `http://localhost:5555`.
+Para desenvolvedores que preferem executar cada etapa individualmente:
 
-Após executar o comando, o servidor estará disponível em `http://localhost:5555`. 🎉
+1. **Clone e acesse o projeto:**
 
-### 🛠️ Método Manual: Passo a Passo
-
-Caso prefira realizar as etapas manualmente, siga os passos abaixo para rodar o projeto localmente:
-
-1. **Clone o repositório:**
-
-    ```sh
+    ```bash
     git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
-    ```
-
-2. **Acesse o diretório do projeto:**
-
-    ```sh
     cd cidade-inclusiva-adm-back-end
     ```
 
-3. **Instale as dependências:**
+2. **Instale as dependências:**
 
-    Caso não tenha o pnpm instalado, execute:
-
-    ```sh
+    ```bash
+    # Instalar pnpm (se necessário)
     npm install -g pnpm
+    
+    # Instalar dependências do projeto
+    pnpm install
     ```
 
-    Em seguida, instale as dependências:
+3. **Configure o banco de dados:**
 
-    ```sh
-    pnpm i
-    ```
-
-4. **🗄️ Monte o banco de dados e execute o seed:**  
-
-    Para configurar o banco de dados aplicando todas as migrações definidas no projeto e popular automaticamente com os dados iniciais, execute:  
-
-    ```sh
+    ```bash
+    # Executar migrações
     pnpm migrate
+    
+    # Popular com dados iniciais (opcional)
+    pnpm seed
     ```
 
-5. **🚀 Inicie a aplicação:**
+4. **Inicie o servidor:**
 
-    ```sh
+    ```bash
+    # Desenvolvimento (com hot-reload)
     pnpm dev
+    
+    # OU Produção (requer build primeiro)
+    pnpm build
+    pnpm start
     ```
 
-O servidor será iniciado em `http://localhost:5555`. 🌐
+### 🔧 Comandos Úteis para Desenvolvimento
+
+```bash
+# Visualizar dados do banco
+pnpm studio
+
+# Verificar status das migrações
+pnpm status
+
+# Aplicar mudanças de schema sem migração
+pnpm push
+
+# Sincronizar schema com banco existente
+pnpm pull
+```
+
+## 📋 Requisitos do Sistema
+
+- **Node.js:** ≥20.0.0
+- **Gerenciador de pacotes:** pnpm (recomendado) ou npm
+- **Sistema operacional:** Windows, macOS ou Linux
+- **Banco de dados:** SQLite (desenvolvimento) ou PostgreSQL (produção)
+
+## 🎯 Funcionalidades Principais
+
+- ✅ **API RESTful** completa para gerenciamento de dados
+- ✅ **Validação de dados** com Zod
+- ✅ **ORM Prisma** para acesso ao banco de dados
+- ✅ **TypeScript** para tipagem estática
+- ✅ **Hot-reload** em desenvolvimento
+- ✅ **Migrações de banco** automatizadas
+- ✅ **Seed de dados** para desenvolvimento
+- ✅ **CORS** configurado para requisições cross-origin
 
 ---
 
-<p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js logo">
-</p>
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 
-> **Node.js®** é um ambiente de execução de JavaScript disponível para várias plataformas, de código aberto e gratuito, que permite aos programadores criar servidores, aplicações web, ferramentas de linha de comando e programas de automação de tarefas.
-
-<p align="center">
-    <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/prisma/prisma-original-wordmark.svg" alt="Prisma logo">
-</p>
-
-> **Prisma** é um ORM (Object-Relational Mapping) para Node.js e TypeScript que facilita o acesso ao banco de dados, permitindo consultas eficientes e seguras, além de migrações e gerenciamento de esquemas de forma intuitiva.
-
-<p align="center">
-    <img width="200" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="ExpressJS logo">
-</p>
-
-> **ExpressJS** é um framework para Node.js que facilita a criação de aplicações web e APIs, fornecendo uma série de funcionalidades robustas para o desenvolvimento de servidores e serviços web.
+> **Cidade Inclusiva** - Construindo uma cidade mais acessível para todos! 🌆♿
 
 🎉 **Agora você está pronto para contribuir com o projeto Cidade Inclusiva!**

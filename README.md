@@ -77,12 +77,99 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 - **`pull`**: Sincroniza o schema do Prisma com a estrutura atual do banco de dados.
 - **`status`**: Mostra informações sobre o estado das migrações.
 
-## 📑 Documentação do Projeto
+## 📂 Estrutura do Projeto
 
-| 📄 Descrição | 🔗 Link |
-|:---|:---|
-| 🗂️ Esquema do Banco de Dados | [SCHEMA.md](docs/SCHEMA.md) |
-| 🗂️ Documentação da Estrutura de Pastas | [FOLDERS.md](docs/FOLDERS.md) |
+O projeto segue uma arquitetura bem organizada e modular, baseada em três entidades principais: **Comentários**, **Notícias** e **Profissionais**.
+
+### 🗄️ **Banco de Dados**
+
+- **📂 `prisma/`** - Configurações do banco de dados
+  - **📂 `migrations/`** - 🔄 Controle de versões do banco
+  - **📄 `schema.prisma`** - 🎯 Estrutura das tabelas
+  - **📄 `seed.ts`** - 🌱 Dados iniciais para desenvolvimento
+
+### 🏗️ **Arquitetura Principal (Camadas)**
+
+Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetura em camadas:
+
+- **📂 `src/controllers/`** - 🎮 **Controladores HTTP**
+  - Gerenciam requisições e respostas da API
+  - Validam dados de entrada e retornam respostas padronizadas
+
+- **📂 `src/services/`** - 🧠 **Serviços de Negócio**
+  - Contêm toda a lógica de negócios da aplicação
+  - Orquestram operações entre repositórios e validações
+
+- **📂 `src/repositories/`** - 🗃️ **Repositórios de Dados**
+  - Abstraem o acesso aos dados do banco
+  - Implementam operações CRUD específicas
+
+- **📂 `src/daos/`** - 💾 **Data Access Objects**
+  - Executam operações diretas no banco de dados via Prisma
+  - Camada mais baixa de acesso aos dados
+
+- **📂 `src/routes/`** - 🛤️ **Definição de Rotas**
+  - Mapeiam endpoints HTTP para controladores
+  - Definem middlewares específicos por rota
+
+### 🔌 **Injeção de Dependências**
+
+- **📂 `src/dependencies/`** - 📂 **Gerenciamento de Dependências**
+  - Criam e conectam as instâncias das camadas
+  - Facilitam testes e manutenção do código
+
+### 📋 **Estrutura e Validação de Dados**
+
+- **📂 `src/dtos/`** - 📦 **Data Transfer Objects**
+  - **📂 `create/`** - ➕ Estruturas para criação
+  - **📂 `update/`** - ✏️ Estruturas para atualização
+  - **📂 `response/`** - 📤 Estruturas de resposta
+
+- **📂 `src/schemas/`** - ✅ **Validação com Zod**
+  - Definem regras de validação para cada entidade
+  - Garantem integridade dos dados de entrada
+
+- **📂 `src/interfaces/`** - 📋 **Contratos TypeScript**
+  - **📂 `access/`** - Interfaces para DAOs e Repositories
+  - **📂 `services/`** - Interfaces para Services
+
+### � **Transformação de Dados**
+
+- **📂 `src/mappers/`** - 🔄 **Conversores de Dados**
+  - **📂 `input/`** - Converte dados de entrada para DTOs
+  - **📂 `output/`** - Converte DTOs para respostas da API
+
+- **📂 `src/helpers/`** - 🤝 **Funções de Apoio**
+  - Geram dados formatados para operações do banco
+  - Auxiliam na preparação de dados para Prisma
+
+### 🛡️ **Middlewares e Configurações**
+
+- **📂 `src/middlewares/`** - 🛡️ **Interceptadores**
+  - `errorMiddleware.ts` - Tratamento global de erros
+  - `timeoutMiddleware.ts` - Controle de timeout de requisições
+  - `validationMiddleware.ts` - Validação automática com schemas
+
+- **📂 `src/configs/`** - ⚙️ **Configurações**
+  - `routePaths.ts` - Centraliza definição de caminhos da API
+
+### 🛠️ **Utilitários**
+
+- **📂 `src/utils/`** - 🛠️ **Funções Auxiliares** (5 arquivos)
+  - `HandleError.ts` / `HandleSuccess.ts` - Padronização de respostas
+  - `HttpError.ts` - Classe customizada para erros HTTP
+  - `stringUtils.ts` / `urlUtils.ts` - Utilitários gerais
+
+- **📂 `src/lib/`** - 📚 **Bibliotecas Compartilhadas**
+  - `prisma.ts` - Configuração e instância do cliente Prisma
+
+- **📂 `src/enums/`** - 📝 **Constantes**
+  - `HttpStatusCode.ts` - Códigos de status HTTP padronizados
+
+### 🚀 **Arquivos de Entrada**
+
+- **📄 `src/app.ts`** - 🏭 Configuração principal da aplicação Express
+- **📄 `src/server.ts`** - 🌐 Inicialização e configuração do servidor
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -108,7 +195,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 ### 🛠️ Dependências de Desenvolvimento
 
-| 🏫 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
+| 📚 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
 |-------------------|------------------|-------------|
 | `@eslint/js` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
 | `@types/*` | Definições de tipos TypeScript para várias bibliotecas | [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |

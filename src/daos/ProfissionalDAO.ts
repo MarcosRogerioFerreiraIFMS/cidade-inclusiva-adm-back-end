@@ -1,4 +1,4 @@
-import { Profissional } from '@prisma/client'
+import { Comentario, Profissional } from '@prisma/client'
 import { ProfissionalCreateDTO } from '../dtos/create/ProfissionalCreateDTO'
 import { ProfissionalUpdateDTO } from '../dtos/update/ProfissionalUpdateDTO'
 import {
@@ -27,15 +27,14 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findById(id: string): Promise<Profissional | null> {
+  async findById(
+    id: string
+  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
     try {
       return await db.profissional.findUnique({
         where: { id },
         include: {
           comentarios: {
-            where: {
-              visivel: true
-            },
             orderBy: {
               criadoEm: 'desc'
             }
@@ -48,10 +47,19 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findByEmail(email: string): Promise<Profissional | null> {
+  async findByEmail(
+    email: string
+  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
     try {
       return await db.profissional.findUnique({
-        where: { email }
+        where: { email },
+        include: {
+          comentarios: {
+            orderBy: {
+              criadoEm: 'desc'
+            }
+          }
+        }
       })
     } catch (error) {
       console.error('Erro ao buscar profissional por email:', error)
@@ -59,7 +67,10 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async update(id: string, data: ProfissionalUpdateDTO): Promise<Profissional> {
+  async update(
+    id: string,
+    data: ProfissionalUpdateDTO
+  ): Promise<Profissional & { comentarios: Comentario[] }> {
     try {
       const dataToUpdate = generateDataProfissionalUpdate(data)
 
@@ -68,9 +79,6 @@ export class ProfissionalDAO implements IProfissionalAccess {
         data: dataToUpdate,
         include: {
           comentarios: {
-            where: {
-              visivel: true
-            },
             orderBy: {
               criadoEm: 'desc'
             }
@@ -94,14 +102,11 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findAll(): Promise<Profissional[]> {
+  async findAll(): Promise<(Profissional & { comentarios: Comentario[] })[]> {
     try {
       return await db.profissional.findMany({
         include: {
           comentarios: {
-            where: {
-              visivel: true
-            },
             orderBy: {
               criadoEm: 'desc'
             }

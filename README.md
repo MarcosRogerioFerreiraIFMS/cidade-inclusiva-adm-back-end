@@ -207,6 +207,33 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 | `typescript` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
 | `typescript-eslint` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
 
+## ⚠️ Aviso Importante sobre Dependências
+
+> **🚨 NÃO ATUALIZE AS DEPENDÊNCIAS DO PROJETO SEM NECESSIDADE REAL!**
+
+### 📋 Por que não atualizar as dependências sem critério?
+
+- **🔒 Estabilidade**: As versões atuais foram testadas e são compatíveis entre si
+- **🐛 Bugs**: Versões mais novas podem introduzir bugs ou breaking changes
+- **💥 Compatibilidade**: Atualizações podem quebrar a compatibilidade entre dependências
+- **🔧 Configurações**: Mudanças podem exigir reconfiguração de ESLint, TypeScript, etc.
+- **⏱️ Tempo de desenvolvimento**: Resolver problemas de compatibilidade consome tempo
+
+### ✅ Quando é apropriado atualizar?
+
+- **🔐 Correções de segurança críticas**
+- **🐛 Bugs que afetam funcionalidades essenciais**
+- **✨ Funcionalidades específicas necessárias para novos recursos**
+- **📈 Melhorias significativas de performance**
+
+### 🛡️ Como atualizar com segurança (se necessário)?
+
+1. **📊 Teste em branch separada**
+2. **📝 Documente as mudanças**
+3. **🧪 Execute todos os testes**
+4. **👥 Revise com a equipe**
+5. **🔄 Tenha um plano de rollback**
+
 ## 🚀 Como Rodar o Projeto
 
 ### ⚡ Método Rápido: Um Comando para Tudo

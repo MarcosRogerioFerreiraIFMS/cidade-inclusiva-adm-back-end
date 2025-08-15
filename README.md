@@ -48,6 +48,9 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
 |---------------|------------------|-------------------|
 | `preinstall` | **Script automático**: verifica se a versão do Node.js é compatível (≥20.0.0) | *Executado automaticamente* |
+| `lint` | Executa o ESLint para verificar problemas no código TypeScript | `pnpm lint` |
+| `check` | Verifica a compilação e linting do código | `pnpm check` |
+| `clean` | Remove pastas de build, temporárias e coverage | `pnpm clean` |
 
 ### 📝 Explicação Detalhada dos Scripts
 
@@ -76,6 +79,12 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 - **`push`**: Aplica mudanças do schema diretamente no banco sem criar arquivos de migração.
 - **`pull`**: Sincroniza o schema do Prisma com a estrutura atual do banco de dados.
 - **`status`**: Mostra informações sobre o estado das migrações.
+
+#### 🔧 Scripts de Qualidade e Manutenção
+
+- **`lint`**: Executa o ESLint em todos os arquivos TypeScript (.ts) com zero tolerância a warnings. Identifica problemas de código, estilo e potenciais bugs.
+- **`check`**: Script de verificação completa que executa compilação TypeScript (sem gerar arquivos) e linting. Ideal para CI/CD.
+- **`clean`**: Remove pastas de build (`dist/`), temporárias (`temp/`) e de coverage (`coverage/`). Limpa o projeto para um novo build.
 
 ## 📂 Estrutura do Projeto
 
@@ -201,7 +210,9 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 | `@types/*` | Definições de tipos TypeScript para várias bibliotecas | [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
 | `dotenv` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
 | `eslint` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
+| `globals` | Variáveis globais para ESLint em diferentes ambientes | [Globals](https://www.npmjs.com/package/globals) |
 | `prisma` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
+| `rimraf` | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf) |
 | `semver` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
 | `tsx` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
 | `typescript` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |

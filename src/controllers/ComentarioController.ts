@@ -119,11 +119,23 @@ export class ComentarioController {
   ): Promise<void> => {
     try {
       const { id } = req.params
-      const { increment } = req.body
-      const comentario = await this.comentarioService.incrementLikes(
-        id,
-        increment
-      )
+
+      const comentario = await this.comentarioService.incrementLikes(id)
+      HandleSuccess.updated(res, comentario, 'Likes atualizados com sucesso')
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  decrementLikes = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { id } = req.params
+
+      const comentario = await this.comentarioService.decrementLikes(id)
       HandleSuccess.updated(res, comentario, 'Likes atualizados com sucesso')
     } catch (error: unknown) {
       next(error)

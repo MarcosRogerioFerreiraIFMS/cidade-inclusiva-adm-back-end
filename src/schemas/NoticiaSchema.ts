@@ -1,5 +1,6 @@
 import { CategoriaNoticia } from '@prisma/client'
 import { z } from 'zod'
+import { sanitizeContent, sanitizeString } from '../utils/stringUtils'
 import {
   isImageUrl,
   normalizeUrl,
@@ -11,24 +12,6 @@ const TITULO_MIN_LENGTH = 3
 const TITULO_MAX_LENGTH = 100
 const CONTEUDO_MIN_LENGTH = 10
 const CONTEUDO_MAX_LENGTH = 5000
-
-const sanitizeString = (str: string): string => {
-  return str
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[\r\n\t]/g, ' ')
-    .replace(/[^\w\s\-.,!?()áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ]/gi, '')
-}
-
-const sanitizeContent = (str: string): string => {
-  return str
-    .trim()
-    .split('\n')
-    .map((line) => line.trim().replace(/\s+/g, ' '))
-    .filter((line) => line.length > 0)
-    .join('\n')
-    .replace(/[^\w\s\-.,!?()\náàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ\n]/gi, '')
-}
 
 export const createNoticiaSchema = z.object({
   titulo: z

@@ -17,7 +17,11 @@
     "push": "prisma db push",
     "pull": "prisma db pull",
     "status": "prisma migrate status",
-    "first": "pnpm install && pnpm migrate && pnpm dev"
+    "first": "pnpm install && pnpm migrate && pnpm dev",
+    "lint": "eslint . --ext .ts --max-warnings=0",
+    "build:noEmit": "tsc --noEmit",
+    "check": "pnpm build:noEmit && pnpm lint && echo ✅ Verificação concluída com sucesso!",
+    "clean": "rimraf ./dist && rimraf ./temp && rimraf ./coverage && echo ✅ Limpeza concluída com sucesso!"
   },
   "prisma": {
     "seed": "tsx ./prisma/seed.ts"
@@ -35,6 +39,7 @@
     "eslint": "^9.28.0",
     "globals": "^16.2.0",
     "prisma": "^6.8.2",
+    "rimraf": "^6.0.1",
     "semver": "^7.7.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",

@@ -11,40 +11,44 @@ export class ComentarioRepository implements IComentarioAccess {
   }
 
   async create(data: ComentarioCreateDTO): Promise<Comentario> {
-    return this.dao.create(data)
+    return await this.dao.create(data)
   }
 
   async findById(id: string): Promise<Comentario | null> {
-    return this.dao.findById(id)
+    return await this.dao.findById(id)
   }
 
   async update(id: string, data: ComentarioUpdateDTO): Promise<Comentario> {
-    return this.dao.update(id, data)
+    return await this.dao.update(id, data)
   }
 
   async delete(id: string): Promise<void> {
-    return this.dao.delete(id)
+    return await this.dao.delete(id)
   }
 
   async findAll(): Promise<Comentario[]> {
-    return this.dao.findAll()
+    return await this.dao.findAll()
   }
 
   async findByEntidade(
     entidadeId: string,
     entidadeTipo: string
   ): Promise<Comentario[]> {
-    return this.dao.findByEntidade(entidadeId, entidadeTipo)
+    return await this.dao.findByEntidade(entidadeId, entidadeTipo)
   }
 
   async findVisibleByEntidade(
     entidadeId: string,
     entidadeTipo: string
   ): Promise<Comentario[]> {
-    return this.dao.findVisibleByEntidade(entidadeId, entidadeTipo)
+    return await this.dao.findVisibleByEntidade(entidadeId, entidadeTipo)
   }
 
-  async incrementLikes(id: string, increment: number): Promise<Comentario> {
-    return this.dao.incrementLikes(id, increment)
+  async incrementLikes(id: string): Promise<Comentario> {
+    return await this.dao.incrementLikes(id)
+  }
+
+  async decrementLikes(id: string): Promise<Comentario> {
+    return await this.dao.decrementLikes(id)
   }
 }

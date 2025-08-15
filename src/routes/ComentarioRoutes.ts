@@ -47,9 +47,15 @@ ComentarioRoutes.get(
 )
 
 ComentarioRoutes.patch(
-  '/:id/likes',
+  '/:id/likes/increment',
   validateUUID('id'),
   ComentarioDependencies.controller.incrementLikes
+)
+
+ComentarioRoutes.patch(
+  '/:id/likes/decrement',
+  validateUUID('id'),
+  ComentarioDependencies.controller.decrementLikes
 )
 
 export { ComentarioRoutes }

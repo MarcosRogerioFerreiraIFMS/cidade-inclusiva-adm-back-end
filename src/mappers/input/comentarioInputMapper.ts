@@ -3,14 +3,11 @@ import { ComentarioUpdateDTO } from '../../dtos/update/ComentarioUpdateDTO'
 import { HttpStatusCode } from '../../enums/HttpStatusCode'
 import {
   createComentarioSchema,
-  likeComentarioSchema,
   updateComentarioSchema
 } from '../../schemas/ComentarioSchema'
 import { HttpError } from '../../utils/HttpError'
 
-export function toCreateComentarioDTO(
-  input: unknown
-): Promise<ComentarioCreateDTO> {
+export function toCreateComentarioDTO(input: unknown): ComentarioCreateDTO {
   if (typeof input !== 'object' || input === null) {
     throw new HttpError(
       'Dados inválidos para criação do comentário.',
@@ -18,12 +15,10 @@ export function toCreateComentarioDTO(
     )
   }
 
-  return createComentarioSchema.parseAsync(input)
+  return createComentarioSchema.parse(input)
 }
 
-export function toUpdateComentarioDTO(
-  input: unknown
-): Promise<ComentarioUpdateDTO> {
+export function toUpdateComentarioDTO(input: unknown): ComentarioUpdateDTO {
   if (typeof input !== 'object' || input === null) {
     throw new HttpError(
       'Dados inválidos para atualização do comentário.',
@@ -31,18 +26,5 @@ export function toUpdateComentarioDTO(
     )
   }
 
-  return updateComentarioSchema.parseAsync(input)
-}
-
-export function toLikeComentarioDTO(
-  input: unknown
-): Promise<{ increment: number }> {
-  if (typeof input !== 'object' || input === null) {
-    throw new HttpError(
-      'Dados inválidos para incrementar likes do comentário.',
-      HttpStatusCode.BAD_REQUEST
-    )
-  }
-
-  return likeComentarioSchema.parseAsync(input)
+  return updateComentarioSchema.parse(input)
 }

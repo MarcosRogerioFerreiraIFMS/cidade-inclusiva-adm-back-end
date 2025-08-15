@@ -1,12 +1,14 @@
 import { Comentario, TipoEntidade } from '@prisma/client'
 import { ComentarioCreateDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import {
   generateDataComentarioCreate,
   generateDataComentarioUpdate
 } from '../helpers/generateDataComentario'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
 import { db } from '../lib/prisma'
+import { HttpError } from '../utils/HttpError'
 
 export class ComentarioDAO implements IComentarioAccess {
   async create(data: ComentarioCreateDTO): Promise<Comentario> {
@@ -114,13 +116,13 @@ export class ComentarioDAO implements IComentarioAccess {
     }
   }
 
-  async incrementLikes(id: string, increment: number): Promise<Comentario> {
+  async incrementLikes(id: string): Promise<Comentario> {
     try {
       const comentario = await db.comentario.update({
         where: { id },
         data: {
           likes: {
-            increment
+            increment: 1
           }
         }
       })
@@ -128,6 +130,41 @@ export class ComentarioDAO implements IComentarioAccess {
       return comentario
     } catch (error) {
       console.error('Erro ao incrementar likes do comentário:', error)
+      throw error
+    }
+  }
+
+  async decrementLikes(id: string): Promise<Comentario> {
+    try {
+      const comentario = await db.comentario.findUnique({
+        where: { id }
+      })
+
+      if (!comentario) {
+        throw new HttpError(
+          'Comentário não encontrado.',
+          HttpStatusCode.NOT_FOUND
+        )
+      }
+
+      if (comentario.likes > 0) {
+        const comentarioUpdated = await db.comentario.update({
+          where: { id },
+          data: {
+            likes: {
+              decrement: 1
+            }
+          }
+        })
+        return comentarioUpdated
+      } else {
+        throw new HttpError(
+          'Não é possível decrementar likes. O número de likes já é zero.',
+          HttpStatusCode.BAD_REQUEST
+        )
+      }
+    } catch (error) {
+      console.error('Erro ao decrementar likes do comentário:', error)
       throw error
     }
   }

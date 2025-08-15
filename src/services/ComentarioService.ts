@@ -21,7 +21,7 @@ export class ComentarioService implements IComentarioService {
   ) {}
 
   async create(data: unknown): Promise<ComentarioResponseDTO> {
-    const comentarioData = await toCreateComentarioDTO(data)
+    const comentarioData = toCreateComentarioDTO(data)
 
     await this.validateEntidadeExists(
       comentarioData.entidadeId,
@@ -47,30 +47,16 @@ export class ComentarioService implements IComentarioService {
   }
 
   async update(id: string, data: unknown): Promise<ComentarioResponseDTO> {
-    const existingComentario = await this.comentarioRepository.findById(id)
-    if (!existingComentario) {
-      throw new HttpError(
-        'Comentário não encontrado.',
-        HttpStatusCode.NOT_FOUND
-      )
-    }
+    await this.validateComentarioExists(id)
 
-    const updateData = await toUpdateComentarioDTO(data)
-
+    const updateData = toUpdateComentarioDTO(data)
     const comentario = await this.comentarioRepository.update(id, updateData)
 
     return toComentarioResponseDTO(comentario)
   }
 
   async delete(id: string): Promise<void> {
-    const comentario = await this.comentarioRepository.findById(id)
-    if (!comentario) {
-      throw new HttpError(
-        'Comentário não encontrado.',
-        HttpStatusCode.NOT_FOUND
-      )
-    }
-
+    await this.validateComentarioExists(id)
     await this.comentarioRepository.delete(id)
   }
 
@@ -93,6 +79,8 @@ export class ComentarioService implements IComentarioService {
         entidadeTipo
       })
 
+    await this.validateEntidadeExists(entidadeId, validatedEntidadeTipo)
+
     const comentarios = await this.comentarioRepository.findByEntidade(
       entidadeId,
       validatedEntidadeTipo
@@ -114,6 +102,8 @@ export class ComentarioService implements IComentarioService {
         entidadeTipo
       })
 
+    await this.validateEntidadeExists(entidadeId, validatedEntidadeTipo)
+
     const comentarios = await this.comentarioRepository.findVisibleByEntidade(
       entidadeId,
       validatedEntidadeTipo
@@ -126,33 +116,34 @@ export class ComentarioService implements IComentarioService {
     return toComentariosResponseDTO(comentarios)
   }
 
-  async incrementLikes(
-    id: string,
-    increment?: number
-  ): Promise<ComentarioResponseDTO> {
-    const existingComentario = await this.comentarioRepository.findById(id)
-    if (!existingComentario) {
+  async incrementLikes(id: string): Promise<ComentarioResponseDTO> {
+    await this.validateComentarioExists(id)
+
+    const comentario = await this.comentarioRepository.incrementLikes(id)
+
+    return toComentarioResponseDTO(comentario)
+  }
+
+  async decrementLikes(id: string): Promise<ComentarioResponseDTO> {
+    const comentario = await this.comentarioRepository.findById(id)
+
+    if (!comentario) {
       throw new HttpError(
         'Comentário não encontrado.',
         HttpStatusCode.NOT_FOUND
       )
     }
 
-    const incrementValue = increment ?? 1
-
-    if (existingComentario.likes + incrementValue < 0) {
+    if (comentario.likes < 1) {
       throw new HttpError(
-        'Os likes não podem ser negativos.',
+        'Não é possível decrementar likes. O número de likes já é zero.',
         HttpStatusCode.BAD_REQUEST
       )
     }
 
-    const comentario = await this.comentarioRepository.incrementLikes(
-      id,
-      incrementValue
-    )
+    const comentarioUpdated = await this.comentarioRepository.decrementLikes(id)
 
-    return toComentarioResponseDTO(comentario)
+    return toComentarioResponseDTO(comentarioUpdated)
   }
 
   private async validateEntidadeExists(
@@ -178,6 +169,16 @@ export class ComentarioService implements IComentarioService {
       throw new HttpError(
         'Tipo de entidade inválido.',
         HttpStatusCode.BAD_REQUEST
+      )
+    }
+  }
+
+  private async validateComentarioExists(id: string): Promise<void> {
+    const comentario = await this.comentarioRepository.findById(id)
+    if (!comentario) {
+      throw new HttpError(
+        'Comentário não encontrado.',
+        HttpStatusCode.NOT_FOUND
       )
     }
   }

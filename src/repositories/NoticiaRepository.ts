@@ -11,22 +11,22 @@ export class NoticiaRepository implements INoticiaAccess {
   }
 
   async create(data: NoticiaCreateDTO): Promise<Noticia> {
-    return this.dao.create(data)
+    return await this.dao.create(data)
   }
 
   async findById(id: string): Promise<Noticia | null> {
-    return this.dao.findById(id)
+    return await this.dao.findById(id)
   }
 
   async update(id: string, data: NoticiaUpdateDTO): Promise<Noticia> {
-    return this.dao.update(id, data)
+    return await this.dao.update(id, data)
   }
 
   async delete(id: string): Promise<void> {
-    return this.dao.delete(id)
+    return await this.dao.delete(id)
   }
 
   async findAll(): Promise<Noticia[]> {
-    return this.dao.findAll()
+    return await this.dao.findAll()
   }
 }

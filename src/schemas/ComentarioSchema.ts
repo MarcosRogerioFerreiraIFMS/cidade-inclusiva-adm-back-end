@@ -1,18 +1,9 @@
 import { TipoEntidade } from '@prisma/client'
 import { z } from 'zod'
+import { sanitizeContent } from '../utils/stringUtils'
 
 const CONTEUDO_MIN_LENGTH = 1
 const CONTEUDO_MAX_LENGTH = 1000
-
-const sanitizeContent = (str: string): string => {
-  return str
-    .trim()
-    .split('\n')
-    .map((line) => line.trim().replace(/\s+/g, ' '))
-    .filter((line) => line.length > 0)
-    .join('\n')
-    .replace(/[^\w\s\-.,!?()\náàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ\n]/gi, '')
-}
 
 export const createComentarioSchema = z.object({
   conteudo: z
@@ -86,15 +77,6 @@ export const updateComentarioSchema = z.object({
   visivel: z
     .boolean({ invalid_type_error: 'Visível deve ser um valor booleano.' })
     .optional()
-})
-
-export const likeComentarioSchema = z.object({
-  increment: z
-    .number({ invalid_type_error: 'O incremento deve ser um número.' })
-    .int('O incremento deve ser um número inteiro.')
-    .min(-1, 'O incremento deve ser -1, 0 ou 1.')
-    .max(1, 'O incremento deve ser -1, 0 ou 1.')
-    .default(1)
 })
 
 export const validateEntidadeTipoComentarioSchema = z.object({

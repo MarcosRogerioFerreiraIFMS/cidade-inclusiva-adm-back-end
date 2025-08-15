@@ -1,5 +1,6 @@
 import { EspecialidadeProfissional } from '@prisma/client'
 import { z } from 'zod'
+import { sanitizeString, sanitizeTelefone } from '../utils/stringUtils'
 import {
   isImageUrl,
   normalizeUrl,
@@ -10,18 +11,6 @@ import {
 const NOME_MIN_LENGTH = 2
 const NOME_MAX_LENGTH = 100
 const TELEFONE_REGEX = /^(?:\d{11}|\d{13})$/
-
-const sanitizeString = (str: string): string => {
-  return str
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[\r\n\t]/g, ' ')
-    .replace(/[^\w\s\-.,!?()áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ]/gi, '')
-}
-
-const sanitizeTelefone = (str: string): string => {
-  return str.replace(/\D/g, '')
-}
 
 export const createProfissionalSchema = z.object({
   nome: z

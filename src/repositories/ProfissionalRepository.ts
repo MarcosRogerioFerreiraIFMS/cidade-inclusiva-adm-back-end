@@ -11,33 +11,33 @@ export class ProfissionalRepository implements IProfissionalAccess {
   }
 
   async create(data: ProfissionalCreateDTO): Promise<Profissional> {
-    return this.dao.create(data)
+    return await this.dao.create(data)
   }
 
   async findById(
     id: string
   ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
-    return this.dao.findById(id)
+    return await this.dao.findById(id)
   }
 
   async findByEmail(
     email: string
   ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
-    return this.dao.findByEmail(email)
+    return await this.dao.findByEmail(email)
   }
 
   async update(
     id: string,
     data: ProfissionalUpdateDTO
   ): Promise<Profissional & { comentarios: Comentario[] }> {
-    return this.dao.update(id, data)
+    return await this.dao.update(id, data)
   }
 
   async delete(id: string): Promise<void> {
-    return this.dao.delete(id)
+    return await this.dao.delete(id)
   }
 
   async findAll(): Promise<(Profissional & { comentarios: Comentario[] })[]> {
-    return this.dao.findAll()
+    return await this.dao.findAll()
   }
 }

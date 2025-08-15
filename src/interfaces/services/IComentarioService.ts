@@ -14,5 +14,6 @@ export interface IComentarioService {
     entidadeId: string,
     entidadeTipo: string
   ): Promise<ComentarioResponseDTO[]>
-  incrementLikes(id: string, increment?: number): Promise<ComentarioResponseDTO>
+  incrementLikes(id: string): Promise<ComentarioResponseDTO>
+  decrementLikes(id: string): Promise<ComentarioResponseDTO>
 }

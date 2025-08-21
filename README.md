@@ -142,7 +142,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
   - **📂 `access/`** - Interfaces para DAOs e Repositories
   - **📂 `services/`** - Interfaces para Services
 
-### � **Transformação de Dados**
+### 📊 **Transformação de Dados**
 
 - **📂 `src/mappers/`** - 🔄 **Conversores de Dados**
   - **📂 `input/`** - Converte dados de entrada para DTOs
@@ -164,7 +164,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ### 🛠️ **Utilitários**
 
-- **📂 `src/utils/`** - 🛠️ **Funções Auxiliares** (5 arquivos)
+- **📂 `src/utils/`** - 🛠️ **Funções Auxiliares**
   - `HandleError.ts` / `HandleSuccess.ts` - Padronização de respostas
   - `HttpError.ts` - Classe customizada para erros HTTP
   - `stringUtils.ts` / `urlUtils.ts` - Utilitários gerais
@@ -174,6 +174,14 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 - **📂 `src/enums/`** - 📝 **Constantes**
   - `HttpStatusCode.ts` - Códigos de status HTTP padronizados
+
+### 🎯 **Tipagem e Padronização**
+
+- **📂 `src/types/`** - 🏷️ **Tipos Personalizados do Prisma**
+  - Padroniza tipos complexos do Prisma pelo projeto
+  - Define tipos customizados com relacionamentos específicos
+  - Exemplo: `ProfissionalCompletions` - Tipo que inclui profissional com comentários e likes
+  - Facilita reutilização de tipos em services, controllers, repositories e DAOs
 
 ### 🚀 **Arquivos de Entrada**
 

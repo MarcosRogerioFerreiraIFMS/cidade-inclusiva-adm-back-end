@@ -49,6 +49,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 |---------------|------------------|-------------------|
 | `preinstall` | **Script automático**: verifica se a versão do Node.js é compatível (≥20.0.0) | *Executado automaticamente* |
 | `lint` | Executa o ESLint para verificar problemas no código TypeScript | `pnpm lint` |
+| `build:noEmit` | Verifica a compilação TypeScript sem gerar arquivos de saída | `pnpm build:noEmit` |
 | `check` | Verifica a compilação e linting do código | `pnpm check` |
 | `clean` | Remove pastas de build, temporárias e coverage | `pnpm clean` |
 
@@ -83,6 +84,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 #### 🔧 Scripts de Qualidade e Manutenção
 
 - **`lint`**: Executa o ESLint em todos os arquivos TypeScript (.ts) com zero tolerância a warnings. Identifica problemas de código, estilo e potenciais bugs.
+- **`build:noEmit`**: Executa a verificação de tipos do TypeScript sem gerar arquivos de saída. Útil para validar o código antes de commits ou em pipelines de CI/CD.
 - **`check`**: Script de verificação completa que executa compilação TypeScript (sem gerar arquivos) e linting. Ideal para CI/CD.
 - **`clean`**: Remove pastas de build (`dist/`), temporárias (`temp/`) e de coverage (`coverage/`). Limpa o projeto para um novo build.
 
@@ -206,6 +208,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 |-------------------|------------------|-------------|
 | `@prisma/client` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
 | `axios` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
+| `brasilapi-js` | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/) |
 | `cors` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
 | `express` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
 | `zod` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
@@ -367,6 +370,7 @@ pnpm pull
 - ✅ **Migrações de banco** automatizadas
 - ✅ **Seed de dados** para desenvolvimento
 - ✅ **CORS** configurado para requisições cross-origin
+- ✅ **Integração BrasilAPI** para dados geográficos do Brasil
 
 ---
 

@@ -77,17 +77,15 @@ export class ComentarioController {
     }
   }
 
-  findByEntidade = async (
+  findByProfissional = async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { entidadeId, entidadeTipo } = req.params
-
-      const comentarios = await this.comentarioService.findByEntidade(
-        entidadeId,
-        entidadeTipo
+      const { profissionalId } = req.params
+      const comentarios = await this.comentarioService.findByProfissional(
+        profissionalId
       )
       HandleSuccess.list(res, comentarios)
     } catch (error: unknown) {
@@ -95,48 +93,16 @@ export class ComentarioController {
     }
   }
 
-  findVisibleByEntidade = async (
+  findVisibleByProfissional = async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { entidadeId, entidadeTipo } = req.params
-      const comentarios = await this.comentarioService.findVisibleByEntidade(
-        entidadeId,
-        entidadeTipo
-      )
+      const { profissionalId } = req.params
+      const comentarios =
+        await this.comentarioService.findVisibleByProfissional(profissionalId)
       HandleSuccess.list(res, comentarios)
-    } catch (error: unknown) {
-      next(error)
-    }
-  }
-
-  incrementLikes = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const { id } = req.params
-
-      const comentario = await this.comentarioService.incrementLikes(id)
-      HandleSuccess.updated(res, comentario, 'Likes atualizados com sucesso')
-    } catch (error: unknown) {
-      next(error)
-    }
-  }
-
-  decrementLikes = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const { id } = req.params
-
-      const comentario = await this.comentarioService.decrementLikes(id)
-      HandleSuccess.updated(res, comentario, 'Likes atualizados com sucesso')
     } catch (error: unknown) {
       next(error)
     }

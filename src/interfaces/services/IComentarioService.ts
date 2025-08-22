@@ -6,14 +6,8 @@ export interface IComentarioService {
   update(id: string, data: unknown): Promise<ComentarioResponseDTO>
   delete(id: string): Promise<void>
   findAll(): Promise<ComentarioResponseDTO[]>
-  findByEntidade(
-    entidadeId: string,
-    entidadeTipo: string
+  findByProfissional(profissionalId: string): Promise<ComentarioResponseDTO[]>
+  findVisibleByProfissional(
+    profissionalId: string
   ): Promise<ComentarioResponseDTO[]>
-  findVisibleByEntidade(
-    entidadeId: string,
-    entidadeTipo: string
-  ): Promise<ComentarioResponseDTO[]>
-  incrementLikes(id: string): Promise<ComentarioResponseDTO>
-  decrementLikes(id: string): Promise<ComentarioResponseDTO>
 }

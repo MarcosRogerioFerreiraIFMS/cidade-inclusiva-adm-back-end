@@ -1,23 +1,25 @@
-import { Comentario } from '@prisma/client'
 import { ComentarioResponseDTO } from '../../dtos/response/ComentarioResponseDTO'
+import { ComentarioCompletions } from '../../types/ComentarioTypes'
+import { removeNullUndefinedProperties } from '../../utils/objectUtils'
+import { toLikeResponseDTO } from './likeOutputMapper'
 
 export function toComentarioResponseDTO(
-  comentario: Comentario
+  comentario: ComentarioCompletions
 ): ComentarioResponseDTO {
-  return {
+  return removeNullUndefinedProperties({
     id: comentario.id,
-    likes: comentario.likes,
     conteudo: comentario.conteudo,
     visivel: comentario.visivel,
-    entidadeId: comentario.entidadeId,
-    entidadeTipo: comentario.entidadeTipo,
+    usuarioId: comentario.usuarioId,
+    profissionalId: comentario.profissionalId!,
     criadoEm: comentario.criadoEm,
-    atualizadoEm: comentario.atualizadoEm
-  }
+    atualizadoEm: comentario.atualizadoEm,
+    likes: comentario.likesUsuarios.map((like) => toLikeResponseDTO(like))
+  })
 }
 
 export function toComentariosResponseDTO(
-  comentarios: Comentario[]
+  comentarios: ComentarioCompletions[]
 ): ComentarioResponseDTO[] {
   return comentarios.map(toComentarioResponseDTO)
 }

@@ -1,30 +1,28 @@
-import { Comentario, Profissional } from '@prisma/client'
 import { ProfissionalResponseDTO } from '../../dtos/response/ProfissionalResponseDTO'
+import { ProfissionalCompletions } from '../../types/ProfissionalTypes'
+import { removeNullUndefinedProperties } from '../../utils/objectUtils'
 import { capitalizeWords } from '../../utils/stringUtils'
 import { toComentarioResponseDTO } from './comentarioOutputMapper'
 
-type ProfissionalWithComentarios = Profissional & {
-  comentarios?: Comentario[]
-}
-
 export function toProfissionalResponseDTO(
-  profissional: ProfissionalWithComentarios
+  profissional: ProfissionalCompletions
 ): ProfissionalResponseDTO {
-  return {
+  return removeNullUndefinedProperties({
     id: profissional.id,
     nome: profissional.nome,
     foto: profissional.foto ?? undefined,
     telefone: profissional.telefone,
     email: profissional.email,
     especialidade: capitalizeWords(profissional.especialidade),
-    comentarios: profissional.comentarios?.map((comentario) =>
+    criadoEm: profissional.criadoEm,
+    comentarios: profissional.comentarios.map((comentario) =>
       toComentarioResponseDTO(comentario)
     )
-  }
+  })
 }
 
 export function toProfissionaisResponseDTO(
-  profissionais: ProfissionalWithComentarios[]
+  profissionais: ProfissionalCompletions[]
 ): ProfissionalResponseDTO[] {
   return profissionais.map(toProfissionalResponseDTO)
 }

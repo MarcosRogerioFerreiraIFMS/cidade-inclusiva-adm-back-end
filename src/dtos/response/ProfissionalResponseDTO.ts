@@ -7,5 +7,6 @@ export interface ProfissionalResponseDTO {
   telefone: string
   email: string
   especialidade: string
-  comentarios?: ComentarioResponseDTO[]
+  criadoEm: Date
+  comentarios: ComentarioResponseDTO[]
 }

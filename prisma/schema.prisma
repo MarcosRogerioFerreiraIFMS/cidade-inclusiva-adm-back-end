@@ -23,26 +23,74 @@ model Profissional {
   id            String                    @id @default(uuid())
   nome          String
   foto          String?
-  telefone      String
+  telefone      String                    @unique
   email         String                    @unique
   especialidade EspecialidadeProfissional
-  comentarios   Comentario[]              @relation("ProfissionalComentarios")
+  comentarios   Comentario[]
   criadoEm      DateTime                  @default(now())
   atualizadoEm  DateTime                  @updatedAt
 }
 
-model Comentario {
-  id           String        @id @default(uuid())
-  likes        Int           @default(0)
-  conteudo     String
-  visivel      Boolean       @default(true)
-  entidadeId   String
-  entidadeTipo TipoEntidade
-  profissional Profissional? @relation("ProfissionalComentarios", fields: [entidadeId], references: [id], onDelete: Cascade)
-  criadoEm     DateTime      @default(now())
-  atualizadoEm DateTime      @updatedAt
+model Usuario {
+  id               String       @id @default(uuid())
+  nome             String
+  telefone         String       @unique
+  foto             String?
+  email            String       @unique
+  senha            String
+  endereco         Endereco?
+  comentarios      Comentario[]
+  likesComentarios Like[]
+  criadoEm         DateTime     @default(now())
+  atualizadoEm     DateTime     @updatedAt
+}
 
-  @@index([entidadeId, entidadeTipo])
+model Endereco {
+  id           String   @id @default(uuid())
+  logradouro   String
+  numero       String
+  complemento  String?
+  cidade       String
+  bairro       String
+  cep          String
+  estado       String
+  pais         String   @default("Brasil")
+  usuarioId    String   @unique
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+}
+
+model Comentario {
+  id       String  @id @default(uuid())
+  conteudo String
+  visivel  Boolean @default(true)
+
+  usuarioId String
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  profissionalId String?
+  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Cascade)
+
+  likesUsuarios Like[]
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([usuarioId])
+  @@index([profissionalId])
+}
+
+model Like {
+  id           String     @id @default(uuid())
+  usuarioId    String
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  comentarioId String
+  comentario   Comentario @relation(fields: [comentarioId], references: [id], onDelete: Cascade)
+  criadoEm     DateTime   @default(now())
+
+  @@unique([usuarioId, comentarioId])
+  @@index([comentarioId])
 }
 
 enum CategoriaNoticia {
@@ -68,8 +116,4 @@ enum EspecialidadeProfissional {
   FISIOTERAPEUTA
   PSICOLOGO
   OUTROS
-}
-
-enum TipoEntidade {
-  PROFISSIONAL
 }

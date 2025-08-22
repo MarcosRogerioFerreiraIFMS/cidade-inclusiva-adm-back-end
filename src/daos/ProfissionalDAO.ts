@@ -1,4 +1,3 @@
-import { Comentario, Profissional } from '@prisma/client'
 import { ProfissionalCreateDTO } from '../dtos/create/ProfissionalCreateDTO'
 import { ProfissionalUpdateDTO } from '../dtos/update/ProfissionalUpdateDTO'
 import {
@@ -7,16 +6,21 @@ import {
 } from '../helpers/generateDataProfissional'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
 import { db } from '../lib/prisma'
+import { ProfissionalCompletions } from '../types/ProfissionalTypes'
 
 export class ProfissionalDAO implements IProfissionalAccess {
-  async create(data: ProfissionalCreateDTO): Promise<Profissional> {
+  async create(data: ProfissionalCreateDTO): Promise<ProfissionalCompletions> {
     try {
       const dataToCreate = generateDataProfissionalCreate(data)
 
       const profissional = await db.profissional.create({
         data: dataToCreate,
         include: {
-          comentarios: true
+          comentarios: {
+            include: {
+              likesUsuarios: true
+            }
+          }
         }
       })
 
@@ -27,9 +31,7 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findById(
-    id: string
-  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
+  async findById(id: string): Promise<ProfissionalCompletions | null> {
     try {
       return await db.profissional.findUnique({
         where: { id },
@@ -37,6 +39,9 @@ export class ProfissionalDAO implements IProfissionalAccess {
           comentarios: {
             orderBy: {
               criadoEm: 'desc'
+            },
+            include: {
+              likesUsuarios: true
             }
           }
         }
@@ -47,9 +52,7 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findByEmail(
-    email: string
-  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
+  async findByEmail(email: string): Promise<ProfissionalCompletions | null> {
     try {
       return await db.profissional.findUnique({
         where: { email },
@@ -57,6 +60,9 @@ export class ProfissionalDAO implements IProfissionalAccess {
           comentarios: {
             orderBy: {
               criadoEm: 'desc'
+            },
+            include: {
+              likesUsuarios: true
             }
           }
         }
@@ -67,10 +73,33 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
+  async findByTelefone(
+    telefone: string
+  ): Promise<ProfissionalCompletions | null> {
+    try {
+      return await db.profissional.findUnique({
+        where: { telefone },
+        include: {
+          comentarios: {
+            orderBy: {
+              criadoEm: 'desc'
+            },
+            include: {
+              likesUsuarios: true
+            }
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Erro ao buscar profissional por telefone:', error)
+      throw error
+    }
+  }
+
   async update(
     id: string,
     data: ProfissionalUpdateDTO
-  ): Promise<Profissional & { comentarios: Comentario[] }> {
+  ): Promise<ProfissionalCompletions> {
     try {
       const dataToUpdate = generateDataProfissionalUpdate(data)
 
@@ -81,6 +110,9 @@ export class ProfissionalDAO implements IProfissionalAccess {
           comentarios: {
             orderBy: {
               criadoEm: 'desc'
+            },
+            include: {
+              likesUsuarios: true
             }
           }
         }
@@ -102,13 +134,16 @@ export class ProfissionalDAO implements IProfissionalAccess {
     }
   }
 
-  async findAll(): Promise<(Profissional & { comentarios: Comentario[] })[]> {
+  async findAll(): Promise<ProfissionalCompletions[]> {
     try {
       return await db.profissional.findMany({
         include: {
           comentarios: {
             orderBy: {
               criadoEm: 'desc'
+            },
+            include: {
+              likesUsuarios: true
             }
           }
         },

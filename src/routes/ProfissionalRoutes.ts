@@ -25,6 +25,7 @@ ProfissionalRoutes.get(
 ProfissionalRoutes.put(
   '/:id',
   validateUUID('id'),
+  validateRequiredBody([]),
   ProfissionalDependencies.controller.update
 )
 

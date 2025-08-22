@@ -1,4 +1,3 @@
-import { TipoEntidade } from '@prisma/client'
 import { z } from 'zod'
 import { sanitizeContent } from '../utils/stringUtils'
 
@@ -13,87 +12,69 @@ export const createComentarioSchema = z.object({
     })
     .transform(sanitizeContent)
     .refine((val) => val.length >= CONTEUDO_MIN_LENGTH, {
-      message: `O conteúdo deve ter pelo menos ${CONTEUDO_MIN_LENGTH} caracteres.`
+      message: `O conteúdo deve ter pelo menos ${CONTEUDO_MIN_LENGTH} caractere.`
     })
     .refine((val) => val.length <= CONTEUDO_MAX_LENGTH, {
       message: `O conteúdo deve ter no máximo ${CONTEUDO_MAX_LENGTH} caracteres.`
+    })
+    .refine((val) => val.trim().length > 0, {
+      message: 'O conteúdo não pode estar vazio ou conter apenas espaços.'
+    })
+    .refine((val) => !/^\s*$/.test(val), {
+      message: 'O conteúdo deve conter pelo menos um caractere não nulo.'
     }),
 
-  entidadeId: z
+  usuarioId: z
     .string({
-      required_error: 'O ID da entidade é obrigatório.',
-      invalid_type_error: 'O ID da entidade deve ser uma string.'
+      required_error: 'O ID do usuário é obrigatório.',
+      invalid_type_error: 'O ID do usuário deve ser uma string.'
     })
-    .uuid('O ID da entidade deve ser um UUID válido.'),
+    .trim()
+    .uuid(
+      'O ID do usuário deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
+    ),
 
-  entidadeTipo: z
+  profissionalId: z
     .string({
-      required_error: 'O tipo da entidade é obrigatório.',
-      invalid_type_error: 'O tipo da entidade deve ser uma string.'
+      required_error: 'O ID do profissional é obrigatório.',
+      invalid_type_error: 'O ID do profissional deve ser uma string.'
     })
-    .min(1, 'O tipo da entidade não pode estar vazio.')
-    .transform((val) => val.trim().toUpperCase())
-    .refine(
-      (val) => Object.values(TipoEntidade).includes(val as TipoEntidade),
-      {
-        message: `Tipo de entidade inválido. Valores aceitos: ${Object.values(
-          TipoEntidade
-        ).join(', ')}`
-      }
-    )
-    .transform((val) => val as TipoEntidade),
-
-  likes: z
-    .number({ invalid_type_error: 'Os likes devem ser um número.' })
-    .int('Os likes devem ser um número inteiro.')
-    .min(0, 'Os likes não podem ser negativos.')
-    .optional()
-    .default(0),
+    .trim()
+    .uuid(
+      'O ID do profissional deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
+    ),
 
   visivel: z
-    .boolean({ invalid_type_error: 'Visível deve ser um valor booleano.' })
+    .boolean({
+      invalid_type_error: 'Visível deve ser um valor booleano (true ou false).'
+    })
     .optional()
     .default(true)
 })
 
 export const updateComentarioSchema = z.object({
   conteudo: z
-    .string({ invalid_type_error: 'O conteúdo deve ser uma string.' })
+    .string({
+      invalid_type_error: 'O conteúdo deve ser uma string.'
+    })
     .transform(sanitizeContent)
     .refine((val) => val.length >= CONTEUDO_MIN_LENGTH, {
-      message: `O conteúdo deve ter pelo menos ${CONTEUDO_MIN_LENGTH} caracteres.`
+      message: `O conteúdo deve ter pelo menos ${CONTEUDO_MIN_LENGTH} caractere.`
     })
     .refine((val) => val.length <= CONTEUDO_MAX_LENGTH, {
       message: `O conteúdo deve ter no máximo ${CONTEUDO_MAX_LENGTH} caracteres.`
     })
-    .optional(),
-
-  likes: z
-    .number({ invalid_type_error: 'Os likes devem ser um número.' })
-    .int('Os likes devem ser um número inteiro.')
-    .min(0, 'Os likes não podem ser negativos.')
+    .refine((val) => val.trim().length > 0, {
+      message: 'O conteúdo não pode estar vazio ou conter apenas espaços.'
+    })
+    .refine((val) => !/^\s*$/.test(val), {
+      message: 'O conteúdo deve conter pelo menos um caractere não nulo.'
+    })
     .optional(),
 
   visivel: z
-    .boolean({ invalid_type_error: 'Visível deve ser um valor booleano.' })
-    .optional()
-})
-
-export const validateEntidadeTipoComentarioSchema = z.object({
-  entidadeTipo: z
-    .string({
-      required_error: 'O tipo da entidade é obrigatório.',
-      invalid_type_error: 'O tipo da entidade deve ser uma string.'
+    .boolean({
+      invalid_type_error: 'Visível deve ser um valor booleano (true ou false).'
     })
-    .min(1, 'O tipo da entidade não pode estar vazio.')
-    .transform((val) => val.trim().toUpperCase())
-    .refine(
-      (val) => Object.values(TipoEntidade).includes(val as TipoEntidade),
-      {
-        message: `Tipo de entidade inválido. Valores aceitos: ${Object.values(
-          TipoEntidade
-        ).join(', ')}`
-      }
-    )
-    .transform((val) => val as TipoEntidade)
+    .optional()
 })

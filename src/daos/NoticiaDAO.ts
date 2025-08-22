@@ -1,4 +1,3 @@
-import { Noticia } from '@prisma/client'
 import { NoticiaCreateDTO } from '../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../dtos/update/NoticiaUpdateDTO'
 import {
@@ -7,9 +6,10 @@ import {
 } from '../helpers/generateDataNoticia'
 import { INoticiaAccess } from '../interfaces/access/INoticiaAccess'
 import { db } from '../lib/prisma'
+import { NoticiaCompletions } from '../types/NoticiaTypes'
 
 export class NoticiaDAO implements INoticiaAccess {
-  async create(data: NoticiaCreateDTO): Promise<Noticia> {
+  async create(data: NoticiaCreateDTO): Promise<NoticiaCompletions> {
     try {
       const dataToCreate = generateDataNoticiaCreate(data)
 
@@ -24,7 +24,7 @@ export class NoticiaDAO implements INoticiaAccess {
     }
   }
 
-  async findById(id: string): Promise<Noticia | null> {
+  async findById(id: string): Promise<NoticiaCompletions | null> {
     try {
       return await db.noticia.findUnique({
         where: { id }
@@ -35,7 +35,10 @@ export class NoticiaDAO implements INoticiaAccess {
     }
   }
 
-  async update(id: string, data: NoticiaUpdateDTO): Promise<Noticia> {
+  async update(
+    id: string,
+    data: NoticiaUpdateDTO
+  ): Promise<NoticiaCompletions> {
     try {
       const dataToUpdate = generateDataNoticiaUpdate(data)
 
@@ -60,7 +63,7 @@ export class NoticiaDAO implements INoticiaAccess {
     }
   }
 
-  async findAll(): Promise<Noticia[]> {
+  async findAll(): Promise<NoticiaCompletions[]> {
     try {
       return await db.noticia.findMany({
         orderBy: {

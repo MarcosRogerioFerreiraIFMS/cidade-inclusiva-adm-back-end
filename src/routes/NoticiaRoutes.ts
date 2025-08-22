@@ -24,6 +24,7 @@ NoticiaRoutes.get(
 NoticiaRoutes.put(
   '/:id',
   validateUUID('id'),
+  validateRequiredBody([]),
   NoticiaDependencies.controller.update
 )
 

@@ -10,7 +10,7 @@ const ComentarioRoutes = Router()
 
 ComentarioRoutes.post(
   '/',
-  validateRequiredBody(['conteudo', 'entidadeId', 'entidadeTipo']),
+  validateRequiredBody(['conteudo', 'usuarioId', 'profissionalId']),
   ComentarioDependencies.controller.create
 )
 
@@ -25,6 +25,7 @@ ComentarioRoutes.get(
 ComentarioRoutes.put(
   '/:id',
   validateUUID('id'),
+  validateRequiredBody([]),
   ComentarioDependencies.controller.update
 )
 
@@ -35,27 +36,15 @@ ComentarioRoutes.delete(
 )
 
 ComentarioRoutes.get(
-  '/entidade/:entidadeId/:entidadeTipo',
-  validateUUID('entidadeId'),
-  ComentarioDependencies.controller.findByEntidade
+  '/profissional/:profissionalId',
+  validateUUID('profissionalId'),
+  ComentarioDependencies.controller.findByProfissional
 )
 
 ComentarioRoutes.get(
-  '/entidade/:entidadeId/:entidadeTipo/visiveis',
-  validateUUID('entidadeId'),
-  ComentarioDependencies.controller.findVisibleByEntidade
-)
-
-ComentarioRoutes.patch(
-  '/:id/likes/increment',
-  validateUUID('id'),
-  ComentarioDependencies.controller.incrementLikes
-)
-
-ComentarioRoutes.patch(
-  '/:id/likes/decrement',
-  validateUUID('id'),
-  ComentarioDependencies.controller.decrementLikes
+  '/profissional/:profissionalId/visiveis',
+  validateUUID('profissionalId'),
+  ComentarioDependencies.controller.findVisibleByProfissional
 )
 
 export { ComentarioRoutes }

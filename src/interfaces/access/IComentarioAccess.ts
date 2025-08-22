@@ -1,21 +1,15 @@
-import { Comentario } from '@prisma/client'
 import { ComentarioCreateDTO } from '../../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../../dtos/update/ComentarioUpdateDTO'
+import { ComentarioCompletions } from '../../types/ComentarioTypes'
 
 export interface IComentarioAccess {
-  create(data: ComentarioCreateDTO): Promise<Comentario>
-  findById(id: string): Promise<Comentario | null>
-  update(id: string, data: ComentarioUpdateDTO): Promise<Comentario>
+  create(data: ComentarioCreateDTO): Promise<ComentarioCompletions>
+  findById(id: string): Promise<ComentarioCompletions | null>
+  update(id: string, data: ComentarioUpdateDTO): Promise<ComentarioCompletions>
   delete(id: string): Promise<void>
-  findAll(): Promise<Comentario[]>
-  findByEntidade(
-    entidadeId: string,
-    entidadeTipo: string
-  ): Promise<Comentario[]>
-  findVisibleByEntidade(
-    entidadeId: string,
-    entidadeTipo: string
-  ): Promise<Comentario[]>
-  incrementLikes(id: string): Promise<Comentario>
-  decrementLikes(id: string): Promise<Comentario>
+  findAll(): Promise<ComentarioCompletions[]>
+  findByProfissional(profissionalId: string): Promise<ComentarioCompletions[]>
+  findVisibleByProfissional(
+    profissionalId: string
+  ): Promise<ComentarioCompletions[]>
 }

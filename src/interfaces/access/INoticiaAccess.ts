@@ -1,11 +1,11 @@
-import { Noticia } from '@prisma/client'
 import { NoticiaCreateDTO } from '../../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../../dtos/update/NoticiaUpdateDTO'
+import { NoticiaCompletions } from '../../types/NoticiaTypes'
 
 export interface INoticiaAccess {
-  create(data: NoticiaCreateDTO): Promise<Noticia>
-  findById(id: string): Promise<Noticia | null>
-  update(id: string, data: NoticiaUpdateDTO): Promise<Noticia>
+  create(data: NoticiaCreateDTO): Promise<NoticiaCompletions>
+  findById(id: string): Promise<NoticiaCompletions | null>
+  update(id: string, data: NoticiaUpdateDTO): Promise<NoticiaCompletions>
   delete(id: string): Promise<void>
-  findAll(): Promise<Noticia[]>
+  findAll(): Promise<NoticiaCompletions[]>
 }

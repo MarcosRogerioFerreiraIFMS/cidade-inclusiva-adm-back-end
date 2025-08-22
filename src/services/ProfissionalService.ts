@@ -1,5 +1,4 @@
 import { ProfissionalResponseDTO } from '../dtos/response/ProfissionalResponseDTO'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
 import { IProfissionalService } from '../interfaces/services/IProfissionalService'
 import {
@@ -10,7 +9,7 @@ import {
   toProfissionaisResponseDTO,
   toProfissionalResponseDTO
 } from '../mappers/output/profissionalOutputMapper'
-import { HttpError } from '../utils/HttpError'
+import { throwIfAlreadyExists, throwIfNotFound } from '../utils/entityValidator'
 
 export class ProfissionalService implements IProfissionalService {
   constructor(private profissionalRepository: IProfissionalAccess) {}
@@ -18,16 +17,17 @@ export class ProfissionalService implements IProfissionalService {
   async create(data: unknown): Promise<ProfissionalResponseDTO> {
     const profissionalData = await toCreateProfissionalDTO(data)
 
-    const existingProfissional = await this.profissionalRepository.findByEmail(
-      profissionalData.email
+    throwIfAlreadyExists(
+      await this.profissionalRepository.findByEmail(profissionalData.email),
+      'Já existe um profissional cadastrado com este email.'
     )
 
-    if (existingProfissional) {
-      throw new HttpError(
-        'Já existe um profissional cadastrado com este email.',
-        HttpStatusCode.CONFLICT
-      )
-    }
+    throwIfAlreadyExists(
+      await this.profissionalRepository.findByTelefone(
+        profissionalData.telefone
+      ),
+      'Já existe um profissional cadastrado com este telefone.'
+    )
 
     const profissional = await this.profissionalRepository.create(
       profissionalData
@@ -37,26 +37,19 @@ export class ProfissionalService implements IProfissionalService {
   }
 
   async findById(id: string): Promise<ProfissionalResponseDTO> {
-    const profissional = await this.profissionalRepository.findById(id)
-
-    if (!profissional) {
-      throw new HttpError(
-        'Profissional não encontrado.',
-        HttpStatusCode.NOT_FOUND
-      )
-    }
+    const profissional = throwIfNotFound(
+      await this.profissionalRepository.findById(id),
+      'Profissional não encontrado.'
+    )
 
     return toProfissionalResponseDTO(profissional)
   }
 
   async update(id: string, data: unknown): Promise<ProfissionalResponseDTO> {
-    const existingProfissional = await this.profissionalRepository.findById(id)
-    if (!existingProfissional) {
-      throw new HttpError(
-        'Profissional não encontrado.',
-        HttpStatusCode.NOT_FOUND
-      )
-    }
+    const existingProfissional = throwIfNotFound(
+      await this.profissionalRepository.findById(id),
+      'Profissional não encontrado.'
+    )
 
     const updateData = await toUpdateProfissionalDTO(data)
 
@@ -65,11 +58,21 @@ export class ProfissionalService implements IProfissionalService {
         await this.profissionalRepository.findByEmail(updateData.email)
 
       if (profissionalWithEmail && profissionalWithEmail.id !== id) {
-        throw new HttpError(
-          'Já existe um profissional cadastrado com este email.',
-          HttpStatusCode.CONFLICT
+        throwIfAlreadyExists(
+          profissionalWithEmail,
+          'Já existe um profissional cadastrado com este email.'
         )
       }
+    }
+
+    if (
+      updateData.telefone &&
+      updateData.telefone !== existingProfissional.telefone
+    ) {
+      throwIfAlreadyExists(
+        await this.profissionalRepository.findByTelefone(updateData.telefone),
+        'Já existe um profissional cadastrado com este telefone.'
+      )
     }
 
     const profissional = await this.profissionalRepository.update(
@@ -81,13 +84,10 @@ export class ProfissionalService implements IProfissionalService {
   }
 
   async delete(id: string): Promise<void> {
-    const profissional = await this.profissionalRepository.findById(id)
-    if (!profissional) {
-      throw new HttpError(
-        'Profissional não encontrado.',
-        HttpStatusCode.NOT_FOUND
-      )
-    }
+    throwIfNotFound(
+      await this.profissionalRepository.findById(id),
+      'Profissional não encontrado.'
+    )
 
     await this.profissionalRepository.delete(id)
   }

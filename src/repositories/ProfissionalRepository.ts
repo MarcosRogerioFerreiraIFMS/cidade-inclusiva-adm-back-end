@@ -1,7 +1,7 @@
-import { Comentario, Profissional } from '@prisma/client'
 import { ProfissionalCreateDTO } from '../dtos/create/ProfissionalCreateDTO'
 import { ProfissionalUpdateDTO } from '../dtos/update/ProfissionalUpdateDTO'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
+import { ProfissionalCompletions } from '../types/ProfissionalTypes'
 
 export class ProfissionalRepository implements IProfissionalAccess {
   private dao: IProfissionalAccess
@@ -10,26 +10,28 @@ export class ProfissionalRepository implements IProfissionalAccess {
     this.dao = dao
   }
 
-  async create(data: ProfissionalCreateDTO): Promise<Profissional> {
+  async create(data: ProfissionalCreateDTO): Promise<ProfissionalCompletions> {
     return await this.dao.create(data)
   }
 
-  async findById(
-    id: string
-  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
+  async findById(id: string): Promise<ProfissionalCompletions | null> {
     return await this.dao.findById(id)
   }
 
-  async findByEmail(
-    email: string
-  ): Promise<(Profissional & { comentarios: Comentario[] }) | null> {
+  async findByEmail(email: string): Promise<ProfissionalCompletions | null> {
     return await this.dao.findByEmail(email)
+  }
+
+  async findByTelefone(
+    telefone: string
+  ): Promise<ProfissionalCompletions | null> {
+    return await this.dao.findByTelefone(telefone)
   }
 
   async update(
     id: string,
     data: ProfissionalUpdateDTO
-  ): Promise<Profissional & { comentarios: Comentario[] }> {
+  ): Promise<ProfissionalCompletions> {
     return await this.dao.update(id, data)
   }
 
@@ -37,7 +39,7 @@ export class ProfissionalRepository implements IProfissionalAccess {
     return await this.dao.delete(id)
   }
 
-  async findAll(): Promise<(Profissional & { comentarios: Comentario[] })[]> {
+  async findAll(): Promise<ProfissionalCompletions[]> {
     return await this.dao.findAll()
   }
 }

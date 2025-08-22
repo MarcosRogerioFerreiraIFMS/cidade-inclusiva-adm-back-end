@@ -1,9 +1,10 @@
 export interface NoticiaResponseDTO {
   id: string
-  foto: string
+  foto?: string
   titulo: string
   conteudo: string
-  url: string
+  url?: string
   dataPublicacao: Date
   categoria: string
+  criadoEm: Date
 }

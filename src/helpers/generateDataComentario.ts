@@ -1,50 +1,42 @@
-import { Prisma, TipoEntidade } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
-interface ComentarioData {
+export const generateDataComentarioCreate = (data: {
   conteudo: string
-  entidadeId: string
-  entidadeTipo: TipoEntidade
-  likes?: number
   visivel?: boolean
-}
-
-export function generateDataComentarioCreate({
-  conteudo,
-  entidadeId,
-  entidadeTipo,
-  likes = 0,
-  visivel = true
-}: ComentarioData): Prisma.ComentarioCreateInput {
-  const associacao =
-    entidadeTipo === 'PROFISSIONAL'
-      ? { profissional: { connect: { id: entidadeId } } }
-      : {}
-
+  usuarioId: string
+  profissionalId: string
+}): Prisma.ComentarioCreateInput => {
   return {
-    conteudo,
-    entidadeTipo,
-    likes,
-    visivel,
-    ...associacao
+    conteudo: data.conteudo,
+    visivel: data.visivel ?? true,
+    usuario: {
+      connect: {
+        id: data.usuarioId
+      }
+    },
+    profissional: {
+      connect: {
+        id: data.profissionalId
+      }
+    }
   }
 }
 
-export function generateDataComentarioUpdate({
-  conteudo,
-  likes,
-  visivel
-}: Partial<ComentarioData>): Prisma.ComentarioUpdateInput {
-  const dataToUpdate: Prisma.ComentarioUpdateInput = {}
+export const generateDataComentarioUpdate = (data: {
+  conteudo?: string
+  visivel?: boolean
+}): Partial<Prisma.ComentarioUpdateInput> => {
+  const dataToUpdate: Partial<Prisma.ComentarioUpdateInput> = {}
 
-  if (conteudo !== undefined) {
-    dataToUpdate.conteudo = conteudo
+  if (data.conteudo !== undefined) {
+    dataToUpdate.conteudo = data.conteudo
   }
-  if (likes !== undefined) {
-    dataToUpdate.likes = likes
+
+  if (data.visivel !== undefined) {
+    dataToUpdate.visivel = data.visivel
   }
-  if (visivel !== undefined) {
-    dataToUpdate.visivel = visivel
-  }
+
+  dataToUpdate.atualizadoEm = new Date()
 
   return dataToUpdate
 }

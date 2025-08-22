@@ -1,8 +1,7 @@
 import {
   CategoriaNoticia,
   EspecialidadeProfissional,
-  PrismaClient,
-  TipoEntidade
+  PrismaClient
 } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -13,13 +12,120 @@ async function main() {
   try {
     // Limpar dados existentes na ordem correta (respeitando foreign keys)
     console.log('🧹 Limpando dados existentes...')
+    await prisma.like.deleteMany()
     await prisma.comentario.deleteMany()
+    await prisma.endereco.deleteMany()
+    await prisma.usuario.deleteMany()
     await prisma.profissional.deleteMany()
     await prisma.noticia.deleteMany()
 
     console.log('✅ Dados existentes removidos com sucesso!')
 
-    // Criar profissionais primeiro (para poder criar comentários depois)
+    // Criar usuários com endereços (relação 1:1)
+    console.log('👤 Criando usuários com endereços...')
+    const usuariosData = [
+      {
+        nome: 'João Silva',
+        telefone: '11999887766',
+        foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+        email: 'joao.silva@email.com',
+        senha: 'senha123',
+        endereco: {
+          logradouro: 'Rua das Flores',
+          numero: '123',
+          complemento: 'Apt 45',
+          cidade: 'São Paulo',
+          bairro: 'Vila Madalena',
+          cep: '05435-050',
+          estado: 'SP'
+        }
+      },
+      {
+        nome: 'Maria Santos',
+        telefone: '11988776655',
+        foto: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=400&h=400&fit=crop&crop=face',
+        email: 'maria.santos@email.com',
+        senha: 'senha123',
+        endereco: {
+          logradouro: 'Avenida Paulista',
+          numero: '1000',
+          cidade: 'São Paulo',
+          bairro: 'Bela Vista',
+          cep: '01310-100',
+          estado: 'SP'
+        }
+      },
+      {
+        nome: 'Pedro Oliveira',
+        telefone: '11977665544',
+        foto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+        email: 'pedro.oliveira@email.com',
+        senha: 'senha123',
+        endereco: {
+          logradouro: 'Rua Oscar Freire',
+          numero: '500',
+          complemento: 'Casa',
+          cidade: 'São Paulo',
+          bairro: 'Jardins',
+          cep: '01426-001',
+          estado: 'SP'
+        }
+      },
+      {
+        nome: 'Ana Costa',
+        telefone: '11966554433',
+        foto: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+        email: 'ana.costa@email.com',
+        senha: 'senha123',
+        endereco: {
+          logradouro: 'Rua Augusta',
+          numero: '750',
+          cidade: 'São Paulo',
+          bairro: 'Consolação',
+          cep: '01305-100',
+          estado: 'SP'
+        }
+      },
+      {
+        nome: 'Carlos Pereira',
+        telefone: '11955443322',
+        foto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+        email: 'carlos.pereira@email.com',
+        senha: 'senha123',
+        endereco: {
+          logradouro: 'Avenida Ibirapuera',
+          numero: '2000',
+          complemento: 'Bloco B',
+          cidade: 'São Paulo',
+          bairro: 'Ibirapuera',
+          cep: '04029-200',
+          estado: 'SP'
+        }
+      }
+    ]
+
+    const usuarios = []
+    for (const usuarioData of usuariosData) {
+      const usuario = await prisma.usuario.create({
+        data: {
+          nome: usuarioData.nome,
+          telefone: usuarioData.telefone,
+          foto: usuarioData.foto,
+          email: usuarioData.email,
+          senha: usuarioData.senha,
+          endereco: {
+            create: usuarioData.endereco
+          }
+        },
+        include: {
+          endereco: true
+        }
+      })
+      usuarios.push(usuario)
+    }
+    console.log(`✅ ${usuarios.length} usuários criados!`)
+
+    // Criar profissionais
     console.log('👥 Criando profissionais...')
     const profissionais = await prisma.profissional.createMany({
       data: [
@@ -196,94 +302,136 @@ async function main() {
     })
     console.log(`✅ ${noticias.count} notícias criadas!`)
 
-    // Criar comentários para os profissionais
+    // Criar comentários dos usuários para os profissionais
     console.log('💬 Criando comentários...')
-    const comentarios = []
-
-    // Comentários variados e realistas para cada profissional
     const comentariosData = [
       {
         conteudo:
-          'Excelente profissional! Muito atenciosa e competente. Recomendo!',
-        likes: 15,
-        profissionalIndex: 0
+          'Excelente profissional! Dr. Ana sempre muito atenciosa e competente. Recomendo!',
+        usuarioId: usuarios[0].id,
+        profissionalId: profissionaisCriados[0].id
       },
       {
         conteudo:
-          'Dr. Ana sempre muito cuidadosa com os pacientes. Consulta muito esclarecedora.',
-        likes: 23,
-        profissionalIndex: 0
+          'Consulta muito esclarecedora com a Dr. Ana. Tirou todas as minhas dúvidas.',
+        usuarioId: usuarios[1].id,
+        profissionalId: profissionaisCriados[0].id
       },
       {
         conteudo: 'Maria é uma cuidadora excepcional. Minha mãe adora ela!',
-        likes: 18,
-        profissionalIndex: 1
+        usuarioId: usuarios[2].id,
+        profissionalId: profissionaisCriados[1].id
       },
       {
         conteudo:
           'Profissional muito dedicada e carinhosa. Super recomendo seus serviços.',
-        likes: 12,
-        profissionalIndex: 1
+        usuarioId: usuarios[3].id,
+        profissionalId: profissionaisCriados[1].id
       },
       {
         conteudo:
           'Dr. Carlos me ajudou muito na recuperação. Fisioterapeuta muito competente.',
-        likes: 20,
-        profissionalIndex: 2
+        usuarioId: usuarios[4].id,
+        profissionalId: profissionaisCriados[2].id
       },
       {
         conteudo:
           'Sessões muito eficazes! Já sinto grande melhora na mobilidade.',
-        likes: 16,
-        profissionalIndex: 2
+        usuarioId: usuarios[0].id,
+        profissionalId: profissionaisCriados[2].id
       },
       {
         conteudo:
           'Dra. Beatriz é uma psicóloga incrível. Me ajudou muito a superar dificuldades.',
-        likes: 25,
-        profissionalIndex: 3
+        usuarioId: usuarios[1].id,
+        profissionalId: profissionaisCriados[3].id
       },
       {
         conteudo:
           'Terapia muito eficaz e acolhedora. Profissional muito humana.',
-        likes: 19,
-        profissionalIndex: 3
+        usuarioId: usuarios[2].id,
+        profissionalId: profissionaisCriados[3].id
       },
       {
         conteudo:
           'Enfermeira Juliana é muito atenciosa e profissional. Cuidados excelentes!',
-        likes: 14,
-        profissionalIndex: 4
+        usuarioId: usuarios[3].id,
+        profissionalId: profissionaisCriados[4].id
       },
       {
         conteudo:
           'Rosa é uma secretária do lar muito organizada e responsável.',
-        likes: 11,
-        profissionalIndex: 5
+        usuarioId: usuarios[4].id,
+        profissionalId: profissionaisCriados[5].id
+      },
+      {
+        conteudo:
+          'Ótimo atendimento da Rosa. Ela é muito prestativa e cuidadosa.',
+        usuarioId: usuarios[0].id,
+        profissionalId: profissionaisCriados[5].id
+      },
+      {
+        conteudo:
+          'Recomendo muito o trabalho da Enfermeira Juliana. Muito profissional!',
+        usuarioId: usuarios[1].id,
+        profissionalId: profissionaisCriados[4].id
       }
     ]
 
+    const comentarios = []
     for (const comentarioData of comentariosData) {
-      comentarios.push({
-        conteudo: comentarioData.conteudo,
-        likes: comentarioData.likes,
-        entidadeId: profissionaisCriados[comentarioData.profissionalIndex].id,
-        entidadeTipo: TipoEntidade.PROFISSIONAL,
-        visivel: true
+      const comentario = await prisma.comentario.create({
+        data: comentarioData
       })
+      comentarios.push(comentario)
+    }
+    console.log(`✅ ${comentarios.length} comentários criados!`)
+
+    // Criar likes nos comentários
+    console.log('👍 Criando likes nos comentários...')
+    const likesData = []
+
+    // Gerar likes aleatórios (cada usuário pode dar like em vários comentários, mas só uma vez por comentário)
+    for (let i = 0; i < comentarios.length; i++) {
+      const comentario = comentarios[i]
+
+      // Adicionar entre 1-4 likes por comentário
+      const numLikes = Math.floor(Math.random() * 4) + 1
+      const usuariosQueJaDeuramLike = new Set()
+
+      for (let j = 0; j < numLikes; j++) {
+        let usuarioAleatorio
+        do {
+          usuarioAleatorio =
+            usuarios[Math.floor(Math.random() * usuarios.length)]
+        } while (usuariosQueJaDeuramLike.has(usuarioAleatorio.id))
+
+        usuariosQueJaDeuramLike.add(usuarioAleatorio.id)
+
+        likesData.push({
+          usuarioId: usuarioAleatorio.id,
+          comentarioId: comentario.id
+        })
+      }
     }
 
-    const comentariosCriados = await prisma.comentario.createMany({
-      data: comentarios
-    })
-    console.log(`✅ ${comentariosCriados.count} comentários criados!`)
+    // Criar os likes
+    for (const likeData of likesData) {
+      await prisma.like.create({
+        data: likeData
+      })
+    }
+    console.log(`✅ ${likesData.length} likes criados!`)
 
     // Resumo final
     console.log('\n🎉 Seed concluído com sucesso!')
     console.log('📊 Resumo dos dados criados:')
+    console.log(`   👤 Usuários: ${usuarios.length}`)
+    console.log(`   🏠 Endereços: ${usuarios.length}`)
     console.log(`   👥 Profissionais: ${profissionais.count}`)
     console.log(`   📰 Notícias: ${noticias.count}`)
-    console.log(`   💬 Comentários: ${comentariosCriados.count}`)
+    console.log(`   💬 Comentários: ${comentarios.length}`)
+    console.log(`   👍 Likes: ${likesData.length}`)
     console.log('\n✨ Banco de dados populado e pronto para uso!')
   } catch (error) {
     console.error('❌ Erro durante o seed:', error)

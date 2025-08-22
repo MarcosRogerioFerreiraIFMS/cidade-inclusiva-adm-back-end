@@ -1,10 +1,12 @@
+import { LikeResponseDTO } from './LikeResponseDTO'
+
 export interface ComentarioResponseDTO {
   id: string
-  likes: number
   conteudo: string
   visivel: boolean
-  entidadeId: string
-  entidadeTipo: string
+  usuarioId: string
+  profissionalId?: string
   criadoEm: Date
   atualizadoEm: Date
+  likes: LikeResponseDTO[]
 }

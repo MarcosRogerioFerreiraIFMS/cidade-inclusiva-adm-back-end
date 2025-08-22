@@ -1,5 +1,4 @@
 import { NoticiaResponseDTO } from '../dtos/response/NoticiaResponseDTO'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { INoticiaAccess } from '../interfaces/access/INoticiaAccess'
 import { INoticiaService } from '../interfaces/services/INoticiaService'
 import {
@@ -10,7 +9,7 @@ import {
   toNoticiaResponseDTO,
   toNoticiasResponseDTO
 } from '../mappers/output/noticiaOutputMapper'
-import { HttpError } from '../utils/HttpError'
+import { throwIfNotFound } from '../utils/entityValidator'
 
 export class NoticiaService implements INoticiaService {
   constructor(private noticiaRepository: INoticiaAccess) {}
@@ -22,20 +21,19 @@ export class NoticiaService implements INoticiaService {
   }
 
   async findById(id: string): Promise<NoticiaResponseDTO> {
-    const noticia = await this.noticiaRepository.findById(id)
-
-    if (!noticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
-    }
+    const noticia = throwIfNotFound(
+      await this.noticiaRepository.findById(id),
+      'Notícia não encontrada.'
+    )
 
     return toNoticiaResponseDTO(noticia)
   }
 
   async update(id: string, data: unknown): Promise<NoticiaResponseDTO> {
-    const existingNoticia = await this.noticiaRepository.findById(id)
-    if (!existingNoticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
-    }
+    throwIfNotFound(
+      await this.noticiaRepository.findById(id),
+      'Notícia não encontrada.'
+    )
 
     const noticia = await this.noticiaRepository.update(
       id,
@@ -46,10 +44,10 @@ export class NoticiaService implements INoticiaService {
   }
 
   async delete(id: string): Promise<void> {
-    const noticia = await this.noticiaRepository.findById(id)
-    if (!noticia) {
-      throw new HttpError('Notícia não encontrada.', HttpStatusCode.NOT_FOUND)
-    }
+    throwIfNotFound(
+      await this.noticiaRepository.findById(id),
+      'Notícia não encontrada.'
+    )
 
     await this.noticiaRepository.delete(id)
   }

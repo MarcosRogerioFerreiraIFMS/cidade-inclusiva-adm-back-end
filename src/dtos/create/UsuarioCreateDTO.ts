@@ -1,17 +1,4 @@
-export interface UsuarioCreateDTO {
-  nome: string
-  telefone: string
-  foto?: string
-  email: string
-  senha: string
-  endereco: {
-    logradouro: string
-    numero: string
-    complemento?: string
-    cidade: string
-    bairro: string
-    cep: string
-    estado: string
-    pais?: string
-  }
-}
+import { z } from 'zod'
+import { createUsuarioSchema } from '../../schemas/UsuarioSchema'
+
+export type UsuarioCreateDTO = z.infer<typeof createUsuarioSchema>

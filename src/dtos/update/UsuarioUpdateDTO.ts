@@ -1,17 +1,4 @@
-export interface UsuarioUpdateDTO {
-  nome?: string
-  telefone?: string
-  foto?: string
-  email?: string
-  senha?: string
-  endereco?: {
-    logradouro?: string
-    numero?: string
-    complemento?: string
-    cidade?: string
-    bairro?: string
-    cep?: string
-    estado?: string
-    pais?: string
-  }
-}
+import { z } from 'zod'
+import { updateUsuarioSchema } from '../../schemas/UsuarioSchema'
+
+export type UsuarioUpdateDTO = z.infer<typeof updateUsuarioSchema>

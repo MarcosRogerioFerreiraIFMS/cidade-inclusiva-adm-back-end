@@ -1,13 +1,13 @@
 import { ProfissionalResponseDTO } from '../../dtos/response/ProfissionalResponseDTO'
 import { ProfissionalCompletions } from '../../types/ProfissionalTypes'
-import { removeNullUndefinedProperties } from '../../utils/objectUtils'
+
 import { capitalizeWords } from '../../utils/stringUtils'
 import { toComentarioResponseDTO } from './comentarioOutputMapper'
 
 export function toProfissionalResponseDTO(
   profissional: ProfissionalCompletions
 ): ProfissionalResponseDTO {
-  return removeNullUndefinedProperties({
+  return {
     id: profissional.id,
     nome: profissional.nome,
     foto: profissional.foto ?? undefined,
@@ -18,7 +18,7 @@ export function toProfissionalResponseDTO(
     comentarios: profissional.comentarios.map((comentario) =>
       toComentarioResponseDTO(comentario)
     )
-  })
+  }
 }
 
 export function toProfissionaisResponseDTO(

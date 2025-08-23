@@ -52,29 +52,12 @@ export const createComentarioSchema = z.object({
     .default(true)
 })
 
-export const updateComentarioSchema = z.object({
-  conteudo: z
-    .string({
-      invalid_type_error: 'O conteúdo deve ser uma string.'
-    })
-    .transform(sanitizeContent)
-    .refine((val) => val.length >= CONTEUDO_MIN_LENGTH, {
-      message: `O conteúdo deve ter pelo menos ${CONTEUDO_MIN_LENGTH} caractere.`
-    })
-    .refine((val) => val.length <= CONTEUDO_MAX_LENGTH, {
-      message: `O conteúdo deve ter no máximo ${CONTEUDO_MAX_LENGTH} caracteres.`
-    })
-    .refine((val) => val.trim().length > 0, {
-      message: 'O conteúdo não pode estar vazio ou conter apenas espaços.'
-    })
-    .refine((val) => !/^\s*$/.test(val), {
-      message: 'O conteúdo deve conter pelo menos um caractere não nulo.'
-    })
-    .optional(),
-
-  visivel: z
-    .boolean({
-      invalid_type_error: 'Visível deve ser um valor booleano (true ou false).'
-    })
-    .optional()
-})
+export const updateComentarioSchema = createComentarioSchema
+  .pick({
+    conteudo: true,
+    visivel: true
+  })
+  .extend({
+    conteudo: createComentarioSchema.shape.conteudo.optional(),
+    visivel: createComentarioSchema.shape.visivel.optional()
+  })

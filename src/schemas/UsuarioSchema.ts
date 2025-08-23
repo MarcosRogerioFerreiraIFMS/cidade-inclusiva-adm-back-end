@@ -247,4 +247,6 @@ export const createUsuarioSchema = z.object({
   )
 })
 
-export const updateUsuarioSchema = createUsuarioSchema.partial()
+export const updateUsuarioSchema = createUsuarioSchema.partial().extend({
+  endereco: createUsuarioSchema.shape.endereco.partial().optional()
+})

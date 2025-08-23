@@ -1,12 +1,12 @@
 import { ComentarioResponseDTO } from '../../dtos/response/ComentarioResponseDTO'
 import { ComentarioCompletions } from '../../types/ComentarioTypes'
-import { removeNullUndefinedProperties } from '../../utils/objectUtils'
+
 import { toLikeResponseDTO } from './likeOutputMapper'
 
 export function toComentarioResponseDTO(
   comentario: ComentarioCompletions
 ): ComentarioResponseDTO {
-  return removeNullUndefinedProperties({
+  return {
     id: comentario.id,
     conteudo: comentario.conteudo,
     visivel: comentario.visivel,
@@ -15,7 +15,7 @@ export function toComentarioResponseDTO(
     criadoEm: comentario.criadoEm,
     atualizadoEm: comentario.atualizadoEm,
     likes: comentario.likesUsuarios.map((like) => toLikeResponseDTO(like))
-  })
+  }
 }
 
 export function toComentariosResponseDTO(

@@ -1,11 +1,10 @@
 import { UsuarioResponseDTO } from '../../dtos/response/UsuarioResponseDTO'
 import { UsuarioCompletions } from '../../types/UsuarioTypes'
-import { removeNullUndefinedProperties } from '../../utils/objectUtils'
 
 export function toUsuarioResponseDTO(
   usuario: UsuarioCompletions
 ): UsuarioResponseDTO {
-  return removeNullUndefinedProperties({
+  return {
     id: usuario.id,
     nome: usuario.nome,
     telefone: usuario.telefone,
@@ -13,7 +12,7 @@ export function toUsuarioResponseDTO(
     email: usuario.email,
     endereco: toEnderecoResponseDTO(usuario.endereco),
     criadoEm: usuario.criadoEm
-  })
+  }
 }
 
 export function toUsuariosResponseDTO(
@@ -27,7 +26,7 @@ export function toEnderecoResponseDTO(
 ): UsuarioResponseDTO['endereco'] | undefined {
   if (!endereco) return undefined
 
-  return removeNullUndefinedProperties({
+  return {
     id: endereco.id,
     logradouro: endereco.logradouro,
     numero: endereco.numero,
@@ -37,5 +36,5 @@ export function toEnderecoResponseDTO(
     cep: endereco.cep,
     estado: endereco.estado,
     pais: endereco.pais
-  })
+  }
 }

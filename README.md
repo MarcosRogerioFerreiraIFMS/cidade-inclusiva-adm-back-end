@@ -208,9 +208,13 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 |-------------------|------------------|-------------|
 | `@prisma/client` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
 | `axios` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
+| `bcryptjs` | Biblioteca para hash de senhas com bcrypt | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
 | `brasilapi-js` | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/) |
+| `compression` | Middleware de compressão para Express | [Compression](https://www.npmjs.com/package/compression) |
 | `cors` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
 | `express` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
+| `express-rate-limit` | Middleware de limitação de taxa para Express | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) |
+| `helmet` | Middleware de segurança para Express | [Helmet](https://helmetjs.github.io/) |
 | `zod` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
 
 ### 🛠️ Dependências de Desenvolvimento
@@ -371,6 +375,10 @@ pnpm pull
 - ✅ **Seed de dados** para desenvolvimento
 - ✅ **CORS** configurado para requisições cross-origin
 - ✅ **Integração BrasilAPI** para dados geográficos do Brasil
+- ✅ **Autenticação e Segurança** com bcryptjs para hash de senhas
+- ✅ **Rate Limiting** para proteção contra spam e ataques DDoS
+- ✅ **Helmet** para proteção com headers de segurança
+- ✅ **Compressão** de respostas para melhor performance
 
 ---
 

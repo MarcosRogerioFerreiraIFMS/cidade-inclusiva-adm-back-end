@@ -31,6 +31,7 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^22.17.2",
@@ -50,8 +51,11 @@
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "brasilapi-js": "^1.0.4",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
     "zod": "^3.25.76"
   }
 }

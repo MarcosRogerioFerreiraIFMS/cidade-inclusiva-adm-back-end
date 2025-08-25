@@ -22,3 +22,6 @@ temp/
 
 # test
 coverage/
+
+# log
+logs/

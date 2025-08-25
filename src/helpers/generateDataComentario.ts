@@ -1,39 +1,43 @@
 import { Prisma } from '@prisma/client'
+import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
+import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
 
-export const generateDataComentarioCreate = (data: {
-  conteudo: string
-  visivel?: boolean
-  usuarioId: string
-  profissionalId: string
-}): Prisma.ComentarioCreateInput => {
+export const generateDataComentarioCreate = ({
+  conteudo,
+  visivel,
+  usuarioId,
+  profissionalId
+}: ComentarioCreateRelationalDTO): Prisma.ComentarioCreateInput => {
   return {
-    conteudo: data.conteudo,
-    visivel: data.visivel ?? true,
+    conteudo: conteudo,
+    visivel: visivel ?? true,
     usuario: {
       connect: {
-        id: data.usuarioId
+        id: usuarioId
       }
     },
-    profissional: {
-      connect: {
-        id: data.profissionalId
+    ...(profissionalId !== undefined && {
+      profissional: {
+        connect: {
+          id: profissionalId
+        }
       }
-    }
+    })
   }
 }
 
-export const generateDataComentarioUpdate = (data: {
-  conteudo?: string
-  visivel?: boolean
-}): Partial<Prisma.ComentarioUpdateInput> => {
-  const dataToUpdate: Partial<Prisma.ComentarioUpdateInput> = {}
+export const generateDataComentarioUpdate = ({
+  conteudo,
+  visivel
+}: ComentarioUpdateDTO): Prisma.ComentarioUpdateInput => {
+  const dataToUpdate: Prisma.ComentarioUpdateInput = {}
 
-  if (data.conteudo !== undefined) {
-    dataToUpdate.conteudo = data.conteudo
+  if (conteudo !== undefined) {
+    dataToUpdate.conteudo = conteudo
   }
 
-  if (data.visivel !== undefined) {
-    dataToUpdate.visivel = data.visivel
+  if (visivel !== undefined) {
+    dataToUpdate.visivel = visivel
   }
 
   dataToUpdate.atualizadoEm = new Date()

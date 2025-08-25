@@ -1,3 +1,4 @@
+import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioResponseDTO } from '../dtos/response/ComentarioResponseDTO'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
@@ -23,17 +24,27 @@ export class ComentarioService implements IComentarioService {
   async create(data: unknown): Promise<ComentarioResponseDTO> {
     const comentarioData = toCreateComentarioDTO(data)
 
-    throwIfNotFound(
-      await this.usuarioRepository.findById(comentarioData.usuarioId),
-      'Usuário não encontrado.'
-    )
+    const [usuario, profissional] = await Promise.all([
+      this.usuarioRepository.findById(comentarioData.usuarioId),
+      this.profissionalRepository.findById(comentarioData.entidadeId)
+    ])
+
+    throwIfNotFound(usuario, 'Usuário não encontrado.')
+
+    const comentarioDataRelational: ComentarioCreateRelationalDTO = {
+      ...comentarioData,
+      profissionalId: profissional?.id
+    }
 
     throwIfNotFound(
-      await this.profissionalRepository.findById(comentarioData.profissionalId),
-      'Profissional não encontrado.'
+      this.validEntityExists(comentarioDataRelational),
+      'Nenhuma entidade encontrada para relacionar o comentário.'
     )
 
-    const comentario = await this.comentarioRepository.create(comentarioData)
+    const comentario = await this.comentarioRepository.create(
+      comentarioDataRelational
+    )
+
     return toComentarioResponseDTO(comentario)
   }
 
@@ -95,5 +106,13 @@ export class ComentarioService implements IComentarioService {
     const comentarios =
       await this.comentarioRepository.findVisibleByProfissional(profissionalId)
     return toComentariosResponseDTO(comentarios)
+  }
+
+  private validEntityExists(
+    comentarioDataRelational: ComentarioCreateRelationalDTO
+  ): boolean {
+    const { profissionalId } = comentarioDataRelational
+
+    return !!profissionalId
   }
 }

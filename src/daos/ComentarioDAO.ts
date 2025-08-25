@@ -1,4 +1,4 @@
-import { ComentarioCreateDTO } from '../dtos/create/ComentarioCreateDTO'
+import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
 import {
   generateDataComentarioCreate,
@@ -9,7 +9,9 @@ import { db } from '../lib/prisma'
 import { ComentarioCompletions } from '../types/ComentarioTypes'
 
 export class ComentarioDAO implements IComentarioAccess {
-  async create(data: ComentarioCreateDTO): Promise<ComentarioCompletions> {
+  async create(
+    data: ComentarioCreateRelationalDTO
+  ): Promise<ComentarioCompletions> {
     const dataToCreate = generateDataComentarioCreate(data)
     return await db.comentario.create({
       data: dataToCreate,

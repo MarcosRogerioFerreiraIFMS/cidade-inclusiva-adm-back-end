@@ -17,13 +17,18 @@ export class UsuarioService implements IUsuarioService {
   async create(data: unknown): Promise<UsuarioResponseDTO> {
     const usuarioData = await toCreateUsuarioDTO(data)
 
+    const [usuarioWithEmail, usuarioWithTelefone] = await Promise.all([
+      this.usuarioRepository.findByEmail(usuarioData.email),
+      this.usuarioRepository.findByTelefone(usuarioData.telefone)
+    ])
+
     throwIfAlreadyExists(
-      await this.usuarioRepository.findByEmail(usuarioData.email),
+      usuarioWithEmail,
       'Já existe um usuário cadastrado com este email.'
     )
 
     throwIfAlreadyExists(
-      await this.usuarioRepository.findByTelefone(usuarioData.telefone),
+      usuarioWithTelefone,
       'Já existe um usuário cadastrado com este telefone.'
     )
 

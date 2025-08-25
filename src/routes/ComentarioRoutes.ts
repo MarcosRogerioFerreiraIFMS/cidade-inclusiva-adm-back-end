@@ -10,7 +10,7 @@ const ComentarioRoutes = Router()
 
 ComentarioRoutes.post(
   '/',
-  validateRequiredBody(['conteudo', 'usuarioId', 'profissionalId']),
+  validateRequiredBody(['conteudo', 'usuarioId']),
   ComentarioDependencies.controller.create
 )
 

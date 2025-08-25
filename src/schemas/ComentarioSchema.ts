@@ -34,14 +34,14 @@ export const createComentarioSchema = z.object({
       'O ID do usuário deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
     ),
 
-  profissionalId: z
+  entidadeId: z
     .string({
-      required_error: 'O ID do profissional é obrigatório.',
-      invalid_type_error: 'O ID do profissional deve ser uma string.'
+      required_error: 'O ID da entidade é obrigatório.',
+      invalid_type_error: 'O ID da entidade deve ser uma string.'
     })
     .trim()
     .uuid(
-      'O ID do profissional deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
+      'O ID da entidade deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
     ),
 
   visivel: z

@@ -17,15 +17,20 @@ export class ProfissionalService implements IProfissionalService {
   async create(data: unknown): Promise<ProfissionalResponseDTO> {
     const profissionalData = await toCreateProfissionalDTO(data)
 
+    const [profissionalWithEmail, profissionalWithTelefone] = await Promise.all(
+      [
+        this.profissionalRepository.findByEmail(profissionalData.email),
+        this.profissionalRepository.findByTelefone(profissionalData.telefone)
+      ]
+    )
+
     throwIfAlreadyExists(
-      await this.profissionalRepository.findByEmail(profissionalData.email),
+      profissionalWithEmail,
       'Já existe um profissional cadastrado com este email.'
     )
 
     throwIfAlreadyExists(
-      await this.profissionalRepository.findByTelefone(
-        profissionalData.telefone
-      ),
+      profissionalWithTelefone,
       'Já existe um profissional cadastrado com este telefone.'
     )
 

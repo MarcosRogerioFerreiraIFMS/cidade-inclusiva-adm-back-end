@@ -1,4 +1,4 @@
-import { ComentarioCreateDTO } from '../dtos/create/ComentarioCreateDTO'
+import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
 import { ComentarioCompletions } from '../types/ComentarioTypes'
@@ -10,7 +10,9 @@ export class ComentarioRepository implements IComentarioAccess {
     this.dao = dao
   }
 
-  async create(data: ComentarioCreateDTO): Promise<ComentarioCompletions> {
+  async create(
+    data: ComentarioCreateRelationalDTO
+  ): Promise<ComentarioCompletions> {
     return await this.dao.create(data)
   }
 

@@ -1,9 +1,9 @@
-import { ComentarioCreateDTO } from '../../dtos/create/ComentarioCreateDTO'
+import { ComentarioCreateRelationalDTO } from '../../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../../dtos/update/ComentarioUpdateDTO'
 import { ComentarioCompletions } from '../../types/ComentarioTypes'
 
 export interface IComentarioAccess {
-  create(data: ComentarioCreateDTO): Promise<ComentarioCompletions>
+  create(data: ComentarioCreateRelationalDTO): Promise<ComentarioCompletions>
   findById(id: string): Promise<ComentarioCompletions | null>
   update(id: string, data: ComentarioUpdateDTO): Promise<ComentarioCompletions>
   delete(id: string): Promise<void>

@@ -29,15 +29,13 @@ export class LikeService implements ILikeService {
     usuarioId: string,
     comentarioId: string
   ): Promise<{ liked: boolean; totalLikes: number }> {
-    throwIfNotFound(
-      await this.usuarioRepository.findById(usuarioId),
-      'Usuário não encontrado.'
-    )
+    const [usuario, comentario] = await Promise.all([
+      this.usuarioRepository.findById(usuarioId),
+      this.comentarioRepository.findById(comentarioId)
+    ])
 
-    throwIfNotFound(
-      await this.comentarioRepository.findById(comentarioId),
-      'Comentário não encontrado.'
-    )
+    throwIfNotFound(usuario, 'Usuário não encontrado.')
+    throwIfNotFound(comentario, 'Comentário não encontrado.')
 
     const existingLike = await this.likeRepository.findByUsuarioAndComentario(
       usuarioId,

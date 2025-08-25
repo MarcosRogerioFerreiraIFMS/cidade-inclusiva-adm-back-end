@@ -1,21 +1,24 @@
 import { Prisma } from '@prisma/client'
 import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
 import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
+import { hashPassword } from '../utils/passwordUtils'
 
-export function generateDataUsuarioCreate({
+export async function generateDataUsuarioCreate({
   nome,
   telefone,
   foto,
   email,
   senha,
   endereco
-}: UsuarioCreateDTO): Prisma.UsuarioCreateInput {
+}: UsuarioCreateDTO): Promise<Prisma.UsuarioCreateInput> {
+  const hashedPassword = await hashPassword(senha)
+
   return {
     nome,
     telefone,
     foto: foto ?? null,
     email,
-    senha,
+    senha: hashedPassword,
     endereco: {
       create: {
         logradouro: endereco.logradouro,
@@ -31,14 +34,14 @@ export function generateDataUsuarioCreate({
   }
 }
 
-export function generateDataUsuarioUpdate({
+export async function generateDataUsuarioUpdate({
   nome,
   telefone,
   foto,
   email,
   senha,
   endereco
-}: UsuarioUpdateDTO): Prisma.UsuarioUpdateInput {
+}: UsuarioUpdateDTO): Promise<Prisma.UsuarioUpdateInput> {
   const dataToUpdate: Prisma.UsuarioUpdateInput = {}
 
   if (nome !== undefined) {
@@ -54,7 +57,7 @@ export function generateDataUsuarioUpdate({
     dataToUpdate.email = email
   }
   if (senha !== undefined) {
-    dataToUpdate.senha = senha
+    dataToUpdate.senha = await hashPassword(senha)
   }
 
   if (endereco) {

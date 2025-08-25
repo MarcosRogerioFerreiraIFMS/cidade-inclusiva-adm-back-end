@@ -3,6 +3,7 @@ import {
   EspecialidadeProfissional,
   PrismaClient
 } from '@prisma/client'
+import { hashPassword } from '../src/utils/passwordUtils'
 
 const prisma = new PrismaClient()
 
@@ -106,13 +107,15 @@ async function main() {
 
     const usuarios = []
     for (const usuarioData of usuariosData) {
+      const hashedPassword = await hashPassword(usuarioData.senha)
+
       const usuario = await prisma.usuario.create({
         data: {
           nome: usuarioData.nome,
           telefone: usuarioData.telefone,
           foto: usuarioData.foto,
           email: usuarioData.email,
-          senha: usuarioData.senha,
+          senha: hashedPassword,
           endereco: {
             create: usuarioData.endereco
           }

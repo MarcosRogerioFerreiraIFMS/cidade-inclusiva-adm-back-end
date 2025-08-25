@@ -10,7 +10,7 @@ import { UsuarioCompletions } from '../types/UsuarioTypes'
 
 export class UsuarioDAO implements IUsuarioAccess {
   async create(data: UsuarioCreateDTO): Promise<UsuarioCompletions> {
-    const dataToCreate = generateDataUsuarioCreate(data)
+    const dataToCreate = await generateDataUsuarioCreate(data)
     return await db.usuario.create({
       data: dataToCreate,
       include: {
@@ -50,7 +50,7 @@ export class UsuarioDAO implements IUsuarioAccess {
     id: string,
     data: UsuarioUpdateDTO
   ): Promise<UsuarioCompletions> {
-    const dataToUpdate = generateDataUsuarioUpdate(data)
+    const dataToUpdate = await generateDataUsuarioUpdate(data)
 
     return await db.usuario.update({
       where: { id },

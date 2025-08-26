@@ -1,9 +1,17 @@
+import { fakerPT_BR as faker } from '@faker-js/faker'
 import {
   CategoriaNoticia,
   EspecialidadeProfissional,
   PrismaClient
 } from '@prisma/client'
+import api from 'brasilapi-js'
 import { hashPassword } from '../src/utils/passwordUtils'
+
+// Configurar seed para garantir resultados reproduzíveis
+faker.seed(123)
+
+// Definir uma data de referência fixa para resultados consistentes
+faker.setDefaultRefDate('2025-01-01T00:00:00.000Z')
 
 const prisma = new PrismaClient()
 
@@ -24,90 +32,237 @@ async function main() {
 
     // Criar usuários com endereços (relação 1:1)
     console.log('👤 Criando usuários com endereços...')
-    const usuariosData = [
-      {
-        nome: 'João Silva',
-        telefone: '11999887766',
-        foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
-        email: 'joao.silva@email.com',
-        senha: 'senha123',
-        endereco: {
-          logradouro: 'Rua das Flores',
-          numero: '123',
-          complemento: 'Apt 45',
-          cidade: 'São Paulo',
-          bairro: 'Vila Madalena',
-          cep: '05435-050',
-          estado: 'SP'
-        }
-      },
-      {
-        nome: 'Maria Santos',
-        telefone: '11988776655',
-        foto: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=400&h=400&fit=crop&crop=face',
-        email: 'maria.santos@email.com',
-        senha: 'senha123',
-        endereco: {
-          logradouro: 'Avenida Paulista',
-          numero: '1000',
-          cidade: 'São Paulo',
-          bairro: 'Bela Vista',
-          cep: '01310-100',
-          estado: 'SP'
-        }
-      },
-      {
-        nome: 'Pedro Oliveira',
-        telefone: '11977665544',
-        foto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
-        email: 'pedro.oliveira@email.com',
-        senha: 'senha123',
-        endereco: {
-          logradouro: 'Rua Oscar Freire',
-          numero: '500',
-          complemento: 'Casa',
-          cidade: 'São Paulo',
-          bairro: 'Jardins',
-          cep: '01426-001',
-          estado: 'SP'
-        }
-      },
-      {
-        nome: 'Ana Costa',
-        telefone: '11966554433',
-        foto: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
-        email: 'ana.costa@email.com',
-        senha: 'senha123',
-        endereco: {
-          logradouro: 'Rua Augusta',
-          numero: '750',
-          cidade: 'São Paulo',
-          bairro: 'Consolação',
-          cep: '01305-100',
-          estado: 'SP'
-        }
-      },
-      {
-        nome: 'Carlos Pereira',
-        telefone: '11955443322',
-        foto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
-        email: 'carlos.pereira@email.com',
-        senha: 'senha123',
-        endereco: {
-          logradouro: 'Avenida Ibirapuera',
-          numero: '2000',
-          complemento: 'Bloco B',
-          cidade: 'São Paulo',
-          bairro: 'Ibirapuera',
-          cep: '04029-200',
-          estado: 'SP'
-        }
-      }
+
+    const validDDDs = [
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '21',
+      '22',
+      '24',
+      '27',
+      '28',
+      '31',
+      '32',
+      '33',
+      '34',
+      '35',
+      '37',
+      '38',
+      '41',
+      '42',
+      '43',
+      '44',
+      '45',
+      '46',
+      '47',
+      '48',
+      '49',
+      '51',
+      '53',
+      '54',
+      '55',
+      '61',
+      '62',
+      '63',
+      '64',
+      '65',
+      '66',
+      '67',
+      '68',
+      '69',
+      '71',
+      '73',
+      '74',
+      '75',
+      '77',
+      '79',
+      '81',
+      '82',
+      '83',
+      '84',
+      '85',
+      '86',
+      '87',
+      '88',
+      '89',
+      '91',
+      '92',
+      '93',
+      '94',
+      '95',
+      '96',
+      '97',
+      '98',
+      '99'
     ]
 
+    // Cache de CEPs reais para melhorar performance
+    const realCEPsCache: Array<{
+      cep: string
+      logradouro: string
+      bairro: string
+      cidade: string
+      estado: string
+    }> = []
+
+    // Função para buscar CEPs reais de capitais brasileiras
+    const fetchRealCEPs = async (): Promise<void> => {
+      console.log('🔍 Buscando CEPs reais das principais cidades...')
+
+      // CEPs conhecidos de locais importantes (reduzido para ser mais rápido)
+      const knownCEPs = [
+        '01310-100', // Av. Paulista, São Paulo - SP
+        '20040-020', // Centro, Rio de Janeiro - RJ
+        '30130-000', // Centro, Belo Horizonte - MG
+        '70040-010', // Asa Norte, Brasília - DF
+        '80010-000' // Centro, Curitiba - PR
+      ]
+
+      for (const cep of knownCEPs) {
+        try {
+          const response = await api.cep.getBy(cep.replace('-', ''))
+
+          if (response && response.data) {
+            const cepData = response.data
+            // Formatar CEP com hífen se não tiver
+            const formattedCep = cepData.cep
+              ? cepData.cep.replace(/(\d{5})(\d{3})/, '$1-$2')
+              : cep
+
+            realCEPsCache.push({
+              cep: formattedCep,
+              logradouro: cepData.street || faker.location.streetAddress(),
+              bairro:
+                cepData.neighborhood ||
+                faker.location.state({ abbreviated: false }),
+              cidade: cepData.city || faker.location.city(),
+              estado:
+                cepData.state || faker.location.state({ abbreviated: true })
+            })
+
+            // Delay pequeno entre requisições
+            await new Promise((resolve) => setTimeout(resolve, 50))
+          }
+        } catch {
+          console.warn(`⚠️ Erro ao buscar CEP ${cep}`)
+          // Fallback para dados gerados com CEP válido
+          realCEPsCache.push({
+            cep: cep,
+            logradouro: faker.location.streetAddress(),
+            bairro: faker.location.state({ abbreviated: false }),
+            cidade: faker.location.city(),
+            estado: faker.location.state({ abbreviated: true })
+          })
+        }
+      }
+
+      console.log(`✅ ${realCEPsCache.length} CEPs carregados!`)
+
+      // Log de quais são reais vs fallback
+      const reais = realCEPsCache.filter(
+        (c) => c.logradouro.includes('Avenida') || c.logradouro.includes('Rua')
+      ).length
+      const fallbacks = realCEPsCache.length - reais
+      if (reais > 0) {
+        console.log(
+          `📍 ${reais} CEPs reais obtidos da API, ${fallbacks} fallbacks gerados`
+        )
+      }
+    }
+
+    // Buscar CEPs reais antes de gerar usuários
+    await fetchRealCEPs()
+
+    // Gera número de celular válido (9 dígitos, começa com 9)
+    const generateValidPhoneNumber = (): string => {
+      const ddd = faker.helpers.arrayElement(validDDDs)
+      const numero = '9' + faker.string.numeric(8)
+      return `${ddd}${numero}`
+    }
+
+    // Função para obter um endereço com CEP real
+    const getRandomRealAddress = () => {
+      if (realCEPsCache.length === 0) {
+        // Fallback se não tiver CEPs reais
+        return {
+          logradouro: faker.location.streetAddress(),
+          numero: faker.location.buildingNumber(),
+          complemento:
+            faker.helpers.maybe(() => faker.location.secondaryAddress()) ||
+            null,
+          cidade: faker.location.city(),
+          bairro: faker.location.state({ abbreviated: false }),
+          cep: faker.string.numeric(5) + '-' + faker.string.numeric(3),
+          estado: faker.location.state({ abbreviated: true })
+        }
+      }
+
+      const realAddress = faker.helpers.arrayElement(realCEPsCache)
+
+      return {
+        logradouro: realAddress.logradouro,
+        numero: faker.location.buildingNumber(),
+        complemento:
+          faker.helpers.maybe(() => faker.location.secondaryAddress()) || null,
+        cidade: realAddress.cidade,
+        bairro: realAddress.bairro,
+        cep: realAddress.cep,
+        estado: realAddress.estado
+      }
+    }
+
+    // Função para gerar usuário com dados realistas
+    const generateUser = (existingEmails: Set<string>) => {
+      const firstName = faker.person.firstName()
+      const lastName = faker.person.lastName()
+
+      // Gerar email único
+      let email: string
+      let attempts = 0
+      do {
+        email = faker.internet.email({ firstName, lastName })
+        attempts++
+        // Se após 10 tentativas ainda não for único, adicionar timestamp
+        if (attempts > 10) {
+          email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Date.now()}@email.com`
+          break
+        }
+      } while (existingEmails.has(email))
+
+      existingEmails.add(email)
+      const endereco = getRandomRealAddress()
+
+      return {
+        nome: `${firstName} ${lastName}`,
+        telefone: generateValidPhoneNumber(),
+        foto: faker.image.avatar(),
+        email,
+        senha: faker.internet.password({ length: 8 }),
+        endereco
+      }
+    }
+
+    // Gerar 25 usuários com dados variados e emails únicos
+    const existingEmails = new Set<string>()
+    const usuariosData = []
+    for (let i = 0; i < 25; i++) {
+      usuariosData.push(generateUser(existingEmails))
+    }
+
     const usuarios = []
-    for (const usuarioData of usuariosData) {
+    for (let i = 0; i < usuariosData.length; i++) {
+      const usuarioData = usuariosData[i]
       const hashedPassword = await hashPassword(usuarioData.senha)
+
+      // Escalonar datas de criação dos usuários ao longo dos últimos 3 meses
+      const dataCriacao = faker.date.past({ years: 0.25 })
 
       const usuario = await prisma.usuario.create({
         data: {
@@ -116,65 +271,87 @@ async function main() {
           foto: usuarioData.foto,
           email: usuarioData.email,
           senha: hashedPassword,
+          criadoEm: dataCriacao,
+          atualizadoEm: dataCriacao,
           endereco: {
-            create: usuarioData.endereco
+            create: {
+              ...usuarioData.endereco,
+              criadoEm: dataCriacao,
+              atualizadoEm: dataCriacao
+            }
           }
         },
         include: {
           endereco: true
         }
       })
+
       usuarios.push(usuario)
     }
     console.log(`✅ ${usuarios.length} usuários criados!`)
 
     // Criar profissionais
     console.log('👥 Criando profissionais...')
-    const profissionais = await prisma.profissional.createMany({
-      data: [
-        {
-          nome: 'Dr. Ana Maria Santos',
-          foto: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face',
-          telefone: '11987654321',
-          email: 'ana.santos@exemplo.com',
-          especialidade: EspecialidadeProfissional.MEDICO
-        },
-        {
-          nome: 'Maria José Silva',
-          foto: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face',
-          telefone: '11976543210',
-          email: 'maria.silva@exemplo.com',
-          especialidade: EspecialidadeProfissional.CUIDADOR
-        },
-        {
-          nome: 'Dr. Carlos Oliveira',
-          foto: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face',
-          telefone: '11965432109',
-          email: 'carlos.oliveira@exemplo.com',
-          especialidade: EspecialidadeProfissional.FISIOTERAPEUTA
-        },
-        {
-          nome: 'Dra. Beatriz Costa',
-          foto: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=400&fit=crop&crop=face',
-          telefone: '11954321098',
-          email: 'beatriz.costa@exemplo.com',
-          especialidade: EspecialidadeProfissional.PSICOLOGO
-        },
-        {
-          nome: 'Enfª. Juliana Pereira',
-          foto: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&h=400&fit=crop&crop=face',
-          telefone: '11943210987',
-          email: 'juliana.pereira@exemplo.com',
-          especialidade: EspecialidadeProfissional.ENFERMEIRO
-        },
-        {
-          nome: 'Rosa Aparecida Lima',
-          foto: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=face',
-          telefone: '11932109876',
-          email: 'rosa.lima@exemplo.com',
-          especialidade: EspecialidadeProfissional.SECRETARIO_DO_LAR
+
+    // Função para gerar profissional com dados realistas
+    const generateProfissional = (existingEmails: Set<string>) => {
+      const sexo = faker.person.sexType()
+      const firstName = faker.person.firstName(sexo)
+      const lastName = faker.person.lastName()
+      const especialidade = faker.helpers.arrayElement(
+        Object.values(EspecialidadeProfissional)
+      )
+
+      // Gerar email único
+      let email: string
+      let attempts = 0
+      do {
+        email = faker.internet.email({ firstName, lastName })
+        attempts++
+        // Se após 10 tentativas ainda não for único, adicionar timestamp
+        if (attempts > 10) {
+          email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.prof.${Date.now()}@email.com`
+          break
         }
-      ]
+      } while (existingEmails.has(email))
+
+      existingEmails.add(email)
+
+      // Adicionar prefixo baseado na especialidade
+      let prefix = ''
+      if (especialidade === 'MEDICO')
+        prefix = sexo === 'male' ? 'Dr. ' : 'Dra. '
+      else if (especialidade === 'ENFERMEIRO')
+        prefix = sexo === 'male' ? 'Enf. ' : 'Enfª. '
+
+      return {
+        nome: `${prefix}${firstName} ${lastName}`,
+        foto: faker.image.avatar(),
+        telefone: generateValidPhoneNumber(),
+        email,
+        especialidade
+      }
+    }
+
+    // Gerar 10 profissionais com dados variados e emails únicos
+    const existingEmailsProfissionais = new Set<string>()
+    // Adicionar emails já existentes dos usuários para evitar conflitos
+    usuariosData.forEach((user) => existingEmailsProfissionais.add(user.email))
+
+    const profissionaisData = []
+    for (let i = 0; i < 10; i++) {
+      profissionaisData.push(generateProfissional(existingEmailsProfissionais))
+    }
+
+    // Adicionar timestamps variados aos profissionais
+    const profissionaisComTimestamps = profissionaisData.map((prof) => ({
+      ...prof,
+      criadoEm: faker.date.past({ years: 0.3 }),
+      atualizadoEm: faker.date.recent({ days: 60 })
+    }))
+
+    const profissionais = await prisma.profissional.createMany({
+      data: profissionaisComTimestamps
     })
     console.log(`✅ ${profissionais.count} profissionais criados!`)
 
@@ -183,210 +360,256 @@ async function main() {
 
     // Criar notícias com dados mais realistas e abrangentes
     console.log('📰 Criando notícias...')
-    const noticias = await prisma.noticia.createMany({
-      data: [
-        // DIREITOS
-        {
-          titulo:
-            'STF analisa mudanças na legislação de isenção para veículos PCD',
-          conteudo:
-            'O Supremo Tribunal Federal está analisando uma ação que pode redefinir as regras de isenção de impostos para compra de veículos por pessoas com deficiência. A decisão pode impactar milhares de beneficiários em todo o país.',
-          categoria: CategoriaNoticia.DIREITOS,
-          url: 'https://www.terra.com.br/mobilidade/carro-com-isencao-para-pcd-stf-entra-na-discussao-e-pode-definir-novas-regras,4b003cb0fd9df721122d6cb3b57c1062l4x9yr3e.html',
-          foto: 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2024/07/08/carro-pcd-1ibjskggydg0y.jpg',
-          dataPublicacao: new Date('2025-08-10T10:00:00.000Z')
-        },
 
-        // BENEFÍCIOS
-        {
-          titulo:
-            'Chevrolet amplia descontos para PCD com redução de até R$ 42.000',
-          conteudo:
-            'A Chevrolet anunciou nova campanha de vendas para pessoas com deficiência com descontos significativos em diversos modelos, incluindo o Tracker Premier com desconto de R$ 41.995.',
-          categoria: CategoriaNoticia.BENEFICIOS,
-          url: 'https://mundodoautomovelparapcd.com.br/chevrolet-para-pcd-em-abril-de-2025/',
-          foto: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-09T09:00:00.000Z')
-        },
-        {
-          titulo:
-            'BPC: Novo valor de R$ 1.518 já está sendo pago aos beneficiários',
-          conteudo:
-            'O Benefício de Prestação Continuada (BPC) teve seu valor atualizado para R$ 1.518, seguindo o reajuste do salário mínimo. O benefício é destinado a pessoas com deficiência e idosos em situação de vulnerabilidade.',
-          categoria: CategoriaNoticia.BENEFICIOS,
-          foto: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-07T11:00:00.000Z')
-        },
+    // Função para gerar notícia com dados realistas
+    const generateNoticia = () => {
+      const categoria = faker.helpers.arrayElement(
+        Object.values(CategoriaNoticia)
+      )
 
-        // OPORTUNIDADES
-        {
-          titulo:
-            'Hospitais públicos do Pará abrem 150 vagas exclusivas para PCD',
-          conteudo:
-            'O Centro Integrado de Inclusão e Reabilitação (CIIR) e outros hospitais públicos do Pará estão com processos seletivos abertos oferecendo vagas exclusivas para pessoas com deficiência em diversas áreas da saúde.',
-          categoria: CategoriaNoticia.OPORTUNIDADES,
-          url: 'https://diariodopara.com.br/concursos-e-empregos/abertas-inscricoes-para-pcd-em-hospitais-publicos-do-para-confira-as-vagas/',
-          foto: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-08T16:00:00.000Z')
-        },
-        {
-          titulo:
-            'Programa de capacitação profissional para PCD tem inscrições abertas',
-          conteudo:
-            'O SENAI está com inscrições abertas para cursos gratuitos de capacitação profissional voltados especificamente para pessoas com deficiência, oferecendo certificação em áreas como informática, administração e serviços.',
-          categoria: CategoriaNoticia.OPORTUNIDADES,
-          foto: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-06T08:30:00.000Z')
-        },
-
-        // TECNOLOGIA
-        {
-          titulo: 'IA brasileira traduz linguagem de sinais em tempo real',
-          conteudo:
-            'Pesquisadores da USP desenvolveram sistema de inteligência artificial capaz de traduzir Libras para português falado em tempo real, revolucionando a comunicação de pessoas surdas.',
-          categoria: CategoriaNoticia.TECNOLOGIA,
-          foto: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-07T15:45:00.000Z')
-        },
-        {
-          titulo:
-            'Aplicativo gratuito ajuda pessoas cegas a navegar em espaços urbanos',
-          conteudo:
-            'O app SoundScape da Microsoft, agora disponível gratuitamente, utiliza áudio 3D para ajudar pessoas com deficiência visual a se orientar em ambientes urbanos complexos.',
-          categoria: CategoriaNoticia.TECNOLOGIA,
-          foto: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-05T12:20:00.000Z')
-        },
-
-        // SAÚDE
-        {
-          titulo:
-            'SUS amplia cobertura de órteses e próteses para pessoas com deficiência',
-          conteudo:
-            'O Ministério da Saúde anunciou a ampliação da cobertura do SUS para órteses e próteses, incluindo novos dispositivos tecnológicos que melhoram significativamente a qualidade de vida dos usuários.',
-          categoria: CategoriaNoticia.SAUDE,
-          foto: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-09T13:15:00.000Z')
-        },
-
-        // EDUCAÇÃO
-        {
-          titulo:
-            'MEC lança programa de educação inclusiva para escolas públicas',
-          conteudo:
-            'O Ministério da Educação lançou o "Programa Escola para Todos", que prevê adaptações pedagógicas e estruturais em 10 mil escolas públicas para melhor atender estudantes com deficiência.',
-          categoria: CategoriaNoticia.EDUCACAO,
-          foto: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-06T10:00:00.000Z')
-        },
-
-        // ESPORTE
-        {
-          titulo:
-            'Paralimpíadas de Paris 2024: Brasil conquista recorde de medalhas',
-          conteudo:
-            'A delegação brasileira nas Paralimpíadas de Paris 2024 conquistou o melhor resultado da história do país na competição, com 89 medalhas e destaque em modalidades como natação e atletismo.',
-          categoria: CategoriaNoticia.ESPORTE,
-          foto: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-04T18:00:00.000Z')
-        },
-
-        // ACESSIBILIDADE
-        {
-          titulo:
-            'São Paulo investe R$ 50 milhões em acessibilidade no transporte público',
-          conteudo:
-            'A Prefeitura de São Paulo anunciou investimento de R$ 50 milhões para melhorias de acessibilidade no transporte público, incluindo elevadores, rampas e pisos táteis em 100 estações de metrô e trem.',
-          categoria: CategoriaNoticia.ACESSIBILIDADE,
-          foto: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&h=600&fit=crop',
-          dataPublicacao: new Date('2025-08-05T09:30:00.000Z')
+      // Gerar títulos e conteúdos baseados na categoria
+      const getTituloEConteudo = (cat: CategoriaNoticia) => {
+        const templates = {
+          DIREITOS: {
+            titulos: [
+              'Nova legislação amplia direitos para pessoas com deficiência',
+              'STF decide sobre isenção de impostos para PCD',
+              'Aprovado projeto que garante novos benefícios inclusivos',
+              'Ministério atualiza regras de acessibilidade obrigatória'
+            ],
+            conteudos: [
+              'Uma nova lei federal foi aprovada expandindo os direitos fundamentais das pessoas com deficiência, incluindo maior acesso a serviços públicos e benefícios sociais.',
+              'O Supremo Tribunal Federal tomou uma decisão importante sobre a isenção de impostos para pessoas com deficiência, beneficiando milhares de cidadãos.',
+              'O Congresso Nacional aprovou um projeto de lei que garante novos benefícios e direitos para a população PCD brasileira.'
+            ]
+          },
+          BENEFICIOS: {
+            titulos: [
+              'BPC aumenta valor para R$ 1.518 em 2025',
+              'Novo programa de auxílio para pessoas com deficiência',
+              'INSS anuncia facilidades para concessão de benefícios',
+              'Cartão de desconto especial para PCD em farmácias'
+            ],
+            conteudos: [
+              'O Benefício de Prestação Continuada teve seu valor atualizado seguindo o reajuste do salário mínimo, beneficiando milhares de pessoas.',
+              'Um novo programa governamental oferece auxílio financeiro adicional para pessoas com deficiência em situação de vulnerabilidade.',
+              'O INSS implementou novos procedimentos para facilitar e agilizar a concessão de benefícios para pessoas com deficiência.'
+            ]
+          },
+          OPORTUNIDADES: {
+            titulos: [
+              'Empresa abre 200 vagas exclusivas para PCD',
+              'Curso gratuito de capacitação profissional para PCD',
+              'Programa de estágio em órgão público aceita inscrições',
+              'Feira de empregos focada em inclusão acontece em SP'
+            ],
+            conteudos: [
+              'Uma grande empresa do setor de tecnologia abriu um processo seletivo exclusivo para pessoas com deficiência, oferecendo oportunidades em diversas áreas.',
+              'O SENAI está oferecendo cursos gratuitos de capacitação profissional especialmente desenvolvidos para pessoas com deficiência.',
+              'Um programa de estágio em órgãos públicos está com inscrições abertas, com vagas reservadas para candidatos PCD.'
+            ]
+          },
+          TECNOLOGIA: {
+            titulos: [
+              'App gratuito facilita navegação para pessoas cegas',
+              'IA traduz libras em tempo real',
+              'Nova tecnologia assistiva chega ao Brasil',
+              'Startup desenvolve cadeira de rodas inteligente'
+            ],
+            conteudos: [
+              'Um novo aplicativo gratuito utiliza inteligência artificial para ajudar pessoas com deficiência visual a navegar em espaços urbanos.',
+              'Pesquisadores brasileiros desenvolveram um sistema de IA capaz de traduzir linguagem de sinais em tempo real.',
+              'Uma nova tecnologia assistiva importada promete revolucionar o dia a dia de pessoas com deficiência no Brasil.'
+            ]
+          },
+          SAUDE: {
+            titulos: [
+              'SUS amplia cobertura de órteses e próteses',
+              'Novo centro de reabilitação é inaugurado',
+              'Tratamento inovador para lesão medular',
+              'Campanha de vacinação prioritária para PCD'
+            ],
+            conteudos: [
+              'O Sistema Único de Saúde anunciou a ampliação da cobertura para órteses e próteses, incluindo novos dispositivos tecnológicos.',
+              'Foi inaugurado um novo centro de reabilitação equipado com tecnologia de ponta para atendimento de pessoas com deficiência.',
+              'Um tratamento inovador para lesão medular está sendo testado em hospitais brasileiros com resultados promissores.'
+            ]
+          },
+          EDUCACAO: {
+            titulos: [
+              'MEC lança programa de educação inclusiva',
+              'Universidade oferece bolsas para estudantes PCD',
+              'Nova metodologia de ensino adaptado',
+              'Projeto conecta escolas públicas com tecnologia assistiva'
+            ],
+            conteudos: [
+              'O Ministério da Educação lançou um programa nacional de educação inclusiva para melhorar o atendimento a estudantes com deficiência.',
+              'Uma renomada universidade brasileira está oferecendo bolsas de estudo integrais para estudantes com deficiência.',
+              'Uma nova metodologia de ensino adaptado está sendo implementada em escolas públicas de todo o país.'
+            ]
+          },
+          ESPORTE: {
+            titulos: [
+              'Brasil conquista medalhas nas Paralimpíadas',
+              'Novo complexo esportivo adaptado é inaugurado',
+              'Atleta paralímpico bate recorde mundial',
+              'Projeto promove esporte inclusivo nas escolas'
+            ],
+            conteudos: [
+              'A delegação brasileira nas Paralimpíadas conquistou resultados históricos, demonstrando a excelência do esporte paralímpico nacional.',
+              'Foi inaugurado um novo complexo esportivo totalmente adaptado para a prática de esportes paralímpicos.',
+              'Um atleta brasileiro quebrou o recorde mundial em sua modalidade, inspirando novos talentos no esporte paralímpico.'
+            ]
+          },
+          ACESSIBILIDADE: {
+            titulos: [
+              'Cidade investe R$ 50 milhões em acessibilidade',
+              'Novas regras de acessibilidade para edifícios',
+              'Transporte público ganha melhorias inclusivas',
+              'Shopping center se torna modelo de acessibilidade'
+            ],
+            conteudos: [
+              'A prefeitura anunciou um investimento de R$ 50 milhões para melhorias de acessibilidade no transporte público e espaços urbanos.',
+              'Novas regras de acessibilidade foram estabelecidas para garantir que todos os edifícios públicos sejam totalmente acessíveis.',
+              'O sistema de transporte público da cidade recebeu importantes melhorias para garantir maior acessibilidade.'
+            ]
+          },
+          TRABALHO: {
+            titulos: [
+              'Lei de cotas gera 15 mil empregos para PCD',
+              'Empresa é premiada por inclusão no trabalho',
+              'Home office facilita inserção de PCD no mercado',
+              'Consultoria especializada em RH inclusivo cresce 200%'
+            ],
+            conteudos: [
+              'A aplicação efetiva da lei de cotas resultou na criação de 15 mil novos empregos para pessoas com deficiência no último ano.',
+              'Uma empresa nacional foi premiada como a mais inclusiva do país por suas práticas de contratação e desenvolvimento de profissionais PCD.',
+              'O modelo de trabalho remoto tem facilitado a inserção de pessoas com deficiência no mercado de trabalho formal.'
+            ]
+          },
+          CULTURA: {
+            titulos: [
+              'Festival de cinema inclusivo acontece em SP',
+              'Museu lança tour virtual acessível',
+              'Livro em braile ganha versão digital',
+              'Teatro adapta peças para pessoas com deficiência'
+            ],
+            conteudos: [
+              'Um festival de cinema com foco em acessibilidade e inclusão está acontecendo em São Paulo, exibindo filmes com audiodescrição e legendas.',
+              'O museu lançou um tour virtual totalmente acessível, permitindo que pessoas com deficiência explorem as exposições de casa.',
+              'Um clássico da literatura brasileira ganhou uma versão digital acessível, incluindo formato em braile e audiolivro.'
+            ]
+          },
+          EVENTOS: {
+            titulos: [
+              'Congresso Nacional de Acessibilidade em BH',
+              'Feira de tecnologia assistiva reúne inovações',
+              'Workshop sobre inclusão no trabalho',
+              'Seminário discute futuro da educação inclusiva'
+            ],
+            conteudos: [
+              'O Congresso Nacional de Acessibilidade reunirá especialistas e profissionais para discutir os avanços na área de inclusão.',
+              'Uma feira especializada em tecnologia assistiva apresentará as mais recentes inovações para pessoas com deficiência.',
+              'Um workshop sobre inclusão no ambiente de trabalho está sendo realizado para capacitar gestores e RH de empresas.'
+            ]
+          },
+          OUTROS: {
+            titulos: [
+              'Pesquisa revela avanços na inclusão social',
+              'ONG lança campanha de conscientização',
+              'Projeto voluntário arrecada fundos para PCD',
+              'Iniciativa promove turismo acessível'
+            ],
+            conteudos: [
+              'Uma pesquisa nacional revelou importantes avanços na inclusão social de pessoas com deficiência nos últimos cinco anos.',
+              'Uma ONG lançou uma campanha nacional de conscientização sobre os direitos das pessoas com deficiência.',
+              'Um projeto voluntário conseguiu arrecadar fundos significativos para apoiar famílias de pessoas com deficiência em situação de vulnerabilidade.'
+            ]
+          }
         }
-      ]
+
+        const categoryData = templates[cat]
+        const titulo = faker.helpers.arrayElement(categoryData.titulos)
+        const conteudo = faker.helpers.arrayElement(categoryData.conteudos)
+
+        return { titulo, conteudo }
+      }
+
+      const { titulo, conteudo } = getTituloEConteudo(categoria)
+
+      return {
+        titulo,
+        conteudo,
+        categoria,
+        url: faker.helpers.maybe(() => faker.internet.url()),
+        foto: faker.image.url({ width: 800, height: 600 }),
+        dataPublicacao: faker.date.past({ years: 0.5 }),
+        criadoEm: faker.date.past({ years: 0.5 }),
+        atualizadoEm: faker.date.recent({ days: 30 })
+      }
+    }
+
+    // Gerar 15 notícias com dados variados
+    const noticiasData = faker.helpers.multiple(generateNoticia, { count: 15 })
+
+    const noticias = await prisma.noticia.createMany({
+      data: noticiasData
     })
     console.log(`✅ ${noticias.count} notícias criadas!`)
 
     // Criar comentários dos usuários para os profissionais
     console.log('💬 Criando comentários...')
-    const comentariosData = [
-      {
-        conteudo:
-          'Excelente profissional! Dr. Ana sempre muito atenciosa e competente. Recomendo!',
-        usuarioId: usuarios[0].id,
-        profissionalId: profissionaisCriados[0].id
-      },
-      {
-        conteudo:
-          'Consulta muito esclarecedora com a Dr. Ana. Tirou todas as minhas dúvidas.',
-        usuarioId: usuarios[1].id,
-        profissionalId: profissionaisCriados[0].id
-      },
-      {
-        conteudo: 'Maria é uma cuidadora excepcional. Minha mãe adora ela!',
-        usuarioId: usuarios[2].id,
-        profissionalId: profissionaisCriados[1].id
-      },
-      {
-        conteudo:
-          'Profissional muito dedicada e carinhosa. Super recomendo seus serviços.',
-        usuarioId: usuarios[3].id,
-        profissionalId: profissionaisCriados[1].id
-      },
-      {
-        conteudo:
-          'Dr. Carlos me ajudou muito na recuperação. Fisioterapeuta muito competente.',
-        usuarioId: usuarios[4].id,
-        profissionalId: profissionaisCriados[2].id
-      },
-      {
-        conteudo:
-          'Sessões muito eficazes! Já sinto grande melhora na mobilidade.',
-        usuarioId: usuarios[0].id,
-        profissionalId: profissionaisCriados[2].id
-      },
-      {
-        conteudo:
-          'Dra. Beatriz é uma psicóloga incrível. Me ajudou muito a superar dificuldades.',
-        usuarioId: usuarios[1].id,
-        profissionalId: profissionaisCriados[3].id
-      },
-      {
-        conteudo:
-          'Terapia muito eficaz e acolhedora. Profissional muito humana.',
-        usuarioId: usuarios[2].id,
-        profissionalId: profissionaisCriados[3].id
-      },
-      {
-        conteudo:
-          'Enfermeira Juliana é muito atenciosa e profissional. Cuidados excelentes!',
-        usuarioId: usuarios[3].id,
-        profissionalId: profissionaisCriados[4].id
-      },
-      {
-        conteudo:
-          'Rosa é uma secretária do lar muito organizada e responsável.',
-        usuarioId: usuarios[4].id,
-        profissionalId: profissionaisCriados[5].id
-      },
-      {
-        conteudo:
-          'Ótimo atendimento da Rosa. Ela é muito prestativa e cuidadosa.',
-        usuarioId: usuarios[0].id,
-        profissionalId: profissionaisCriados[5].id
-      },
-      {
-        conteudo:
-          'Recomendo muito o trabalho da Enfermeira Juliana. Muito profissional!',
-        usuarioId: usuarios[1].id,
-        profissionalId: profissionaisCriados[4].id
+
+    // Função para gerar comentário realista com timestamp variado
+    const generateComentario = (usuarioId: string, profissionalId: string) => {
+      const comentariosTemplate = [
+        'Excelente profissional! Muito atencioso e competente. Recomendo!',
+        'Atendimento excepcional, sempre muito cuidadoso e prestativo.',
+        'Profissional muito dedicado, fez toda a diferença no meu tratamento.',
+        'Super recomendo! Muito humano e profissional ao mesmo tempo.',
+        'Cuidado exemplar, sempre com muito carinho e atenção.',
+        'Muito competente e experiente, me senti muito bem atendido.',
+        'Profissional incrível! Superou todas as minhas expectativas.',
+        'Atendimento de qualidade superior, muito satisfeito.',
+        'Excelente trabalho, muito responsável e cuidadoso.',
+        'Recomendo de olhos fechados, profissional nota 10!',
+        'Muito atencioso e paciente, explicou tudo detalhadamente.',
+        'Cuidado diferenciado, profissional muito qualificado.',
+        'Trabalho excepcional, sempre muito profissional.',
+        'Ótimo atendimento, me senti muito acolhido.',
+        'Profissional muito competente e carinhoso.'
+      ]
+
+      // Gerar data aleatória dos últimos 6 meses
+      const dataComentario = faker.date.past({ years: 0.5 })
+
+      return {
+        conteudo: faker.helpers.arrayElement(comentariosTemplate),
+        usuarioId,
+        profissionalId,
+        criadoEm: dataComentario,
+        atualizadoEm: dataComentario
       }
-    ]
+    }
 
     const comentarios = []
-    for (const comentarioData of comentariosData) {
-      const comentario = await prisma.comentario.create({
-        data: comentarioData
-      })
-      comentarios.push(comentario)
+
+    // Criar entre 2-4 comentários para cada profissional
+    for (const profissional of profissionaisCriados) {
+      const numComentarios = faker.number.int({ min: 2, max: 4 })
+
+      for (let i = 0; i < numComentarios; i++) {
+        const usuarioAleatorio = faker.helpers.arrayElement(usuarios)
+        const comentarioData = generateComentario(
+          usuarioAleatorio.id,
+          profissional.id
+        )
+
+        const comentario = await prisma.comentario.create({
+          data: comentarioData
+        })
+        comentarios.push(comentario)
+      }
     }
     console.log(`✅ ${comentarios.length} comentários criados!`)
 
@@ -395,30 +618,40 @@ async function main() {
     const likesData = []
 
     // Gerar likes aleatórios (cada usuário pode dar like em vários comentários, mas só uma vez por comentário)
-    for (let i = 0; i < comentarios.length; i++) {
-      const comentario = comentarios[i]
-
-      // Adicionar entre 1-4 likes por comentário
-      const numLikes = Math.floor(Math.random() * 4) + 1
+    for (const comentario of comentarios) {
+      // Cada comentário recebe entre 1-5 likes
+      const numLikes = faker.number.int({ min: 1, max: 5 })
       const usuariosQueJaDeuramLike = new Set()
 
-      for (let j = 0; j < numLikes; j++) {
+      for (
+        let j = 0;
+        j < numLikes && usuariosQueJaDeuramLike.size < usuarios.length;
+        j++
+      ) {
         let usuarioAleatorio
         do {
-          usuarioAleatorio =
-            usuarios[Math.floor(Math.random() * usuarios.length)]
+          usuarioAleatorio = faker.helpers.arrayElement(usuarios)
         } while (usuariosQueJaDeuramLike.has(usuarioAleatorio.id))
 
         usuariosQueJaDeuramLike.add(usuarioAleatorio.id)
 
+        // Like deve ser posterior ao comentário
+        const comentarioDate = new Date(comentario.criadoEm)
+        const maxDate = new Date() // Data atual
+        const dataLike = faker.date.between({
+          from: comentarioDate,
+          to: maxDate
+        })
+
         likesData.push({
           usuarioId: usuarioAleatorio.id,
-          comentarioId: comentario.id
+          comentarioId: comentario.id,
+          criadoEm: dataLike
         })
       }
     }
 
-    // Criar os likes
+    // Criar os likes em lotes para melhor performance
     for (const likeData of likesData) {
       await prisma.like.create({
         data: likeData

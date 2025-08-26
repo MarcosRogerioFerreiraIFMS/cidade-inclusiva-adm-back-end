@@ -97,7 +97,7 @@ O projeto segue uma arquitetura bem organizada e modular, baseada em três entid
 - **📂 `prisma/`** - Configurações do banco de dados
   - **📂 `migrations/`** - 🔄 Controle de versões do banco
   - **📄 `schema.prisma`** - 🎯 Estrutura das tabelas
-  - **📄 `seed.ts`** - 🌱 Dados iniciais para desenvolvimento
+  - **📄 `seed.ts`** - 🌱 Dados iniciais otimizados para desenvolvimento
 
 ### 🏗️ **Arquitetura Principal (Camadas)**
 
@@ -222,6 +222,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 | 📚 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
 |-------------------|------------------|-------------|
 | `@eslint/js` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
+| `@faker-js/faker` | Biblioteca para geração de dados falsos realistas | [Faker.js](https://fakerjs.dev/) |
 | `@types/*` | Definições de tipos TypeScript para várias bibliotecas | [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
 | `dotenv` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
 | `eslint` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |

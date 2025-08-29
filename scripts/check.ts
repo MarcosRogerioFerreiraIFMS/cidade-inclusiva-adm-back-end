@@ -7,7 +7,9 @@
  * 3. Verificação de tipos TypeScript
  * 4. Linting do código
  *
- * Uso: pnpm check
+ * Uso:
+ * - pnpm check
+ * - npm run check
  */
 
 import chalk from 'chalk'

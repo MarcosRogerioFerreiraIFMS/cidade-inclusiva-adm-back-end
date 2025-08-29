@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "preinstall": "pnpm run check-node-version && pnpm run validate-env",
+    "preinstall": "tsx ./scripts/check-node-version.ts",
     "dev": "tsx watch ./src/server.ts",
     "seed": "prisma db seed",
     "migrate": "prisma migrate dev",
@@ -17,13 +17,13 @@
     "push": "prisma db push",
     "pull": "prisma db pull",
     "status": "prisma migrate status",
-    "first": "pnpm install && pnpm migrate && pnpm dev",
     "lint": "eslint . --ext .ts --max-warnings=0",
     "build:noEmit": "tsc --noEmit",
     "check": "tsx ./scripts/check.ts",
     "clean": "tsx ./scripts/clean.ts",
     "generate-jwt-secret": "tsx ./scripts/generate-jwt-secret.ts",
     "validate-env": "tsx ./scripts/validate-env.ts",
+    "validate-jwt": "tsx ./scripts/validate-jwt.ts",
     "check-node-version": "tsx ./scripts/check-node-version.ts"
   },
   "prisma": {

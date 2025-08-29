@@ -10,11 +10,14 @@ export const requestTimeout = (timeoutMs: number = 30000) => {
     const timeout = setTimeout(() => {
       if (!res.headersSent) {
         const elapsedTime = Date.now() - startTime
-        console.error(
-          chalk.red.bold('⏱️  TIMEOUT:'),
-          chalk.yellow(`${req.method} ${req.path}`),
-          chalk.red(`após ${elapsedTime}ms`)
-        )
+        // Log apenas em produção ou quando NODE_ENV não está definido
+        if (process.env.NODE_ENV === 'production' || !process.env.NODE_ENV) {
+          console.error(
+            chalk.red.bold('⏱️  TIMEOUT:'),
+            chalk.yellow(`${req.method} ${req.path}`),
+            chalk.red(`após ${elapsedTime}ms`)
+          )
+        }
 
         const error = new HttpError(
           `Tempo limite da requisição excedido (${timeoutMs}ms). A operação demorou muito para ser concluída. Tente novamente ou entre em contato com o suporte se o problema persistir.`,

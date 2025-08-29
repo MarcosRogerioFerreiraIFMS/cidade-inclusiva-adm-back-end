@@ -6,7 +6,9 @@
  * - temp/ (arquivos temporários)
  * - coverage/ (relatórios de cobertura)
  *
- * Uso: pnpm clean
+ * Uso:
+ * - pnpm clean
+ * - npm run clean
  */
 
 import chalk from 'chalk'

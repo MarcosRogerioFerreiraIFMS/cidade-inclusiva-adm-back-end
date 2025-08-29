@@ -144,8 +144,10 @@ export class EnvValidator {
   /**
    * Valida e exibe resultados no console
    */
-  public static validateAndLog(): boolean {
-    console.log(chalk.blue.bold('\n🔍 Validando variáveis de ambiente...\n'))
+  public static validateAndLog(verbose = true): boolean {
+    if (verbose) {
+      console.log(chalk.blue.bold('\n🔍 Validando variáveis de ambiente...\n'))
+    }
 
     const result = this.validate()
 
@@ -170,8 +172,8 @@ export class EnvValidator {
       console.log()
     }
 
-    // Exibe variáveis opcionais ausentes
-    if (result.missingOptional.length > 0) {
+    // Exibe variáveis opcionais ausentes apenas em modo verboso
+    if (result.missingOptional.length > 0 && verbose) {
       console.log(
         chalk.yellow.bold(
           '⚠️  VARIÁVEIS OPCIONAIS AUSENTES (usando valores padrão):'
@@ -189,7 +191,7 @@ export class EnvValidator {
       console.log()
     }
 
-    // Exibe variáveis configuradas corretamente
+    // Exibe variáveis configuradas corretamente apenas em modo verboso
     const configuredVars = this.ENV_VARIABLES.filter((envVar) => {
       const value = process.env[envVar.name]
       return (
@@ -199,7 +201,7 @@ export class EnvValidator {
       )
     })
 
-    if (configuredVars.length > 0) {
+    if (configuredVars.length > 0 && verbose) {
       console.log(chalk.green.bold('✅ VARIÁVEIS CONFIGURADAS CORRETAMENTE:'))
       for (const envVar of configuredVars) {
         const value = process.env[envVar.name]
@@ -213,13 +215,15 @@ export class EnvValidator {
 
     // Resultado final
     if (result.isValid) {
-      console.log(chalk.green.bold('✅ Validação concluída com sucesso!'))
-      if (result.missingOptional.length > 0) {
-        console.log(
-          chalk.gray(
-            '   (Algumas variáveis opcionais não estão configuradas, mas a aplicação pode funcionar)'
+      if (verbose) {
+        console.log(chalk.green.bold('✅ Validação concluída com sucesso!'))
+        if (result.missingOptional.length > 0) {
+          console.log(
+            chalk.gray(
+              '   (Algumas variáveis opcionais não estão configuradas, mas a aplicação pode funcionar)'
+            )
           )
-        )
+        }
       }
     } else {
       console.log(chalk.red.bold('❌ VALIDAÇÃO FALHOU!'))
@@ -228,17 +232,29 @@ export class EnvValidator {
           '   Configure as variáveis críticas antes de iniciar a aplicação.'
         )
       )
+
+      // Sempre mostra a orientação principal, independente do modo verbose
       console.log()
-      console.log(chalk.blue('💡 Dicas:'))
-      console.log(chalk.gray('   1. Copie o arquivo .env.example para .env'))
-      console.log(chalk.gray('   2. Configure as variáveis necessárias'))
       console.log(
-        chalk.gray('   3. Para JWT_SECRET, execute: ') +
-          chalk.cyan('pnpm generate-jwt-secret')
+        chalk.yellow.bold('💡 Para instruções completas: ') +
+          chalk.cyan.bold('pnpm validate-env')
       )
+
+      if (verbose) {
+        console.log()
+        console.log(chalk.blue('💡 Dicas:'))
+        console.log(chalk.gray('   1. Copie o arquivo .env.example para .env'))
+        console.log(chalk.gray('   2. Configure as variáveis necessárias'))
+        console.log(
+          chalk.gray('   3. Para JWT_SECRET, execute: ') +
+            chalk.cyan('pnpm generate-jwt-secret')
+        )
+      }
     }
 
-    console.log()
+    if (verbose) {
+      console.log()
+    }
     return result.isValid
   }
 
@@ -283,5 +299,128 @@ export class EnvValidator {
     } else {
       this.ENV_VARIABLES.push(envVar)
     }
+  }
+
+  /**
+   * Verifica especificamente as configurações relacionadas ao JWT
+   * e fornece ajuda contextual detalhada
+   */
+  public static validateJWTAndLog(): boolean {
+    console.log(chalk.blue.bold('\n🔐 Verificação específica do JWT...\n'))
+
+    const jwtSecret = process.env.JWT_SECRET
+    const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '7d'
+    let isValid = true
+
+    if (!jwtSecret) {
+      console.log(chalk.red.bold('❌ JWT_SECRET ausente:'))
+      console.log(
+        chalk.red('   • Variável obrigatória para autenticação não encontrada')
+      )
+      console.log(
+        chalk.red('   • Aplicação não pode processar login/logout sem ela')
+      )
+      console.log()
+      console.log(chalk.blue('🛠️  Solução passo a passo:'))
+      console.log(
+        chalk.gray('   1. Execute: ') + chalk.cyan('pnpm generate-jwt-secret')
+      )
+      console.log(
+        chalk.gray(
+          '   2. Copie uma das chaves geradas (recomendado: Hexadecimal 64 bytes)'
+        )
+      )
+      console.log(chalk.gray('   3. Abra o arquivo .env'))
+      console.log(
+        chalk.gray('   4. Adicione a linha: ') +
+          chalk.cyan('JWT_SECRET=sua-chave-copiada')
+      )
+      console.log(chalk.gray('   5. Salve o arquivo'))
+      console.log(
+        chalk.gray('   6. Execute novamente: ') + chalk.cyan('pnpm dev')
+      )
+      console.log()
+      isValid = false
+    } else {
+      const jwtVar = this.ENV_VARIABLES.find((v) => v.name === 'JWT_SECRET')
+      if (jwtVar?.validator && !jwtVar.validator(jwtSecret)) {
+        console.log(chalk.yellow.bold('⚠️  JWT_SECRET inseguro:'))
+        console.log(chalk.yellow(`   • Atual: ${jwtSecret.length} caracteres`))
+        console.log(chalk.yellow('   • Mínimo recomendado: 32 caracteres'))
+        console.log(chalk.yellow('   • Produção: 64+ caracteres'))
+        console.log()
+        console.log(chalk.blue('🔧 Para melhorar a segurança:'))
+        console.log(
+          chalk.gray('   1. Execute: ') + chalk.cyan('pnpm generate-jwt-secret')
+        )
+        console.log(
+          chalk.gray(
+            '   2. Substitua o JWT_SECRET atual por uma chave mais longa'
+          )
+        )
+        console.log()
+        isValid = false
+      } else {
+        console.log(chalk.green('✅ JWT_SECRET configurado adequadamente'))
+        console.log(
+          chalk.gray(`   • Comprimento: ${jwtSecret.length} caracteres`)
+        )
+      }
+    }
+
+    // Verificação do JWT_EXPIRES_IN
+    const expiresInVar = this.ENV_VARIABLES.find(
+      (v) => v.name === 'JWT_EXPIRES_IN'
+    )
+    if (expiresInVar?.validator && !expiresInVar.validator(jwtExpiresIn)) {
+      console.log(chalk.yellow.bold('⚠️  JWT_EXPIRES_IN com formato inválido:'))
+      console.log(chalk.yellow(`   • Valor atual: "${jwtExpiresIn}"`))
+      console.log()
+      console.log(chalk.blue('📝 Exemplos de formatos válidos:'))
+      console.log(
+        chalk.gray('   • ') + chalk.cyan('30s') + chalk.gray(' → 30 segundos')
+      )
+      console.log(
+        chalk.gray('   • ') + chalk.cyan('15m') + chalk.gray(' → 15 minutos')
+      )
+      console.log(
+        chalk.gray('   • ') + chalk.cyan('2h') + chalk.gray(' → 2 horas')
+      )
+      console.log(
+        chalk.gray('   • ') +
+          chalk.cyan('7d') +
+          chalk.gray(' → 7 dias (recomendado)')
+      )
+      console.log(
+        chalk.gray('   • ') + chalk.cyan('30d') + chalk.gray(' → 30 dias')
+      )
+      console.log()
+      isValid = false
+    } else {
+      console.log(chalk.green('✅ JWT_EXPIRES_IN configurado corretamente'))
+      console.log(chalk.gray(`   • Duração: ${jwtExpiresIn}`))
+    }
+
+    if (!isValid) {
+      console.log(
+        chalk.red.bold('\n❌ Configuração JWT precisa ser corrigida!')
+      )
+      console.log(
+        chalk.red('   Sistema de autenticação não funcionará adequadamente.')
+      )
+      console.log()
+      console.log(chalk.blue('🎯 Ação recomendada:'))
+      console.log(
+        chalk.gray('   Execute: ') +
+          chalk.cyan('pnpm generate-jwt-secret') +
+          chalk.gray(' e siga as instruções')
+      )
+    } else {
+      console.log(chalk.green.bold('\n✅ Configuração JWT está correta!'))
+      console.log(chalk.gray('   Sistema de autenticação pronto para uso.'))
+    }
+
+    console.log()
+    return isValid
   }
 }

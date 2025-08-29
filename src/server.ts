@@ -26,13 +26,31 @@ async function startServer() {
   // Valida variáveis de ambiente antes de iniciar o servidor
   console.log(chalk.blue.bold('🔧 Iniciando aplicação Cidade Inclusiva...\n'))
 
-  const isEnvValid = EnvValidator.validateAndLog()
+  // Em desenvolvimento, usa logs menos verbosos para evitar spam
+  const isDevelopment = process.env.NODE_ENV !== 'production'
+  const isEnvValid = EnvValidator.validateAndLog(!isDevelopment)
   if (!isEnvValid) {
     console.log(
       chalk.red.bold(
         '💥 Não é possível iniciar a aplicação com variáveis de ambiente inválidas!'
       )
     )
+    console.log()
+    console.log(
+      chalk.yellow.bold('💡 SOLUÇÃO: ') + chalk.cyan.bold('pnpm validate-env')
+    )
+    console.log(
+      chalk.gray(
+        '   ↳ Este comando mostrará instruções detalhadas para configurar todas as variáveis.'
+      )
+    )
+    console.log()
+    console.log(chalk.blue('📋 Processo rápido:'))
+    console.log(chalk.gray('   1. ') + chalk.cyan('cp .env.example .env'))
+    console.log(chalk.gray('   2. ') + chalk.cyan('pnpm generate-jwt-secret'))
+    console.log(chalk.gray('   3. Configure as variáveis no arquivo .env'))
+    console.log(chalk.gray('   4. ') + chalk.cyan('pnpm dev'))
+    console.log()
     process.exit(1)
   }
 

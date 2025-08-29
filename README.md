@@ -30,7 +30,6 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | `dev` | Inicia o servidor em modo de desenvolvimento com hot-reload usando tsx | `pnpm dev` |
 | `start` | Inicia o servidor em modo de produção (requer build) | `pnpm start` |
 | `build` | Compila o código TypeScript para JavaScript na pasta `dist/` | `pnpm build` |
-| `first` | **Script completo**: instala dependências, executa migrações e inicia o dev | `pnpm first` |
 
 ### 🗄️ Scripts do Banco de Dados (Prisma)
 
@@ -47,32 +46,21 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 | 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
 |---------------|------------------|-------------------|
-| `preinstall` | **Script automático**: verifica se a versão do Node.js é compatível (≥20.0.0) | *Executado automaticamente* |
 | `lint` | Executa o ESLint para verificar problemas no código TypeScript | `pnpm lint` |
 | `build:noEmit` | Verifica a compilação TypeScript sem gerar arquivos de saída | `pnpm build:noEmit` |
 | `check` | Verifica a compilação e linting do código | `pnpm check` |
 | `clean` | Remove pastas de build, temporárias e coverage | `pnpm clean` |
 | `generate-jwt-secret` | Gera uma chave secreta JWT para autenticação | `pnpm generate-jwt-secret` |
 | `validate-env` | **Valida variáveis de ambiente**: verifica se todas as configurações necessárias estão presentes | `pnpm validate-env` |
+| `validate-jwt` | **Validação específica do JWT**: verifica configurações de autenticação e segurança JWT | `pnpm validate-jwt` |
 
 ### 📝 Explicação Detalhada dos Scripts
-
-#### 🔄 Scripts Automáticos
-
-- **`preinstall`**: Este script é executado automaticamente pelo pnpm antes de instalar qualquer dependência. Ele verifica se a versão do Node.js é compatível (≥20.0.0) usando o arquivo `scripts/check-node-version.ts`.
 
 #### 🚀 Scripts de Desenvolvimento
 
 - **`dev`**: Utiliza o `tsx` em modo watch para monitorar mudanças no código TypeScript e reiniciar automaticamente o servidor. Ideal para desenvolvimento.
 - **`build`**: Compila todo o código TypeScript para JavaScript, criando os arquivos na pasta `dist/`.
 - **`start`**: Executa a versão compilada da aplicação (arquivo `dist/src/server.js`). Usado em produção.
-
-#### 🎯 Script Completo
-
-- **`first`**: Um script conveniente que executa três comandos em sequência:
-  1. `pnpm install` - Instala todas as dependências
-  2. `pnpm migrate` - Executa as migrações do banco
-  3. `pnpm dev` - Inicia o servidor de desenvolvimento
 
 #### 🗃️ Scripts do Prisma
 
@@ -91,6 +79,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 - **`clean`**: Remove pastas de build (`dist/`), temporárias (`temp/`) e de coverage (`coverage/`). Limpa o projeto para um novo build.
 - **`generate-jwt-secret`**: Executa o arquivo `scripts/generate-jwt-secret.ts` para gerar uma chave secreta JWT segura para autenticação. A chave gerada deve ser usada nas variáveis de ambiente.
 - **`validate-env`**: Executa validação completa das variáveis de ambiente, verificando se todas as configurações necessárias estão presentes e válidas. Mostra relatório detalhado com variáveis críticas, opcionais e valores inválidos.
+- **`validate-jwt`**: Executa validação específica e detalhada das configurações JWT, verificando a segurança da chave secreta, formato do tempo de expiração e inicialização adequada. Oferece instruções passo a passo para correção de problemas relacionados à autenticação.
 
 ## 🔍 Validação de Variáveis de Ambiente
 
@@ -253,7 +242,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 | 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
 |-------------------|---------------|------------------|-------------|
-| `@prisma/client` | `^6.14.0` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
+| `@prisma/client` | `^6.15.0` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
 | `@types/jsonwebtoken` | `^9.0.10` | Definições de tipos TypeScript para jsonwebtoken | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
 | `axios` | `^1.11.0` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
 | `bcryptjs` | `^3.0.2` | Biblioteca para hash de senhas com bcrypt | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
@@ -271,22 +260,22 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 | 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
 |-------------------|---------------|------------------|-------------|
-| `@eslint/js` | `^9.33.0` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
+| `@eslint/js` | `^9.34.0` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
 | `@faker-js/faker` | `^10.0.0` | Biblioteca para geração de dados falsos realistas | [Faker.js](https://fakerjs.dev/) |
 | `@types/compression` | `^1.8.1` | Definições de tipos TypeScript para compression | [Types Compression](https://www.npmjs.com/package/@types/compression) |
 | `@types/cors` | `^2.8.19` | Definições de tipos TypeScript para cors | [Types CORS](https://www.npmjs.com/package/@types/cors) |
 | `@types/express` | `^5.0.3` | Definições de tipos TypeScript para express | [Types Express](https://www.npmjs.com/package/@types/express) |
-| `@types/node` | `^22.17.2` | Definições de tipos TypeScript para Node.js | [Types Node](https://www.npmjs.com/package/@types/node) |
+| `@types/node` | `^22.18.0` | Definições de tipos TypeScript para Node.js | [Types Node](https://www.npmjs.com/package/@types/node) |
 | `@types/semver` | `^7.7.0` | Definições de tipos TypeScript para semver | [Types Semver](https://www.npmjs.com/package/@types/semver) |
 | `dotenv` | `^16.6.1` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
-| `eslint` | `^9.33.0` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
+| `eslint` | `^9.34.0` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
 | `globals` | `^16.3.0` | Variáveis globais para ESLint em diferentes ambientes | [Globals](https://www.npmjs.com/package/globals) |
-| `prisma` | `^6.14.0` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
+| `prisma` | `^6.15.0` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
 | `rimraf` | `^6.0.1` | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf) |
 | `semver` | `^7.7.2` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
-| `tsx` | `^4.20.4` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
+| `tsx` | `^4.20.5` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
 | `typescript` | `^5.9.2` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
-| `typescript-eslint` | `^8.40.0` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
+| `typescript-eslint` | `^8.41.0` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
 
 ## ⚠️ Aviso Importante sobre Dependências
 
@@ -317,7 +306,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ## 🚀 Como Rodar o Projeto
 
-### ⚡ Método Rápido: Um Comando para Tudo
+### ⚡ Método Rápido: Configuração Automática
 
 Este é o método mais simples e recomendado para iniciantes:
 
@@ -339,18 +328,29 @@ Este é o método mais simples e recomendado para iniciantes:
     npm install -g pnpm
     ```
 
-4. **Execute o comando completo:**
+4. **Instale as dependências e configure o projeto:**
 
     ```bash
-    pnpm first
+    pnpm install
     ```
 
-✨ **O que o comando `pnpm first` faz automaticamente:**
+5. **Configure o banco de dados:**
 
-1. 📦 **Instala todas as dependências** (`pnpm install`)
-2. 🗄️ **Configura o banco de dados** (`pnpm migrate`)
-3. 🌱 **Popula com dados iniciais** (seed automático)
-4. 🚀 **Inicia o servidor de desenvolvimento** (`pnpm dev`)
+    ```bash
+    pnpm migrate
+    ```
+
+6. **Popule o banco com dados iniciais (opcional):**
+
+    ```bash
+    pnpm seed
+    ```
+
+7. **Inicie o servidor de desenvolvimento:**
+
+    ```bash
+    pnpm dev
+    ```
 
 **Resultado:** Servidor disponível em `http://localhost:5555` 🎉
 

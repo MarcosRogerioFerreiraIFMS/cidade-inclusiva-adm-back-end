@@ -1,6 +1,8 @@
 /**
  * Script para gerar chaves JWT seguras
- * Uso: pnpm generate-jwt-secret
+ * Uso:
+ * - pnpm generate-jwt-secret
+ * - npm run generate-jwt-secret
  */
 
 import chalk from 'chalk'

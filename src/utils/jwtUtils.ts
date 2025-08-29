@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import jwt, {
   JsonWebTokenError,
   NotBeforeError,
@@ -26,11 +27,27 @@ export class JWTUtils {
 
   private static readonly EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 
-  private static readonly isInitialized = JWTSecurityConfig.initialize()
+  private static readonly isInitialized = JWTSecurityConfig.initialize(false)
 
   static {
-    if (!this.isInitialized) {
-      console.warn('⚠️  JWT não foi inicializado corretamente.')
+    // JWT será validado apenas quando necessário, sem logs desnecessários durante desenvolvimento
+    if (!this.isInitialized && process.env.NODE_ENV === 'production') {
+      console.error(chalk.red.bold('\n💥 FALHA NA INICIALIZAÇÃO JWT!'))
+      console.error(
+        chalk.red('   Não é possível usar funcionalidades de autenticação.')
+      )
+      console.error()
+      console.error(chalk.blue('📋 Para corrigir:'))
+      console.error(
+        chalk.gray('   1. Verifique as configurações: ') +
+          chalk.cyan('pnpm validate-env')
+      )
+      console.error(
+        chalk.gray('   2. Gere uma chave segura: ') +
+          chalk.cyan('pnpm generate-jwt-secret')
+      )
+      console.error(chalk.gray('   3. Configure o JWT_SECRET no arquivo .env'))
+      console.error()
     }
   }
 
@@ -39,12 +56,42 @@ export class JWTUtils {
    */
   static generateToken(payload: { userId: string; email: string }): string {
     if (!this.isInitialized) {
-      throw new Error('JWT não foi inicializado corretamente.')
+      console.error(
+        chalk.red.bold(
+          '[JWT ERROR] Tentativa de gerar token com JWT não inicializado'
+        )
+      )
+      console.error(
+        chalk.red(
+          'Verifique as configurações JWT antes de usar a autenticação.'
+        )
+      )
+      console.error(chalk.gray('Execute: ') + chalk.cyan('pnpm validate-env'))
+      throw new Error(
+        'JWT não foi inicializado corretamente. Configure JWT_SECRET no .env.'
+      )
     }
 
-    return jwt.sign(payload, this.SECRET, {
-      expiresIn: this.EXPIRES_IN as SignOptions['expiresIn']
-    })
+    try {
+      const token = jwt.sign(payload, this.SECRET, {
+        expiresIn: this.EXPIRES_IN as SignOptions['expiresIn']
+      })
+
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(
+          chalk.green(
+            `[JWT] Token gerado com sucesso para usuário: ${payload.email}`
+          )
+        )
+      }
+
+      return token
+    } catch (error) {
+      console.error(chalk.red.bold('[JWT ERROR] Falha ao gerar token'))
+      console.error(chalk.red('Verifique se JWT_SECRET é válido.'))
+      console.error(chalk.gray('Erro detalhado:'), error)
+      throw new Error('Erro interno ao gerar token de autenticação.')
+    }
   }
 
   /**
@@ -52,7 +99,20 @@ export class JWTUtils {
    */
   static verifyToken(token: string): JWTPayload {
     if (!this.isInitialized) {
-      throw new Error('JWT não foi inicializado corretamente.')
+      console.error(
+        chalk.red.bold(
+          '[JWT ERROR] Tentativa de verificar token com JWT não inicializado'
+        )
+      )
+      console.error(
+        chalk.red(
+          'Verifique as configurações JWT antes de usar a autenticação.'
+        )
+      )
+      console.error(chalk.gray('Execute: ') + chalk.cyan('pnpm validate-env'))
+      throw new Error(
+        'JWT não foi inicializado corretamente. Configure JWT_SECRET no .env.'
+      )
     }
 
     try {
@@ -74,19 +134,44 @@ export class JWTUtils {
       return payload as JWTPayload
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
-        console.error('[JWT ERROR]', error)
+        console.error(chalk.red('[JWT ERROR] Falha na verificação do token'))
       }
 
       if (error instanceof TokenExpiredError) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            chalk.yellow(
+              '[JWT] Token expirado - usuário precisa fazer login novamente'
+            )
+          )
+        }
         throw new Error('Token expirado')
       }
+
       if (error instanceof JsonWebTokenError) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            chalk.red('[JWT] Token malformado ou assinatura inválida')
+          )
+        }
         throw new Error('Token inválido')
       }
+
       if (error instanceof NotBeforeError) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            chalk.yellow('[JWT] Token usado antes do tempo permitido')
+          )
+        }
         throw new Error('Token ainda não é válido')
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          chalk.red('[JWT] Erro desconhecido na verificação:'),
+          error
+        )
+      }
       throw new Error('Erro ao verificar o token')
     }
   }

@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { NextFunction, Request, Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from '../utils/HttpError'
@@ -10,7 +11,9 @@ export const requestTimeout = (timeoutMs: number = 30000) => {
       if (!res.headersSent) {
         const elapsedTime = Date.now() - startTime
         console.error(
-          `Timeout na requisição ${req.method} ${req.path} após ${elapsedTime}ms`
+          chalk.red.bold('⏱️  TIMEOUT:'),
+          chalk.yellow(`${req.method} ${req.path}`),
+          chalk.red(`após ${elapsedTime}ms`)
         )
 
         const error = new HttpError(

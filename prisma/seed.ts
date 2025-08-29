@@ -5,6 +5,7 @@ import {
   PrismaClient
 } from '@prisma/client'
 import api from 'brasilapi-js'
+import chalk from 'chalk'
 import { hashPassword } from '../src/utils/passwordUtils'
 
 // Configurar seed para garantir resultados reproduzíveis
@@ -16,22 +17,53 @@ faker.setDefaultRefDate('2025-01-01T00:00:00.000Z')
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Iniciando seed do banco de dados...')
+  console.log(chalk.green.bold('🌱 Iniciando seed do banco de dados...'))
+  console.log(chalk.cyan('📝 Configurações:'))
+  console.log(
+    chalk.gray(`   • Seed: ${chalk.white('123')} (resultados reproduzíveis)`)
+  )
+  console.log(
+    chalk.gray(`   • Data de referência: ${chalk.white('2025-01-01')}`)
+  )
+  console.log('')
 
   try {
     // Limpar dados existentes na ordem correta (respeitando foreign keys)
-    console.log('🧹 Limpando dados existentes...')
+    console.log(chalk.yellow.bold('🧹 Limpando dados existentes...'))
+
+    const startTime = Date.now()
+
+    console.log(chalk.gray('   • Removendo likes...'))
     await prisma.like.deleteMany()
+
+    console.log(chalk.gray('   • Removendo comentários...'))
     await prisma.comentario.deleteMany()
+
+    console.log(chalk.gray('   • Removendo endereços...'))
     await prisma.endereco.deleteMany()
+
+    console.log(chalk.gray('   • Removendo usuários...'))
     await prisma.usuario.deleteMany()
+
+    console.log(chalk.gray('   • Removendo profissionais...'))
     await prisma.profissional.deleteMany()
+
+    console.log(chalk.gray('   • Removendo notícias...'))
     await prisma.noticia.deleteMany()
 
-    console.log('✅ Dados existentes removidos com sucesso!')
+    const cleanupTime = Date.now() - startTime
+    console.log(
+      chalk.green(
+        `✅ Dados existentes removidos com sucesso! ${chalk.gray(
+          `(${cleanupTime}ms)`
+        )}`
+      )
+    )
+    console.log('')
 
     // Criar usuários com endereços (relação 1:1)
-    console.log('👤 Criando usuários com endereços...')
+    console.log(chalk.blue.bold('👤 Criando usuários com endereços...'))
+    console.log(chalk.gray('   • Preparando dados de localização...'))
 
     const validDDDs = [
       '11',
@@ -114,7 +146,9 @@ async function main() {
 
     // Função para buscar CEPs reais de capitais brasileiras
     const fetchRealCEPs = async (): Promise<void> => {
-      console.log('🔍 Buscando CEPs reais das principais cidades...')
+      console.log(
+        chalk.cyan('🔍 Buscando CEPs reais das principais cidades...')
+      )
 
       // CEPs conhecidos de locais importantes (reduzido para ser mais rápido)
       const knownCEPs = [
@@ -124,6 +158,9 @@ async function main() {
         '70040-010', // Asa Norte, Brasília - DF
         '80010-000' // Centro, Curitiba - PR
       ]
+
+      let successCount = 0
+      let fallbackCount = 0
 
       for (const cep of knownCEPs) {
         try {
@@ -147,11 +184,26 @@ async function main() {
                 cepData.state || faker.location.state({ abbreviated: true })
             })
 
+            console.log(
+              chalk.gray(
+                `   • ${chalk.green('✓')} CEP ${chalk.white(formattedCep)} - ${
+                  cepData.city || 'N/A'
+                }, ${cepData.state || 'N/A'}`
+              )
+            )
+            successCount++
+
             // Delay pequeno entre requisições
             await new Promise((resolve) => setTimeout(resolve, 50))
           }
         } catch {
-          console.warn(`⚠️ Erro ao buscar CEP ${cep}`)
+          console.log(
+            chalk.gray(
+              `   • ${chalk.yellow('⚠')} CEP ${chalk.white(
+                cep
+              )} - usando dados gerados`
+            )
+          )
           // Fallback para dados gerados com CEP válido
           realCEPsCache.push({
             cep: cep,
@@ -160,21 +212,18 @@ async function main() {
             cidade: faker.location.city(),
             estado: faker.location.state({ abbreviated: true })
           })
+          fallbackCount++
         }
       }
 
-      console.log(`✅ ${realCEPsCache.length} CEPs carregados!`)
-
-      // Log de quais são reais vs fallback
-      const reais = realCEPsCache.filter(
-        (c) => c.logradouro.includes('Avenida') || c.logradouro.includes('Rua')
-      ).length
-      const fallbacks = realCEPsCache.length - reais
-      if (reais > 0) {
-        console.log(
-          `📍 ${reais} CEPs reais obtidos da API, ${fallbacks} fallbacks gerados`
-        )
-      }
+      console.log(chalk.green(`✅ ${realCEPsCache.length} CEPs carregados!`))
+      console.log(
+        chalk.gray(`   • ${chalk.green(successCount)} CEPs reais da API`)
+      )
+      console.log(
+        chalk.gray(`   • ${chalk.yellow(fallbackCount)} CEPs com dados gerados`)
+      )
+      console.log('')
     }
 
     // Buscar CEPs reais antes de gerar usuários
@@ -227,7 +276,7 @@ async function main() {
       let email: string
       let attempts = 0
       do {
-        email = faker.internet.email({ firstName, lastName })
+        email = faker.internet.email({ firstName, lastName }).toLowerCase()
         attempts++
         // Se após 10 tentativas ainda não for único, adicionar timestamp
         if (attempts > 10) {
@@ -249,6 +298,7 @@ async function main() {
       }
     }
 
+    console.log(chalk.cyan('👥 Gerando dados de usuários...'))
     // Gerar 25 usuários com dados variados e emails únicos
     const existingEmails = new Set<string>()
     const usuariosData = []
@@ -256,7 +306,10 @@ async function main() {
       usuariosData.push(generateUser(existingEmails))
     }
 
+    console.log(chalk.cyan('💾 Salvando usuários no banco de dados...'))
     const usuarios = []
+    const startUserCreation = Date.now()
+
     for (let i = 0; i < usuariosData.length; i++) {
       const usuarioData = usuariosData[i]
       const hashedPassword = await hashPassword(usuarioData.senha)
@@ -287,11 +340,28 @@ async function main() {
       })
 
       usuarios.push(usuario)
+
+      // Log de progresso a cada 5 usuários
+      if ((i + 1) % 5 === 0 || i === usuariosData.length - 1) {
+        console.log(
+          chalk.gray(`   • ${i + 1}/${usuariosData.length} usuários criados`)
+        )
+      }
     }
-    console.log(`✅ ${usuarios.length} usuários criados!`)
+
+    const userCreationTime = Date.now() - startUserCreation
+    console.log(
+      chalk.green(
+        `✅ ${usuarios.length} usuários criados com sucesso! ${chalk.gray(
+          `(${userCreationTime}ms)`
+        )}`
+      )
+    )
+    console.log('')
 
     // Criar profissionais
-    console.log('👥 Criando profissionais...')
+    console.log(chalk.blue.bold('👥 Criando profissionais...'))
+    console.log(chalk.cyan('🎭 Gerando dados de profissionais...'))
 
     // Função para gerar profissional com dados realistas
     const generateProfissional = (existingEmails: Set<string>) => {
@@ -306,7 +376,7 @@ async function main() {
       let email: string
       let attempts = 0
       do {
-        email = faker.internet.email({ firstName, lastName })
+        email = faker.internet.email({ firstName, lastName }).toLowerCase()
         attempts++
         // Se após 10 tentativas ainda não for único, adicionar timestamp
         if (attempts > 10) {
@@ -343,6 +413,8 @@ async function main() {
       profissionaisData.push(generateProfissional(existingEmailsProfissionais))
     }
 
+    console.log(chalk.cyan('💾 Salvando profissionais no banco de dados...'))
+
     // Adicionar timestamps variados aos profissionais
     const profissionaisComTimestamps = profissionaisData.map((prof) => ({
       ...prof,
@@ -350,16 +422,43 @@ async function main() {
       atualizadoEm: faker.date.recent({ days: 60 })
     }))
 
+    const startProfCreation = Date.now()
     const profissionais = await prisma.profissional.createMany({
       data: profissionaisComTimestamps
     })
-    console.log(`✅ ${profissionais.count} profissionais criados!`)
+    const profCreationTime = Date.now() - startProfCreation
+
+    console.log(
+      chalk.green(
+        `✅ ${
+          profissionais.count
+        } profissionais criados com sucesso! ${chalk.gray(
+          `(${profCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas das especialidades
+    const especialidadeStats = profissionaisComTimestamps.reduce(
+      (acc, prof) => {
+        acc[prof.especialidade] = (acc[prof.especialidade] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>
+    )
+
+    console.log(chalk.gray('   • Especialidades criadas:'))
+    Object.entries(especialidadeStats).forEach(([esp, count]) => {
+      console.log(chalk.gray(`     - ${esp}: ${count}`))
+    })
+    console.log('')
 
     // Buscar os profissionais criados para usar seus IDs nos comentários
     const profissionaisCriados = await prisma.profissional.findMany()
 
     // Criar notícias com dados mais realistas e abrangentes
-    console.log('📰 Criando notícias...')
+    console.log(chalk.blue.bold('📰 Criando notícias...'))
+    console.log(chalk.cyan('📝 Gerando conteúdo das notícias...'))
 
     // Função para gerar notícia com dados realistas
     const generateNoticia = () => {
@@ -552,13 +651,36 @@ async function main() {
     // Gerar 15 notícias com dados variados
     const noticiasData = faker.helpers.multiple(generateNoticia, { count: 15 })
 
+    console.log(chalk.cyan('💾 Salvando notícias no banco de dados...'))
+    const startNewsCreation = Date.now()
     const noticias = await prisma.noticia.createMany({
       data: noticiasData
     })
-    console.log(`✅ ${noticias.count} notícias criadas!`)
+    const newsCreationTime = Date.now() - startNewsCreation
+
+    console.log(
+      chalk.green(
+        `✅ ${noticias.count} notícias criadas com sucesso! ${chalk.gray(
+          `(${newsCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas das categorias
+    const categoriaStats = noticiasData.reduce((acc, noticia) => {
+      acc[noticia.categoria] = (acc[noticia.categoria] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    console.log(chalk.gray('   • Categorias criadas:'))
+    Object.entries(categoriaStats).forEach(([cat, count]) => {
+      console.log(chalk.gray(`     - ${cat}: ${count}`))
+    })
+    console.log('')
 
     // Criar comentários dos usuários para os profissionais
-    console.log('💬 Criando comentários...')
+    console.log(chalk.blue.bold('💬 Criando comentários...'))
+    console.log(chalk.cyan('📝 Gerando feedback dos usuários...'))
 
     // Função para gerar comentário realista com timestamp variado
     const generateComentario = (usuarioId: string, profissionalId: string) => {
@@ -593,6 +715,7 @@ async function main() {
     }
 
     const comentarios = []
+    const startCommentCreation = Date.now()
 
     // Criar entre 2-4 comentários para cada profissional
     for (const profissional of profissionaisCriados) {
@@ -611,10 +734,27 @@ async function main() {
         comentarios.push(comentario)
       }
     }
-    console.log(`✅ ${comentarios.length} comentários criados!`)
+
+    const commentCreationTime = Date.now() - startCommentCreation
+    console.log(
+      chalk.green(
+        `✅ ${comentarios.length} comentários criados com sucesso! ${chalk.gray(
+          `(${commentCreationTime}ms)`
+        )}`
+      )
+    )
+    console.log(
+      chalk.gray(
+        `   • Média de ${(
+          comentarios.length / profissionaisCriados.length
+        ).toFixed(1)} comentários por profissional`
+      )
+    )
+    console.log('')
 
     // Criar likes nos comentários
-    console.log('👍 Criando likes nos comentários...')
+    console.log(chalk.blue.bold('👍 Criando likes nos comentários...'))
+    console.log(chalk.cyan('❤️  Gerando interações dos usuários...'))
     const likesData = []
 
     // Gerar likes aleatórios (cada usuário pode dar like em vários comentários, mas só uma vez por comentário)
@@ -652,35 +792,110 @@ async function main() {
     }
 
     // Criar os likes em lotes para melhor performance
+    const startLikeCreation = Date.now()
     for (const likeData of likesData) {
       await prisma.like.create({
         data: likeData
       })
     }
-    console.log(`✅ ${likesData.length} likes criados!`)
+    const likeCreationTime = Date.now() - startLikeCreation
+
+    console.log(
+      chalk.green(
+        `✅ ${likesData.length} likes criados com sucesso! ${chalk.gray(
+          `(${likeCreationTime}ms)`
+        )}`
+      )
+    )
+    console.log(
+      chalk.gray(
+        `   • Média de ${(likesData.length / comentarios.length).toFixed(
+          1
+        )} likes por comentário`
+      )
+    )
+    console.log('')
 
     // Resumo final
-    console.log('\n🎉 Seed concluído com sucesso!')
-    console.log('📊 Resumo dos dados criados:')
-    console.log(`   👤 Usuários: ${usuarios.length}`)
-    console.log(`   🏠 Endereços: ${usuarios.length}`)
-    console.log(`   👥 Profissionais: ${profissionais.count}`)
-    console.log(`   📰 Notícias: ${noticias.count}`)
-    console.log(`   💬 Comentários: ${comentarios.length}`)
-    console.log(`   👍 Likes: ${likesData.length}`)
-    console.log('\n✨ Banco de dados populado e pronto para uso!')
+    const totalTime = Date.now() - startTime
+    console.log('')
+    console.log(chalk.green.bold('🎉 Seed concluído com sucesso!'))
+    console.log(chalk.cyan.bold('📊 Resumo dos dados criados:'))
+    console.log(
+      chalk.white(
+        `   👤 Usuários: ${chalk.green.bold(usuarios.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   🏠 Endereços: ${chalk.green.bold(usuarios.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   👥 Profissionais: ${chalk.green.bold(
+          profissionais.count.toString()
+        )}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   📰 Notícias: ${chalk.green.bold(noticias.count.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   💬 Comentários: ${chalk.green.bold(comentarios.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   👍 Likes: ${chalk.green.bold(likesData.length.toString())}`
+      )
+    )
+    console.log('')
+    console.log(
+      chalk.green.bold(
+        `⏱️  Tempo total: ${chalk.white((totalTime / 1000).toFixed(2))}s`
+      )
+    )
+    console.log('')
+    console.log(
+      chalk.magenta.bold('✨ Banco de dados populado e pronto para uso! ✨')
+    )
   } catch (error) {
-    console.error('❌ Erro durante o seed:', error)
+    console.log('')
+    console.log(chalk.red.bold('❌ Erro durante o seed:'))
+    console.log(
+      chalk.red(error instanceof Error ? error.message : String(error))
+    )
+    if (error instanceof Error && error.stack) {
+      console.log(chalk.gray(error.stack))
+    }
     throw error
   }
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erro fatal no seed:', e)
+    console.log('')
+    console.log(chalk.red.bold('❌ ERRO FATAL NO SEED'))
+    console.log(chalk.red('Falha crítica durante a execução do seed:'))
+    console.log(chalk.red(e instanceof Error ? e.message : String(e)))
+    if (e instanceof Error && e.stack) {
+      console.log('')
+      console.log(chalk.gray('Stack trace:'))
+      console.log(chalk.gray(e.stack))
+    }
+    console.log('')
+    console.log(chalk.yellow('💡 Dicas para resolver:'))
+    console.log(chalk.yellow('   • Verifique se o banco de dados está rodando'))
+    console.log(chalk.yellow('   • Execute: pnpm migrate'))
+    console.log(chalk.yellow('   • Verifique as variáveis de ambiente'))
+    console.log('')
     process.exit(1)
   })
   .finally(async () => {
     await prisma.$disconnect()
-    console.log('🔌 Conexão com o banco de dados encerrada.')
+    console.log(chalk.gray('🔌 Conexão com o banco de dados encerrada.'))
   })

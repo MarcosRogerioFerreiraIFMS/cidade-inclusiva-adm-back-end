@@ -1,5 +1,7 @@
+import chalk from 'chalk'
 import * as net from 'net'
 import app from './app'
+import { EnvValidator } from './utils/envValidator'
 
 const PORT = Number(process.env.PORT) || 5555
 
@@ -21,24 +23,45 @@ function checkPortAvailability(port: number): Promise<boolean> {
 }
 
 async function startServer() {
-  const isPortAvailable = await checkPortAvailability(Number(PORT))
+  // Valida variáveis de ambiente antes de iniciar o servidor
+  console.log(chalk.blue.bold('🔧 Iniciando aplicação Cidade Inclusiva...\n'))
+
+  const isEnvValid = EnvValidator.validateAndLog()
+  if (!isEnvValid) {
+    console.log(
+      chalk.red.bold(
+        '💥 Não é possível iniciar a aplicação com variáveis de ambiente inválidas!'
+      )
+    )
+    process.exit(1)
+  }
+
+  const isPortAvailable = await checkPortAvailability(PORT)
 
   if (!isPortAvailable) {
-    console.error(`❌ Erro: A porta ${PORT} já está em uso!`)
+    console.error(chalk.red.bold(`❌ Erro: A porta ${PORT} já está em uso!`))
     console.log(
-      '💡 Tente usar uma porta diferente definindo a variável PORT no ambiente'
+      chalk.blue('💡 Dica: ') +
+        chalk.gray('Defina outra porta usando a variável ') +
+        chalk.cyan.bold('PORT') +
+        chalk.gray(', por exemplo: ') +
+        chalk.green('PORT=3001 pnpm dev')
     )
     process.exit(1)
   }
 
   app.listen(PORT, () => {
     console.log(
-      `🚀 Servidor rodando na porta ${PORT}. Acesse em http://localhost:${PORT}`
+      chalk.green(`🚀 Servidor rodando na porta ${PORT}.`) +
+        ' ' +
+        chalk.gray(`Acesse em `) +
+        chalk.underline.blue(`http://localhost:${PORT}`)
     )
   })
 }
 
 startServer().catch((error) => {
-  console.error('❌ Erro ao iniciar o servidor:', error)
+  console.error(chalk.red.bold('❌ Erro ao iniciar o servidor:'))
+  console.error(chalk.red(error))
   process.exit(1)
 })

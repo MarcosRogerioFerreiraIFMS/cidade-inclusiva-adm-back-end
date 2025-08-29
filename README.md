@@ -37,7 +37,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
 |---------------|------------------|-------------------|
 | `migrate` | Executa as migrações do banco de dados em modo desenvolvimento | `pnpm migrate` |
-| `seed` | Popula o banco de dados com dados iniciais definidos em `prisma/seed.ts` | `pnpm seed` |
+| `seed` | Popula o banco de dados com dados iniciais realistas usando logs coloridos e informativos | `pnpm seed` |
 | `studio` | Abre o Prisma Studio para visualizar e editar dados do banco | `pnpm studio` |
 | `push` | Aplica mudanças do schema diretamente no banco (sem criar migrações) | `pnpm push` |
 | `pull` | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma` | `pnpm pull` |
@@ -52,6 +52,8 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | `build:noEmit` | Verifica a compilação TypeScript sem gerar arquivos de saída | `pnpm build:noEmit` |
 | `check` | Verifica a compilação e linting do código | `pnpm check` |
 | `clean` | Remove pastas de build, temporárias e coverage | `pnpm clean` |
+| `generate-jwt-secret` | Gera uma chave secreta JWT para autenticação | `pnpm generate-jwt-secret` |
+| `validate-env` | **Valida variáveis de ambiente**: verifica se todas as configurações necessárias estão presentes | `pnpm validate-env` |
 
 ### 📝 Explicação Detalhada dos Scripts
 
@@ -75,7 +77,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 #### 🗃️ Scripts do Prisma
 
 - **`migrate`**: Executa `prisma migrate dev` para aplicar migrações pendentes ao banco de dados de desenvolvimento.
-- **`seed`**: Executa o arquivo `prisma/seed.ts` para popular o banco com dados iniciais.
+- **`seed`**: Executa o arquivo `prisma/seed.ts` para popular o banco com dados iniciais realistas e bem estruturados, incluindo usuários com endereços reais (via BrasilAPI), profissionais, notícias categorizadas, comentários e likes. O processo inclui logs coloridos e informativos que mostram o progresso detalhado e estatísticas finais.
 - **`studio`**: Abre uma interface web para visualizar e editar dados do banco de dados.
 - **`push`**: Aplica mudanças do schema diretamente no banco sem criar arquivos de migração.
 - **`pull`**: Sincroniza o schema do Prisma com a estrutura atual do banco de dados.
@@ -87,6 +89,51 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 - **`build:noEmit`**: Executa a verificação de tipos do TypeScript sem gerar arquivos de saída. Útil para validar o código antes de commits ou em pipelines de CI/CD.
 - **`check`**: Script de verificação completa que executa compilação TypeScript (sem gerar arquivos) e linting. Ideal para CI/CD.
 - **`clean`**: Remove pastas de build (`dist/`), temporárias (`temp/`) e de coverage (`coverage/`). Limpa o projeto para um novo build.
+- **`generate-jwt-secret`**: Executa o arquivo `scripts/generate-jwt-secret.ts` para gerar uma chave secreta JWT segura para autenticação. A chave gerada deve ser usada nas variáveis de ambiente.
+- **`validate-env`**: Executa validação completa das variáveis de ambiente, verificando se todas as configurações necessárias estão presentes e válidas. Mostra relatório detalhado com variáveis críticas, opcionais e valores inválidos.
+
+## 🔍 Validação de Variáveis de Ambiente
+
+Este projeto inclui um **sistema robusto de validação de variáveis de ambiente** que garante que todas as configurações necessárias estejam presentes e válidas antes da aplicação iniciar.
+
+### ✅ Variáveis Críticas (Obrigatórias)
+
+- **`DATABASE_URL`**: URL de conexão com o banco de dados
+- **`JWT_SECRET`**: Chave secreta para tokens JWT (mínimo 32 caracteres)
+
+### ⚠️ Variáveis Importantes (com valores padrão)
+
+- **`JWT_EXPIRES_IN`**: Tempo de expiração do token (padrão: `7d`)
+- **`NODE_ENV`**: Ambiente de execução (padrão: `development`)
+- **`PORT`**: Porta do servidor (padrão: `5555`)
+
+### 🔧 Variáveis Opcionais
+
+- **`ALLOWED_ORIGINS`**: Origins permitidas para CORS (padrão: `http://localhost:3000`)
+
+### 🚀 Como Usar
+
+1. **Validar variáveis sem iniciar o servidor:**
+
+   ```bash
+   pnpm validate-env
+   ```
+
+2. **Configuração inicial:**
+
+   ```bash
+   # 1. Copie o arquivo de exemplo
+   cp .env.example .env
+   
+   # 2. Gere uma chave JWT segura
+   pnpm generate-jwt-secret
+   
+   # 3. Configure suas variáveis no .env
+   # 4. Valide a configuração
+   pnpm validate-env
+   ```
+
+3. **A validação acontece automaticamente** quando você inicia o servidor com `pnpm dev` ou `pnpm start`.
 
 ## 📂 Estrutura do Projeto
 
@@ -97,7 +144,7 @@ O projeto segue uma arquitetura bem organizada e modular, baseada em três entid
 - **📂 `prisma/`** - Configurações do banco de dados
   - **📂 `migrations/`** - 🔄 Controle de versões do banco
   - **📄 `schema.prisma`** - 🎯 Estrutura das tabelas
-  - **📄 `seed.ts`** - 🌱 Dados iniciais otimizados para desenvolvimento
+  - **📄 `seed.ts`** - 🌱 Dados iniciais otimizados para desenvolvimento com logs coloridos e informativos
 
 ### 🏗️ **Arquitetura Principal (Camadas)**
 
@@ -204,35 +251,42 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ### 📦 Dependências de Produção
 
-| 📚 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
-|-------------------|------------------|-------------|
-| `@prisma/client` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
-| `axios` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
-| `bcryptjs` | Biblioteca para hash de senhas com bcrypt | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
-| `brasilapi-js` | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/) |
-| `compression` | Middleware de compressão para Express | [Compression](https://www.npmjs.com/package/compression) |
-| `cors` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
-| `express` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
-| `express-rate-limit` | Middleware de limitação de taxa para Express | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) |
-| `helmet` | Middleware de segurança para Express | [Helmet](https://helmetjs.github.io/) |
-| `zod` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
+| 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
+|-------------------|---------------|------------------|-------------|
+| `@prisma/client` | `^6.14.0` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
+| `@types/jsonwebtoken` | `^9.0.10` | Definições de tipos TypeScript para jsonwebtoken | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
+| `axios` | `^1.11.0` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
+| `bcryptjs` | `^3.0.2` | Biblioteca para hash de senhas com bcrypt | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
+| `brasilapi-js` | `^1.0.4` | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/) |
+| `chalk` | `^5.6.0` | Biblioteca para estilizar texto no terminal com cores e formatação | [Chalk](https://www.npmjs.com/package/chalk) |
+| `compression` | `^1.8.1` | Middleware de compressão para Express | [Compression](https://www.npmjs.com/package/compression) |
+| `cors` | `^2.8.5` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
+| `express` | `^5.1.0` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
+| `express-rate-limit` | `^8.0.1` | Middleware de limitação de taxa para Express | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) |
+| `helmet` | `^8.1.0` | Middleware de segurança para Express | [Helmet](https://helmetjs.github.io/) |
+| `jsonwebtoken` | `^9.0.2` | Implementação de JSON Web Tokens para autenticação | [JsonWebToken](https://www.npmjs.com/package/jsonwebtoken) |
+| `zod` | `^3.25.76` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
 
 ### 🛠️ Dependências de Desenvolvimento
 
-| 📚 **Biblioteca** | 📖 **Descrição** | 🔗 **Link** |
-|-------------------|------------------|-------------|
-| `@eslint/js` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
-| `@faker-js/faker` | Biblioteca para geração de dados falsos realistas | [Faker.js](https://fakerjs.dev/) |
-| `@types/*` | Definições de tipos TypeScript para várias bibliotecas | [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
-| `dotenv` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
-| `eslint` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
-| `globals` | Variáveis globais para ESLint em diferentes ambientes | [Globals](https://www.npmjs.com/package/globals) |
-| `prisma` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
-| `rimraf` | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf) |
-| `semver` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
-| `tsx` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
-| `typescript` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
-| `typescript-eslint` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
+| 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
+|-------------------|---------------|------------------|-------------|
+| `@eslint/js` | `^9.33.0` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
+| `@faker-js/faker` | `^10.0.0` | Biblioteca para geração de dados falsos realistas | [Faker.js](https://fakerjs.dev/) |
+| `@types/compression` | `^1.8.1` | Definições de tipos TypeScript para compression | [Types Compression](https://www.npmjs.com/package/@types/compression) |
+| `@types/cors` | `^2.8.19` | Definições de tipos TypeScript para cors | [Types CORS](https://www.npmjs.com/package/@types/cors) |
+| `@types/express` | `^5.0.3` | Definições de tipos TypeScript para express | [Types Express](https://www.npmjs.com/package/@types/express) |
+| `@types/node` | `^22.17.2` | Definições de tipos TypeScript para Node.js | [Types Node](https://www.npmjs.com/package/@types/node) |
+| `@types/semver` | `^7.7.0` | Definições de tipos TypeScript para semver | [Types Semver](https://www.npmjs.com/package/@types/semver) |
+| `dotenv` | `^16.6.1` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
+| `eslint` | `^9.33.0` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
+| `globals` | `^16.3.0` | Variáveis globais para ESLint em diferentes ambientes | [Globals](https://www.npmjs.com/package/globals) |
+| `prisma` | `^6.14.0` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
+| `rimraf` | `^6.0.1` | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf) |
+| `semver` | `^7.7.2` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
+| `tsx` | `^4.20.4` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
+| `typescript` | `^5.9.2` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
+| `typescript-eslint` | `^8.40.0` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
 
 ## ⚠️ Aviso Importante sobre Dependências
 
@@ -373,13 +427,15 @@ pnpm pull
 - ✅ **TypeScript** para tipagem estática
 - ✅ **Hot-reload** em desenvolvimento
 - ✅ **Migrações de banco** automatizadas
-- ✅ **Seed de dados** para desenvolvimento
+- ✅ **Seed de dados** otimizado para desenvolvimento com logs coloridos
 - ✅ **CORS** configurado para requisições cross-origin
 - ✅ **Integração BrasilAPI** para dados geográficos do Brasil
-- ✅ **Autenticação e Segurança** com bcryptjs para hash de senhas
+- ✅ **Autenticação JWT** com jsonwebtoken para sessões seguras
+- ✅ **Hash de senhas** com bcryptjs para segurança
 - ✅ **Rate Limiting** para proteção contra spam e ataques DDoS
 - ✅ **Helmet** para proteção com headers de segurança
 - ✅ **Compressão** de respostas para melhor performance
+- ✅ **Logs coloridos** com chalk para melhor experiência de desenvolvimento
 
 ---
 

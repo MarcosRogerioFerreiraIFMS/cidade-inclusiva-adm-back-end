@@ -8,6 +8,7 @@ import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums/HttpStatusCode'
 import { globalErrorHandler } from './middlewares/errorMiddleware'
 import { requestTimeout } from './middlewares/timeoutMiddleware'
+import { AuthRoutes } from './routes/AuthRoutes'
 import { ComentarioRoutes } from './routes/ComentarioRoutes'
 import { LikeRoutes } from './routes/LikeRoutes'
 import { NoticiaRoutes } from './routes/NoticiaRoutes'
@@ -26,7 +27,7 @@ const limiter = rateLimit({
 })
 
 app.use(limiter)
-app.use(requestTimeout(30000))
+app.use(requestTimeout(30 * 1000))
 app.use(
   cors({
     origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:3000',
@@ -45,6 +46,7 @@ app.use(
   })
 )
 
+app.use(ROUTES.AUTH, AuthRoutes)
 app.use(ROUTES.NOTICIA, NoticiaRoutes)
 app.use(ROUTES.PROFISSIONAL, ProfissionalRoutes)
 app.use(ROUTES.COMENTARIO, ComentarioRoutes)

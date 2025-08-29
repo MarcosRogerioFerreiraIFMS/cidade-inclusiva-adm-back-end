@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from './HttpError'
@@ -40,7 +41,10 @@ export class HandleError {
     err: HttpError | unknown
   ): Response<ErrorResponse> {
     if (!err) {
-      console.error('Erro inesperado: Nenhum erro fornecido')
+      console.error(
+        chalk.red.bold('❌ ERRO INESPERADO:'),
+        chalk.gray('Nenhum erro fornecido')
+      )
       return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
         success: false,
         error: 'Erro interno do servidor'
@@ -121,7 +125,10 @@ export class HandleError {
     res: Response,
     jsonErr: JsonSyntaxError
   ): Response<ErrorResponse> {
-    console.error('Erro de sintaxe JSON:', jsonErr.message)
+    console.error(
+      chalk.red.bold('📄 JSON SYNTAX ERROR:'),
+      chalk.yellow(jsonErr.message)
+    )
 
     let errorDetails = 'O JSON enviado está malformado'
 
@@ -151,7 +158,11 @@ export class HandleError {
   ): Response<ErrorResponse> {
     switch (prismaErr.code) {
       case 'P2002':
-        console.error('Erro de duplicação:', prismaErr.message)
+        console.error(
+          chalk.red.bold('🔁 DUPLICAÇÃO:'),
+          chalk.cyan('P2002'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           success: false,
           error: 'Recurso já existe',
@@ -159,7 +170,11 @@ export class HandleError {
         })
 
       case 'P2025':
-        console.error('Registro não encontrado:', prismaErr.message)
+        console.error(
+          chalk.red.bold('🔍 NÃO ENCONTRADO:'),
+          chalk.cyan('P2025'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.NOT_FOUND).json({
           success: false,
           error: 'Registro não encontrado',
@@ -167,7 +182,11 @@ export class HandleError {
         })
 
       case 'P2003':
-        console.error('Violação de chave estrangeira:', prismaErr.message)
+        console.error(
+          chalk.red.bold('🔗 CONSTRAINT:'),
+          chalk.cyan('P2003'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           success: false,
           error: 'Erro de relacionamento',
@@ -175,7 +194,11 @@ export class HandleError {
         })
 
       case 'P2021':
-        console.error('Tabela não existe:', prismaErr.message)
+        console.error(
+          chalk.red.bold('🗄️  TABELA:'),
+          chalk.cyan('P2021'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
           success: false,
           error: 'Erro interno do servidor',
@@ -183,7 +206,11 @@ export class HandleError {
         })
 
       case 'P2000':
-        console.error('Valor muito longo:', prismaErr.message)
+        console.error(
+          chalk.red.bold('📏 TAMANHO:'),
+          chalk.cyan('P2000'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           success: false,
           error: 'Dados inválidos',
@@ -191,7 +218,11 @@ export class HandleError {
         })
 
       case 'P2006':
-        console.error('Valor inválido:', prismaErr.message)
+        console.error(
+          chalk.red.bold('❌ VALOR INVÁLIDO:'),
+          chalk.cyan('P2006'),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.BAD_REQUEST).json({
           success: false,
           error: 'Dados inválidos',
@@ -199,7 +230,11 @@ export class HandleError {
         })
 
       default:
-        console.error('Erro do Prisma:', prismaErr.code, prismaErr.message)
+        console.error(
+          chalk.red.bold('🗃️  PRISMA ERROR:'),
+          chalk.cyan(prismaErr.code),
+          chalk.yellow(prismaErr.message)
+        )
         return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
           success: false,
           error: 'Erro interno do servidor',
@@ -216,17 +251,17 @@ export class HandleError {
 
     if (isClientError) {
       console.error(
-        'Erro do cliente:',
-        httpErr.message,
-        'Status:',
-        httpErr.statusCode
+        chalk.yellow.bold('⚠️  ERRO DO CLIENTE:'),
+        chalk.red(httpErr.message),
+        chalk.gray('Status:'),
+        chalk.magenta(httpErr.statusCode.toString())
       )
     } else {
       console.error(
-        'Erro do servidor:',
-        httpErr.message,
-        'Status:',
-        httpErr.statusCode
+        chalk.red.bold('💥 ERRO DO SERVIDOR:'),
+        chalk.red(httpErr.message),
+        chalk.gray('Status:'),
+        chalk.magenta(httpErr.statusCode.toString())
       )
     }
 
@@ -243,7 +278,7 @@ export class HandleError {
     res: Response,
     err: unknown
   ): Response<ErrorResponse> {
-    console.error('Erro inesperado:', err)
+    console.error(chalk.red.bold('🚨 ERRO GENÉRICO:'), chalk.gray(String(err)))
     return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
       success: false,
       error: 'Erro interno do servidor'

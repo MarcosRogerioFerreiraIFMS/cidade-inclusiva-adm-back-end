@@ -3,5 +3,6 @@ export const ROUTES = {
   PROFISSIONAL: '/profissionais',
   COMENTARIO: '/comentarios',
   USUARIO: '/usuarios',
-  LIKE: '/likes'
+  LIKE: '/likes',
+  AUTH: '/auth'
 } as const

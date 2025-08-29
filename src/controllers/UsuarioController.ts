@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { IUsuarioService } from '../interfaces/services/IUsuarioService'
+import { AuthenticatedRequest } from '../middlewares/authMiddleware'
+import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class UsuarioController {
@@ -47,13 +49,27 @@ export class UsuarioController {
   }
 
   update = async (
-    req: Request,
+    req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
       const { id } = req.params
+
+      // Buscar dados atuais antes da atualização para auditoria
+      const usuarioAtual = await this.usuarioService.findById(id)
+
       const usuario = await this.usuarioService.update(id, req.body)
+
+      // Log de auditoria
+      await AuditLogger.logUpdate(
+        req,
+        'USUARIO',
+        id,
+        usuarioAtual as unknown as Record<string, unknown>,
+        usuario as unknown as Record<string, unknown>
+      )
+
       HandleSuccess.updated(res, usuario, 'Usuário atualizado com sucesso')
     } catch (error: unknown) {
       next(error)
@@ -61,13 +77,26 @@ export class UsuarioController {
   }
 
   delete = async (
-    req: Request,
+    req: AuthenticatedRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
       const { id } = req.params
+
+      // Buscar dados antes de deletar para auditoria
+      const usuarioParaDeletar = await this.usuarioService.findById(id)
+
       await this.usuarioService.delete(id)
+
+      // Log de auditoria
+      await AuditLogger.logDelete(
+        req,
+        'USUARIO',
+        id,
+        usuarioParaDeletar as unknown as Record<string, unknown>
+      )
+
       HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)

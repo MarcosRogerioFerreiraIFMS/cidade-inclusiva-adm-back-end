@@ -32,17 +32,18 @@ model Profissional {
 }
 
 model Usuario {
-  id               String       @id @default(uuid())
+  id               String              @id @default(uuid())
   nome             String
-  telefone         String       @unique
+  telefone         String              @unique
   foto             String?
-  email            String       @unique
+  email            String              @unique
   senha            String
   endereco         Endereco?
   comentarios      Comentario[]
   likesComentarios Like[]
-  criadoEm         DateTime     @default(now())
-  atualizadoEm     DateTime     @updatedAt
+  logsAuditoria    RegistroAuditoria[]
+  criadoEm         DateTime            @default(now())
+  atualizadoEm     DateTime            @updatedAt
 }
 
 model Endereco {
@@ -91,6 +92,26 @@ model Like {
 
   @@unique([usuarioId, comentarioId])
   @@index([comentarioId])
+}
+
+model RegistroAuditoria {
+  id           String   @id @default(uuid())
+  acao         String
+  usuarioId    String?
+  recursoId    String?
+  tipoRecurso  String?
+  dadosAntigos Json?
+  dadosNovos   Json?
+  ip           String?
+  userAgent    String?
+  criadoEm     DateTime @default(now())
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  @@index([usuarioId])
+  @@index([recursoId])
+  @@index([acao])
+  @@index([criadoEm])
 }
 
 enum CategoriaNoticia {

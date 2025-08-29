@@ -4,5 +4,6 @@ export const ROUTES = {
   COMENTARIO: '/comentarios',
   USUARIO: '/usuarios',
   LIKE: '/likes',
-  AUTH: '/auth'
+  AUTH: '/auth',
+  AUDIT: '/audit'
 } as const

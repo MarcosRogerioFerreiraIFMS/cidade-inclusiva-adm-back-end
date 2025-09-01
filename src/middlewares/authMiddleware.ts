@@ -1,10 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
-import { JWTPayload, JWTUtils } from '../utils/jwtUtils'
-
-export interface AuthenticatedRequest extends Request {
-  user?: JWTPayload
-}
+import { AuthenticatedRequest } from '../types/RequestTypes'
+import { JWTUtils } from '../utils/jwtUtils'
 
 export const authMiddleware = (
   req: AuthenticatedRequest,

@@ -1,3 +1,4 @@
+import { db } from '../database/prisma'
 import { ProfissionalCreateDTO } from '../dtos/create/ProfissionalCreateDTO'
 import { ProfissionalUpdateDTO } from '../dtos/update/ProfissionalUpdateDTO'
 import {
@@ -5,7 +6,6 @@ import {
   generateDataProfissionalUpdate
 } from '../helpers/generateDataProfissional'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
-import { db } from '../lib/prisma'
 import { ProfissionalCompletions } from '../types/ProfissionalTypes'
 
 export class ProfissionalDAO implements IProfissionalAccess {

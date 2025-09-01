@@ -38,6 +38,7 @@ model Usuario {
   foto             String?
   email            String              @unique
   senha            String
+  tipo             TipoUsuario         @default(USUARIO)
   endereco         Endereco?
   comentarios      Comentario[]
   likesComentarios Like[]
@@ -95,16 +96,16 @@ model Like {
 }
 
 model RegistroAuditoria {
-  id           String   @id @default(uuid())
+  id           String       @id @default(uuid())
   acao         String
   usuarioId    String?
   recursoId    String?
-  tipoRecurso  String?
+  tipoRecurso  TipoRecurso?
   dadosAntigos Json?
   dadosNovos   Json?
   ip           String?
   userAgent    String?
-  criadoEm     DateTime @default(now())
+  criadoEm     DateTime     @default(now())
 
   usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
 
@@ -137,4 +138,19 @@ enum EspecialidadeProfissional {
   FISIOTERAPEUTA
   PSICOLOGO
   OUTROS
+}
+
+enum TipoUsuario {
+  ADMIN
+  USUARIO
+}
+
+enum TipoRecurso {
+  NOTICIA
+  PROFISSIONAL
+  USUARIO
+  ENDERECO
+  COMENTARIO
+  LIKE
+  ENDPOINT
 }

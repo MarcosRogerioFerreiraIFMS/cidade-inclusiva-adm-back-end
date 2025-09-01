@@ -1,15 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
 import { IProfissionalService } from '../interfaces/services/IProfissionalService'
+import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class ProfissionalController {
   constructor(private profissionalService: IProfissionalService) {}
 
-  create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  create: ControllerRequest = async (req, res, next) => {
     try {
       const profissional = await this.profissionalService.create(req.body)
       HandleSuccess.created(
@@ -22,11 +18,7 @@ export class ProfissionalController {
     }
   }
 
-  findById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const profissional = await this.profissionalService.findById(id)
@@ -36,11 +28,7 @@ export class ProfissionalController {
     }
   }
 
-  update = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const profissional = await this.profissionalService.update(id, req.body)
@@ -54,11 +42,7 @@ export class ProfissionalController {
     }
   }
 
-  delete = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       await this.profissionalService.delete(id)
@@ -68,11 +52,7 @@ export class ProfissionalController {
     }
   }
 
-  findAll = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const profissionais = await this.profissionalService.findAll()
       HandleSuccess.list(res, profissionais)

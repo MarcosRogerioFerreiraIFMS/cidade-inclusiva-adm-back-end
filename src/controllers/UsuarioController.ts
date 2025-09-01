@@ -1,17 +1,13 @@
-import { NextFunction, Request, Response } from 'express'
+import { TipoRecurso } from '@prisma/client'
 import { IUsuarioService } from '../interfaces/services/IUsuarioService'
-import { AuthenticatedRequest } from '../middlewares/authMiddleware'
+import { ControllerRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class UsuarioController {
   constructor(private usuarioService: IUsuarioService) {}
 
-  create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  create: ControllerRequest = async (req, res, next) => {
     try {
       const usuario = await this.usuarioService.create(req.body)
       HandleSuccess.created(res, usuario, 'Usuário criado com sucesso')
@@ -20,11 +16,7 @@ export class UsuarioController {
     }
   }
 
-  findById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const usuario = await this.usuarioService.findById(id)
@@ -34,11 +26,7 @@ export class UsuarioController {
     }
   }
 
-  findByEmail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findByEmail: ControllerRequest = async (req, res, next) => {
     try {
       const { email } = req.params
       const usuario = await this.usuarioService.findByEmail(email)
@@ -48,11 +36,7 @@ export class UsuarioController {
     }
   }
 
-  update = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
 
@@ -64,7 +48,7 @@ export class UsuarioController {
       // Log de auditoria
       await AuditLogger.logUpdate(
         req,
-        'USUARIO',
+        TipoRecurso.USUARIO,
         id,
         usuarioAtual as unknown as Record<string, unknown>,
         usuario as unknown as Record<string, unknown>
@@ -76,11 +60,7 @@ export class UsuarioController {
     }
   }
 
-  delete = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
 
@@ -92,7 +72,7 @@ export class UsuarioController {
       // Log de auditoria
       await AuditLogger.logDelete(
         req,
-        'USUARIO',
+        TipoRecurso.USUARIO,
         id,
         usuarioParaDeletar as unknown as Record<string, unknown>
       )
@@ -103,11 +83,7 @@ export class UsuarioController {
     }
   }
 
-  findAll = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const usuarios = await this.usuarioService.findAll()
       HandleSuccess.list(res, usuarios)

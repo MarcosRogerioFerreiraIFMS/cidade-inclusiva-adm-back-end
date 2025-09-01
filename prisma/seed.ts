@@ -2,7 +2,8 @@ import { fakerPT_BR as faker } from '@faker-js/faker'
 import {
   CategoriaNoticia,
   EspecialidadeProfissional,
-  PrismaClient
+  PrismaClient,
+  TipoUsuario
 } from '@prisma/client'
 import api from 'brasilapi-js'
 import chalk from 'chalk'
@@ -294,13 +295,42 @@ async function main() {
         foto: faker.image.avatar(),
         email,
         senha: faker.internet.password({ length: 8 }),
+        tipo: TipoUsuario.USUARIO, // Usuários comuns por padrão
         endereco
       }
     }
 
+    console.log(chalk.cyan('👤 Criando usuário administrador...'))
+    const adminPassword = await hashPassword('admin123')
+    const admin = await prisma.usuario.create({
+      data: {
+        nome: 'Administrador do Sistema',
+        telefone: '(11) 99999-9999',
+        foto: 'https://i.pravatar.cc/400?img=admin',
+        email: 'admin@cidadeinclusiva.com.br',
+        senha: adminPassword,
+        tipo: TipoUsuario.ADMIN,
+        endereco: {
+          create: {
+            logradouro: 'Avenida Paulista - de 612 a 1510 - lado par',
+            numero: '1042',
+            complemento: 'Sala 1',
+            cidade: 'São Paulo',
+            bairro: 'Bela Vista',
+            cep: '01310-100',
+            estado: 'SP',
+            pais: 'Brasil'
+          }
+        }
+      }
+    })
+    console.log(chalk.green(`   ✅ Admin criado: ${admin.email}`))
+    console.log('')
+
     console.log(chalk.cyan('👥 Gerando dados de usuários...'))
     // Gerar 25 usuários com dados variados e emails únicos
     const existingEmails = new Set<string>()
+    existingEmails.add('admin@cidadeinclusiva.com.br') // Evitar duplicar email do admin
     const usuariosData = []
     for (let i = 0; i < 25; i++) {
       usuariosData.push(generateUser(existingEmails))
@@ -324,6 +354,7 @@ async function main() {
           foto: usuarioData.foto,
           email: usuarioData.email,
           senha: hashedPassword,
+          tipo: usuarioData.tipo,
           criadoEm: dataCriacao,
           atualizadoEm: dataCriacao,
           endereco: {

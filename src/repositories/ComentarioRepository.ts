@@ -46,4 +46,8 @@ export class ComentarioRepository implements IComentarioAccess {
   ): Promise<ComentarioCompletions[]> {
     return await this.dao.findVisibleByProfissional(profissionalId)
   }
+
+  async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
+    return await this.dao.isCommentOwner(commentId, userId)
+  }
 }

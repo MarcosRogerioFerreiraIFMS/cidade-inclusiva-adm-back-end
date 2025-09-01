@@ -1,46 +1,42 @@
 import { Router } from 'express'
 import { UsuarioDependencies } from '../dependencies/UsuarioDependencies'
-import { authMiddleware } from '../middlewares/authMiddleware'
-import {
-  validateRequiredBody,
-  validateUUID
-} from '../middlewares/validationMiddleware'
+import { usuarioOperations } from '../middlewares/compositeAuthMiddleware'
 
 const UsuarioRoutes = Router()
 
 UsuarioRoutes.post(
   '/',
-  validateRequiredBody(['nome', 'telefone', 'email', 'senha', 'endereco']),
+  ...usuarioOperations.register,
   UsuarioDependencies.controller.create
 )
 
-UsuarioRoutes.get('/', authMiddleware, UsuarioDependencies.controller.findAll)
+UsuarioRoutes.get(
+  '/',
+  ...usuarioOperations.listAll,
+  UsuarioDependencies.controller.findAll
+)
 
 UsuarioRoutes.get(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
+  ...usuarioOperations.viewProfile,
   UsuarioDependencies.controller.findById
 )
 
 UsuarioRoutes.get(
   '/email/:email',
-  authMiddleware,
+  ...usuarioOperations.findByEmail,
   UsuarioDependencies.controller.findByEmail
 )
 
 UsuarioRoutes.put(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
-  validateRequiredBody([]),
+  ...usuarioOperations.updateProfile,
   UsuarioDependencies.controller.update
 )
 
 UsuarioRoutes.delete(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
+  ...usuarioOperations.deleteProfile,
   UsuarioDependencies.controller.delete
 )
 

@@ -29,7 +29,8 @@ export class AuthService implements IAuthService {
 
     const token = `Bearer ${JWTUtils.generateToken({
       userId: usuario.id,
-      email: usuario.email
+      email: usuario.email,
+      tipo: usuario.tipo
     })}`
 
     return {

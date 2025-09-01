@@ -7,7 +7,6 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "preinstall": "tsx ./scripts/check-node-version.ts",
     "dev": "tsx watch ./src/server.ts",
     "seed": "prisma db seed",
     "migrate": "prisma migrate dev",

@@ -16,4 +16,5 @@ export interface ILikeAccess {
   findByComentario(comentarioId: string): Promise<LikeCompletions[]>
   findByUsuario(usuarioId: string): Promise<LikeCompletions[]>
   countByComentario(comentarioId: string): Promise<number>
+  isLikeOwner(likeId: string, userId: string): Promise<boolean>
 }

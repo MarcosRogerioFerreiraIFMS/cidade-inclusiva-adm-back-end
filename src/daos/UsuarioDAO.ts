@@ -1,3 +1,4 @@
+import { db } from '../database/prisma'
 import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
 import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
 import {
@@ -5,7 +6,6 @@ import {
   generateDataUsuarioUpdate
 } from '../helpers/generateDataUsuario'
 import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
-import { db } from '../lib/prisma'
 import { UsuarioCompletions } from '../types/UsuarioTypes'
 
 export class UsuarioDAO implements IUsuarioAccess {

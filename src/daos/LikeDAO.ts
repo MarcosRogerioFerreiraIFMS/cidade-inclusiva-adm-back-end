@@ -1,7 +1,7 @@
+import { db } from '../database/prisma'
 import { LikeCreateDTO } from '../dtos/create/LikeCreateDTO'
 import { generateDataLikeCreate } from '../helpers/generateDataLike'
 import { ILikeAccess } from '../interfaces/access/ILikeAccess'
-import { db } from '../lib/prisma'
 import { LikeCompletions } from '../types/LikeTypes'
 
 export class LikeDAO implements ILikeAccess {
@@ -68,5 +68,13 @@ export class LikeDAO implements ILikeAccess {
     return await db.like.count({
       where: { comentarioId }
     })
+  }
+
+  async isLikeOwner(likeId: string, userId: string): Promise<boolean> {
+    const like = await db.like.findUnique({
+      where: { id: likeId },
+      select: { usuarioId: true }
+    })
+    return like?.usuarioId === userId
   }
 }

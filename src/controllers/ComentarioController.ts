@@ -1,15 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
 import { IComentarioService } from '../interfaces/services/IComentarioService'
+import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class ComentarioController {
   constructor(private comentarioService: IComentarioService) {}
 
-  create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  create: ControllerRequest = async (req, res, next) => {
     try {
       const comentario = await this.comentarioService.create(req.body)
       HandleSuccess.created(res, comentario, 'Comentário criado com sucesso')
@@ -18,11 +14,7 @@ export class ComentarioController {
     }
   }
 
-  findById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const comentario = await this.comentarioService.findById(id)
@@ -32,11 +24,7 @@ export class ComentarioController {
     }
   }
 
-  update = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const comentario = await this.comentarioService.update(id, req.body)
@@ -50,11 +38,7 @@ export class ComentarioController {
     }
   }
 
-  delete = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       await this.comentarioService.delete(id)
@@ -64,11 +48,7 @@ export class ComentarioController {
     }
   }
 
-  findAll = async (
-    _req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const comentarios = await this.comentarioService.findAll()
       HandleSuccess.list(res, comentarios)
@@ -77,11 +57,7 @@ export class ComentarioController {
     }
   }
 
-  findByProfissional = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findByProfissional: ControllerRequest = async (req, res, next) => {
     try {
       const { profissionalId } = req.params
       const comentarios = await this.comentarioService.findByProfissional(
@@ -93,11 +69,7 @@ export class ComentarioController {
     }
   }
 
-  findVisibleByProfissional = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findVisibleByProfissional: ControllerRequest = async (req, res, next) => {
     try {
       const { profissionalId } = req.params
       const comentarios =

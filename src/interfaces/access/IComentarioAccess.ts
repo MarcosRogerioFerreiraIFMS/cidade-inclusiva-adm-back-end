@@ -12,4 +12,5 @@ export interface IComentarioAccess {
   findVisibleByProfissional(
     profissionalId: string
   ): Promise<ComentarioCompletions[]>
+  isCommentOwner(commentId: string, userId: string): Promise<boolean>
 }

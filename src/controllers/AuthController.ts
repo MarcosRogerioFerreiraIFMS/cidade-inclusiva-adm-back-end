@@ -1,17 +1,13 @@
-import { NextFunction, Request, Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { IAuthService } from '../interfaces/services/IAuthService'
+import { ControllerRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class AuthController {
   constructor(private authService: IAuthService) {}
 
-  login = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  login: ControllerRequest = async (req, res, next) => {
     try {
       const login = await this.authService.login(req.body)
 
@@ -29,11 +25,7 @@ export class AuthController {
     }
   }
 
-  validateToken = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  validateToken: ControllerRequest = async (req, res, next) => {
     try {
       const authHeader = req.headers.authorization
 

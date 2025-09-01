@@ -1,14 +1,25 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, TipoRecurso } from '@prisma/client'
 import { Request } from 'express'
-import { db } from '../lib/prisma'
-import { AuthenticatedRequest } from '../middlewares/authMiddleware'
+import { db } from '../database/prisma'
+import { AuthenticatedRequest } from '../types/RequestTypes'
 
 export interface AuditData {
   acao: string
   recursoId?: string
-  tipoRecurso?: string
+  tipoRecurso?: TipoRecurso
   dadosAntigos?: unknown
   dadosNovos?: unknown
+}
+
+/**
+ * Converte string para TipoRecurso
+ */
+function toTipoRecurso(resourceType: string): TipoRecurso | undefined {
+  const upperType = resourceType.toUpperCase()
+  if (Object.values(TipoRecurso).includes(upperType as TipoRecurso)) {
+    return upperType as TipoRecurso
+  }
+  return undefined
 }
 
 export class AuditLogger {
@@ -49,7 +60,7 @@ export class AuditLogger {
     await this.log(req, {
       acao: 'LOGIN_SUCCESS',
       recursoId: userId,
-      tipoRecurso: 'USUARIO'
+      tipoRecurso: TipoRecurso.USUARIO
     })
   }
 
@@ -75,7 +86,7 @@ export class AuditLogger {
     await this.log(req, {
       acao: `CREATE_${resourceType.toUpperCase()}`,
       recursoId: resourceId,
-      tipoRecurso: resourceType.toUpperCase(),
+      tipoRecurso: toTipoRecurso(resourceType),
       dadosNovos: data
     })
   }
@@ -93,7 +104,7 @@ export class AuditLogger {
     await this.log(req, {
       acao: `UPDATE_${resourceType.toUpperCase()}`,
       recursoId: resourceId,
-      tipoRecurso: resourceType.toUpperCase(),
+      tipoRecurso: toTipoRecurso(resourceType),
       dadosAntigos: oldData,
       dadosNovos: newData
     })
@@ -111,7 +122,7 @@ export class AuditLogger {
     await this.log(req, {
       acao: `DELETE_${resourceType.toUpperCase()}`,
       recursoId: resourceId,
-      tipoRecurso: resourceType.toUpperCase(),
+      tipoRecurso: toTipoRecurso(resourceType),
       dadosAntigos: deletedData
     })
   }

@@ -1,15 +1,19 @@
 import { Router } from 'express'
 import { AuthDependencies } from '../dependencies/AuthDependencies'
-import { validateRequiredBody } from '../middlewares/validationMiddleware'
+import { authOperations } from '../middlewares/compositeAuthMiddleware'
 
 const AuthRoutes = Router()
 
 AuthRoutes.post(
   '/login',
-  validateRequiredBody(['email', 'senha']),
+  ...authOperations.login,
   AuthDependencies.controller.login
 )
 
-AuthRoutes.get('/validate-token', AuthDependencies.controller.validateToken)
+AuthRoutes.get(
+  '/validate-token',
+  ...authOperations.validateToken,
+  AuthDependencies.controller.validateToken
+)
 
 export { AuthRoutes }

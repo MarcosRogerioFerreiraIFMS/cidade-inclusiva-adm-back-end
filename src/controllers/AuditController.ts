@@ -1,5 +1,4 @@
-import { NextFunction, Response } from 'express'
-import { AuthenticatedRequest } from '../middlewares/authMiddleware'
+import { ControllerRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
@@ -7,11 +6,7 @@ export class AuditController {
   /**
    * Lista logs de auditoria com filtros
    */
-  getLogs = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  getLogs: ControllerRequest = async (req, res, next) => {
     try {
       const {
         usuarioId,
@@ -40,11 +35,7 @@ export class AuditController {
   /**
    * Busca logs específicos de um usuário
    */
-  getUserLogs = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  getUserLogs: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const { limite = 20 } = req.query
@@ -63,11 +54,7 @@ export class AuditController {
   /**
    * Busca atividades suspeitas recentes
    */
-  getSuspiciousActivity = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  getSuspiciousActivity: ControllerRequest = async (req, res, next) => {
     try {
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
 

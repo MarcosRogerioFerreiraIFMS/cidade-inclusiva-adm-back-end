@@ -1,3 +1,4 @@
+import { db } from '../database/prisma'
 import { NoticiaCreateDTO } from '../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../dtos/update/NoticiaUpdateDTO'
 import {
@@ -5,7 +6,6 @@ import {
   generateDataNoticiaUpdate
 } from '../helpers/generateDataNoticia'
 import { INoticiaAccess } from '../interfaces/access/INoticiaAccess'
-import { db } from '../lib/prisma'
 import { NoticiaCompletions } from '../types/NoticiaTypes'
 
 export class NoticiaDAO implements INoticiaAccess {

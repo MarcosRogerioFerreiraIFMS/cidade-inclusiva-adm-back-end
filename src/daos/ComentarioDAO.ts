@@ -1,3 +1,4 @@
+import { db } from '../database/prisma'
 import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
 import {
@@ -5,7 +6,6 @@ import {
   generateDataComentarioUpdate
 } from '../helpers/generateDataComentario'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
-import { db } from '../lib/prisma'
 import { ComentarioCompletions } from '../types/ComentarioTypes'
 
 export class ComentarioDAO implements IComentarioAccess {
@@ -72,5 +72,13 @@ export class ComentarioDAO implements IComentarioAccess {
       orderBy: { criadoEm: 'desc' },
       include: { likesUsuarios: true }
     })
+  }
+
+  async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
+    const comment = await db.comentario.findUnique({
+      where: { id: commentId },
+      select: { usuarioId: true }
+    })
+    return comment?.usuarioId === userId
   }
 }

@@ -1,64 +1,49 @@
 import { Router } from 'express'
-
 import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
-import {
-  authMiddleware,
-  optionalAuthMiddleware
-} from '../middlewares/authMiddleware'
-import {
-  validateRequiredBody,
-  validateUUID
-} from '../middlewares/validationMiddleware'
+import { comentarioOperations } from '../middlewares/compositeAuthMiddleware'
 
 const ComentarioRoutes = Router()
 
 ComentarioRoutes.post(
   '/',
-  authMiddleware,
-  validateRequiredBody(['conteudo', 'usuarioId']),
+  ...comentarioOperations.create,
   ComentarioDependencies.controller.create
 )
 
 ComentarioRoutes.get(
   '/',
-  optionalAuthMiddleware,
+  ...comentarioOperations.list,
   ComentarioDependencies.controller.findAll
 )
 
 ComentarioRoutes.get(
   '/:id',
-  optionalAuthMiddleware,
-  validateUUID('id'),
+  ...comentarioOperations.view,
   ComentarioDependencies.controller.findById
 )
 
 ComentarioRoutes.put(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
-  validateRequiredBody([]),
+  ...comentarioOperations.update,
   ComentarioDependencies.controller.update
 )
 
 ComentarioRoutes.delete(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
+  ...comentarioOperations.delete,
   ComentarioDependencies.controller.delete
 )
 
 // Rotas públicas para visualização de comentários (autenticação opcional)
 ComentarioRoutes.get(
   '/profissional/:profissionalId',
-  optionalAuthMiddleware,
-  validateUUID('profissionalId'),
+  ...comentarioOperations.findByProfessional,
   ComentarioDependencies.controller.findByProfissional
 )
 
 ComentarioRoutes.get(
   '/profissional/:profissionalId/visiveis',
-  optionalAuthMiddleware,
-  validateUUID('profissionalId'),
+  ...comentarioOperations.findVisibleByProfessional,
   ComentarioDependencies.controller.findVisibleByProfissional
 )
 

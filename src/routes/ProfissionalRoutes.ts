@@ -1,49 +1,36 @@
 import { Router } from 'express'
-
 import { ProfissionalDependencies } from '../dependencies/ProfissionalDependencies'
-import {
-  authMiddleware,
-  optionalAuthMiddleware
-} from '../middlewares/authMiddleware'
-import {
-  validateRequiredBody,
-  validateUUID
-} from '../middlewares/validationMiddleware'
+import { profissionalOperations } from '../middlewares/compositeAuthMiddleware'
 
 const ProfissionalRoutes = Router()
 
 ProfissionalRoutes.post(
   '/',
-  authMiddleware,
-  validateRequiredBody(['nome', 'email', 'especialidade', 'telefone']),
+  ...profissionalOperations.create,
   ProfissionalDependencies.controller.create
 )
 
 ProfissionalRoutes.get(
   '/',
-  optionalAuthMiddleware,
+  ...profissionalOperations.list,
   ProfissionalDependencies.controller.findAll
 )
 
 ProfissionalRoutes.get(
   '/:id',
-  optionalAuthMiddleware,
-  validateUUID('id'),
+  ...profissionalOperations.view,
   ProfissionalDependencies.controller.findById
 )
 
 ProfissionalRoutes.put(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
-  validateRequiredBody([]),
+  ...profissionalOperations.update,
   ProfissionalDependencies.controller.update
 )
 
 ProfissionalRoutes.delete(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
+  ...profissionalOperations.delete,
   ProfissionalDependencies.controller.delete
 )
 

@@ -1,26 +1,23 @@
 import { Router } from 'express'
 import { AuditController } from '../controllers/AuditController'
-import { authMiddleware } from '../middlewares/authMiddleware'
+import { adminOnly } from '../middlewares/compositeAuthMiddleware'
 import { validateUUID } from '../middlewares/validationMiddleware'
 
 const AuditRoutes = Router()
 const auditController = new AuditController()
 
-// Apenas usuários autenticados podem ver logs de auditoria
-// Em um sistema real, apenas admins deveriam ter acesso
-
-AuditRoutes.get('/', authMiddleware, auditController.getLogs)
+AuditRoutes.get('/', ...adminOnly, auditController.getLogs)
 
 AuditRoutes.get(
   '/user/:id',
-  authMiddleware,
+  ...adminOnly,
   validateUUID('id'),
   auditController.getUserLogs
 )
 
 AuditRoutes.get(
   '/suspicious',
-  authMiddleware,
+  ...adminOnly,
   auditController.getSuspiciousActivity
 )
 

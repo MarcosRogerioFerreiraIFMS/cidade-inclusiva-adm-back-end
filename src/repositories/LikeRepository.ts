@@ -46,4 +46,8 @@ export class LikeRepository implements ILikeAccess {
   async countByComentario(comentarioId: string): Promise<number> {
     return await this.dao.countByComentario(comentarioId)
   }
+
+  async isLikeOwner(likeId: string, userId: string): Promise<boolean> {
+    return await this.dao.isLikeOwner(likeId, userId)
+  }
 }

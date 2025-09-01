@@ -1,3 +1,4 @@
+import { TipoUsuario } from '@prisma/client'
 import chalk from 'chalk'
 import jwt, {
   JsonWebTokenError,
@@ -14,6 +15,7 @@ import { JWTSecurityConfig } from './jwtSecurityConfig'
 export interface JWTPayload {
   userId: string
   email: string
+  tipo: TipoUsuario
   iat?: number
   exp?: number
 }
@@ -54,7 +56,11 @@ export class JWTUtils {
   /**
    * Gera um token JWT.
    */
-  static generateToken(payload: { userId: string; email: string }): string {
+  static generateToken(payload: {
+    userId: string
+    email: string
+    tipo: string
+  }): string {
     if (!this.isInitialized) {
       console.error(
         chalk.red.bold(

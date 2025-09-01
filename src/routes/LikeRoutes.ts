@@ -1,46 +1,36 @@
 import { Router } from 'express'
 import { LikeDependencies } from '../dependencies/LikeDependencies'
-import {
-  authMiddleware,
-  optionalAuthMiddleware
-} from '../middlewares/authMiddleware'
-import { validateUUID } from '../middlewares/validationMiddleware'
+import { likeOperations } from '../middlewares/compositeAuthMiddleware'
 
 const LikeRoutes = Router()
 
 LikeRoutes.patch(
   '/toggle/:usuarioId/:comentarioId',
-  authMiddleware,
-  validateUUID('usuarioId'),
-  validateUUID('comentarioId'),
+  ...likeOperations.toggle,
   LikeDependencies.controller.toggle
 )
 
 LikeRoutes.get(
   '/:id',
-  optionalAuthMiddleware,
-  validateUUID('id'),
+  ...likeOperations.view,
   LikeDependencies.controller.findById
 )
 
 LikeRoutes.delete(
   '/:id',
-  authMiddleware,
-  validateUUID('id'),
+  ...likeOperations.delete,
   LikeDependencies.controller.delete
 )
 
 LikeRoutes.get(
   '/comentario/:comentarioId',
-  optionalAuthMiddleware,
-  validateUUID('comentarioId'),
+  ...likeOperations.findByComment,
   LikeDependencies.controller.findByComentario
 )
 
 LikeRoutes.get(
   '/usuario/:usuarioId',
-  authMiddleware,
-  validateUUID('usuarioId'),
+  ...likeOperations.findByUser,
   LikeDependencies.controller.findByUsuario
 )
 

@@ -1,15 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
 import { ILikeService } from '../interfaces/services/ILikeService'
+import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 export class LikeController {
   constructor(private likeService: ILikeService) {}
 
-  toggle = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  toggle: ControllerRequest = async (req, res, next) => {
     try {
       const { usuarioId, comentarioId } = req.params
       const result = await this.likeService.toggle(usuarioId, comentarioId)
@@ -23,11 +19,7 @@ export class LikeController {
     }
   }
 
-  findById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       const like = await this.likeService.findById(id)
@@ -37,11 +29,7 @@ export class LikeController {
     }
   }
 
-  delete = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
       await this.likeService.delete(id)
@@ -51,11 +39,7 @@ export class LikeController {
     }
   }
 
-  findByComentario = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findByComentario: ControllerRequest = async (req, res, next) => {
     try {
       const { comentarioId } = req.params
       const likes = await this.likeService.findByComentario(comentarioId)
@@ -65,11 +49,7 @@ export class LikeController {
     }
   }
 
-  findByUsuario = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  findByUsuario: ControllerRequest = async (req, res, next) => {
     try {
       const { usuarioId } = req.params
       const likes = await this.likeService.findByUsuario(usuarioId)

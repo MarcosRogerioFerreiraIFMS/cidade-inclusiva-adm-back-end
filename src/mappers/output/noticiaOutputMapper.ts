@@ -3,6 +3,12 @@ import { NoticiaCompletions } from '../../types/NoticiaTypes'
 
 import { capitalizeWords } from '../../utils/stringUtils'
 
+/**
+ * - Converte entidade Noticia completa para DTO de resposta
+ * - Formata campos opcionais e aplica transformações de apresentação
+ * @param {NoticiaCompletions} noticia - Entidade noticia completa do banco de dados
+ * @returns {NoticiaResponseDTO} DTO formatado para resposta da API
+ */
 export function toNoticiaResponseDTO(
   noticia: NoticiaCompletions
 ): NoticiaResponseDTO {
@@ -18,6 +24,12 @@ export function toNoticiaResponseDTO(
   }
 }
 
+/**
+ * - Converte lista de entidades Noticia para lista de DTOs de resposta
+ * - Aplica transformação individual para cada notícia da lista
+ * @param {NoticiaCompletions[]} noticias - Lista de entidades noticia do banco de dados
+ * @returns {NoticiaResponseDTO[]} Lista de DTOs formatados para resposta da API
+ */
 export function toNoticiasResponseDTO(
   noticias: NoticiaCompletions[]
 ): NoticiaResponseDTO[] {

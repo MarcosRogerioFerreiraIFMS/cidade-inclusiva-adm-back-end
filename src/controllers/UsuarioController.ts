@@ -4,9 +4,20 @@ import { ControllerRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * Controller responsável pelas operações CRUD de usuários:
+ * - Gerencia requisições HTTP para criação, consulta, atualização e remoção de usuários
+ */
 export class UsuarioController {
+  /**
+   * @param {IUsuarioService} usuarioService - Serviço de usuários injetado
+   */
   constructor(private usuarioService: IUsuarioService) {}
 
+  /**
+   * Cria um novo usuário no sistema
+   * @type {ControllerRequest}
+   */
   create: ControllerRequest = async (req, res, next) => {
     try {
       const usuario = await this.usuarioService.create(req.body)
@@ -16,6 +27,10 @@ export class UsuarioController {
     }
   }
 
+  /**
+   * Busca um usuário específico por ID
+   * @type {ControllerRequest}
+   */
   findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -26,6 +41,10 @@ export class UsuarioController {
     }
   }
 
+  /**
+   * Busca um usuário específico por email
+   * @type {ControllerRequest}
+   */
   findByEmail: ControllerRequest = async (req, res, next) => {
     try {
       const { email } = req.params
@@ -36,6 +55,11 @@ export class UsuarioController {
     }
   }
 
+  /**
+   * Atualiza os dados de um usuário existente:
+   * - Registra a operação no log de auditoria
+   * @type {ControllerRequest}
+   */
   update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -60,6 +84,11 @@ export class UsuarioController {
     }
   }
 
+  /**
+   * - Remove um usuário do sistema
+   * - Registra a operação no log de auditoria
+   * @type {ControllerRequest}
+   */
   delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -83,6 +112,10 @@ export class UsuarioController {
     }
   }
 
+  /**
+   * Lista todos os usuários do sistema
+   * @type {ControllerRequest}
+   */
   findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const usuarios = await this.usuarioService.findAll()

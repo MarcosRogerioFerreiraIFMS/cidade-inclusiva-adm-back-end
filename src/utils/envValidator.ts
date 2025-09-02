@@ -1,24 +1,45 @@
 import chalk from 'chalk'
 
+/**
+ * Interface que define uma variável de ambiente e suas regras de validação
+ */
 interface EnvVariable {
+  /** Nome da variável de ambiente */
   name: string
+  /** Se a variável é obrigatória para funcionamento da aplicação */
   required: boolean
+  /** Descrição do propósito da variável */
   description: string
+  /** Valor padrão se não estiver definida */
   defaultValue?: string
+  /** Função de validação personalizada */
   validator?: (value: string) => boolean
+  /** Mensagem de erro quando validação falha */
   validatorMessage?: string
 }
 
+/**
+ * Interface que representa o resultado da validação de variáveis de ambiente
+ */
 interface ValidationResult {
+  /** Se todas as validações passaram */
   isValid: boolean
+  /** Variáveis críticas que estão ausentes */
   missingCritical: string[]
+  /** Variáveis opcionais que estão ausentes */
   missingOptional: string[]
+  /** Variáveis com valores inválidos */
   invalidValues: Array<{ name: string; message: string }>
 }
 
+/**
+ * Classe responsável pela validação de variáveis de ambiente
+ * Garante que todas as configurações necessárias estejam presentes e válidas
+ * Fornece feedback detalhado sobre problemas de configuração
+ */
 export class EnvValidator {
+  /** Lista de todas as variáveis de ambiente configuradas para validação */
   private static readonly ENV_VARIABLES: EnvVariable[] = [
-    // Variáveis críticas - aplicação não pode iniciar sem elas
     {
       name: 'DATABASE_URL',
       required: true,
@@ -33,7 +54,6 @@ export class EnvValidator {
         'JWT_SECRET deve ter pelo menos 32 caracteres para ser seguro'
     },
 
-    // Variáveis importantes mas com valores padrão
     {
       name: 'JWT_EXPIRES_IN',
       required: false,
@@ -74,26 +94,17 @@ export class EnvValidator {
   ]
 
   /**
-   * Determina se uma variável deve ser censurada na exibição dos logs
-   *
-   * @param name Nome da variável de ambiente
-   * @param value Valor da variável de ambiente
-   * @returns true se a variável deve ser censurada, false caso contrário
-   *
-   * Regras de censura:
-   * - Sempre censurar variáveis que contêm 'SECRET' ou 'PASSWORD'
-   * - Censurar DATABASE_URL apenas se não for SQLite (para proteger credenciais de bancos remotos)
-   * - SQLite é considerado seguro pois usa arquivos locais (file: ou sqlite:)
+   * Determina se uma variável deve ter seu valor censurado nos logs
+   * @param {string} name - Nome da variável
+   * @param {string} value - Valor da variável
+   * @returns {boolean} True se deve ser censurada, false caso contrário
    */
   private static shouldCensorVariable(name: string, value: string): boolean {
-    // Sempre censurar variáveis que contêm SECRET ou PASSWORD
     if (name.includes('SECRET') || name.includes('PASSWORD')) {
       return true
     }
 
-    // Censurar DATABASE_URL se não for SQLite
     if (name === 'DATABASE_URL') {
-      // SQLite URLs geralmente começam com "file:" ou "sqlite:"
       const isSQLite = value.startsWith('file:') || value.startsWith('sqlite:')
       return !isSQLite
     }
@@ -102,7 +113,8 @@ export class EnvValidator {
   }
 
   /**
-   * Valida todas as variáveis de ambiente
+   * Valida todas as variáveis de ambiente configuradas
+   * @returns {ValidationResult} Resultado da validação com detalhes dos problemas encontrados
    */
   public static validate(): ValidationResult {
     const result: ValidationResult = {
@@ -142,7 +154,9 @@ export class EnvValidator {
   }
 
   /**
-   * Valida e exibe resultados no console
+   * Valida e exibe resultados detalhados no console
+   * @param {boolean} verbose - Se deve exibir informações detalhadas
+   * @returns {boolean} True se todas as validações passaram, false caso contrário
    */
   public static validateAndLog(verbose = true): boolean {
     if (verbose) {
@@ -260,20 +274,25 @@ export class EnvValidator {
 
   /**
    * Obtém informações sobre uma variável específica
+   * @param {string} name - Nome da variável
+   * @returns {EnvVariable | undefined} Configuração da variável ou undefined se não encontrada
    */
   public static getVariableInfo(name: string): EnvVariable | undefined {
     return this.ENV_VARIABLES.find((v) => v.name === name)
   }
 
   /**
-   * Lista todas as variáveis de ambiente esperadas
+   * Lista todas as variáveis configuradas para validação
+   * @returns {EnvVariable[]} Cópia do array de variáveis configuradas
    */
   public static listAllVariables(): EnvVariable[] {
     return [...this.ENV_VARIABLES]
   }
 
   /**
-   * Verifica se uma variável específica está configurada corretamente
+   * Verifica se uma variável específica está válida
+   * @param {string} name - Nome da variável a ser verificada
+   * @returns {boolean} True se a variável estiver válida, false caso contrário
    */
   public static isVariableValid(name: string): boolean {
     const envVar = this.ENV_VARIABLES.find((v) => v.name === name)
@@ -288,7 +307,8 @@ export class EnvValidator {
   }
 
   /**
-   * Método para usar durante o desenvolvimento - adiciona nova validação
+   * Adiciona ou substitui uma validação customizada para uma variável
+   * @param {EnvVariable} envVar - Configuração da variável a ser adicionada
    */
   public static addCustomValidation(envVar: EnvVariable): void {
     const existingIndex = this.ENV_VARIABLES.findIndex(
@@ -302,8 +322,8 @@ export class EnvValidator {
   }
 
   /**
-   * Verifica especificamente as configurações relacionadas ao JWT
-   * e fornece ajuda contextual detalhada
+   * Validação específica para configurações JWT com feedback detalhado
+   * @returns {boolean} True se as configurações JWT estiverem válidas, false caso contrário
    */
   public static validateJWTAndLog(): boolean {
     console.log(chalk.blue.bold('\n🔐 Verificação específica do JWT...\n'))
@@ -368,7 +388,6 @@ export class EnvValidator {
       }
     }
 
-    // Verificação do JWT_EXPIRES_IN
     const expiresInVar = this.ENV_VARIABLES.find(
       (v) => v.name === 'JWT_EXPIRES_IN'
     )

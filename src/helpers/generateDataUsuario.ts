@@ -3,6 +3,12 @@ import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
 import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
 import { hashPassword } from '../utils/passwordUtils'
 
+/**
+ * - Gera dados formatados para criação de usuário no Prisma
+ * - Converte DTO de criação em input do Prisma, incluindo hash da senha e criação do endereço
+ * @param {UsuarioCreateDTO} data - Dados do usuário vindos do DTO
+ * @returns {Promise<Prisma.UsuarioCreateInput>} Dados formatados para o Prisma
+ */
 export async function generateDataUsuarioCreate({
   nome,
   telefone,
@@ -34,6 +40,13 @@ export async function generateDataUsuarioCreate({
   }
 }
 
+/**
+ * - Gera dados formatados para atualização de usuário no Prisma
+ * - Converte DTO de atualização em input do Prisma, incluindo upsert do endereço
+ * - Apenas campos definidos são incluídos na atualização
+ * @param {UsuarioUpdateDTO} data - Dados de atualização vindos do DTO
+ * @returns {Promise<Prisma.UsuarioUpdateInput>} Dados formatados para o Prisma
+ */
 export async function generateDataUsuarioUpdate({
   nome,
   telefone,

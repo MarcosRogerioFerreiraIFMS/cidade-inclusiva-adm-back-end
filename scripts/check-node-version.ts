@@ -1,5 +1,8 @@
 /**
- * Script para verificar a versão do Node.js.
+ * Script para verificar a compatibilidade da versão do Node.js
+ *
+ * Verifica se a versão atual do Node.js atende aos requisitos mínimos do projeto.
+ * Exibe mensagens informativas de sucesso ou erro com sugestões de resolução.
  *
  * Uso:
  * - pnpm check-node-version
@@ -9,7 +12,9 @@
 import chalk from 'chalk'
 import semver from 'semver'
 
+/** Versão mínima requerida do Node.js */
 const requiredRange = '>=20.0.0'
+/** Versão atual do Node.js em execução */
 const currentVersion = process.version
 
 if (semver.satisfies(currentVersion, requiredRange)) {

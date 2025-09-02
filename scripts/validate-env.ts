@@ -1,6 +1,10 @@
 /**
  * Script para validar variáveis de ambiente
  *
+ * Verifica se todas as variáveis de ambiente necessárias estão
+ * configuradas corretamente. Fornece instruções detalhadas para
+ * resolução de problemas de configuração encontrados.
+ *
  * Uso:
  * - pnpm validate-env
  * - npm run validate-env
@@ -9,6 +13,10 @@
 import 'dotenv/config'
 import { EnvValidator } from '../src/utils/envValidator'
 
+/**
+ * Função principal do script de validação
+ * Executa a validação e exibe instruções em caso de erro
+ */
 function main() {
   const isValid = EnvValidator.validateAndLog(true)
 

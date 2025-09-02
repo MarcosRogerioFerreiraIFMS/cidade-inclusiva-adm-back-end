@@ -1,6 +1,12 @@
 import { Prisma } from '@prisma/client'
 import { LikeCreateDTO } from '../dtos/create/LikeCreateDTO'
 
+/**
+ * - Gera dados formatados para criação de like no Prisma
+ * - Converte DTO de criação em input do Prisma com relacionamentos
+ * @param {LikeCreateDTO} data - Dados do like vindos do DTO
+ * @returns {Prisma.LikeCreateInput} Dados formatados para o Prisma
+ */
 export function generateDataLikeCreate({
   usuarioId,
   comentarioId

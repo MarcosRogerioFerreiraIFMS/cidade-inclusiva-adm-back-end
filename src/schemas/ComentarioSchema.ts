@@ -1,9 +1,16 @@
 import { z } from 'zod'
 import { sanitizeContent } from '../utils/stringUtils'
 
+/** Comprimento mínimo permitido para conteúdo de comentários */
 const CONTEUDO_MIN_LENGTH = 1
+/** Comprimento máximo permitido para conteúdo de comentários */
 const CONTEUDO_MAX_LENGTH = 1000
 
+/**
+ * - Schema de validação Zod para criação de comentário
+ * - Define regras de validação e transformação para conteúdo e relacionamentos
+ * - Inclui validações para comprimento e formato do conteúdo
+ */
 export const createComentarioSchema = z.object({
   conteudo: z
     .string({
@@ -52,6 +59,11 @@ export const createComentarioSchema = z.object({
     .default(true)
 })
 
+/**
+ * - Schema de validação Zod para atualização de comentário
+ * - Permite atualização apenas dos campos conteúdo e visibilidade
+ * - Todos os campos são opcionais para atualizações parciais
+ */
 export const updateComentarioSchema = createComentarioSchema
   .pick({
     conteudo: true,

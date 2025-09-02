@@ -3,6 +3,12 @@ import { ComentarioCompletions } from '../../types/ComentarioTypes'
 
 import { toLikeResponseDTO } from './likeOutputMapper'
 
+/**
+ * - Converte entidade Comentario completa para DTO de resposta
+ * - Inclui todos os likes associados ao comentário
+ * @param {ComentarioCompletions} comentario - Entidade comentario completa do banco de dados
+ * @returns {ComentarioResponseDTO} DTO formatado para resposta da API
+ */
 export function toComentarioResponseDTO(
   comentario: ComentarioCompletions
 ): ComentarioResponseDTO {
@@ -18,6 +24,12 @@ export function toComentarioResponseDTO(
   }
 }
 
+/**
+ * - Converte lista de entidades Comentario para lista de DTOs de resposta
+ * - Aplica transformação individual para cada comentário da lista
+ * @param {ComentarioCompletions[]} comentarios - Lista de entidades comentario do banco de dados
+ * @returns {ComentarioResponseDTO[]} Lista de DTOs formatados para resposta da API
+ */
 export function toComentariosResponseDTO(
   comentarios: ComentarioCompletions[]
 ): ComentarioResponseDTO[] {

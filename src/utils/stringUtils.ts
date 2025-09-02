@@ -1,8 +1,18 @@
+/**
+ * Capitaliza a primeira letra de uma palavra
+ * @param {string} word - Palavra a ser capitalizada
+ * @returns {string} Palavra com primeira letra maiúscula e restante minúscula
+ */
 export function capitalizeFirstLetter(word: string): string {
   if (!word || typeof word !== 'string') return ''
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 }
 
+/**
+ * Capitaliza a primeira letra de cada palavra em um texto
+ * @param {string} text - Texto com múltiplas palavras
+ * @returns {string} Texto com cada palavra capitalizada
+ */
 export function capitalizeWords(text: string): string {
   if (!text || typeof text !== 'string') return ''
   return text
@@ -14,6 +24,11 @@ export function capitalizeWords(text: string): string {
     .join(' ')
 }
 
+/**
+ * Sanitiza uma string removendo caracteres especiais e normalizando espaços
+ * @param {string} str - String a ser sanitizada
+ * @returns {string} String sanitizada e normalizada
+ */
 export const sanitizeString = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
 
@@ -26,6 +41,11 @@ export const sanitizeString = (str: string): string => {
     .trim()
 }
 
+/**
+ * Sanitiza conteúdo de texto preservando formatação básica e quebras de linha
+ * @param {string} str - Conteúdo a ser sanitizado
+ * @returns {string} Conteúdo sanitizado mantendo estrutura básica
+ */
 export const sanitizeContent = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
 
@@ -39,11 +59,23 @@ export const sanitizeContent = (str: string): string => {
     .trim()
 }
 
+/**
+ * Sanitiza número de telefone removendo caracteres não numéricos
+ * @param {string} str - String contendo telefone
+ * @returns {string} Apenas dígitos do telefone
+ */
 export const sanitizeTelefone = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
   return str.replace(/\D/g, '')
 }
 
+/**
+ * Valida se uma string está dentro do comprimento especificado
+ * @param {string} str - String a ser validada
+ * @param {number} min - Comprimento mínimo
+ * @param {number} max - Comprimento máximo
+ * @returns {boolean} True se está dentro dos limites
+ */
 export const validateStringLength = (
   str: string,
   min: number,
@@ -54,21 +86,41 @@ export const validateStringLength = (
   return length >= min && length <= max
 }
 
+/**
+ * Remove espaços extras de uma string
+ * @param {string} str - String a ser normalizada
+ * @returns {string} String com espaços normalizados
+ */
 export const removeExtraSpaces = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
   return str.replace(/\s+/g, ' ').trim()
 }
 
+/**
+ * Verifica se a string contém apenas letras e espaços
+ * @param {string} str - String a ser verificada
+ * @returns {boolean} True se contém apenas letras e espaços
+ */
 export const containsOnlyLettersAndSpaces = (str: string): boolean => {
   if (!str || typeof str !== 'string') return false
   return /^[a-zA-ZÀ-ÿ\s]+$/.test(str.trim())
 }
 
+/**
+ * Verifica se a string contém apenas números
+ * @param {string} str - String a ser verificada
+ * @returns {boolean} True se contém apenas dígitos
+ */
 export const containsOnlyNumbers = (str: string): boolean => {
   if (!str || typeof str !== 'string') return false
   return /^\d+$/.test(str.trim())
 }
 
+/**
+ * Valida formato de email usando regex
+ * @param {string} email - Email a ser validado
+ * @returns {boolean} True se o formato é válido
+ */
 export const isValidEmail = (email: string): boolean => {
   if (!email || typeof email !== 'string') return false
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

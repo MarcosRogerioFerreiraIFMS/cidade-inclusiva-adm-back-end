@@ -1,5 +1,10 @@
 import { CategoriaNoticia, EspecialidadeProfissional } from '@prisma/client'
 
+/**
+ * Valida se um estado brasileiro é válido
+ * @param {string} state - Sigla do estado (ex: 'SP', 'RJ')
+ * @returns {boolean} True se o estado for válido, false caso contrário
+ */
 export const validateBrazilianStates = (state: string): boolean => {
   const validStates = [
     'AC',
@@ -33,6 +38,11 @@ export const validateBrazilianStates = (state: string): boolean => {
   return validStates.includes(state.toUpperCase())
 }
 
+/**
+ * Valida se um DDD brasileiro é válido
+ * @param {string} ddd - Código DDD (ex: '11', '21')
+ * @returns {boolean} True se o DDD for válido, false caso contrário
+ */
 export const validateBrazilianDDD = (ddd: string): boolean => {
   const validDDDs = [
     '11',
@@ -106,6 +116,12 @@ export const validateBrazilianDDD = (ddd: string): boolean => {
   return validDDDs.includes(ddd)
 }
 
+/**
+ * Valida se um número de celular brasileiro é válido
+ * Verifica formato, DDD válido e se o primeiro dígito é 9
+ * @param {string} phone - Número de telefone (com ou sem formatação)
+ * @returns {boolean} True se o celular for válido, false caso contrário
+ */
 export const validateBrazilianCellPhone = (phone: string): boolean => {
   const cleanPhone = phone.replace(/\D/g, '')
 
@@ -125,6 +141,12 @@ export const validateBrazilianCellPhone = (phone: string): boolean => {
   return true
 }
 
+/**
+ * Valida se um CEP brasileiro é válido
+ * Verifica formato e se não é um CEP conhecido como inválido
+ * @param {string} cep - CEP (com ou sem formatação)
+ * @returns {boolean} True se o CEP for válido, false caso contrário
+ */
 export const validateBrazilianCEP = (cep: string): boolean => {
   const cleanCEP = cep.replace(/\D/g, '')
 
@@ -152,18 +174,33 @@ export const validateBrazilianCEP = (cep: string): boolean => {
   return true
 }
 
+/**
+ * Valida se uma categoria de notícia é válida
+ * @param {string} category - Categoria da notícia
+ * @returns {boolean} True se a categoria for válida, false caso contrário
+ */
 export const validateNewsCategory = (category: string): boolean => {
   return Object.values(CategoriaNoticia).includes(
     category.toUpperCase() as CategoriaNoticia
   )
 }
 
+/**
+ * Valida se uma especialidade profissional é válida
+ * @param {string} specialty - Especialidade do profissional
+ * @returns {boolean} True se a especialidade for válida, false caso contrário
+ */
 export const validateProfessionalSpecialty = (specialty: string): boolean => {
   return Object.values(EspecialidadeProfissional).includes(
     specialty.toUpperCase() as EspecialidadeProfissional
   )
 }
 
+/**
+ * Valida força de uma senha com base em critérios de segurança
+ * @param {string} password - Senha a ser validada
+ * @returns {Object} Objeto com isValid (boolean) e errors (string[])
+ */
 export const validateStrongPassword = (
   password: string
 ): {
@@ -219,6 +256,11 @@ export const validateStrongPassword = (
   }
 }
 
+/**
+ * Valida formato e estrutura de nome de pessoa
+ * @param {string} name - Nome a ser validado
+ * @returns {Object} Objeto com isValid (boolean) e errors (string[])
+ */
 export const validatePersonName = (
   name: string
 ): {
@@ -260,6 +302,11 @@ export const validatePersonName = (
   }
 }
 
+/**
+ * Valida se o domínio de um email é confiável
+ * @param {string} email - Email a ser validado
+ * @returns {boolean} True se o domínio for confiável, false caso contrário
+ */
 export const validateEmailDomain = (email: string): boolean => {
   const domain = email.split('@')[1]
   if (!domain) return false
@@ -288,6 +335,12 @@ export const validateEmailDomain = (email: string): boolean => {
   )
 }
 
+/**
+ * Sanitiza e valida conteúdo de comentário
+ * Remove conteúdo malicioso e valida critérios de qualidade
+ * @param {string} content - Conteúdo do comentário
+ * @returns {Object} Objeto com sanitized (string), isValid (boolean) e errors (string[])
+ */
 export const sanitizeAndValidateComment = (
   content: string
 ): {

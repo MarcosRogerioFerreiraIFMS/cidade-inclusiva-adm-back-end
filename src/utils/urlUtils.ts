@@ -1,5 +1,10 @@
 import axios from 'axios'
 
+/**
+ * Normaliza uma URL adicionando protocolo HTTPS se necessário
+ * @param {string} url - URL a ser normalizada
+ * @returns {string} URL normalizada com protocolo
+ */
 export const normalizeUrl = (url: string): string => {
   if (!url) return url
 
@@ -13,6 +18,11 @@ export const normalizeUrl = (url: string): string => {
   return trimmed
 }
 
+/**
+ * Verifica se uma URL tem formato válido
+ * @param {unknown} url - Valor a ser verificado como URL
+ * @returns {boolean} True se é uma URL válida
+ */
 export const verifyUrl = (url: unknown): boolean => {
   if (typeof url !== 'string') return false
 
@@ -43,6 +53,11 @@ export const verifyUrl = (url: unknown): boolean => {
   }
 }
 
+/**
+ * Transforma e valida uma URL, retornando versão normalizada
+ * @param {unknown} url - Valor a ser transformado em URL
+ * @returns {string} URL válida e normalizada ou string vazia
+ */
 export const transformUrl = (url: unknown): string => {
   if (typeof url !== 'string') return ''
 
@@ -58,6 +73,12 @@ export const transformUrl = (url: unknown): string => {
   }
 }
 
+/**
+ * Verifica se uma URL aponta para uma imagem válida
+ * @param {string} url - URL a ser verificada
+ * @param {boolean} skipHttpCheck - Se deve pular verificação HTTP (padrão: false)
+ * @returns {Promise<boolean>} True se é uma URL de imagem válida
+ */
 export const isImageUrl = async (
   url: string,
   skipHttpCheck: boolean = false
@@ -66,6 +87,7 @@ export const isImageUrl = async (
 
   if (skipHttpCheck || process.env.NODE_ENV === 'test') {
     const normalizedUrl = normalizeUrl(url).toLowerCase()
+    /** Extensões de arquivo de imagem suportadas */
     const imageExtensions = [
       '.jpg',
       '.jpeg',

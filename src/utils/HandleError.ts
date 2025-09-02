@@ -3,39 +3,84 @@ import { Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from './HttpError'
 
+/**
+ * Interface que define a estrutura de resposta para erros da API
+ */
 interface ErrorResponse {
+  /** Sempre false para indicar falha na operação */
   success: false
+  /** Mensagem de erro principal */
   error: string
+  /** Detalhes adicionais sobre o erro (opcional) */
   details?: string | Record<string, unknown> | Array<Record<string, unknown>>
 }
 
+/**
+ * Interface para erros específicos do Prisma ORM
+ * Estende Error com propriedades específicas do Prisma
+ */
 interface PrismaError extends Error {
+  /** Código de erro do Prisma (ex: P2002, P2025) */
   code?: string
+  /** Metadados adicionais sobre o erro */
   meta?: {
+    /** Campos que causaram o erro */
     target?: string[]
+    /** Causa raiz do erro */
     cause?: string
+    /** Nome do campo específico */
     field_name?: string
   }
 }
 
+/**
+ * Interface para erros de validação do Zod
+ * Contém informações detalhadas sobre falhas de validação
+ */
 interface ZodError extends Error {
+  /** Nome identificador do erro Zod */
   name: 'ZodError'
+  /** Array de erros específicos de validação */
   errors: Array<{
+    /** Caminho do campo que falhou */
     path: string[]
+    /** Mensagem de erro */
     message: string
+    /** Código do tipo de erro */
     code: string
+    /** Valor recebido que causou o erro */
     received?: unknown
   }>
 }
 
+/**
+ * Interface para erros de sintaxe JSON
+ * Estende SyntaxError com propriedades específicas de parsing JSON
+ */
 interface JsonSyntaxError extends SyntaxError {
+  /** Status HTTP associado ao erro */
   status?: number
+  /** Código de status HTTP */
   statusCode?: number
+  /** Tipo do erro de parsing */
   type?: string
+  /** Corpo da requisição que causou o erro */
   body?: string
 }
 
+/**
+ * Classe utilitária para tratamento centralizado de erros da aplicação
+ * Fornece métodos especializados para diferentes tipos de erro
+ * Inclui logging colorido e respostas padronizadas
+ */
 export class HandleError {
+  /**
+   * Método principal para tratamento de erros da aplicação
+   * Identifica o tipo de erro e delega para o handler específico
+   * @param {Response} res - Objeto Response do Express
+   * @param {HttpError | unknown} err - Erro a ser tratado
+   * @returns {Response<ErrorResponse>} Resposta HTTP formatada com detalhes do erro
+   */
   public static handleError(
     res: Response,
     err: HttpError | unknown
@@ -70,10 +115,20 @@ export class HandleError {
     return this.handleGenericError(res, err)
   }
 
+  /**
+   * Verifica se o erro é um erro de validação Zod
+   * @param {unknown} err - Erro a ser verificado
+   * @returns {boolean} True se for erro Zod, false caso contrário
+   */
   private static isZodError(err: unknown): err is ZodError {
     return err instanceof Error && err.name === 'ZodError' && 'errors' in err
   }
 
+  /**
+   * Verifica se o erro é um erro de sintaxe JSON
+   * @param {unknown} err - Erro a ser verificado
+   * @returns {boolean} True se for erro de JSON, false caso contrário
+   */
   private static isJsonSyntaxError(err: unknown): err is JsonSyntaxError {
     return (
       err instanceof SyntaxError &&
@@ -84,6 +139,11 @@ export class HandleError {
     )
   }
 
+  /**
+   * Verifica se o erro é um erro específico do Prisma ORM
+   * @param {unknown} err - Erro a ser verificado
+   * @returns {boolean} True se for erro Prisma, false caso contrário
+   */
   private static isPrismaError(err: unknown): err is PrismaError {
     return (
       err instanceof Error &&
@@ -92,6 +152,12 @@ export class HandleError {
     )
   }
 
+  /**
+   * Trata erros de validação Zod convertendo-os em respostas HTTP amigáveis
+   * @param {Response} res - Objeto Response do Express
+   * @param {ZodError} zodErr - Erro de validação Zod
+   * @returns {Response<ErrorResponse>} Resposta HTTP com detalhes dos erros de validação
+   */
   private static handleZodError(
     res: Response,
     zodErr: ZodError
@@ -121,6 +187,12 @@ export class HandleError {
     })
   }
 
+  /**
+   * Trata erros de sintaxe JSON fornecendo feedback específico sobre o problema
+   * @param {Response} res - Objeto Response do Express
+   * @param {JsonSyntaxError} jsonErr - Erro de sintaxe JSON
+   * @returns {Response<ErrorResponse>} Resposta HTTP com detalhes do erro JSON
+   */
   private static handleJsonSyntaxError(
     res: Response,
     jsonErr: JsonSyntaxError
@@ -152,6 +224,13 @@ export class HandleError {
     })
   }
 
+  /**
+   * Trata erros específicos do Prisma ORM baseado nos códigos de erro
+   * Converte códigos Prisma em mensagens de erro compreensíveis
+   * @param {Response} res - Objeto Response do Express
+   * @param {PrismaError} prismaErr - Erro do Prisma ORM
+   * @returns {Response<ErrorResponse>} Resposta HTTP com tratamento específico do erro Prisma
+   */
   private static handlePrismaError(
     res: Response,
     prismaErr: PrismaError
@@ -243,6 +322,12 @@ export class HandleError {
     }
   }
 
+  /**
+   * Trata erros HTTP customizados da aplicação
+   * @param {Response} res - Objeto Response do Express
+   * @param {HttpError} httpErr - Erro HTTP customizado
+   * @returns {Response<ErrorResponse>} Resposta HTTP com status e mensagem apropriados
+   */
   private static handleHttpError(
     res: Response,
     httpErr: HttpError
@@ -274,6 +359,12 @@ export class HandleError {
     })
   }
 
+  /**
+   * Trata erros genéricos não identificados pelos outros handlers
+   * @param {Response} res - Objeto Response do Express
+   * @param {unknown} err - Erro genérico não categorizado
+   * @returns {Response<ErrorResponse>} Resposta HTTP genérica para erro interno
+   */
   private static handleGenericError(
     res: Response,
     err: unknown
@@ -285,6 +376,11 @@ export class HandleError {
     })
   }
 
+  /**
+   * Obtém valores válidos para campos enum baseado no nome do campo
+   * @param {string} fieldName - Nome do campo enum
+   * @returns {string} String com valores válidos separados por vírgula
+   */
   private static getEnumValues(fieldName: string): string {
     if (fieldName === 'categoria') {
       return 'DIREITOS, BENEFICIOS, OPORTUNIDADES, TECNOLOGIA, TRABALHO, SAUDE, EDUCACAO, CULTURA, EVENTOS, ESPORTE, ACESSIBILIDADE, OUTROS'

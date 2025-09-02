@@ -10,25 +10,35 @@ import jwt, {
 import { JWTSecurityConfig } from './jwtSecurityConfig'
 
 /**
- * Estrutura do payload do JWT.
+ * Estrutura do payload do JWT
+ * @interface JWTPayload
  */
 export interface JWTPayload {
+  /** ID único do usuário */
   userId: string
+  /** Email do usuário autenticado */
   email: string
+  /** Tipo/perfil do usuário */
   tipo: TipoUsuario
+  /** Timestamp de criação do token */
   iat?: number
+  /** Timestamp de expiração do token */
   exp?: number
 }
 
 /**
- * Utilitários para geração e verificação de tokens JWT.
+ * Classe utilitária para geração e verificação de tokens JWT
+ * Responsável por gerenciar toda a lógica de autenticação baseada em JWT
  */
 export class JWTUtils {
+  /** Chave secreta para assinatura dos tokens */
   private static readonly SECRET =
     process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 
+  /** Tempo de expiração padrão dos tokens */
   private static readonly EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 
+  /** Flag indicando se o JWT foi inicializado corretamente */
   private static readonly isInitialized = JWTSecurityConfig.initialize(false)
 
   static {
@@ -54,7 +64,13 @@ export class JWTUtils {
   }
 
   /**
-   * Gera um token JWT.
+   * Gera um token JWT assinado com os dados do usuário
+   * @param {Object} payload - Dados do usuário para incluir no token
+   * @param {string} payload.userId - ID único do usuário
+   * @param {string} payload.email - Email do usuário
+   * @param {string} payload.tipo - Tipo/perfil do usuário
+   * @returns {string} Token JWT assinado
+   * @throws {Error} Quando o JWT não está configurado corretamente
    */
   static generateToken(payload: {
     userId: string
@@ -101,7 +117,10 @@ export class JWTUtils {
   }
 
   /**
-   * Verifica a validade de um token JWT.
+   * Verifica a validade de um token JWT e retorna o payload decodificado
+   * @param {string} token - Token JWT a ser verificado
+   * @returns {JWTPayload} Payload decodificado do token
+   * @throws {Error} Quando o token é inválido, expirado ou malformado
    */
   static verifyToken(token: string): JWTPayload {
     if (!this.isInitialized) {

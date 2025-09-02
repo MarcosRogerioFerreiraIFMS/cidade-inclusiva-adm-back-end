@@ -4,8 +4,13 @@ import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 
 /**
- * Middleware que verifica se o usuário pode fazer operações de like
- * Garante que usuários só possam dar like/unlike por si mesmos
+ * - Middleware que verifica se o usuário pode fazer operações de like
+ * - Garante que usuários só possam dar like/unlike por si mesmos
+ * - Administradores podem fazer operações de like em nome de qualquer usuário
+ * @param {AuthenticatedRequest} req - Requisição autenticada contendo dados do usuário
+ * @param {Response} res - Resposta HTTP
+ * @param {NextFunction} next - Função para continuar ao próximo middleware
+ * @returns {void}
  */
 export const requireSelfLikeAction = (
   req: AuthenticatedRequest,
@@ -43,8 +48,13 @@ export const requireSelfLikeAction = (
 }
 
 /**
- * Middleware que verifica se o usuário pode visualizar dados específicos de outro usuário
- * Usado para rotas como GET /likes/usuario/:usuarioId
+ * - Middleware que verifica se o usuário pode visualizar dados específicos de outro usuário
+ * - Usado para rotas como GET /likes/usuario/:usuarioId
+ * - Administradores podem ver dados de qualquer usuário, usuários comuns apenas seus próprios dados
+ * @param {AuthenticatedRequest} req - Requisição autenticada contendo dados do usuário
+ * @param {Response} res - Resposta HTTP
+ * @param {NextFunction} next - Função para continuar ao próximo middleware
+ * @returns {void}
  */
 export const requireSelfOrAdmin = (
   req: AuthenticatedRequest,

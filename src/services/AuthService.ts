@@ -9,9 +9,21 @@ import { throwIfNotFound } from '../utils/entityValidator'
 import { HttpError } from '../utils/HttpError'
 import { JWTUtils } from '../utils/jwtUtils'
 
+/**
+ * Serviço responsável pelas operações de autenticação e autorização
+ */
 export class AuthService implements IAuthService {
+  /**
+   * @param {IUsuarioAccess} usuarioRepository - Repositório de usuários para acesso aos dados
+   */
   constructor(private usuarioRepository: IUsuarioAccess) {}
 
+  /**
+   * Realiza a autenticação do usuário com email e senha
+   * @param {unknown} loginData - Dados de login não tipados vindos da requisição
+   * @returns {Promise<LoginResponseDTO>} Token JWT e dados do usuário autenticado
+   * @throws {HttpError} Quando as credenciais são inválidas
+   */
   async login(loginData: unknown): Promise<LoginResponseDTO> {
     const { email, senha } = toCreateLoginDTO(loginData)
 
@@ -39,6 +51,12 @@ export class AuthService implements IAuthService {
     }
   }
 
+  /**
+   * Valida um token JWT e retorna os dados básicos do usuário
+   * @param {string} token - Token JWT a ser validado
+   * @returns {Promise<{ userId: string; email: string }>} Dados básicos do usuário
+   * @throws {HttpError} Quando o token é inválido ou o usuário não existe
+   */
   async validateToken(
     token: string
   ): Promise<{ userId: string; email: string }> {

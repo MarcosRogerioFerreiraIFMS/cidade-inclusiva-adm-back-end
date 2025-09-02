@@ -3,8 +3,17 @@ import * as net from 'net'
 import app from './app'
 import { EnvValidator } from './utils/envValidator'
 
+/**
+ * Porta do servidor configurada pela variável de ambiente PORT ou 5555 como padrão
+ * @constant {number}
+ */
 const PORT = Number(process.env.PORT) || 5555
 
+/**
+ * Verifica se uma porta específica está disponível para uso
+ * @param {number} port - Número da porta a ser verificada
+ * @returns {Promise<boolean>} Promise que resolve com true se a porta estiver disponível
+ */
 function checkPortAvailability(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const server = net.createServer()
@@ -22,7 +31,12 @@ function checkPortAvailability(port: number): Promise<boolean> {
   })
 }
 
-async function startServer() {
+/**
+ * Inicializa o servidor da aplicação com validações e verificações necessárias
+ * @async
+ * @returns {Promise<void>}
+ */
+async function startServer(): Promise<void> {
   // Valida variáveis de ambiente antes de iniciar o servidor
   console.log(chalk.blue.bold('🔧 Iniciando aplicação Cidade Inclusiva...\n'))
 

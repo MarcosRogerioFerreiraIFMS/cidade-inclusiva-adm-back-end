@@ -2,6 +2,12 @@ import { Prisma } from '@prisma/client'
 import { NoticiaCreateDTO } from '../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../dtos/update/NoticiaUpdateDTO'
 
+/**
+ * - Gera dados formatados para criação de notícia no Prisma
+ * - Converte DTO de criação em input do Prisma, aplicando valores padrão
+ * @param {NoticiaCreateDTO} data - Dados da notícia vindos do DTO
+ * @returns {Prisma.NoticiaCreateInput} Dados formatados para o Prisma
+ */
 export function generateDataNoticiaCreate({
   titulo,
   conteudo,
@@ -20,6 +26,13 @@ export function generateDataNoticiaCreate({
   }
 }
 
+/**
+ * Gera dados formatados para atualização de notícia no Prisma
+ * Converte DTO de atualização em input do Prisma
+ * Apenas campos definidos são incluídos na atualização
+ * @param {NoticiaUpdateDTO} data - Dados de atualização vindos do DTO
+ * @returns {Prisma.NoticiaUpdateInput} Dados formatados para o Prisma
+ */
 export function generateDataNoticiaUpdate({
   titulo,
   conteudo,

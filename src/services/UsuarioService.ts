@@ -11,9 +11,23 @@ import {
 } from '../mappers/output/usuarioOutputMapper'
 import { throwIfAlreadyExists, throwIfNotFound } from '../utils/entityValidator'
 
+/**
+ * Serviço responsável pela lógica de negócio de usuários:
+ * - Implementa validações, regras de negócio e orquestra operações do repositório
+ */
 export class UsuarioService implements IUsuarioService {
+  /**
+   * @param {IUsuarioAccess} usuarioRepository - Repositório de usuários para acesso aos dados
+   */
   constructor(private usuarioRepository: IUsuarioAccess) {}
 
+  /**
+   * Cria um novo usuário no sistema:
+   * - Valida unicidade de email e telefone antes da criação
+   * @param {unknown} data - Dados não tipados do usuário vindos da requisição
+   * @returns {Promise<UsuarioResponseDTO>} Usuário criado formatado para resposta
+   * @throws {HttpError} Quando email ou telefone já existem
+   */
   async create(data: unknown): Promise<UsuarioResponseDTO> {
     const usuarioData = await toCreateUsuarioDTO(data)
 
@@ -37,6 +51,12 @@ export class UsuarioService implements IUsuarioService {
     return toUsuarioResponseDTO(usuario)
   }
 
+  /**
+   * Busca um usuário por ID
+   * @param {string} id - ID único do usuário
+   * @returns {Promise<UsuarioResponseDTO>} Usuário encontrado formatado para resposta
+   * @throws {HttpError} Quando o usuário não é encontrado
+   */
   async findById(id: string): Promise<UsuarioResponseDTO> {
     const usuario = throwIfNotFound(
       await this.usuarioRepository.findById(id),
@@ -46,6 +66,12 @@ export class UsuarioService implements IUsuarioService {
     return toUsuarioResponseDTO(usuario)
   }
 
+  /**
+   * Busca um usuário por email
+   * @param {string} email - Email único do usuário
+   * @returns {Promise<UsuarioResponseDTO>} Usuário encontrado formatado para resposta
+   * @throws {HttpError} Quando o usuário não é encontrado
+   */
   async findByEmail(email: string): Promise<UsuarioResponseDTO> {
     const usuario = throwIfNotFound(
       await this.usuarioRepository.findByEmail(email),
@@ -55,6 +81,14 @@ export class UsuarioService implements IUsuarioService {
     return toUsuarioResponseDTO(usuario)
   }
 
+  /**
+   * Atualiza os dados de um usuário existente:
+   * - Valida se novos email/telefone não conflitam com outros usuários
+   * @param {string} id - ID único do usuário
+   * @param {unknown} data - Dados não tipados de atualização
+   * @returns {Promise<UsuarioResponseDTO>} Usuário atualizado formatado para resposta
+   * @throws {HttpError} Quando o usuário não existe ou há conflito de dados
+   */
   async update(id: string, data: unknown): Promise<UsuarioResponseDTO> {
     const existingUsuario = throwIfNotFound(
       await this.usuarioRepository.findById(id),
@@ -91,6 +125,12 @@ export class UsuarioService implements IUsuarioService {
     return toUsuarioResponseDTO(usuario)
   }
 
+  /**
+   * Remove um usuário do sistema
+   * @param {string} id - ID único do usuário a ser removido
+   * @returns {Promise<void>}
+   * @throws {HttpError} Quando o usuário não é encontrado
+   */
   async delete(id: string): Promise<void> {
     throwIfNotFound(
       await this.usuarioRepository.findById(id),
@@ -100,6 +140,10 @@ export class UsuarioService implements IUsuarioService {
     await this.usuarioRepository.delete(id)
   }
 
+  /**
+   * Lista todos os usuários do sistema
+   * @returns {Promise<UsuarioResponseDTO[]>} Lista de usuários formatada para resposta
+   */
   async findAll(): Promise<UsuarioResponseDTO[]> {
     const usuarios = await this.usuarioRepository.findAll()
 

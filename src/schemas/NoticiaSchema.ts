@@ -8,11 +8,20 @@ import {
   verifyUrl
 } from '../utils/urlUtils'
 
+/** Comprimento mínimo permitido para títulos de notícias */
 const TITULO_MIN_LENGTH = 3
+/** Comprimento máximo permitido para títulos de notícias */
 const TITULO_MAX_LENGTH = 100
+/** Comprimento mínimo permitido para conteúdo de notícias */
 const CONTEUDO_MIN_LENGTH = 10
+/** Comprimento máximo permitido para conteúdo de notícias */
 const CONTEUDO_MAX_LENGTH = 5000
 
+/**
+ * - Schema de validação Zod para criação de notícia
+ * - Define regras de validação, transformação e refinamento para todos os campos
+ * - Inclui validações para URLs, categorias e comprimentos de texto
+ */
 export const createNoticiaSchema = z.object({
   titulo: z
     .string({
@@ -116,4 +125,9 @@ export const createNoticiaSchema = z.object({
     .optional()
 })
 
+/**
+ * - Schema de validação Zod para atualização de notícia
+ * - Torna todos os campos opcionais, permitindo atualizações parciais
+ * - Mantém as mesmas regras de validação do schema de criação
+ */
 export const updateNoticiaSchema = createNoticiaSchema.partial()

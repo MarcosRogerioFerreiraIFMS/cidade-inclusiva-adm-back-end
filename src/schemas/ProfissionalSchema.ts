@@ -8,10 +8,18 @@ import {
   verifyUrl
 } from '../utils/urlUtils'
 
+/** Comprimento mínimo permitido para nomes de profissionais */
 const NOME_MIN_LENGTH = 2
+/** Comprimento máximo permitido para nomes de profissionais */
 const NOME_MAX_LENGTH = 100
+/** Regex para validação de formato de telefone brasileiro */
 const TELEFONE_REGEX = /^(?:\d{11}|\d{13})$/
 
+/**
+ * - Schema de validação Zod para criação de profissional
+ * - Define regras de validação, transformação e refinamento para todos os campos
+ * - Inclui validações específicas para telefone, email e especialidades
+ */
 export const createProfissionalSchema = z.object({
   nome: z
     .string({
@@ -182,4 +190,9 @@ export const createProfissionalSchema = z.object({
     .transform((val) => val as EspecialidadeProfissional)
 })
 
+/**
+ * - Schema de validação Zod para atualização de profissional
+ * - Torna todos os campos opcionais, permitindo atualizações parciais
+ * - Mantém as mesmas regras de validação do schema de criação
+ */
 export const updateProfissionalSchema = createProfissionalSchema.partial()

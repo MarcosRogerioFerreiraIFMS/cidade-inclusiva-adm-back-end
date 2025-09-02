@@ -1,6 +1,11 @@
 /**
  * Script para validar configurações específicas do JWT
  *
+ * Executa validações específicas para o sistema de autenticação JWT:
+ * - Verifica variáveis de ambiente relacionadas ao JWT
+ * - Valida configurações de segurança JWT
+ * - Fornece relatório detalhado de problemas encontrados
+ *
  * Uso:
  * - pnpm validate-jwt
  * - npm run validate-jwt
@@ -10,6 +15,10 @@ import 'dotenv/config'
 import { EnvValidator } from '../src/utils/envValidator'
 import { JWTSecurityConfig } from '../src/utils/jwtSecurityConfig'
 
+/**
+ * Função principal do script de validação JWT
+ * Executa todas as verificações e reporta resultados
+ */
 function main() {
   // Primeiro valida as variáveis de ambiente relacionadas ao JWT
   const isEnvValid = EnvValidator.validateJWTAndLog()

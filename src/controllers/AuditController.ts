@@ -2,9 +2,15 @@ import { ControllerRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * - Controller responsável pelo gerenciamento de auditoria:
+ * - Expõe endpoints para consulta e análise de logs de auditoria
+ * - Implementa funcionalidades para rastreamento de atividades do sistema
+ */
 export class AuditController {
   /**
-   * Lista logs de auditoria com filtros
+   * Busca logs de auditoria de atividades do sistema
+   * @type {ControllerRequest}
    */
   getLogs: ControllerRequest = async (req, res, next) => {
     try {
@@ -34,6 +40,7 @@ export class AuditController {
 
   /**
    * Busca logs específicos de um usuário
+   * @type {ControllerRequest}
    */
   getUserLogs: ControllerRequest = async (req, res, next) => {
     try {
@@ -52,10 +59,12 @@ export class AuditController {
   }
 
   /**
-   * Busca atividades suspeitas recentes
+   * Busca atividades suspeitas recentes no sistema
+   * @type {ControllerRequest}
    */
   getSuspiciousActivity: ControllerRequest = async (req, res, next) => {
     try {
+      // Definir data de referência para busca
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
 
       // Buscar muitas tentativas de login falhadas

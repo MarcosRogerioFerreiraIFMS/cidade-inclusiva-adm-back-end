@@ -2,16 +2,20 @@ import chalk from 'chalk'
 import jwt from 'jsonwebtoken'
 
 /**
- * Configurações e validações relacionadas à segurança do JWT.
+ * Classe responsável pela configuração e validação de segurança JWT
+ * Implementa verificações de segurança para tokens JWT e configurações relacionadas
+ * Garante que as configurações atendam aos padrões de segurança necessários
  */
 export class JWTSecurityConfig {
-  /** Algoritmos permitidos para assinatura/verificação JWT */
+  /** Algoritmos permitidos para assinatura JWT (apenas HS256 por segurança) */
   static readonly ALLOWED_ALGORITHMS: jwt.Algorithm[] = ['HS256']
 
+  /** Prefixo para logs de segurança JWT */
   private static readonly LOG_PREFIX = '[JWT Security]'
 
   /**
-   * Retorna configurações de segurança ajustadas conforme ambiente.
+   * Obtém configurações de segurança baseadas no ambiente
+   * @returns {Object} Configurações de segurança com comprimento mínimo do secret e tolerância do relógio
    */
   static getSecurityConfig() {
     const isProduction = process.env.NODE_ENV === 'production'
@@ -22,7 +26,9 @@ export class JWTSecurityConfig {
   }
 
   /**
-   * Valida se o segredo JWT é seguro.
+   * Valida se o secret JWT atende aos requisitos de segurança
+   * @param {string} secret - Secret JWT a ser validado
+   * @returns {boolean} True se o secret for válido, false caso contrário
    */
   private static validateSecret(secret: string): boolean {
     if (!secret) return false
@@ -42,15 +48,19 @@ export class JWTSecurityConfig {
   }
 
   /**
-   * Valida o formato da duração do token JWT.
+   * Valida se a duração do token JWT está no formato correto
+   * @param {string} duration - Duração do token (ex: '7d', '1h', '30m')
+   * @returns {boolean} True se o formato for válido, false caso contrário
    */
   private static validateTokenDuration(duration: string): boolean {
     return /^(\d+)([smhd])$/.test(duration)
   }
 
   /**
-   * Inicializa e valida as configurações JWT.
-   * Exibe logs detalhados com instruções para correção.
+   * Inicializa e valida todas as configurações JWT
+   * Verifica secret, duração do token e outras configurações de segurança
+   * @param {boolean} verbose - Se deve exibir logs detalhados durante a validação
+   * @returns {boolean} True se todas as configurações estiverem válidas, false caso contrário
    */
   static initialize(verbose = false): boolean {
     const secret = process.env.JWT_SECRET || ''
@@ -66,7 +76,6 @@ export class JWTSecurityConfig {
       )
     }
 
-    // Validação do JWT_SECRET
     if (!secret) {
       if (verbose) {
         console.log(chalk.red.bold('❌ JWT_SECRET NÃO ENCONTRADO:'))
@@ -121,7 +130,6 @@ export class JWTSecurityConfig {
       )
     }
 
-    // Validação do JWT_EXPIRES_IN
     if (!this.validateTokenDuration(expiresIn)) {
       if (verbose) {
         console.log(chalk.red.bold('⚠️  JWT_EXPIRES_IN FORMATO INVÁLIDO:'))
@@ -153,7 +161,6 @@ export class JWTSecurityConfig {
       console.log(chalk.gray(`   • Duração: ${expiresIn}`))
     }
 
-    // Informações de segurança adicionais
     if (verbose) {
       console.log(chalk.blue('🔒 Configurações de segurança:'))
       console.log(

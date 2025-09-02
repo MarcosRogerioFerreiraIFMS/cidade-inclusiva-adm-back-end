@@ -3,6 +3,13 @@ import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 import { JWTUtils } from '../utils/jwtUtils'
 
+/**
+ * - Middleware de autenticação obrigatório que valida o token JWT
+ * - Rejeita requisições sem token válido
+ * @param {AuthenticatedRequest} req - Request com dados do usuário autenticado
+ * @param {Response} res - Response do Express
+ * @param {NextFunction} next - Função para continuar para o próximo middleware
+ */
 export const authMiddleware = (
   req: AuthenticatedRequest,
   res: Response,
@@ -80,6 +87,13 @@ export const authMiddleware = (
   }
 }
 
+/**
+ * - Middleware de autenticação opcional que valida o token JWT quando presente
+ * - Permite requisições mesmo sem token, mas autentica se fornecido
+ * @param {AuthenticatedRequest} req - Request com dados do usuário autenticado (opcional)
+ * @param {Response} _res - Response do Express (não utilizado)
+ * @param {NextFunction} next - Função para continuar para o próximo middleware
+ */
 export const optionalAuthMiddleware = (
   req: AuthenticatedRequest,
   _res: Response,

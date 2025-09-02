@@ -3,16 +3,28 @@ import { Request } from 'express'
 import { db } from '../database/prisma'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 
+/**
+ * Interface para dados de auditoria
+ * Define a estrutura dos dados necessários para registrar uma ação de auditoria
+ */
 export interface AuditData {
+  /** Ação realizada (ex: LOGIN_SUCCESS, CREATE_USUARIO, UPDATE_NOTICIA) */
   acao: string
+  /** ID do recurso afetado (opcional) */
   recursoId?: string
+  /** Tipo do recurso afetado (opcional) */
   tipoRecurso?: TipoRecurso
+  /** Dados antes da alteração (para updates e deletes) */
   dadosAntigos?: unknown
+  /** Dados após a alteração (para creates e updates) */
   dadosNovos?: unknown
 }
 
 /**
- * Converte string para TipoRecurso
+ * Converte string para TipoRecurso enum
+ * Utility function para validar e converter tipos de recursos
+ * @param {string} resourceType - Tipo do recurso em string
+ * @returns {TipoRecurso | undefined} Enum TipoRecurso ou undefined se inválido
  */
 function toTipoRecurso(resourceType: string): TipoRecurso | undefined {
   const upperType = resourceType.toUpperCase()
@@ -22,9 +34,17 @@ function toTipoRecurso(resourceType: string): TipoRecurso | undefined {
   return undefined
 }
 
+/**
+ * Classe responsável por registrar ações de auditoria no sistema
+ * Permite rastreamento de ações dos usuários para fins de segurança e compliance
+ */
 export class AuditLogger {
   /**
-   * Registra uma ação de auditoria
+   * Registra uma ação de auditoria no banco de dados
+   * Método principal para logging de auditoria, captura dados da requisição
+   * @param {AuthenticatedRequest | Request} req - Requisição HTTP contendo dados do usuário e contexto
+   * @param {AuditData} data - Dados da ação a ser auditada
+   * @returns {Promise<void>}
    */
   static async log(
     req: AuthenticatedRequest | Request,
@@ -55,6 +75,9 @@ export class AuditLogger {
 
   /**
    * Registra login bem-sucedido
+   * @param {Request} req - Requisição HTTP do login
+   * @param {string} userId - ID do usuário que fez login
+   * @returns {Promise<void>}
    */
   static async logLogin(req: Request, userId: string): Promise<void> {
     await this.log(req, {
@@ -66,6 +89,9 @@ export class AuditLogger {
 
   /**
    * Registra tentativa de login falhada
+   * @param {Request} req - Requisição HTTP da tentativa de login
+   * @param {string} email - Email usado na tentativa de login
+   * @returns {Promise<void>}
    */
   static async logFailedLogin(req: Request, email: string): Promise<void> {
     await this.log(req, {
@@ -76,6 +102,11 @@ export class AuditLogger {
 
   /**
    * Registra criação de recurso
+   * @param {AuthenticatedRequest} req - Requisição autenticada
+   * @param {string} resourceType - Tipo do recurso criado
+   * @param {string} resourceId - ID do recurso criado
+   * @param {unknown} data - Dados do recurso criado
+   * @returns {Promise<void>}
    */
   static async logCreate(
     req: AuthenticatedRequest,
@@ -93,6 +124,12 @@ export class AuditLogger {
 
   /**
    * Registra atualização de recurso
+   * @param {AuthenticatedRequest} req - Requisição autenticada
+   * @param {string} resourceType - Tipo do recurso atualizado
+   * @param {string} resourceId - ID do recurso atualizado
+   * @param {unknown} oldData - Dados anteriores do recurso
+   * @param {unknown} newData - Dados atualizados do recurso
+   * @returns {Promise<void>}
    */
   static async logUpdate(
     req: AuthenticatedRequest,
@@ -112,6 +149,11 @@ export class AuditLogger {
 
   /**
    * Registra exclusão de recurso
+   * @param {AuthenticatedRequest} req - Requisição autenticada
+   * @param {string} resourceType - Tipo do recurso excluído
+   * @param {string} resourceId - ID do recurso excluído
+   * @param {unknown} deletedData - Dados do recurso excluído
+   * @returns {Promise<void>}
    */
   static async logDelete(
     req: AuthenticatedRequest,
@@ -128,7 +170,16 @@ export class AuditLogger {
   }
 
   /**
-   * Busca logs de auditoria por critérios
+   * Busca logs de auditoria por critérios específicos
+   * Permite filtrar e recuperar registros de auditoria para análise
+   * @param {Object} filters - Filtros para busca
+   * @param {string} [filters.usuarioId] - ID do usuário
+   * @param {string} [filters.recursoId] - ID do recurso
+   * @param {string} [filters.acao] - Ação realizada
+   * @param {Date} [filters.dataInicio] - Data inicial do período
+   * @param {Date} [filters.dataFim] - Data final do período
+   * @param {number} [filters.limite] - Limite de registros (padrão: 100)
+   * @returns {Promise<Array>} Lista de registros de auditoria com dados do usuário
    */
   static async getLogs(filters: {
     usuarioId?: string

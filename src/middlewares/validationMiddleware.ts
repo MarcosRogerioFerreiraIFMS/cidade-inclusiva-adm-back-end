@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from '../utils/HttpError'
 
+/**
+ * Middleware para validação de UUID em parâmetros da rota
+ * @param {string} paramName - Nome do parâmetro a ser validado (padrão: 'id')
+ */
 export const validateUUID = (paramName: string = 'id') => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const paramValue = req.params[paramName]
@@ -31,6 +35,10 @@ export const validateUUID = (paramName: string = 'id') => {
   }
 }
 
+/**
+ * Middleware para validação de campos obrigatórios no corpo da requisição
+ * @param {string[]} requiredFields - Array com nomes dos campos obrigatórios
+ */
 export const validateRequiredBody = (requiredFields: string[]) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.body || typeof req.body !== 'object') {
@@ -64,6 +72,10 @@ export const validateRequiredBody = (requiredFields: string[]) => {
   }
 }
 
+/**
+ * Middleware para validação do Content-Type da requisição
+ * @param {string} expectedType - Tipo de conteúdo esperado (padrão: 'application/json')
+ */
 export const validateContentType = (
   expectedType: string = 'application/json'
 ) => {
@@ -85,6 +97,10 @@ export const validateContentType = (
   }
 }
 
+/**
+ * Middleware para validação do tamanho da requisição
+ * @param {number} maxSizeInMB - Tamanho máximo em MB (padrão: 10)
+ */
 export const validateRequestSize = (maxSizeInMB: number = 10) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const contentLength = parseInt(req.headers['content-length'] || '0', 10)
@@ -105,6 +121,10 @@ export const validateRequestSize = (maxSizeInMB: number = 10) => {
   }
 }
 
+/**
+ * Middleware para validação de parâmetros de consulta permitidos
+ * @param {string[]} allowedParams - Array com parâmetros permitidos
+ */
 export const validateQueryParams = (allowedParams: string[]) => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const queryKeys = Object.keys(req.query)
@@ -127,6 +147,12 @@ export const validateQueryParams = (allowedParams: string[]) => {
   }
 }
 
+/**
+ * Middleware para validação de parâmetros numéricos
+ * @param {string} paramName - Nome do parâmetro a ser validado
+ * @param {number} min - Valor mínimo permitido (opcional)
+ * @param {number} max - Valor máximo permitido (opcional)
+ */
 export const validateNumericParam = (
   paramName: string,
   min?: number,

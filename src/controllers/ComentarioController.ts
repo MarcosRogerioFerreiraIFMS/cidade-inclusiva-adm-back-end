@@ -2,9 +2,21 @@ import { IComentarioService } from '../interfaces/services/IComentarioService'
 import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * Controller responsável pelo gerenciamento de comentários:
+ * - Expõe endpoints para operações CRUD de comentários
+ * Implementa funcionalidades para comentários relacionados a profissionais ou qualquer outro recurso
+ */
 export class ComentarioController {
+  /**
+   * @param {IComentarioService} comentarioService - Serviço de comentários injetado
+   */
   constructor(private comentarioService: IComentarioService) {}
 
+  /**
+   * Cria um novo comentário
+   * @type {ControllerRequest}
+   */
   create: ControllerRequest = async (req, res, next) => {
     try {
       const comentario = await this.comentarioService.create(req.body)
@@ -14,6 +26,10 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * Busca um comentário específico pelo ID
+   * @type {ControllerRequest}
+   */
   findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -24,6 +40,10 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * Atualiza um comentário existente
+   * @type {ControllerRequest}
+   */
   update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -38,6 +58,10 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * Remove um comentário do sistema
+   * @type {ControllerRequest}
+   */
   delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -48,6 +72,10 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * Lista todos os comentários cadastrados
+   * @type {ControllerRequest}
+   */
   findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const comentarios = await this.comentarioService.findAll()
@@ -57,6 +85,11 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * - Lista todos os comentários de um profissional específico
+   * - Inclui comentários visíveis e ocultos (para uso administrativo)
+   * @type {ControllerRequest}
+   */
   findByProfissional: ControllerRequest = async (req, res, next) => {
     try {
       const { profissionalId } = req.params
@@ -69,6 +102,11 @@ export class ComentarioController {
     }
   }
 
+  /**
+   * - Lista apenas os comentários visíveis de um profissional específico
+   * - Filtra comentários que estão marcados como visíveis para exibição pública
+   * @type {ControllerRequest}
+   */
   findVisibleByProfissional: ControllerRequest = async (req, res, next) => {
     try {
       const { profissionalId } = req.params

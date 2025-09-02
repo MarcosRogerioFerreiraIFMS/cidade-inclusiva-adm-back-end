@@ -2,9 +2,22 @@ import { IProfissionalService } from '../interfaces/services/IProfissionalServic
 import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * Controller responsável pelo gerenciamento de profissionais:
+ * - Expõe endpoints para operações CRUD de profissionais
+ * - Implementa padrão de arquitetura em camadas, delegando lógica de negócio ao service
+ */
 export class ProfissionalController {
+  /**
+   * Construtor do controller de profissionais
+   * @param {IProfissionalService} profissionalService - Serviço de profissionais injetado
+   */
   constructor(private profissionalService: IProfissionalService) {}
 
+  /**
+   * Cria um novo profissional
+   * @type {ControllerRequest}
+   */
   create: ControllerRequest = async (req, res, next) => {
     try {
       const profissional = await this.profissionalService.create(req.body)
@@ -18,6 +31,10 @@ export class ProfissionalController {
     }
   }
 
+  /**
+   * Busca um profissional específico pelo ID
+   * @type {ControllerRequest}
+   */
   findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -28,6 +45,10 @@ export class ProfissionalController {
     }
   }
 
+  /**
+   * Atualiza um profissional existente
+   * @type {ControllerRequest}
+   */
   update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -42,6 +63,10 @@ export class ProfissionalController {
     }
   }
 
+  /**
+   * Remove um profissional do sistema
+   * @type {ControllerRequest}
+   */
   delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -52,6 +77,10 @@ export class ProfissionalController {
     }
   }
 
+  /**
+   * Lista todos os profissionais cadastrados
+   * @type {ControllerRequest}
+   */
   findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const profissionais = await this.profissionalService.findAll()

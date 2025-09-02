@@ -9,14 +9,19 @@ import api from 'brasilapi-js'
 import chalk from 'chalk'
 import { hashPassword } from '../src/utils/passwordUtils'
 
-// Configurar seed para garantir resultados reproduzíveis
+/** Configurar seed para garantir resultados fixos */
 faker.seed(123)
 
-// Definir uma data de referência fixa para resultados consistentes
+/** Definir uma data de referência fixa para resultados consistentes */
 faker.setDefaultRefDate('2025-01-01T00:00:00.000Z')
 
+/** Cliente Prisma para operações no banco de dados */
 const prisma = new PrismaClient()
 
+/**
+ * Função principal do script de seed
+ * Executa todas as operações de população do banco em sequência
+ */
 async function main() {
   console.log(chalk.green.bold('🌱 Iniciando seed do banco de dados...'))
   console.log(chalk.cyan('📝 Configurações:'))

@@ -2,9 +2,23 @@ import { ILikeService } from '../interfaces/services/ILikeService'
 import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * Controller responsável pelo gerenciamento de likes:
+ * - Expõe endpoints para operações de like/unlike em comentários
+ * Implementa funcionalidades para interação entre usuários e comentários
+ */
 export class LikeController {
+  /**
+   * Construtor do controller de likes
+   * @param {ILikeService} likeService - Serviço de likes injetado
+   */
   constructor(private likeService: ILikeService) {}
 
+  /**
+   * - Alterna o estado de like de um usuário em um comentário (toggle like/unlike)
+   * - Se o like existe, remove (unlike). Se não existe, adiciona (like)
+   * @type {ControllerRequest}
+   */
   toggle: ControllerRequest = async (req, res, next) => {
     try {
       const { usuarioId, comentarioId } = req.params
@@ -19,6 +33,10 @@ export class LikeController {
     }
   }
 
+  /**
+   * Busca um like específico pelo ID
+   * @type {ControllerRequest}
+   */
   findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -29,6 +47,10 @@ export class LikeController {
     }
   }
 
+  /**
+   * Remove um like do sistema
+   * @type {ControllerRequest}
+   */
   delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -39,6 +61,10 @@ export class LikeController {
     }
   }
 
+  /**
+   * Lista todos os likes de um comentário específico
+   * @type {ControllerRequest}
+   */
   findByComentario: ControllerRequest = async (req, res, next) => {
     try {
       const { comentarioId } = req.params
@@ -49,6 +75,10 @@ export class LikeController {
     }
   }
 
+  /**
+   * Lista todos os likes dados por um usuário específico
+   * @type {ControllerRequest}
+   */
   findByUsuario: ControllerRequest = async (req, res, next) => {
     try {
       const { usuarioId } = req.params

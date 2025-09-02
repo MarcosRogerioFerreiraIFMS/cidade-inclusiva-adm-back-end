@@ -1,11 +1,13 @@
 /**
  * Script para verificação completa de integridade do projeto
  *
- * Executa as seguintes verificações:
- * 1. Versão do Node.js
- * 2. Variáveis de ambiente
- * 3. Verificação de tipos TypeScript
- * 4. Linting do código
+ * Executa uma bateria de verificações essenciais para garantir que o projeto
+ * está configurado corretamente e pronto para desenvolvimento ou produção:
+ *
+ * 1. Versão do Node.js - Verifica compatibilidade
+ * 2. Variáveis de ambiente - Valida configurações necessárias
+ * 3. Verificação de tipos TypeScript - Compila e verifica tipos
+ * 4. Linting do código - Verifica padrões de código
  *
  * Uso:
  * - pnpm check
@@ -18,11 +20,17 @@ import { execSync } from 'node:child_process'
 import semver from 'semver'
 import { EnvValidator } from '../src/utils/envValidator'
 
+/** Formatação para títulos principais */
 const title = chalk.bold.blue
+/** Formatação para seções */
 const section = chalk.bold.green
+/** Formatação para informações */
 const info = chalk.cyan
+/** Formatação para mensagens de sucesso */
 const success = chalk.bold.green
+/** Formatação para mensagens de erro */
 const error = chalk.bold.red
+/** Formatação para avisos */
 const warning = chalk.bold.yellow
 
 console.log(title('\n🔍 Verificação Completa de Integridade do Projeto'))

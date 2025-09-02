@@ -3,6 +3,11 @@ import { NextFunction, Request, Response } from 'express'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from '../utils/HttpError'
 
+/**
+ * - Middleware para controle de timeout de requisições
+ * - Interrompe requisições que demoram mais que o tempo limite especificado
+ * @param {number} timeoutMs - Tempo limite em milissegundos (padrão: 30000)
+ */
 export const requestTimeout = (timeoutMs: number = 30000) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const startTime = Date.now()
@@ -27,18 +32,22 @@ export const requestTimeout = (timeoutMs: number = 30000) => {
       }
     }, timeoutMs)
 
+    // Limpar timeout quando a resposta for finalizada
     res.on('finish', () => {
       clearTimeout(timeout)
     })
 
+    // Limpar timeout quando a conexão for fechada
     res.on('close', () => {
       clearTimeout(timeout)
     })
 
+    // Limpar timeout em caso de erro
     res.on('error', () => {
       clearTimeout(timeout)
     })
 
+    // Adicionar header informativo sobre o timeout
     res.setHeader('X-Request-Timeout', timeoutMs.toString())
 
     next()

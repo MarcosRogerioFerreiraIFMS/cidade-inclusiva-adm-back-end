@@ -4,6 +4,14 @@ import { UsuarioCompletions } from '../types/UsuarioTypes'
 import { HttpError } from '../utils/HttpError'
 import { comparePassword } from '../utils/passwordUtils'
 
+/**
+ * Autentica um usuário verificando email e senha
+ * @param {string} email - Email do usuário
+ * @param {string} password - Senha fornecida pelo usuário
+ * @param {IUsuarioAccess} IUsuarioAccess - Interface de acesso aos dados do usuário
+ * @returns {Promise<Omit<UsuarioCompletions, 'senha'>>} Dados do usuário sem a senha
+ * @throws {HttpError} Erro de autenticação se credenciais inválidas
+ */
 export const authenticateUser = async (
   email: string,
   password: string,
@@ -21,6 +29,7 @@ export const authenticateUser = async (
     throw new HttpError('Email ou senha inválidos', HttpStatusCode.UNAUTHORIZED)
   }
 
+  // Remove a senha dos dados retornados por segurança
   const usuarioSemSenha = { ...usuario, senha: undefined }
 
   return usuarioSemSenha

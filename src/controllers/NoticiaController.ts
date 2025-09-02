@@ -2,9 +2,21 @@ import { INoticiaService } from '../interfaces/services/INoticiaService'
 import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
+/**
+ * Controller responsável pelas operações CRUD de notícias
+:
+   * - Gerencia requisições HTTP para criação, consulta, atualização e remoção de notícias
+ */
 export class NoticiaController {
+  /**
+   * @param {INoticiaService} noticiaService - Serviço de notícias injetado
+   */
   constructor(private noticiaService: INoticiaService) {}
 
+  /**
+   * Cria uma nova notícia no sistema
+   * @type {ControllerRequest}
+   */
   create: ControllerRequest = async (req, res, next) => {
     try {
       const noticia = await this.noticiaService.create(req.body)
@@ -14,6 +26,10 @@ export class NoticiaController {
     }
   }
 
+  /**
+   * Busca uma notícia específica por ID
+   * @type {ControllerRequest}
+   */
   findById: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -24,6 +40,10 @@ export class NoticiaController {
     }
   }
 
+  /**
+   * Atualiza os dados de uma notícia existente
+   * @type {ControllerRequest}
+   */
   update: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -34,6 +54,10 @@ export class NoticiaController {
     }
   }
 
+  /**
+   * Remove uma notícia do sistema
+   * @type {ControllerRequest}
+   */
   delete: ControllerRequest = async (req, res, next) => {
     try {
       const { id } = req.params
@@ -44,6 +68,10 @@ export class NoticiaController {
     }
   }
 
+  /**
+   * Lista todas as notícias do sistema
+   * @type {ControllerRequest}
+   */
   findAll: ControllerRequest = async (req, res, next) => {
     try {
       const noticias = await this.noticiaService.findAll()

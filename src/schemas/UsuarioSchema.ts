@@ -16,9 +16,16 @@ import {
   verifyUrl
 } from '../utils/urlUtils'
 
+/** Comprimento mínimo permitido para senhas */
 const SENHA_MIN_LENGTH = 8
+/** Comprimento máximo permitido para senhas */
 const SENHA_MAX_LENGTH = 128
 
+/**
+ * - Schema de validação Zod para criação de usuário
+ * - Define regras de validação, transformação e refinamento para todos os campos
+ * - Inclui validações específicas para dados brasileiros (CEP, telefone, estados)
+ */
 export const createUsuarioSchema = z.object({
   nome: z
     .string({
@@ -247,6 +254,11 @@ export const createUsuarioSchema = z.object({
   )
 })
 
+/**
+ * - Schema de validação Zod para atualização de usuário
+ * - Torna todos os campos opcionais, permitindo atualizações parciais
+ * - Mantém as mesmas regras de validação do schema de criação
+ */
 export const updateUsuarioSchema = createUsuarioSchema.partial().extend({
   endereco: createUsuarioSchema.shape.endereco.partial().optional()
 })

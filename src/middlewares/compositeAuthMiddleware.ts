@@ -12,51 +12,57 @@ import {
 import { validateRequiredBody, validateUUID } from './validationMiddleware'
 
 /**
- * Middleware compostos que abstraem toda a lógica de autenticação e autorização
- * Evita repetição de código e facilita manutenção
+ * - Módulo de middlewares compostos para autenticação e autorização
+ * - Combina múltiplos middlewares em configurações pré-definidas para diferentes cenários
+ * - Facilita o uso consistente de validações e autorizações em toda a aplicação
  */
 
 /**
- * Middleware para operações que requerem apenas autenticação
- * Uso: Criar recursos próprios, visualizar perfil próprio
+ * - Middleware para operações que requerem apenas autenticação
+ * - Uso: Criar recursos próprios, visualizar perfil próprio
  */
 export const authenticated = [authMiddleware]
 
 /**
- * Middleware para operações que podem ser feitas com ou sem autenticação
- * Uso: Listar recursos públicos, visualizar detalhes públicos
+ * - Middleware para operações que podem ser feitas com ou sem autenticação
+ * - Uso: Listar recursos públicos, visualizar detalhes públicos
  */
 export const optionallyAuthenticated = [optionalAuthMiddleware]
 
 /**
- * Middleware para operações administrativas
- * Uso: Gerenciar sistema, acessar dados de todos os usuários
+ * - Middleware para operações administrativas
+ * - Uso: Gerenciar sistema, acessar dados de todos os usuários
  */
 export const adminOnly = [authMiddleware, requireAdmin]
 
 /**
- * Middleware para operações específicas de usuários comuns
- * Uso: Funcionalidades exclusivas de usuários não-admin
+ * - Middleware para operações específicas de usuários comuns
+ * - Uso: Funcionalidades exclusivas de usuários não-admin
  */
 export const userOnly = [authMiddleware, requireRole([TipoUsuario.USUARIO])]
 
-// ====== MIDDLEWARES ESPECÍFICOS POR RECURSO ======
+/**
+ *
+ * Conjunto de middlewares pré-configurados para operações específicas por tipo de recurso
+ * Cada conjunto inclui as validações e autorizações apropriadas para o contexto
+ */
 
 /**
- * Middlewares para operações de USUÁRIO
+ * - Middlewares para operações de USUÁRIO
+ * - Incluem validações específicas para gerenciamento de perfis de usuário
  */
 export const usuarioOperations = {
-  // GET /usuarios - Apenas admins podem listar todos os usuários
+  /** GET /usuarios - Apenas admins podem listar todos os usuários */
   listAll: [authMiddleware, requireAdmin],
 
-  // GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um
+  /** GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um */
   viewProfile: [
     authMiddleware,
     validateUUID('id'),
     requireOwnershipOrAdmin(TipoRecurso.USUARIO)
   ],
 
-  // PUT /usuarios/:id - Usuário pode editar próprio perfil, admin pode editar qualquer um
+  /** PUT /usuarios/:id - Usuário pode editar próprio perfil, admin pode editar qualquer um */
   updateProfile: [
     authMiddleware,
     validateUUID('id'),
@@ -64,40 +70,41 @@ export const usuarioOperations = {
     requireOwnershipOrAdmin(TipoRecurso.USUARIO)
   ],
 
-  // DELETE /usuarios/:id - Usuário pode deletar próprio perfil, admin pode deletar qualquer um
+  /** DELETE /usuarios/:id - Usuário pode deletar próprio perfil, admin pode deletar qualquer um */
   deleteProfile: [
     authMiddleware,
     validateUUID('id'),
     requireOwnershipOrAdmin(TipoRecurso.USUARIO)
   ],
 
-  // POST /usuarios - Registro público (não requer autenticação)
+  /** POST /usuarios - Registro público (não requer autenticação) */
   register: [
     validateRequiredBody(['nome', 'telefone', 'email', 'senha', 'endereco'])
   ],
 
-  // GET /usuarios/email/:email - Apenas admins podem buscar por email
+  /** GET /usuarios/email/:email - Apenas admins podem buscar por email */
   findByEmail: [authMiddleware, requireAdmin]
 }
 
 /**
- * Middlewares para operações de NOTÍCIAS
+ * - Middlewares para operações de NOTÍCIAS
+ * - Incluem validações específicas para gerenciamento de conteúdo jornalístico
  */
 export const noticiaOperations = {
-  // GET /noticias - Público pode visualizar, mas dados extras para usuários autenticados
+  /** GET /noticias - Público pode visualizar, mas dados extras para usuários autenticados */
   list: [optionalAuthMiddleware],
 
-  // GET /noticias/:id - Público pode visualizar, mas dados extras para usuários autenticados
+  /** GET /noticias/:id - Público pode visualizar, mas dados extras para usuários autenticados */
   view: [optionalAuthMiddleware, validateUUID('id')],
 
-  // POST /noticias - Apenas admins podem criar
+  /** POST /noticias - Apenas admins podem criar */
   create: [
     authMiddleware,
     requireAdmin,
     validateRequiredBody(['titulo', 'conteudo', 'categoria'])
   ],
 
-  // PUT /noticias/:id - Apenas admins podem editar
+  /** PUT /noticias/:id - Apenas admins podem editar */
   update: [
     authMiddleware,
     requireAdmin,
@@ -105,28 +112,29 @@ export const noticiaOperations = {
     validateRequiredBody([])
   ],
 
-  // DELETE /noticias/:id - Apenas admins podem deletar
+  /** DELETE /noticias/:id - Apenas admins podem deletar */
   delete: [authMiddleware, requireAdmin, validateUUID('id')]
 }
 
 /**
- * Middlewares para operações de PROFISSIONAIS
+ * - Middlewares para operações de PROFISSIONAIS
+ * - Incluem validações específicas para gerenciamento de dados profissionais
  */
 export const profissionalOperations = {
-  // GET /profissionais - Público pode visualizar
+  /** GET /profissionais - Público pode visualizar */
   list: [optionalAuthMiddleware],
 
-  // GET /profissionais/:id - Público pode visualizar
+  /** GET /profissionais/:id - Público pode visualizar */
   view: [optionalAuthMiddleware, validateUUID('id')],
 
-  // POST /profissionais - Apenas admins podem criar
+  /** POST /profissionais - Apenas admins podem criar */
   create: [
     authMiddleware,
     requireAdmin,
     validateRequiredBody(['nome', 'telefone', 'email', 'especialidade'])
   ],
 
-  // PUT /profissionais/:id - Apenas admins podem editar
+  /** PUT /profissionais/:id - Apenas admins podem editar */
   update: [
     authMiddleware,
     requireAdmin,
@@ -134,24 +142,25 @@ export const profissionalOperations = {
     validateRequiredBody([])
   ],
 
-  // DELETE /profissionais/:id - Apenas admins podem deletar
+  /** DELETE /profissionais/:id - Apenas admins podem deletar */
   delete: [authMiddleware, requireAdmin, validateUUID('id')]
 }
 
 /**
- * Middlewares para operações de COMENTÁRIOS
+ * - Middlewares para operações de COMENTÁRIOS
+ * - Incluem validações específicas para sistema de comentários e moderação
  */
 export const comentarioOperations = {
-  // GET /comentarios - Público pode visualizar
+  /** GET /comentarios - Público pode visualizar */
   list: [optionalAuthMiddleware],
 
-  // GET /comentarios/:id - Público pode visualizar
+  /** GET /comentarios/:id - Público pode visualizar */
   view: [optionalAuthMiddleware, validateUUID('id')],
 
-  // POST /comentarios - Apenas usuários autenticados podem criar
+  /** POST /comentarios - Apenas usuários autenticados podem criar */
   create: [authMiddleware, validateRequiredBody(['conteudo', 'usuarioId'])],
 
-  // PUT /comentarios/:id - Apenas o autor ou admin podem editar
+  /** PUT /comentarios/:id - Apenas o autor ou admin podem editar */
   update: [
     authMiddleware,
     validateUUID('id'),
@@ -159,17 +168,17 @@ export const comentarioOperations = {
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
   ],
 
-  // DELETE /comentarios/:id - Apenas o autor ou admin podem deletar
+  /** DELETE /comentarios/:id - Apenas o autor ou admin podem deletar */
   delete: [
     authMiddleware,
     validateUUID('id'),
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
   ],
 
-  // GET /comentarios/profissional/:profissionalId - Público pode visualizar comentários de um profissional
+  /** GET /comentarios/profissional/:profissionalId - Público pode visualizar comentários de um profissional */
   findByProfessional: [optionalAuthMiddleware, validateUUID('profissionalId')],
 
-  // GET /comentarios/profissional/:profissionalId/visiveis - Público pode visualizar comentários visíveis
+  /** GET /comentarios/profissional/:profissionalId/visiveis - Público pode visualizar comentários visíveis */
   findVisibleByProfessional: [
     optionalAuthMiddleware,
     validateUUID('profissionalId')
@@ -177,13 +186,14 @@ export const comentarioOperations = {
 }
 
 /**
- * Middlewares para operações de LIKES
+ * - Middlewares para operações de LIKES
+ * - Incluem validações específicas para sistema de likes e reações
  */
 export const likeOperations = {
-  // GET /likes/:id - Público pode visualizar
+  /** GET /likes/:id - Público pode visualizar */
   view: [optionalAuthMiddleware, validateUUID('id')],
 
-  // PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos
+  /** PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos */
   toggle: [
     authMiddleware,
     validateUUID('usuarioId'),
@@ -191,49 +201,60 @@ export const likeOperations = {
     requireSelfLikeAction // Verifica se o usuário pode dar like por si mesmo
   ],
 
-  // DELETE /likes/:id - Apenas o autor ou admin podem deletar
+  /** DELETE /likes/:id - Apenas o autor ou admin podem deletar */
   delete: [
     authMiddleware,
     validateUUID('id'),
     requireOwnershipOrAdmin(TipoRecurso.LIKE)
   ],
 
-  // GET /likes/comentario/:comentarioId - Público pode visualizar likes de um comentário
+  /** GET /likes/comentario/:comentarioId - Público pode visualizar likes de um comentário */
   findByComment: [optionalAuthMiddleware, validateUUID('comentarioId')],
 
-  // GET /likes/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus likes
+  /** GET /likes/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus likes */
   findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin]
 }
 
 /**
- * Middlewares para operações de AUDITORIA
+ * - Middlewares para operações de AUDITORIA
+ * - Incluem validações específicas para acesso a logs e registros de auditoria
  */
 export const auditOperations = {
-  // GET /audit - Apenas admins podem visualizar logs
+  /** GET /audit - Apenas admins podem visualizar logs */
   list: [authMiddleware, requireAdmin],
 
-  // GET /audit/:id - Apenas admins podem visualizar log específico
+  /** GET /audit/:id - Apenas admins podem visualizar log específico */
   view: [authMiddleware, requireAdmin, validateUUID('id')]
 }
 
 /**
- * Middlewares para operações de AUTENTICAÇÃO
+ * - Middlewares para operações de AUTENTICAÇÃO
+ * - Incluem validações específicas para login e validação de tokens
  */
 export const authOperations = {
-  // POST /auth/login - Público pode fazer login
+  /** POST /auth/login - Público pode fazer login */
   login: [validateRequiredBody(['email', 'senha'])],
 
-  // GET /auth/validate-token - Público pode validar token
+  /** GET /auth/validate-token - Público pode validar token */
   validateToken: []
 }
 
 /**
- * Função helper para criar middlewares customizados rapidamente
+ * Funções utilitárias para criação de middlewares customizados
  */
-export const createCustomMiddleware = (middlewares: unknown[]) => middlewares
+
+/**
+ * Função helper para criar middlewares customizados rapidamente
+ * @param {unknown[]} middlewares - Array de middlewares a serem aplicados
+ * @returns {unknown[]} Array de middlewares configurados
+ */
+export const createCustomMiddleware = (middlewares: unknown[]): unknown[] =>
+  middlewares
 
 /**
  * Middleware para operações que requerem propriedade específica de recurso
+ * @param {TipoRecurso} resourceType - Tipo do recurso a ser verificado
+ * @returns {unknown[]} Array de middlewares para verificação de propriedade
  */
 export const requireResourceOwnership = (resourceType: TipoRecurso) => [
   authMiddleware,
@@ -243,6 +264,9 @@ export const requireResourceOwnership = (resourceType: TipoRecurso) => [
 
 /**
  * Middleware para operações que requerem validação de corpo + propriedade
+ * @param {TipoRecurso} resourceType - Tipo do recurso a ser verificado
+ * @param {string[]} requiredFields - Campos obrigatórios no corpo da requisição
+ * @returns {unknown[]} Array de middlewares para validação completa
  */
 export const requireOwnershipWithValidation = (
   resourceType: TipoRecurso,

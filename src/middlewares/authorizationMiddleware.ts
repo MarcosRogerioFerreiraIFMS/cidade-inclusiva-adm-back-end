@@ -7,7 +7,14 @@ import { AuthenticatedRequest } from '../types/RequestTypes'
 import { AuditLogger } from '../utils/auditLogger'
 
 /**
- * Middleware que requer roles específicos
+ * - Módulo de middlewares de autorização
+ * - Implementa verificações de permissões baseadas em roles e propriedade de recursos
+ * - Garante que usuários só acessem recursos para os quais têm autorização
+ */
+
+/**
+ * Middleware que requer roles específicos para acesso
+ * @param {TipoUsuario[]} rolesPermitidos - Array de roles que podem acessar o recurso
  */
 export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
   return (
@@ -50,14 +57,16 @@ export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
 }
 
 /**
- * Middleware que requer que o usuário seja admin
+ * - Middleware que requer que o usuário seja administrador
+ * - Atalho para requireRole([TipoUsuario.ADMIN])
  */
 export const requireAdmin = requireRole([TipoUsuario.ADMIN])
 
 /**
- * Middleware que valida se o usuário pode acessar/modificar o recurso
- * - Admins podem tudo
+ * - Middleware que valida se o usuário pode acessar/modificar o recurso
+ * - Administradores podem acessar qualquer recurso
  * - Usuários comuns só podem acessar/modificar seus próprios recursos
+ * @param {TipoRecurso} tipoRecurso - Tipo do recurso sendo acessado
  */
 export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
   return async (
@@ -119,7 +128,11 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
 }
 
 /**
- * Verifica se o usuário é proprietário do recurso
+ * Verifica se o usuário é proprietário do recurso baseado no tipo
+ * @param {TipoRecurso} tipoRecurso - Tipo do recurso a ser verificado
+ * @param {string} recursoId - ID do recurso
+ * @param {string} userId - ID do usuário
+ * @returns {Promise<boolean>} True se o usuário for proprietário, false caso contrário
  */
 async function verifyOwnership(
   tipoRecurso: TipoRecurso,

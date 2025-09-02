@@ -1,10 +1,13 @@
 /**
  * Script para limpeza completa do projeto
  *
- * Remove arquivos e diretórios temporários e de build:
- * - dist/ (arquivos compilados)
- * - temp/ (arquivos temporários)
- * - coverage/ (relatórios de cobertura)
+ * Remove arquivos e diretórios temporários e de build para garantir
+ * um ambiente limpo de desenvolvimento. Inclui:
+ *
+ * - dist/ (arquivos compilados TypeScript)
+ * - temp/ (arquivos temporários do sistema)
+ * - coverage/ (relatórios de cobertura de testes)
+ * - node_modules/.cache/ (cache de dependências)
  *
  * Uso:
  * - pnpm clean
@@ -16,10 +19,15 @@ import { execSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
+/** Formatação para títulos principais */
 const title = chalk.bold.blue
+/** Formatação para informações */
 const info = chalk.cyan
+/** Formatação para mensagens de sucesso */
 const success = chalk.bold.green
+/** Formatação para avisos */
 const warning = chalk.bold.yellow
+/** Formatação para mensagens de erro */
 const error = chalk.bold.red
 
 console.log(title('\n🧹 Limpeza Completa do Projeto'))

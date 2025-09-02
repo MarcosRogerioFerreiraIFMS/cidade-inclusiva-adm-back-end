@@ -12,47 +12,47 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 ## 📚 Documentação de Apoio
 
-| 📄 Descrição | 🔗 Link |
-|:---|:---|
-| 📝 Desenvolvimento do Plano de Trabalho | [Plano de Trabalho](https://docs.google.com/document/d/1nRhvRcXlDFgf7TtoWgm3VRqlIvhKTE5sb9miVpVaVKU/edit?usp=sharing) |
-| 📄 Documentação do Projeto Mobile | [Documentação Cidade Inclusiva](https://docs.google.com/document/d/1VxejBnzkMbvmlPWUQOMgSNrHDl5ugXdu/edit?usp=sharing) |
-| 🎨 Protótipo Inicial no Figma | [Figma](https://www.figma.com/design/sHp0ryMHBTla6oVVEYJSOv) |
-| 📱 Protótipo Mobile no Vercel | [Cidade Inclusiva - Mobile](https://fundect-pictec3-mobile-cidade-inclusiva.vercel.app/login) |
-| 🛠️ Modelagem UML do Projeto | [Cidade Inclusiva - UML](https://app.diagrams.net/#G1c72Gns79DE7laBVADoPoukr65F1AaNS-) |
-| 📂 Repositório Mobile no GitHub | [Cidade Inclusiva - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva) |
+| 📄 Descrição                            | 🔗 Link                                                                                                                |
+| :-------------------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| 📝 Desenvolvimento do Plano de Trabalho | [Plano de Trabalho](https://docs.google.com/document/d/1nRhvRcXlDFgf7TtoWgm3VRqlIvhKTE5sb9miVpVaVKU/edit?usp=sharing)  |
+| 📄 Documentação do Projeto Mobile       | [Documentação Cidade Inclusiva](https://docs.google.com/document/d/1VxejBnzkMbvmlPWUQOMgSNrHDl5ugXdu/edit?usp=sharing) |
+| 🎨 Protótipo Inicial no Figma           | [Figma](https://www.figma.com/design/sHp0ryMHBTla6oVVEYJSOv)                                                           |
+| 📱 Protótipo Mobile no Vercel           | [Cidade Inclusiva - Mobile](https://fundect-pictec3-mobile-cidade-inclusiva.vercel.app/login)                          |
+| 🛠️ Modelagem UML do Projeto             | [Cidade Inclusiva - UML](https://app.diagrams.net/#G1c72Gns79DE7laBVADoPoukr65F1AaNS-)                                 |
+| 📂 Repositório Mobile no GitHub         | [Cidade Inclusiva - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva)              |
 
 ## ⚡ Scripts Disponíveis
 
 ### 🚀 Scripts de Execução
 
-| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
-|---------------|------------------|-------------------|
-| `dev` | Inicia o servidor em modo de desenvolvimento com hot-reload usando tsx | `pnpm dev` |
-| `start` | Inicia o servidor em modo de produção (requer build) | `pnpm start` |
-| `build` | Compila o código TypeScript para JavaScript na pasta `dist/` | `pnpm build` |
+| 📜 **Script** | 📖 **Descrição**                                                       | 🏃‍♂️ **Comando** |
+| ------------- | ---------------------------------------------------------------------- | -------------- |
+| `dev`         | Inicia o servidor em modo de desenvolvimento com hot-reload usando tsx | `pnpm dev`     |
+| `start`       | Inicia o servidor em modo de produção (requer build)                   | `pnpm start`   |
+| `build`       | Compila o código TypeScript para JavaScript na pasta `dist/`           | `pnpm build`   |
 
 ### 🗄️ Scripts do Banco de Dados (Prisma)
 
-| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
-|---------------|------------------|-------------------|
-| `migrate` | Executa as migrações do banco de dados em modo desenvolvimento | `pnpm migrate` |
-| `seed` | Popula o banco de dados com dados iniciais realistas usando logs coloridos e informativos | `pnpm seed` |
-| `studio` | Abre o Prisma Studio para visualizar e editar dados do banco | `pnpm studio` |
-| `push` | Aplica mudanças do schema diretamente no banco (sem criar migrações) | `pnpm push` |
-| `pull` | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma` | `pnpm pull` |
-| `status` | Mostra o status das migrações do banco de dados | `pnpm status` |
+| 📜 **Script** | 📖 **Descrição**                                                                          | 🏃‍♂️ **Comando** |
+| ------------- | ----------------------------------------------------------------------------------------- | -------------- |
+| `migrate`     | Executa as migrações do banco de dados em modo desenvolvimento                            | `pnpm migrate` |
+| `seed`        | Popula o banco de dados com dados iniciais realistas usando logs coloridos e informativos | `pnpm seed`    |
+| `studio`      | Abre o Prisma Studio para visualizar e editar dados do banco                              | `pnpm studio`  |
+| `push`        | Aplica mudanças do schema diretamente no banco (sem criar migrações)                      | `pnpm push`    |
+| `pull`        | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma`                     | `pnpm pull`    |
+| `status`      | Mostra o status das migrações do banco de dados                                           | `pnpm status`  |
 
 ### 🔧 Scripts de Sistema
 
-| 📜 **Script** | 📖 **Descrição** | 🏃‍♂️ **Comando** |
-|---------------|------------------|-------------------|
-| `lint` | Executa o ESLint para verificar problemas no código TypeScript | `pnpm lint` |
-| `build:noEmit` | Verifica a compilação TypeScript sem gerar arquivos de saída | `pnpm build:noEmit` |
-| `check` | Verifica a compilação e linting do código | `pnpm check` |
-| `clean` | Remove pastas de build, temporárias e coverage | `pnpm clean` |
-| `generate-jwt-secret` | Gera uma chave secreta JWT para autenticação | `pnpm generate-jwt-secret` |
-| `validate-env` | **Valida variáveis de ambiente**: verifica se todas as configurações necessárias estão presentes | `pnpm validate-env` |
-| `validate-jwt` | **Validação específica do JWT**: verifica configurações de autenticação e segurança JWT | `pnpm validate-jwt` |
+| 📜 **Script**         | 📖 **Descrição**                                                                                 | 🏃‍♂️ **Comando**             |
+| --------------------- | ------------------------------------------------------------------------------------------------ | -------------------------- |
+| `lint`                | Executa o ESLint para verificar problemas no código TypeScript                                   | `pnpm lint`                |
+| `build:noEmit`        | Verifica a compilação TypeScript sem gerar arquivos de saída                                     | `pnpm build:noEmit`        |
+| `check`               | Verifica a compilação e linting do código                                                        | `pnpm check`               |
+| `clean`               | Remove pastas de build, temporárias e coverage                                                   | `pnpm clean`               |
+| `generate-jwt-secret` | Gera uma chave secreta JWT para autenticação                                                     | `pnpm generate-jwt-secret` |
+| `validate-env`        | **Valida variáveis de ambiente**: verifica se todas as configurações necessárias estão presentes | `pnpm validate-env`        |
+| `validate-jwt`        | **Validação específica do JWT**: verifica configurações de autenticação e segurança JWT          | `pnpm validate-jwt`        |
 
 ### 📝 Explicação Detalhada dos Scripts
 
@@ -113,10 +113,10 @@ Este projeto inclui um **sistema robusto de validação de variáveis de ambient
    ```bash
    # 1. Copie o arquivo de exemplo
    cp .env.example .env
-   
+
    # 2. Gere uma chave JWT segura
    pnpm generate-jwt-secret
-   
+
    # 3. Configure suas variáveis no .env
    # 4. Valide a configuração
    pnpm validate-env
@@ -140,18 +140,22 @@ O projeto segue uma arquitetura bem organizada e modular, baseada em três entid
 Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetura em camadas:
 
 - **📂 `src/controllers/`** - 🎮 **Controladores HTTP**
+
   - Gerenciam requisições e respostas da API
   - Validam dados de entrada e retornam respostas padronizadas
 
 - **📂 `src/services/`** - 🧠 **Serviços de Negócio**
+
   - Contêm toda a lógica de negócios da aplicação
   - Orquestram operações entre repositórios e validações
 
 - **📂 `src/repositories/`** - 🗃️ **Repositórios de Dados**
+
   - Abstraem o acesso aos dados do banco
   - Implementam operações CRUD específicas
 
 - **📂 `src/daos/`** - 💾 **Data Access Objects**
+
   - Executam operações diretas no banco de dados via Prisma
   - Camada mais baixa de acesso aos dados
 
@@ -168,11 +172,13 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 ### 📋 **Estrutura e Validação de Dados**
 
 - **📂 `src/dtos/`** - 📦 **Data Transfer Objects**
+
   - **📂 `create/`** - ➕ Estruturas para criação
   - **📂 `update/`** - ✏️ Estruturas para atualização
   - **📂 `response/`** - 📤 Estruturas de resposta
 
 - **📂 `src/schemas/`** - ✅ **Validação com Zod**
+
   - Definem regras de validação para cada entidade
   - Garantem integridade dos dados de entrada
 
@@ -183,6 +189,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 ### 📊 **Transformação de Dados**
 
 - **📂 `src/mappers/`** - 🔄 **Conversores de Dados**
+
   - **📂 `input/`** - Converte dados de entrada para DTOs
   - **📂 `output/`** - Converte DTOs para respostas da API
 
@@ -193,6 +200,7 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 ### 🛡️ **Middlewares e Configurações**
 
 - **📂 `src/middlewares/`** - 🛡️ **Interceptadores**
+
   - `errorMiddleware.ts` - Tratamento global de erros
   - `timeoutMiddleware.ts` - Controle de timeout de requisições
   - `validationMiddleware.ts` - Validação automática com schemas
@@ -203,11 +211,13 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 ### 🛠️ **Utilitários**
 
 - **📂 `src/utils/`** - 🛠️ **Funções Auxiliares**
+
   - `HandleError.ts` / `HandleSuccess.ts` - Padronização de respostas
   - `HttpError.ts` - Classe customizada para erros HTTP
   - `stringUtils.ts` / `urlUtils.ts` - Utilitários gerais
 
 - **📂 `src/lib/`** - 📚 **Bibliotecas Compartilhadas**
+
   - `prisma.ts` - Configuração e instância do cliente Prisma
 
 - **📂 `src/enums/`** - 📝 **Constantes**
@@ -230,52 +240,52 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ### 🚀 Tecnologias Principais
 
-| 🚀 **Tecnologia** | 📖 **Descrição** | 🔗 **Link de Acesso** |
-|-------------------|------------------|-----------------------|
-| 🟢 Node.js       | Ambiente de execução de JavaScript para várias plataformas (≥20.0.0) | [Node.js](https://nodejs.org/pt) |
-| ⚡ ExpressJS     | Framework para Node.js que facilita a criação de aplicações web e APIs | [ExpressJS](https://expressjs.com/pt-br/) |
-| 🟦 TypeScript    | Superset do JavaScript que adiciona tipos estáticos ao código | [TypeScript](https://www.typescriptlang.org/) |
-| 🌀 Prisma        | ORM (Object-Relational Mapping) para Node.js e TypeScript | [Prisma](https://www.prisma.io/) |
-| ⚙️ pnpm          | Gerenciador de pacotes rápido e eficiente para JavaScript | [pnpm](https://pnpm.io/) |
+| 🚀 **Tecnologia** | 📖 **Descrição**                                                       | 🔗 **Link de Acesso**                         |
+| ----------------- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| 🟢 Node.js        | Ambiente de execução de JavaScript para várias plataformas (≥20.0.0)   | [Node.js](https://nodejs.org/pt)              |
+| ⚡ ExpressJS      | Framework para Node.js que facilita a criação de aplicações web e APIs | [ExpressJS](https://expressjs.com/pt-br/)     |
+| 🟦 TypeScript     | Superset do JavaScript que adiciona tipos estáticos ao código          | [TypeScript](https://www.typescriptlang.org/) |
+| 🌀 Prisma         | ORM (Object-Relational Mapping) para Node.js e TypeScript              | [Prisma](https://www.prisma.io/)              |
+| ⚙️ pnpm           | Gerenciador de pacotes rápido e eficiente para JavaScript              | [pnpm](https://pnpm.io/)                      |
 
 ### 📦 Dependências de Produção
 
-| 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
-|-------------------|---------------|------------------|-------------|
-| `@prisma/client` | `^6.15.0` | Cliente Prisma para acesso ao banco de dados | [Prisma Client](https://www.prisma.io/client) |
-| `@types/jsonwebtoken` | `^9.0.10` | Definições de tipos TypeScript para jsonwebtoken | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
-| `axios` | `^1.11.0` | Cliente HTTP baseado em promises para requisições | [Axios](https://axios-http.com/) |
-| `bcryptjs` | `^3.0.2` | Biblioteca para hash de senhas com bcrypt | [bcryptjs](https://www.npmjs.com/package/bcryptjs) |
-| `brasilapi-js` | `^1.0.4` | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/) |
-| `chalk` | `^5.6.0` | Biblioteca para estilizar texto no terminal com cores e formatação | [Chalk](https://www.npmjs.com/package/chalk) |
-| `compression` | `^1.8.1` | Middleware de compressão para Express | [Compression](https://www.npmjs.com/package/compression) |
-| `cors` | `^2.8.5` | Middleware para habilitar CORS (Cross-Origin Resource Sharing) | [CORS](https://www.npmjs.com/package/cors) |
-| `express` | `^5.1.0` | Framework web rápido e minimalista para Node.js | [Express](https://expressjs.com/) |
-| `express-rate-limit` | `^8.0.1` | Middleware de limitação de taxa para Express | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) |
-| `helmet` | `^8.1.0` | Middleware de segurança para Express | [Helmet](https://helmetjs.github.io/) |
-| `jsonwebtoken` | `^9.0.2` | Implementação de JSON Web Tokens para autenticação | [JsonWebToken](https://www.npmjs.com/package/jsonwebtoken) |
-| `zod` | `^3.25.76` | Biblioteca de validação de schema TypeScript-first | [Zod](https://zod.dev/) |
+| 📚 **Biblioteca**     | 📖 **Versão** | 📖 **Descrição**                                                             | 🔗 **Link**                                                             |
+| --------------------- | ------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `@prisma/client`      | `^6.15.0`     | Cliente Prisma para acesso ao banco de dados                                 | [Prisma Client](https://www.prisma.io/client)                           |
+| `@types/jsonwebtoken` | `^9.0.10`     | Definições de tipos TypeScript para jsonwebtoken                             | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
+| `axios`               | `^1.11.0`     | Cliente HTTP baseado em promises para requisições                            | [Axios](https://axios-http.com/)                                        |
+| `bcryptjs`            | `^3.0.2`      | Biblioteca para hash de senhas com bcrypt                                    | [bcryptjs](https://www.npmjs.com/package/bcryptjs)                      |
+| `brasilapi-js`        | `^1.0.4`      | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/)                               |
+| `chalk`               | `^5.6.0`      | Biblioteca para estilizar texto no terminal com cores e formatação           | [Chalk](https://www.npmjs.com/package/chalk)                            |
+| `compression`         | `^1.8.1`      | Middleware de compressão para Express                                        | [Compression](https://www.npmjs.com/package/compression)                |
+| `cors`                | `^2.8.5`      | Middleware para habilitar CORS (Cross-Origin Resource Sharing)               | [CORS](https://www.npmjs.com/package/cors)                              |
+| `express`             | `^5.1.0`      | Framework web rápido e minimalista para Node.js                              | [Express](https://expressjs.com/)                                       |
+| `express-rate-limit`  | `^8.0.1`      | Middleware de limitação de taxa para Express                                 | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit)  |
+| `helmet`              | `^8.1.0`      | Middleware de segurança para Express                                         | [Helmet](https://helmetjs.github.io/)                                   |
+| `jsonwebtoken`        | `^9.0.2`      | Implementação de JSON Web Tokens para autenticação                           | [JsonWebToken](https://www.npmjs.com/package/jsonwebtoken)              |
+| `zod`                 | `^3.25.76`    | Biblioteca de validação de schema TypeScript-first                           | [Zod](https://zod.dev/)                                                 |
 
 ### 🛠️ Dependências de Desenvolvimento
 
-| 📚 **Biblioteca** | 📖 **Versão** | 📖 **Descrição** | 🔗 **Link** |
-|-------------------|---------------|------------------|-------------|
-| `@eslint/js` | `^9.34.0` | Configurações JavaScript oficiais do ESLint | [ESLint JS](https://eslint.org/) |
-| `@faker-js/faker` | `^10.0.0` | Biblioteca para geração de dados falsos realistas | [Faker.js](https://fakerjs.dev/) |
-| `@types/compression` | `^1.8.1` | Definições de tipos TypeScript para compression | [Types Compression](https://www.npmjs.com/package/@types/compression) |
-| `@types/cors` | `^2.8.19` | Definições de tipos TypeScript para cors | [Types CORS](https://www.npmjs.com/package/@types/cors) |
-| `@types/express` | `^5.0.3` | Definições de tipos TypeScript para express | [Types Express](https://www.npmjs.com/package/@types/express) |
-| `@types/node` | `^22.18.0` | Definições de tipos TypeScript para Node.js | [Types Node](https://www.npmjs.com/package/@types/node) |
-| `@types/semver` | `^7.7.0` | Definições de tipos TypeScript para semver | [Types Semver](https://www.npmjs.com/package/@types/semver) |
-| `dotenv` | `^16.6.1` | Carrega variáveis de ambiente de um arquivo .env | [Dotenv](https://www.npmjs.com/package/dotenv) |
-| `eslint` | `^9.34.0` | Ferramenta de linting para identificar problemas no código | [ESLint](https://eslint.org/) |
-| `globals` | `^16.3.0` | Variáveis globais para ESLint em diferentes ambientes | [Globals](https://www.npmjs.com/package/globals) |
-| `prisma` | `^6.15.0` | Kit de ferramentas de banco de dados | [Prisma](https://www.prisma.io/) |
-| `rimraf` | `^6.0.1` | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf) |
-| `semver` | `^7.7.2` | Utilitário para trabalhar com versionamento semântico | [Semver](https://www.npmjs.com/package/semver) |
-| `tsx` | `^4.20.5` | Executor TypeScript/JSX de alta performance | [TSX](https://www.npmjs.com/package/tsx) |
-| `typescript` | `^5.9.2` | Linguagem de programação que adiciona tipagem ao JavaScript | [TypeScript](https://www.typescriptlang.org/) |
-| `typescript-eslint` | `^8.41.0` | Integração entre TypeScript e ESLint | [TypeScript ESLint](https://typescript-eslint.io/) |
+| 📚 **Biblioteca**    | 📖 **Versão** | 📖 **Descrição**                                             | 🔗 **Link**                                                           |
+| -------------------- | ------------- | ------------------------------------------------------------ | --------------------------------------------------------------------- |
+| `@eslint/js`         | `^9.34.0`     | Configurações JavaScript oficiais do ESLint                  | [ESLint JS](https://eslint.org/)                                      |
+| `@faker-js/faker`    | `^10.0.0`     | Biblioteca para geração de dados falsos realistas            | [Faker.js](https://fakerjs.dev/)                                      |
+| `@types/compression` | `^1.8.1`      | Definições de tipos TypeScript para compression              | [Types Compression](https://www.npmjs.com/package/@types/compression) |
+| `@types/cors`        | `^2.8.19`     | Definições de tipos TypeScript para cors                     | [Types CORS](https://www.npmjs.com/package/@types/cors)               |
+| `@types/express`     | `^5.0.3`      | Definições de tipos TypeScript para express                  | [Types Express](https://www.npmjs.com/package/@types/express)         |
+| `@types/node`        | `^22.18.0`    | Definições de tipos TypeScript para Node.js                  | [Types Node](https://www.npmjs.com/package/@types/node)               |
+| `@types/semver`      | `^7.7.0`      | Definições de tipos TypeScript para semver                   | [Types Semver](https://www.npmjs.com/package/@types/semver)           |
+| `dotenv`             | `^16.6.1`     | Carrega variáveis de ambiente de um arquivo .env             | [Dotenv](https://www.npmjs.com/package/dotenv)                        |
+| `eslint`             | `^9.34.0`     | Ferramenta de linting para identificar problemas no código   | [ESLint](https://eslint.org/)                                         |
+| `globals`            | `^16.3.0`     | Variáveis globais para ESLint em diferentes ambientes        | [Globals](https://www.npmjs.com/package/globals)                      |
+| `prisma`             | `^6.15.0`     | Kit de ferramentas de banco de dados                         | [Prisma](https://www.prisma.io/)                                      |
+| `rimraf`             | `^6.0.1`      | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf)                        |
+| `semver`             | `^7.7.2`      | Utilitário para trabalhar com versionamento semântico        | [Semver](https://www.npmjs.com/package/semver)                        |
+| `tsx`                | `^4.20.5`     | Executor TypeScript/JSX de alta performance                  | [TSX](https://www.npmjs.com/package/tsx)                              |
+| `typescript`         | `^5.9.2`      | Linguagem de programação que adiciona tipagem ao JavaScript  | [TypeScript](https://www.typescriptlang.org/)                         |
+| `typescript-eslint`  | `^8.41.0`     | Integração entre TypeScript e ESLint                         | [TypeScript ESLint](https://typescript-eslint.io/)                    |
 
 ## ⚠️ Aviso Importante sobre Dependências
 
@@ -312,45 +322,45 @@ Este é o método mais simples e recomendado para iniciantes:
 
 1. **Clone o repositório:**
 
-    ```bash
-    git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
-    ```
+   ```bash
+   git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
+   ```
 
 2. **Acesse o diretório do projeto:**
 
-    ```bash
-    cd cidade-inclusiva-adm-back-end
-    ```
+   ```bash
+   cd cidade-inclusiva-adm-back-end
+   ```
 
 3. **Instale o pnpm (se não tiver):**
 
-    ```bash
-    npm install -g pnpm
-    ```
+   ```bash
+   npm install -g pnpm
+   ```
 
 4. **Instale as dependências e configure o projeto:**
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 5. **Configure o banco de dados:**
 
-    ```bash
-    pnpm migrate
-    ```
+   ```bash
+   pnpm migrate
+   ```
 
 6. **Popule o banco com dados iniciais (opcional):**
 
-    ```bash
-    pnpm seed
-    ```
+   ```bash
+   pnpm seed
+   ```
 
 7. **Inicie o servidor de desenvolvimento:**
 
-    ```bash
-    pnpm dev
-    ```
+   ```bash
+   pnpm dev
+   ```
 
 **Resultado:** Servidor disponível em `http://localhost:5555` 🎉
 
@@ -360,41 +370,41 @@ Para desenvolvedores que preferem executar cada etapa individualmente:
 
 1. **Clone e acesse o projeto:**
 
-    ```bash
-    git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
-    cd cidade-inclusiva-adm-back-end
-    ```
+   ```bash
+   git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
+   cd cidade-inclusiva-adm-back-end
+   ```
 
 2. **Instale as dependências:**
 
-    ```bash
-    # Instalar pnpm (se necessário)
-    npm install -g pnpm
-    
-    # Instalar dependências do projeto
-    pnpm install
-    ```
+   ```bash
+   # Instalar pnpm (se necessário)
+   npm install -g pnpm
+
+   # Instalar dependências do projeto
+   pnpm install
+   ```
 
 3. **Configure o banco de dados:**
 
-    ```bash
-    # Executar migrações
-    pnpm migrate
-    
-    # Popular com dados iniciais (opcional)
-    pnpm seed
-    ```
+   ```bash
+   # Executar migrações
+   pnpm migrate
+
+   # Popular com dados iniciais (opcional)
+   pnpm seed
+   ```
 
 4. **Inicie o servidor:**
 
-    ```bash
-    # Desenvolvimento (com hot-reload)
-    pnpm dev
-    
-    # OU Produção (requer build primeiro)
-    pnpm build
-    pnpm start
-    ```
+   ```bash
+   # Desenvolvimento (com hot-reload)
+   pnpm dev
+
+   # OU Produção (requer build primeiro)
+   pnpm build
+   pnpm start
+   ```
 
 ### 🔧 Comandos Úteis para Desenvolvimento
 

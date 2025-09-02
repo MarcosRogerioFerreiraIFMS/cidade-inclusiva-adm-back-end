@@ -364,48 +364,6 @@ Este é o método mais simples e recomendado para iniciantes:
 
 **Resultado:** Servidor disponível em `http://localhost:5555` 🎉
 
-### 🛠️ Método Manual: Controle Total
-
-Para desenvolvedores que preferem executar cada etapa individualmente:
-
-1. **Clone e acesse o projeto:**
-
-   ```bash
-   git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
-   cd cidade-inclusiva-adm-back-end
-   ```
-
-2. **Instale as dependências:**
-
-   ```bash
-   # Instalar pnpm (se necessário)
-   npm install -g pnpm
-
-   # Instalar dependências do projeto
-   pnpm install
-   ```
-
-3. **Configure o banco de dados:**
-
-   ```bash
-   # Executar migrações
-   pnpm migrate
-
-   # Popular com dados iniciais (opcional)
-   pnpm seed
-   ```
-
-4. **Inicie o servidor:**
-
-   ```bash
-   # Desenvolvimento (com hot-reload)
-   pnpm dev
-
-   # OU Produção (requer build primeiro)
-   pnpm build
-   pnpm start
-   ```
-
 ### 🔧 Comandos Úteis para Desenvolvimento
 
 ```bash

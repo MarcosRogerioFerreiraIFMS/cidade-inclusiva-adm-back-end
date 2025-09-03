@@ -11,9 +11,6 @@ const AuthRoutes = Router()
 /**
  * POST /auth/login
  * Endpoint para autenticação de usuários
- * @route POST /auth/login
- * @body {LoginCreateDTO} Dados de login (email, senha)
- * @returns {LoginResponseDTO} Token JWT e dados do usuário
  */
 AuthRoutes.post(
   '/login',
@@ -24,9 +21,6 @@ AuthRoutes.post(
 /**
  * GET /auth/validate-token
  * Endpoint para validação de token JWT
- * @route GET /auth/validate-token
- * @header {string} Authorization - Bearer token JWT
- * @returns {Object} Dados básicos do usuário (userId, email)
  */
 AuthRoutes.get(
   '/validate-token',

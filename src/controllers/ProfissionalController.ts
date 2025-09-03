@@ -3,15 +3,9 @@ import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
- * Controller responsável pelo gerenciamento de profissionais:
- * - Expõe endpoints para operações CRUD de profissionais
- * - Implementa padrão de arquitetura em camadas, delegando lógica de negócio ao service
+ * Controller responsável pelo gerenciamento de profissionais
  */
 export class ProfissionalController {
-  /**
-   * Construtor do controller de profissionais
-   * @param {IProfissionalService} profissionalService - Serviço de profissionais injetado
-   */
   constructor(private profissionalService: IProfissionalService) {}
 
   /**
@@ -21,6 +15,7 @@ export class ProfissionalController {
   create: ControllerRequest = async (req, res, next) => {
     try {
       const profissional = await this.profissionalService.create(req.body)
+
       HandleSuccess.created(
         res,
         profissional,
@@ -39,6 +34,7 @@ export class ProfissionalController {
     try {
       const { id } = req.params
       const profissional = await this.profissionalService.findById(id)
+
       HandleSuccess.found(res, profissional)
     } catch (error: unknown) {
       next(error)
@@ -53,6 +49,7 @@ export class ProfissionalController {
     try {
       const { id } = req.params
       const profissional = await this.profissionalService.update(id, req.body)
+
       HandleSuccess.updated(
         res,
         profissional,
@@ -71,6 +68,7 @@ export class ProfissionalController {
     try {
       const { id } = req.params
       await this.profissionalService.delete(id)
+
       HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)
@@ -81,9 +79,10 @@ export class ProfissionalController {
    * Lista todos os profissionais cadastrados
    * @type {ControllerRequest}
    */
-  findAll: ControllerRequest = async (_req, res, next) => {
+  findAll: ControllerRequest = async (req, res, next) => {
     try {
       const profissionais = await this.profissionalService.findAll()
+
       HandleSuccess.list(res, profissionais)
     } catch (error: unknown) {
       next(error)

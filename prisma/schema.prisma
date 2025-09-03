@@ -32,19 +32,18 @@ model Profissional {
 }
 
 model Usuario {
-  id               String              @id @default(uuid())
+  id               String       @id @default(uuid())
   nome             String
-  telefone         String              @unique
+  telefone         String       @unique
   foto             String?
-  email            String              @unique
+  email            String       @unique
   senha            String
-  tipo             TipoUsuario         @default(USUARIO)
+  tipo             TipoUsuario  @default(USUARIO)
   endereco         Endereco?
   comentarios      Comentario[]
   likesComentarios Like[]
-  logsAuditoria    RegistroAuditoria[]
-  criadoEm         DateTime            @default(now())
-  atualizadoEm     DateTime            @updatedAt
+  criadoEm         DateTime     @default(now())
+  atualizadoEm     DateTime     @updatedAt
 }
 
 model Endereco {
@@ -95,26 +94,6 @@ model Like {
   @@index([comentarioId])
 }
 
-model RegistroAuditoria {
-  id           String       @id @default(uuid())
-  acao         String
-  usuarioId    String?
-  recursoId    String?
-  tipoRecurso  TipoRecurso?
-  dadosAntigos Json?
-  dadosNovos   Json?
-  ip           String?
-  userAgent    String?
-  criadoEm     DateTime     @default(now())
-
-  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
-
-  @@index([usuarioId])
-  @@index([recursoId])
-  @@index([acao])
-  @@index([criadoEm])
-}
-
 enum CategoriaNoticia {
   DIREITOS
   BENEFICIOS
@@ -146,11 +125,7 @@ enum TipoUsuario {
 }
 
 enum TipoRecurso {
-  NOTICIA
-  PROFISSIONAL
   USUARIO
-  ENDERECO
   COMENTARIO
   LIKE
-  ENDPOINT
 }

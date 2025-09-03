@@ -8,7 +8,6 @@ import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums/HttpStatusCode'
 import { globalErrorHandler } from './middlewares/errorMiddleware'
 import { requestTimeout } from './middlewares/timeoutMiddleware'
-import { AuditRoutes } from './routes/AuditRoutes'
 import { AuthRoutes } from './routes/AuthRoutes'
 import { ComentarioRoutes } from './routes/ComentarioRoutes'
 import { LikeRoutes } from './routes/LikeRoutes'
@@ -71,7 +70,6 @@ app.use(ROUTES.PROFISSIONAL, ProfissionalRoutes)
 app.use(ROUTES.COMENTARIO, ComentarioRoutes)
 app.use(ROUTES.USUARIO, UsuarioRoutes)
 app.use(ROUTES.LIKE, LikeRoutes)
-app.use(ROUTES.AUDIT, AuditRoutes)
 
 /**
  * Handler para rotas não encontradas

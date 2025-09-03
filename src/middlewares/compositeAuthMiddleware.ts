@@ -216,18 +216,6 @@ export const likeOperations = {
 }
 
 /**
- * - Middlewares para operações de AUDITORIA
- * - Incluem validações específicas para acesso a logs e registros de auditoria
- */
-export const auditOperations = {
-  /** GET /audit - Apenas admins podem visualizar logs */
-  list: [authMiddleware, requireAdmin],
-
-  /** GET /audit/:id - Apenas admins podem visualizar log específico */
-  view: [authMiddleware, requireAdmin, validateUUID('id')]
-}
-
-/**
  * - Middlewares para operações de AUTENTICAÇÃO
  * - Incluem validações específicas para login e validação de tokens
  */

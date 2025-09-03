@@ -3,14 +3,9 @@ import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
- * Controller responsável pelo gerenciamento de comentários:
- * - Expõe endpoints para operações CRUD de comentários
- * Implementa funcionalidades para comentários relacionados a profissionais ou qualquer outro recurso
+ * Controller responsável pelo gerenciamento de comentários
  */
 export class ComentarioController {
-  /**
-   * @param {IComentarioService} comentarioService - Serviço de comentários injetado
-   */
   constructor(private comentarioService: IComentarioService) {}
 
   /**
@@ -73,7 +68,7 @@ export class ComentarioController {
   }
 
   /**
-   * Lista todos os comentários cadastrados
+   * Lista todos os comentários do sistema
    * @type {ControllerRequest}
    */
   findAll: ControllerRequest = async (_req, res, next) => {
@@ -86,8 +81,7 @@ export class ComentarioController {
   }
 
   /**
-   * - Lista todos os comentários de um profissional específico
-   * - Inclui comentários visíveis e ocultos (para uso administrativo)
+   * Lista comentários por profissional
    * @type {ControllerRequest}
    */
   findByProfissional: ControllerRequest = async (req, res, next) => {
@@ -103,8 +97,7 @@ export class ComentarioController {
   }
 
   /**
-   * - Lista apenas os comentários visíveis de um profissional específico
-   * - Filtra comentários que estão marcados como visíveis para exibição pública
+   * Lista comentários visíveis por profissional
    * @type {ControllerRequest}
    */
   findVisibleByProfissional: ControllerRequest = async (req, res, next) => {

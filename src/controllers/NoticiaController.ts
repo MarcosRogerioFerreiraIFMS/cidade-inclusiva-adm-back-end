@@ -4,13 +4,8 @@ import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
  * Controller responsável pelas operações CRUD de notícias
-:
-   * - Gerencia requisições HTTP para criação, consulta, atualização e remoção de notícias
  */
 export class NoticiaController {
-  /**
-   * @param {INoticiaService} noticiaService - Serviço de notícias injetado
-   */
   constructor(private noticiaService: INoticiaService) {}
 
   /**
@@ -20,6 +15,7 @@ export class NoticiaController {
   create: ControllerRequest = async (req, res, next) => {
     try {
       const noticia = await this.noticiaService.create(req.body)
+
       HandleSuccess.created(res, noticia, 'Notícia criada com sucesso')
     } catch (error: unknown) {
       next(error)
@@ -34,6 +30,7 @@ export class NoticiaController {
     try {
       const { id } = req.params
       const noticia = await this.noticiaService.findById(id)
+
       HandleSuccess.found(res, noticia)
     } catch (error: unknown) {
       next(error)
@@ -48,6 +45,7 @@ export class NoticiaController {
     try {
       const { id } = req.params
       const noticia = await this.noticiaService.update(id, req.body)
+
       HandleSuccess.updated(res, noticia, 'Notícia atualizada com sucesso')
     } catch (error: unknown) {
       next(error)
@@ -62,6 +60,7 @@ export class NoticiaController {
     try {
       const { id } = req.params
       await this.noticiaService.delete(id)
+
       HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)
@@ -75,6 +74,7 @@ export class NoticiaController {
   findAll: ControllerRequest = async (req, res, next) => {
     try {
       const noticias = await this.noticiaService.findAll()
+
       HandleSuccess.list(res, noticias)
     } catch (error: unknown) {
       next(error)

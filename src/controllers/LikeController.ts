@@ -3,20 +3,13 @@ import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
- * Controller responsável pelo gerenciamento de likes:
- * - Expõe endpoints para operações de like/unlike em comentários
- * Implementa funcionalidades para interação entre usuários e comentários
+ * Controller responsável pelo gerenciamento de likes
  */
 export class LikeController {
-  /**
-   * Construtor do controller de likes
-   * @param {ILikeService} likeService - Serviço de likes injetado
-   */
   constructor(private likeService: ILikeService) {}
 
   /**
-   * - Alterna o estado de like de um usuário em um comentário (toggle like/unlike)
-   * - Se o like existe, remove (unlike). Se não existe, adiciona (like)
+   * Alterna o estado de like de um usuário em um comentário (toggle like/unlike)
    * @type {ControllerRequest}
    */
   toggle: ControllerRequest = async (req, res, next) => {

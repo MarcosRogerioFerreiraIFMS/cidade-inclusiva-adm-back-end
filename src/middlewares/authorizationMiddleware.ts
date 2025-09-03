@@ -4,7 +4,6 @@ import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
 import { LikeDependencies } from '../dependencies/LikeDependencies'
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { AuthenticatedRequest } from '../types/RequestTypes'
-import { AuditLogger } from '../utils/auditLogger'
 
 /**
  * - Módulo de middlewares de autorização
@@ -31,19 +30,6 @@ export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
     }
 
     if (!rolesPermitidos.includes(req.user.tipo)) {
-      // Log de tentativa de acesso não autorizado
-      AuditLogger.log(req, {
-        acao: 'ACESSO_NEGADO',
-        recursoId: req.params.id || req.originalUrl,
-        tipoRecurso: TipoRecurso.ENDPOINT,
-        dadosNovos: {
-          endpoint: req.originalUrl,
-          method: req.method,
-          userRole: req.user.tipo,
-          requiredRoles: rolesPermitidos
-        }
-      }).catch(console.error)
-
       res.status(HttpStatusCode.FORBIDDEN).json({
         success: false,
         error: 'Acesso negado. Permissões insuficientes.',
@@ -95,19 +81,6 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
       const isOwner = await verifyOwnership(tipoRecurso, recursoId, userId)
 
       if (!isOwner) {
-        // Log de tentativa de acesso a recurso não próprio
-        await AuditLogger.log(req, {
-          acao: 'ACESSO_NEGADO_PROPRIEDADE',
-          recursoId,
-          tipoRecurso,
-          dadosNovos: {
-            tentativaAcesso: recursoId,
-            usuarioTentativa: userId,
-            endpoint: req.originalUrl,
-            method: req.method
-          }
-        })
-
         res.status(HttpStatusCode.FORBIDDEN).json({
           success: false,
           error: 'Você só pode acessar/modificar seus próprios recursos.',

@@ -15,7 +15,5 @@ export const ROUTES = {
   /** Rotas para operações de likes */
   LIKE: '/likes',
   /** Rotas para operações de autenticação */
-  AUTH: '/auth',
-  /** Rotas para operações de auditoria */
-  AUDIT: '/audit'
+  AUTH: '/auth'
 } as const

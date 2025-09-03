@@ -1,16 +1,12 @@
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { IAuthService } from '../interfaces/services/IAuthService'
 import { ControllerRequest } from '../types/RequestTypes'
-import { AuditLogger } from '../utils/auditLogger'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
  * Controller responsável pelas operações de autenticação
  */
 export class AuthController {
-  /**
-   * @param {IAuthService} authService - Serviço de autenticação injetado
-   */
   constructor(private authService: IAuthService) {}
 
   /**
@@ -21,16 +17,8 @@ export class AuthController {
     try {
       const login = await this.authService.login(req.body)
 
-      // Log de login bem-sucedido
-      await AuditLogger.logLogin(req, login.usuario.id)
-
       HandleSuccess.ok(res, login, 'Login realizado com sucesso')
     } catch (error: unknown) {
-      // Log de tentativa de login falhada
-      if (req.body?.email) {
-        await AuditLogger.logFailedLogin(req, req.body.email)
-      }
-
       next(error)
     }
   }

@@ -158,7 +158,7 @@ export const comentarioOperations = {
   view: [optionalAuthMiddleware, validateUUID('id')],
 
   /** POST /comentarios - Apenas usuários autenticados podem criar */
-  create: [authMiddleware, validateRequiredBody(['conteudo', 'usuarioId'])],
+  create: [authMiddleware, validateRequiredBody(['conteudo', 'entidadeId'])],
 
   /** PUT /comentarios/:id - Apenas o autor ou admin podem editar */
   update: [
@@ -182,7 +182,10 @@ export const comentarioOperations = {
   findVisibleByProfessional: [
     optionalAuthMiddleware,
     validateUUID('profissionalId')
-  ]
+  ],
+
+  /** GET /comentarios/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus comentários */
+  findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin]
 }
 
 /**
@@ -244,7 +247,9 @@ export const createCustomMiddleware = (middlewares: unknown[]): unknown[] =>
  * @param {TipoRecurso} resourceType - Tipo do recurso a ser verificado
  * @returns {unknown[]} Array de middlewares para verificação de propriedade
  */
-export const requireResourceOwnership = (resourceType: TipoRecurso) => [
+export const requireResourceOwnership = (
+  resourceType: TipoRecurso
+): unknown[] => [
   authMiddleware,
   validateUUID('id'),
   requireOwnershipOrAdmin(resourceType)
@@ -259,7 +264,7 @@ export const requireResourceOwnership = (resourceType: TipoRecurso) => [
 export const requireOwnershipWithValidation = (
   resourceType: TipoRecurso,
   requiredFields: string[] = []
-) => [
+): unknown[] => [
   authMiddleware,
   validateUUID('id'),
   validateRequiredBody(requiredFields),

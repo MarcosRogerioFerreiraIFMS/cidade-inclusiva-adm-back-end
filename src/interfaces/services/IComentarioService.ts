@@ -1,4 +1,5 @@
 import { ComentarioResponseDTO } from '../../dtos/response/ComentarioResponseDTO'
+import { JWTPayload } from '../../utils/jwtUtils'
 
 /**
  * Interface para serviço de comentários
@@ -8,9 +9,14 @@ export interface IComentarioService {
   /**
    * Cria um novo comentário
    * @param {unknown} data - Dados do comentário a ser criado
+   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando o comentário
+   * - O usuário autenticado é obrigatório para criar um comentário
    * @returns {Promise<ComentarioResponseDTO>} Comentário criado
    */
-  create(data: unknown): Promise<ComentarioResponseDTO>
+  create(
+    data: unknown,
+    user: JWTPayload | undefined
+  ): Promise<ComentarioResponseDTO>
 
   /**
    * Busca comentário por ID
@@ -55,4 +61,11 @@ export interface IComentarioService {
   findVisibleByProfissional(
     profissionalId: string
   ): Promise<ComentarioResponseDTO[]>
+
+  /**
+   * Busca comentários de um usuário específico
+   * @param {string} usuarioId - ID do usuário
+   * @returns {Promise<ComentarioResponseDTO[]>} Comentários do usuário
+   */
+  findByUsuario(usuarioId: string): Promise<ComentarioResponseDTO[]>
 }

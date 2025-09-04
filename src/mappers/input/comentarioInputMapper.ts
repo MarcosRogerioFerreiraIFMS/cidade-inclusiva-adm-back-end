@@ -8,11 +8,13 @@ import {
 /**
  * - Converte dados não tipados para DTO de criação de comentário
  * - Aplica validação usando Zod schema e retorna dados tipados e validados
- * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
+ * @param {unknown} input - Dados de entrada não tipados (geralmente req.body), incluindo o ID do usuário autenticado
  * @returns {ComentarioCreateDTO} DTO validado para criação de comentário
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateComentarioDTO(input: unknown): ComentarioCreateDTO {
+export function toCreateComentarioDTO(
+  input: unknown & { usuarioId: string }
+): ComentarioCreateDTO {
   return createComentarioSchema.parse(input)
 }
 

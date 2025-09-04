@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { HttpError } from './HttpError'
+import { JWTPayload } from './jwtUtils'
 
 /**
  * Valida se uma entidade existe e lança erro HTTP 404 se não encontrada
@@ -29,5 +30,21 @@ export function throwIfNotFound<T>(item: T | null, message: string): T {
 export function throwIfAlreadyExists<T>(item: T | null, message: string): void {
   if (item) {
     throw new HttpError(message, HttpStatusCode.CONFLICT)
+  }
+}
+
+/**
+ * Valida se um usuário autenticado existe e possui userId (JWTPayload)
+ * @param {JWTPayload | undefined} user - Usuário autenticado
+ * @param {string} message - Mensagem de erro a ser exibida se o usuário ou userId não existir
+ * @returns {void}
+ * @throws {Error} Erro se o usuário ou userId não existir
+ */
+export function throwIfNoAuthenticatedUser(
+  user: JWTPayload | undefined,
+  message: string
+): void {
+  if (!user || !user.userId) {
+    throw new HttpError(message, HttpStatusCode.UNAUTHORIZED)
   }
 }

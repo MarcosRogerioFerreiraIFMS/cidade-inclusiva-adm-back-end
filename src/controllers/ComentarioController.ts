@@ -1,5 +1,5 @@
 import { IComentarioService } from '../interfaces/services/IComentarioService'
-import { ControllerRequest } from '../types/RequestTypes'
+import { AuthenticatedRequest, ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
@@ -12,9 +12,9 @@ export class ComentarioController {
    * Cria um novo comentário
    * @type {ControllerRequest}
    */
-  create: ControllerRequest = async (req, res, next) => {
+  create: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
-      const comentario = await this.comentarioService.create(req.body)
+      const comentario = await this.comentarioService.create(req.body, req.user)
       HandleSuccess.created(res, comentario, 'Comentário criado com sucesso')
     } catch (error: unknown) {
       next(error)
@@ -105,6 +105,20 @@ export class ComentarioController {
       const { profissionalId } = req.params
       const comentarios =
         await this.comentarioService.findVisibleByProfissional(profissionalId)
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  /**
+   * Lista comentários por usuário
+   * @type {ControllerRequest}
+   */
+  findByUsuario: ControllerRequest = async (req, res, next) => {
+    try {
+      const { usuarioId } = req.params
+      const comentarios = await this.comentarioService.findByUsuario(usuarioId)
       HandleSuccess.list(res, comentarios)
     } catch (error: unknown) {
       next(error)

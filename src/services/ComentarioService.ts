@@ -1,5 +1,6 @@
 import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioResponseDTO } from '../dtos/response/ComentarioResponseDTO'
+import { HttpStatusCode } from '../enums/HttpStatusCode'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
 import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
@@ -13,6 +14,8 @@ import {
   toComentariosResponseDTO
 } from '../mappers/output/comentarioOutputMapper'
 import { throwIfNotFound } from '../utils/entityValidator'
+import { HttpError } from '../utils/HttpError'
+import { JWTPayload } from '../utils/jwtUtils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a comentários:
@@ -36,11 +39,26 @@ export class ComentarioService implements IComentarioService {
    * Cria um novo comentário no sistema:
    * - Valida a existência do usuário e da entidade (profissional) relacionada
    * @param {unknown} data - Dados do comentário a ser criado
+   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando o comentário
+   * - O usuário autenticado é obrigatório para criar um comentário
    * @returns {Promise<ComentarioResponseDTO>} Dados do comentário criado
    * @throws {HttpError} Erro 404 se usuário ou entidade não forem encontrados
    */
-  async create(data: unknown): Promise<ComentarioResponseDTO> {
-    const comentarioData = toCreateComentarioDTO(data)
+  async create(
+    data: unknown,
+    user: JWTPayload | undefined
+  ): Promise<ComentarioResponseDTO> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário autenticado é obrigatório para criar um comentário.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
+    const comentarioData = toCreateComentarioDTO({
+      ...(typeof data === 'object' && data !== null ? data : {}),
+      usuarioId: user.userId
+    })
 
     const [usuario, profissional] = await Promise.all([
       this.usuarioRepository.findById(comentarioData.usuarioId),
@@ -162,6 +180,23 @@ export class ComentarioService implements IComentarioService {
   ): Promise<ComentarioResponseDTO[]> {
     const comentarios =
       await this.comentarioRepository.findVisibleByProfissional(profissionalId)
+    return toComentariosResponseDTO(comentarios)
+  }
+
+  /**
+   * Recupera todos os comentários de um usuário específico:
+   * - Lista todos os comentários feitos pelo usuário, ordenados por data de criação
+   * @param {string} usuarioId - ID do usuário
+   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários do usuário
+   * @throws {HttpError} Erro 404 se o usuário não for encontrado
+   */
+  async findByUsuario(usuarioId: string): Promise<ComentarioResponseDTO[]> {
+    throwIfNotFound(
+      await this.usuarioRepository.findById(usuarioId),
+      'Usuário não encontrado.'
+    )
+
+    const comentarios = await this.comentarioRepository.findByUsuario(usuarioId)
     return toComentariosResponseDTO(comentarios)
   }
 

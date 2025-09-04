@@ -49,14 +49,7 @@ export const createComentarioSchema = z.object({
     .trim()
     .uuid(
       'O ID da entidade deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
-    ),
-
-  visivel: z
-    .boolean({
-      invalid_type_error: 'Visível deve ser um valor booleano (true ou false).'
-    })
-    .optional()
-    .default(true)
+    )
 })
 
 /**
@@ -66,10 +59,14 @@ export const createComentarioSchema = z.object({
  */
 export const updateComentarioSchema = createComentarioSchema
   .pick({
-    conteudo: true,
-    visivel: true
+    conteudo: true
   })
   .extend({
     conteudo: createComentarioSchema.shape.conteudo.optional(),
-    visivel: createComentarioSchema.shape.visivel.optional()
+    visivel: z
+      .boolean({
+        invalid_type_error:
+          'Visível deve ser um valor booleano (true ou false).'
+      })
+      .optional()
   })

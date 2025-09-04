@@ -95,6 +95,15 @@ export class ComentarioRepository implements IComentarioAccess {
   }
 
   /**
+   * Lista todos os comentários de um usuário específico
+   * @param {string} usuarioId - ID do usuário
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do usuário
+   */
+  async findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByUsuario(usuarioId)
+  }
+
+  /**
    * Verifica se um usuário é o proprietário de um comentário
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário

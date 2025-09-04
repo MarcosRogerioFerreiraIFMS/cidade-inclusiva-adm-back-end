@@ -119,6 +119,20 @@ export class ComentarioDAO implements IComentarioAccess {
   }
 
   /**
+   * Lista todos os comentários de um usuário específico
+   * Ordena por data de criação decrescente e inclui likes
+   * @param {string} usuarioId - ID do usuário
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do usuário
+   */
+  async findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: { usuarioId },
+      orderBy: { criadoEm: 'desc' },
+      include: { likesUsuarios: true }
+    })
+  }
+
+  /**
    * Verifica se um usuário é o proprietário de um comentário
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário

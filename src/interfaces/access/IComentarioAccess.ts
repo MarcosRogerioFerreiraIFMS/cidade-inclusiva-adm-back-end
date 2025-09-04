@@ -59,6 +59,13 @@ export interface IComentarioAccess {
   ): Promise<ComentarioCompletions[]>
 
   /**
+   * Busca comentários de um usuário específico
+   * @param {string} usuarioId - ID do usuário
+   * @returns {Promise<ComentarioCompletions[]>} Comentários do usuário
+   */
+  findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]>
+
+  /**
    * Verifica se um usuário é dono de um comentário específico
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário

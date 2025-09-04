@@ -10,13 +10,12 @@ import { ComentarioUpdateDTO } from '../dtos/update/ComentarioUpdateDTO'
  */
 export const generateDataComentarioCreate = ({
   conteudo,
-  visivel,
   usuarioId,
   profissionalId
 }: ComentarioCreateRelationalDTO): Prisma.ComentarioCreateInput => {
   return {
     conteudo: conteudo,
-    visivel: visivel ?? true,
+    visivel: true, // Comentários são visíveis por padrão
     usuario: {
       connect: {
         id: usuarioId

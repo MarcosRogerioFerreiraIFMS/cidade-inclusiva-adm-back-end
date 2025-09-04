@@ -79,4 +79,14 @@ ComentarioRoutes.get(
   ComentarioDependencies.controller.findVisibleByProfissional
 )
 
+/**
+ * GET /comentarios/usuario/:usuarioId - Lista comentários de um usuário específico
+ * Requer autenticação e autorização (próprio usuário ou admin)
+ */
+ComentarioRoutes.get(
+  '/usuario/:usuarioId',
+  ...comentarioOperations.findByUser,
+  ComentarioDependencies.controller.findByUsuario
+)
+
 export { ComentarioRoutes }

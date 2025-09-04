@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { HttpError } from './HttpError'
 import { JWTPayload } from './jwtUtils'
 

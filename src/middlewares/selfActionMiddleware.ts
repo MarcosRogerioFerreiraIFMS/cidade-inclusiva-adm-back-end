@@ -1,6 +1,5 @@
-import { TipoUsuario } from '@prisma/client'
 import { NextFunction, Response } from 'express'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode, TipoUsuario } from '../enums'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 
 /**

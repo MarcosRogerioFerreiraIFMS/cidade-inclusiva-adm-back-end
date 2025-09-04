@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 
 /**
  * Classe de erro personalizada para operações HTTP

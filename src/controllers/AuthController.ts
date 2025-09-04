@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { IAuthService } from '../interfaces/services/IAuthService'
 import { ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'

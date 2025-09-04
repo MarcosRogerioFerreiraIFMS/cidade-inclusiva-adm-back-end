@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import { NextFunction, Request, Response } from 'express'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { HttpError } from '../utils/HttpError'
 
 /**

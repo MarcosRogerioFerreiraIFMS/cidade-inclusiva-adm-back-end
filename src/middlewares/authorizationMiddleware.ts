@@ -1,8 +1,8 @@
-import { TipoRecurso, TipoUsuario } from '@prisma/client'
 import { NextFunction, Response } from 'express'
 import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
 import { LikeDependencies } from '../dependencies/LikeDependencies'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { MobilidadeDependencies } from '../dependencies/MobilidadeDependencies'
+import { HttpStatusCode, TipoRecurso, TipoUsuario } from '../enums'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 
 /**
@@ -134,6 +134,16 @@ async function verifyOwnership(
         userId
       )
       return like
+    }
+
+    case TipoRecurso.MOBILIDADE: {
+      // Para mobilidades, verificar se o usuário é o criador
+      const mobilidade =
+        await MobilidadeDependencies.repository.isMobilidadeOwner(
+          recursoId,
+          userId
+        )
+      return mobilidade
     }
 
     default:

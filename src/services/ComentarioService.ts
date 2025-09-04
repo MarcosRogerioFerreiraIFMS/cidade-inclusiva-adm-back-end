@@ -1,6 +1,6 @@
 import { ComentarioCreateRelationalDTO } from '../dtos/create/ComentarioCreateDTO'
 import { ComentarioResponseDTO } from '../dtos/response/ComentarioResponseDTO'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
 import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
 import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'

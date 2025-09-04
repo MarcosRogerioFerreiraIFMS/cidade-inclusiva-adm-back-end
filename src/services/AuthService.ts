@@ -1,6 +1,6 @@
 import { compareSync } from 'bcryptjs'
 import { LoginResponseDTO } from '../dtos/response/LoginResponseDTO'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
 import { IAuthService } from '../interfaces/services/IAuthService'
 import { toCreateLoginDTO } from '../mappers/input/loginInputMapper'

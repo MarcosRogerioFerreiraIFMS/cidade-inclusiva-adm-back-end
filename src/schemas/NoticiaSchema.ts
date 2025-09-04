@@ -1,5 +1,5 @@
-import { CategoriaNoticia } from '@prisma/client'
 import { z } from 'zod'
+import { CategoriaNoticia } from '../enums'
 import { sanitizeContent, sanitizeString } from '../utils/stringUtils'
 import {
   isImageUrl,

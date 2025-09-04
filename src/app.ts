@@ -5,12 +5,13 @@ import express, { Request, Response } from 'express'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import { ROUTES } from './configs/routePaths'
-import { HttpStatusCode } from './enums/HttpStatusCode'
+import { HttpStatusCode } from './enums'
 import { globalErrorHandler } from './middlewares/errorMiddleware'
 import { requestTimeout } from './middlewares/timeoutMiddleware'
 import { AuthRoutes } from './routes/AuthRoutes'
 import { ComentarioRoutes } from './routes/ComentarioRoutes'
 import { LikeRoutes } from './routes/LikeRoutes'
+import { MobilidadeRoutes } from './routes/MobilidadeRoutes'
 import { NoticiaRoutes } from './routes/NoticiaRoutes'
 import { ProfissionalRoutes } from './routes/ProfissionalRoutes'
 import { UsuarioRoutes } from './routes/UsuarioRoutes'
@@ -70,6 +71,7 @@ app.use(ROUTES.PROFISSIONAL, ProfissionalRoutes)
 app.use(ROUTES.COMENTARIO, ComentarioRoutes)
 app.use(ROUTES.USUARIO, UsuarioRoutes)
 app.use(ROUTES.LIKE, LikeRoutes)
+app.use(ROUTES.MOBILIDADE, MobilidadeRoutes)
 
 /**
  * Handler para rotas não encontradas

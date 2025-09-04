@@ -1,5 +1,5 @@
-import { EspecialidadeProfissional } from '@prisma/client'
 import { z } from 'zod'
+import { EspecialidadeProfissional } from '../enums'
 import { sanitizeString, sanitizeTelefone } from '../utils/stringUtils'
 import {
   isImageUrl,

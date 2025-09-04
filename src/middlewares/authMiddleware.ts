@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express'
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 import { JWTUtils } from '../utils/jwtUtils'
 

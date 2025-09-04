@@ -42,6 +42,7 @@ model Usuario {
   endereco         Endereco?
   comentarios      Comentario[]
   likesComentarios Like[]
+  mobilidades      Mobilidade[]
   criadoEm         DateTime     @default(now())
   atualizadoEm     DateTime     @updatedAt
 }
@@ -71,7 +72,7 @@ model Comentario {
   usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   profissionalId String?
-  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Cascade)
+  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
 
   likesUsuarios Like[]
 
@@ -92,6 +93,19 @@ model Like {
 
   @@unique([usuarioId, comentarioId])
   @@index([comentarioId])
+}
+
+model Mobilidade {
+  id           String           @id @default(uuid())
+  latitude     Float
+  longitude    Float
+  descricao    String
+  dataRegistro DateTime         @default(now())
+  status       StatusMobilidade @default(PENDENTE)
+  usuarioId    String?
+  usuario      Usuario?         @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  criadoEm     DateTime         @default(now())
+  atualizadoEm DateTime         @updatedAt
 }
 
 enum CategoriaNoticia {
@@ -124,8 +138,9 @@ enum TipoUsuario {
   USUARIO
 }
 
-enum TipoRecurso {
-  USUARIO
-  COMENTARIO
-  LIKE
+enum StatusMobilidade {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
 }

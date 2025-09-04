@@ -15,5 +15,7 @@ export const ROUTES = {
   /** Rotas para operações de likes */
   LIKE: '/likes',
   /** Rotas para operações de autenticação */
-  AUTH: '/auth'
+  AUTH: '/auth',
+  /** Rotas para operações de mobilidade */
+  MOBILIDADE: '/mobilidades'
 } as const

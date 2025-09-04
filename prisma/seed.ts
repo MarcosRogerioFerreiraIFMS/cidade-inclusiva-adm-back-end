@@ -3,6 +3,7 @@ import {
   CategoriaNoticia,
   EspecialidadeProfissional,
   PrismaClient,
+  StatusMobilidade,
   TipoUsuario
 } from '@prisma/client'
 import api from 'brasilapi-js'
@@ -38,6 +39,9 @@ async function main() {
     console.log(chalk.yellow.bold('🧹 Limpando dados existentes...'))
 
     const startTime = Date.now()
+
+    console.log(chalk.gray('   • Removendo mobilidades...'))
+    await prisma.mobilidade.deleteMany()
 
     console.log(chalk.gray('   • Removendo likes...'))
     await prisma.like.deleteMany()
@@ -342,7 +346,7 @@ async function main() {
     }
 
     console.log(chalk.cyan('💾 Salvando usuários no banco de dados...'))
-    const usuarios = []
+    const usuarios: Array<{ id: string; nome: string; email: string }> = []
     const startUserCreation = Date.now()
 
     for (let i = 0; i < usuariosData.length; i++) {
@@ -393,6 +397,131 @@ async function main() {
         )}`
       )
     )
+    console.log('')
+
+    // Criar mobilidades
+    console.log(chalk.blue.bold('🚀 Criando mobilidades...'))
+    console.log(chalk.cyan('📍 Gerando dados de mobilidade urbana...'))
+
+    // Função para gerar mobilidade com dados realistas
+    const generateMobilidade = (usuario?: { id: string }) => {
+      const status = faker.helpers.arrayElement(Object.values(StatusMobilidade))
+
+      // Descrições realistas baseadas em problemas comuns de mobilidade urbana
+      const descricoesTemplate = [
+        'Calçada com degrau muito alto, impossível para cadeirantes',
+        'Rampa de acesso danificada, precisa de reparo urgente',
+        'Falta de piso tátil na travessia da rua principal',
+        'Semáforo sem sinal sonoro para pessoas com deficiência visual',
+        'Ponto de ônibus sem abrigo e com meio-fio muito alto',
+        'Elevador do metrô quebrado há mais de uma semana',
+        'Buraco grande na calçada, perigoso para quem usa bengala',
+        'Vaga de deficiente sempre ocupada por carros sem placa',
+        'Escada do prédio público sem corrimão adequado',
+        'Porta giratória muito pesada, difícil de usar',
+        'Banheiro público sem acessibilidade para cadeirantes',
+        'Obstáculo permanente bloqueando a rampa de acesso',
+        'Sinalização em braile desgastada e ilegível',
+        'Transporte público sem espaço para cadeira de rodas',
+        'Calçada muito estreita, não passa cadeira de rodas',
+        'Falta de iluminação adequada no local de travessia',
+        'Piso irregular e escorregadio quando chove',
+        'Telefone público muito alto para pessoas em cadeiras',
+        'Plataforma do trem com vão muito grande',
+        'Corrimão da rampa solto e perigoso'
+      ]
+
+      // Coordenadas de algumas cidades brasileiras importantes
+      const coordenadasCidades = [
+        { lat: -23.5505, lng: -46.6333, cidade: 'São Paulo - SP' },
+        { lat: -22.9068, lng: -43.1729, cidade: 'Rio de Janeiro - RJ' },
+        { lat: -19.9191, lng: -43.9386, cidade: 'Belo Horizonte - MG' },
+        { lat: -15.7942, lng: -47.8822, cidade: 'Brasília - DF' },
+        { lat: -25.4284, lng: -49.2733, cidade: 'Curitiba - PR' },
+        { lat: -12.9714, lng: -38.5014, cidade: 'Salvador - BA' },
+        { lat: -8.0476, lng: -34.877, cidade: 'Recife - PE' },
+        { lat: -3.7319, lng: -38.5267, cidade: 'Fortaleza - CE' },
+        { lat: -30.0346, lng: -51.2177, cidade: 'Porto Alegre - RS' },
+        { lat: -20.3155, lng: -40.3128, cidade: 'Vitória - ES' }
+      ]
+
+      const coordenada = faker.helpers.arrayElement(coordenadasCidades)
+
+      // Adicionar uma pequena variação às coordenadas para simular locais específicos
+      const latitude =
+        coordenada.lat + faker.number.float({ min: -0.05, max: 0.05 })
+      const longitude =
+        coordenada.lng + faker.number.float({ min: -0.05, max: 0.05 })
+
+      // Gerar data de registro realista
+      const dataRegistro = faker.date.past({ years: 0.5 })
+
+      return {
+        latitude: Number(latitude.toFixed(6)),
+        longitude: Number(longitude.toFixed(6)),
+        descricao: faker.helpers.arrayElement(descricoesTemplate),
+        dataRegistro,
+        status,
+        usuarioId: usuario?.id || null,
+        criadoEm: dataRegistro,
+        atualizadoEm:
+          status !== StatusMobilidade.PENDENTE
+            ? faker.date.between({ from: dataRegistro, to: new Date() })
+            : dataRegistro
+      }
+    }
+
+    const mobilidades = []
+    const startMobilityCreation = Date.now()
+
+    // Criar 30 mobilidades - algumas com usuário, outras anônimas
+    for (let i = 0; i < 30; i++) {
+      // 70% das mobilidades têm usuário associado, 30% são anônimas
+      const usuarioAleatorio = faker.helpers.maybe(
+        () => faker.helpers.arrayElement(usuarios),
+        { probability: 0.7 }
+      )
+
+      const mobilidadeData = generateMobilidade(usuarioAleatorio)
+
+      const mobilidade = await prisma.mobilidade.create({
+        data: mobilidadeData
+      })
+
+      mobilidades.push(mobilidade)
+
+      // Log de progresso a cada 10 mobilidades
+      if ((i + 1) % 10 === 0 || i === 29) {
+        console.log(chalk.gray(`   • ${i + 1}/30 mobilidades criadas`))
+      }
+    }
+
+    const mobilityCreationTime = Date.now() - startMobilityCreation
+    console.log(
+      chalk.green(
+        `✅ ${mobilidades.length} mobilidades criadas com sucesso! ${chalk.gray(
+          `(${mobilityCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas dos status
+    const statusStats = mobilidades.reduce((acc, mobilidade) => {
+      acc[mobilidade.status] = (acc[mobilidade.status] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    console.log(chalk.gray('   • Status das mobilidades:'))
+    Object.entries(statusStats).forEach(([status, count]) => {
+      console.log(chalk.gray(`     - ${status}: ${count}`))
+    })
+
+    // Mostrar quantidade com e sem usuário
+    const comUsuario = mobilidades.filter((m) => m.usuarioId).length
+    const semUsuario = mobilidades.length - comUsuario
+    console.log(chalk.gray('   • Distribuição:'))
+    console.log(chalk.gray(`     - Com usuário: ${comUsuario}`))
+    console.log(chalk.gray(`     - Anônimas: ${semUsuario}`))
     console.log('')
 
     // Criar profissionais
@@ -877,6 +1006,11 @@ async function main() {
     console.log(
       chalk.white(
         `   📰 Notícias: ${chalk.green.bold(noticias.count.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   💼 Mobilidades: ${chalk.green.bold(mobilidades.length.toString())}`
       )
     )
     console.log(

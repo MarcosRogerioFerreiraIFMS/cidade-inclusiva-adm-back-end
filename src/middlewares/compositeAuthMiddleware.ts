@@ -1,4 +1,4 @@
-import { TipoRecurso, TipoUsuario } from '@prisma/client'
+import { TipoRecurso, TipoUsuario } from '../enums'
 import { authMiddleware, optionalAuthMiddleware } from './authMiddleware'
 import {
   requireAdmin,
@@ -228,6 +228,45 @@ export const authOperations = {
 
   /** GET /auth/validate-token - Público pode validar token */
   validateToken: []
+}
+
+/**
+ * - Middlewares para operações de MOBILIDADE
+ * - Incluem validações específicas para gerenciamento de dados de mobilidade urbana
+ */
+export const mobilidadeOperations = {
+  /** GET /mobilidades - Público pode visualizar */
+  list: [optionalAuthMiddleware],
+
+  /** GET /mobilidades/:id - Público pode visualizar */
+  view: [optionalAuthMiddleware, validateUUID('id')],
+
+  /** POST /mobilidades - Usuários autenticados podem criar */
+  create: [
+    authMiddleware,
+    validateRequiredBody(['latitude', 'longitude', 'descricao'])
+  ],
+
+  /** PUT /mobilidades/:id - Proprietário ou admin podem editar */
+  update: [
+    authMiddleware,
+    validateUUID('id'),
+    validateRequiredBody([]),
+    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE)
+  ],
+
+  /** DELETE /mobilidades/:id - Proprietário ou admin podem deletar */
+  delete: [
+    authMiddleware,
+    validateUUID('id'),
+    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE)
+  ],
+
+  /** GET /mobilidades/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver suas mobilidades */
+  findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin],
+
+  /** GET /mobilidades/status/:status - Público pode visualizar por status */
+  findByStatus: [optionalAuthMiddleware]
 }
 
 /**

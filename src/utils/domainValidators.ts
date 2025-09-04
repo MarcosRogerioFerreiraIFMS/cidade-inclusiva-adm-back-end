@@ -1,4 +1,4 @@
-import { CategoriaNoticia, EspecialidadeProfissional } from '@prisma/client'
+import { CategoriaNoticia, EspecialidadeProfissional } from '../enums'
 
 /**
  * Valida se um estado brasileiro é válido

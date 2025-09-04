@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../enums/HttpStatusCode'
+import { HttpStatusCode } from '../enums'
 import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
 import { UsuarioCompletions } from '../types/UsuarioTypes'
 import { HttpError } from '../utils/HttpError'

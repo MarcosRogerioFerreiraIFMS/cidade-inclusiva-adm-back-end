@@ -70,6 +70,10 @@ export class ComentarioRepository implements IComentarioAccess {
     return await this.dao.findAll()
   }
 
+  async findVisible(): Promise<ComentarioCompletions[]> {
+    return await this.dao.findVisible()
+  }
+
   /**
    * Lista todos os comentários de um profissional específico
    * Inclui comentários visíveis e ocultos

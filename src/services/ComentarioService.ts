@@ -149,6 +149,15 @@ export class ComentarioService implements IComentarioService {
   }
 
   /**
+   * Recupera todos os comentários visíveis
+   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários visíveis
+   */
+  async findVisible(): Promise<ComentarioResponseDTO[]> {
+    const comentarios = await this.comentarioRepository.findVisible()
+    return toComentariosResponseDTO(comentarios)
+  }
+
+  /**
    * Recupera todos os comentários de um profissional específico:
    * - Inclui comentários visíveis e ocultos (para uso administrativo)
    * @param {string} profissionalId - ID do profissional

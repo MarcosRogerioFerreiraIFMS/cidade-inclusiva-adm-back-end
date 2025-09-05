@@ -81,6 +81,19 @@ export class ComentarioController {
   }
 
   /**
+   * Lista todos os comentários visíveis
+   * @type {ControllerRequest}
+   */
+  findVisible: ControllerRequest = async (_req, res, next) => {
+    try {
+      const comentarios = await this.comentarioService.findVisible()
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  /**
    * Lista comentários por profissional
    * @type {ControllerRequest}
    */

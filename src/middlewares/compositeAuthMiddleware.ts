@@ -151,11 +151,18 @@ export const profissionalOperations = {
  * - Incluem validações específicas para sistema de comentários e moderação
  */
 export const comentarioOperations = {
-  /** GET /comentarios - Público pode visualizar */
-  list: [optionalAuthMiddleware],
+  /** GET /comentarios - Apenas administradores podem visualizar */
+  list: [authMiddleware, requireAdmin],
 
-  /** GET /comentarios/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
+  view: [
+    authMiddleware,
+    validateUUID('id'),
+    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
+  ],
+
+  /** GET /comentarios/visiveis - Público pode visualizar comentários visíveis */
+  findVisible: [optionalAuthMiddleware],
 
   /** POST /comentarios - Apenas usuários autenticados podem criar */
   create: [authMiddleware, validateRequiredBody(['conteudo', 'entidadeId'])],

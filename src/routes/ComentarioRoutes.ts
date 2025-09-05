@@ -21,12 +21,23 @@ ComentarioRoutes.post(
 
 /**
  * GET /comentarios - Lista todos os comentários
- * Requer autenticação para listagem
+ * Requer autenticação de administrador
  */
 ComentarioRoutes.get(
   '/',
   ...comentarioOperations.list,
   ComentarioDependencies.controller.findAll
+)
+
+/**
+ * GET /comentarios/visiveis - Lista todos os comentários visíveis
+ * Rota pública, sem necessidade de autenticação
+ */
+
+ComentarioRoutes.get(
+  '/visiveis',
+  ...comentarioOperations.findVisible,
+  ComentarioDependencies.controller.findVisible
 )
 
 /**

@@ -47,6 +47,12 @@ export interface IComentarioService {
   findAll(): Promise<ComentarioResponseDTO[]>
 
   /**
+   * Lista todos os comentários visíveis
+   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários visíveis
+   */
+  findVisible(): Promise<ComentarioResponseDTO[]>
+
+  /**
    * Busca comentários de um profissional específico
    * @param {string} profissionalId - ID do profissional
    * @returns {Promise<ComentarioResponseDTO[]>} Comentários do profissional

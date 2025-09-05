@@ -83,6 +83,14 @@ export class ComentarioDAO implements IComentarioAccess {
     })
   }
 
+  async findVisible(): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: { visivel: true },
+      orderBy: { criadoEm: 'desc' },
+      include: { likesUsuarios: true }
+    })
+  }
+
   /**
    * Lista todos os comentários de um profissional específico
    * Inclui comentários visíveis e ocultos, ordenados por data

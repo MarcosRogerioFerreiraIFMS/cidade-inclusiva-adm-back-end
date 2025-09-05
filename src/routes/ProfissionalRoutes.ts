@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { ProfissionalDependencies } from '../dependencies/ProfissionalDependencies'
 import { profissionalOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  contentCreationRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Router para rotas de profissionais
@@ -15,6 +20,7 @@ const ProfissionalRoutes = Router()
  */
 ProfissionalRoutes.post(
   '/',
+  contentCreationRateLimit,
   ...profissionalOperations.create,
   ProfissionalDependencies.controller.create
 )
@@ -25,6 +31,7 @@ ProfissionalRoutes.post(
  */
 ProfissionalRoutes.get(
   '/',
+  readOperationsRateLimit,
   ...profissionalOperations.list,
   ProfissionalDependencies.controller.findAll
 )
@@ -35,6 +42,7 @@ ProfissionalRoutes.get(
  */
 ProfissionalRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...profissionalOperations.view,
   ProfissionalDependencies.controller.findById
 )
@@ -45,6 +53,7 @@ ProfissionalRoutes.get(
  */
 ProfissionalRoutes.put(
   '/:id',
+  modificationRateLimit,
   ...profissionalOperations.update,
   ProfissionalDependencies.controller.update
 )
@@ -55,6 +64,7 @@ ProfissionalRoutes.put(
  */
 ProfissionalRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...profissionalOperations.delete,
   ProfissionalDependencies.controller.delete
 )

@@ -1,6 +1,10 @@
 import { Router } from 'express'
 import { AuthDependencies } from '../dependencies/AuthDependencies'
 import { authOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  loginRateLimit,
+  tokenValidationRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Rotas para operações de autenticação
@@ -14,6 +18,7 @@ const AuthRoutes = Router()
  */
 AuthRoutes.post(
   '/login',
+  loginRateLimit,
   ...authOperations.login,
   AuthDependencies.controller.login
 )
@@ -24,6 +29,7 @@ AuthRoutes.post(
  */
 AuthRoutes.get(
   '/validate-token',
+  tokenValidationRateLimit,
   ...authOperations.validateToken,
   AuthDependencies.controller.validateToken
 )

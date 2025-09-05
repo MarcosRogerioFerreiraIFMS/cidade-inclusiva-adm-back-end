@@ -2,7 +2,6 @@ import compression from 'compression'
 import cors from 'cors'
 import 'dotenv/config'
 import express, { Request, Response } from 'express'
-import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
 import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums'
@@ -21,21 +20,6 @@ import { UsuarioRoutes } from './routes/UsuarioRoutes'
  */
 const app = express()
 
-/**
- * Configuração de rate limiting para prevenir abuso de requisições
- * @constant {RateLimitRequestHandler}
- */
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // máximo 100 requisições por IP
-  message: {
-    success: false,
-    error: 'Muitas requisições, tente novamente mais tarde.'
-  }
-})
-
-// Middlewares de segurança e configuração
-app.use(limiter)
 app.use(requestTimeout(30 * 1000)) // timeout de 30 segundos
 
 /**

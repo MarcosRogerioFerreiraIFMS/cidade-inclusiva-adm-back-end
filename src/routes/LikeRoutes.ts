@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { LikeDependencies } from '../dependencies/LikeDependencies'
 import { likeOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  contentCreationRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Router para rotas de likes
@@ -16,6 +21,7 @@ const LikeRoutes = Router()
  */
 LikeRoutes.patch(
   '/toggle/:usuarioId/:comentarioId',
+  contentCreationRateLimit,
   ...likeOperations.toggle,
   LikeDependencies.controller.toggle
 )
@@ -26,6 +32,7 @@ LikeRoutes.patch(
  */
 LikeRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...likeOperations.view,
   LikeDependencies.controller.findById
 )
@@ -36,6 +43,7 @@ LikeRoutes.get(
  */
 LikeRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...likeOperations.delete,
   LikeDependencies.controller.delete
 )
@@ -46,6 +54,7 @@ LikeRoutes.delete(
  */
 LikeRoutes.get(
   '/comentario/:comentarioId',
+  readOperationsRateLimit,
   ...likeOperations.findByComment,
   LikeDependencies.controller.findByComentario
 )
@@ -56,6 +65,7 @@ LikeRoutes.get(
  */
 LikeRoutes.get(
   '/usuario/:usuarioId',
+  readOperationsRateLimit,
   ...likeOperations.findByUser,
   LikeDependencies.controller.findByUsuario
 )

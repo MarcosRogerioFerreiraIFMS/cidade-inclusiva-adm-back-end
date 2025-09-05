@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
 import { comentarioOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  adminOperationsRateLimit,
+  contentCreationRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Router para rotas de comentários
@@ -15,6 +21,7 @@ const ComentarioRoutes = Router()
  */
 ComentarioRoutes.post(
   '/',
+  contentCreationRateLimit,
   ...comentarioOperations.create,
   ComentarioDependencies.controller.create
 )
@@ -25,6 +32,7 @@ ComentarioRoutes.post(
  */
 ComentarioRoutes.get(
   '/',
+  adminOperationsRateLimit,
   ...comentarioOperations.list,
   ComentarioDependencies.controller.findAll
 )
@@ -36,6 +44,7 @@ ComentarioRoutes.get(
 
 ComentarioRoutes.get(
   '/visiveis',
+  readOperationsRateLimit,
   ...comentarioOperations.findVisible,
   ComentarioDependencies.controller.findVisible
 )
@@ -46,6 +55,7 @@ ComentarioRoutes.get(
  */
 ComentarioRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...comentarioOperations.view,
   ComentarioDependencies.controller.findById
 )
@@ -56,6 +66,7 @@ ComentarioRoutes.get(
  */
 ComentarioRoutes.put(
   '/:id',
+  modificationRateLimit,
   ...comentarioOperations.update,
   ComentarioDependencies.controller.update
 )
@@ -66,6 +77,7 @@ ComentarioRoutes.put(
  */
 ComentarioRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...comentarioOperations.delete,
   ComentarioDependencies.controller.delete
 )
@@ -76,6 +88,7 @@ ComentarioRoutes.delete(
  */
 ComentarioRoutes.get(
   '/profissional/:profissionalId',
+  readOperationsRateLimit,
   ...comentarioOperations.findByProfessional,
   ComentarioDependencies.controller.findByProfissional
 )
@@ -86,6 +99,7 @@ ComentarioRoutes.get(
  */
 ComentarioRoutes.get(
   '/profissional/:profissionalId/visiveis',
+  readOperationsRateLimit,
   ...comentarioOperations.findVisibleByProfessional,
   ComentarioDependencies.controller.findVisibleByProfissional
 )
@@ -96,6 +110,7 @@ ComentarioRoutes.get(
  */
 ComentarioRoutes.get(
   '/usuario/:usuarioId',
+  readOperationsRateLimit,
   ...comentarioOperations.findByUser,
   ComentarioDependencies.controller.findByUsuario
 )

@@ -1,6 +1,13 @@
 import { Router } from 'express'
 import { UsuarioDependencies } from '../dependencies/UsuarioDependencies'
 import { usuarioOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  adminOperationsRateLimit,
+  emailSearchRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit,
+  registerRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Rotas para operações de usuários
@@ -14,6 +21,7 @@ const UsuarioRoutes = Router()
  */
 UsuarioRoutes.post(
   '/',
+  registerRateLimit,
   ...usuarioOperations.register,
   UsuarioDependencies.controller.create
 )
@@ -24,6 +32,7 @@ UsuarioRoutes.post(
  */
 UsuarioRoutes.get(
   '/',
+  adminOperationsRateLimit,
   ...usuarioOperations.listAll,
   UsuarioDependencies.controller.findAll
 )
@@ -34,6 +43,7 @@ UsuarioRoutes.get(
  */
 UsuarioRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...usuarioOperations.viewProfile,
   UsuarioDependencies.controller.findById
 )
@@ -44,6 +54,7 @@ UsuarioRoutes.get(
  */
 UsuarioRoutes.get(
   '/email/:email',
+  emailSearchRateLimit,
   ...usuarioOperations.findByEmail,
   UsuarioDependencies.controller.findByEmail
 )
@@ -54,6 +65,7 @@ UsuarioRoutes.get(
  */
 UsuarioRoutes.put(
   '/:id',
+  modificationRateLimit,
   ...usuarioOperations.updateProfile,
   UsuarioDependencies.controller.update
 )
@@ -64,6 +76,7 @@ UsuarioRoutes.put(
  */
 UsuarioRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...usuarioOperations.deleteProfile,
   UsuarioDependencies.controller.delete
 )

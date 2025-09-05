@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { MobilidadeDependencies } from '../dependencies/MobilidadeDependencies'
 import { mobilidadeOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  contentCreationRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Router para rotas de mobilidade
@@ -15,6 +20,7 @@ const MobilidadeRoutes = Router()
  */
 MobilidadeRoutes.post(
   '/',
+  contentCreationRateLimit,
   ...mobilidadeOperations.create,
   MobilidadeDependencies.controller.create
 )
@@ -25,6 +31,7 @@ MobilidadeRoutes.post(
  */
 MobilidadeRoutes.get(
   '/',
+  readOperationsRateLimit,
   ...mobilidadeOperations.list,
   MobilidadeDependencies.controller.findAll
 )
@@ -35,6 +42,7 @@ MobilidadeRoutes.get(
  */
 MobilidadeRoutes.get(
   '/usuario/:usuarioId',
+  readOperationsRateLimit,
   ...mobilidadeOperations.findByUser,
   MobilidadeDependencies.controller.findByUsuario
 )
@@ -45,6 +53,7 @@ MobilidadeRoutes.get(
  */
 MobilidadeRoutes.get(
   '/status/:status',
+  readOperationsRateLimit,
   ...mobilidadeOperations.findByStatus,
   MobilidadeDependencies.controller.findByStatus
 )
@@ -55,6 +64,7 @@ MobilidadeRoutes.get(
  */
 MobilidadeRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...mobilidadeOperations.view,
   MobilidadeDependencies.controller.findById
 )
@@ -65,6 +75,7 @@ MobilidadeRoutes.get(
  */
 MobilidadeRoutes.put(
   '/:id',
+  modificationRateLimit,
   ...mobilidadeOperations.update,
   MobilidadeDependencies.controller.update
 )
@@ -75,6 +86,7 @@ MobilidadeRoutes.put(
  */
 MobilidadeRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...mobilidadeOperations.delete,
   MobilidadeDependencies.controller.delete
 )

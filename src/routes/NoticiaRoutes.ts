@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { NoticiaDependencies } from '../dependencies/NoticiaDependencies'
 import { noticiaOperations } from '../middlewares/compositeAuthMiddleware'
+import {
+  contentCreationRateLimit,
+  modificationRateLimit,
+  readOperationsRateLimit
+} from '../middlewares/rateLimitMiddleware'
 
 /**
  * - Router para rotas de notícias
@@ -15,6 +20,7 @@ const NoticiaRoutes = Router()
  */
 NoticiaRoutes.post(
   '/',
+  contentCreationRateLimit,
   ...noticiaOperations.create,
   NoticiaDependencies.controller.create
 )
@@ -25,6 +31,7 @@ NoticiaRoutes.post(
  */
 NoticiaRoutes.get(
   '/',
+  readOperationsRateLimit,
   ...noticiaOperations.list,
   NoticiaDependencies.controller.findAll
 )
@@ -35,6 +42,7 @@ NoticiaRoutes.get(
  */
 NoticiaRoutes.get(
   '/:id',
+  readOperationsRateLimit,
   ...noticiaOperations.view,
   NoticiaDependencies.controller.findById
 )
@@ -45,6 +53,7 @@ NoticiaRoutes.get(
  */
 NoticiaRoutes.put(
   '/:id',
+  modificationRateLimit,
   ...noticiaOperations.update,
   NoticiaDependencies.controller.update
 )
@@ -55,6 +64,7 @@ NoticiaRoutes.put(
  */
 NoticiaRoutes.delete(
   '/:id',
+  modificationRateLimit,
   ...noticiaOperations.delete,
   NoticiaDependencies.controller.delete
 )

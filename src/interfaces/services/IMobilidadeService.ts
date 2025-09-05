@@ -1,4 +1,5 @@
 import { MobilidadeResponseDTO } from '../../dtos/response/MobilidadeResponseDTO'
+import { JWTPayload } from '../../utils/jwtUtils'
 
 /**
  * Interface que define o contrato de serviços para mobilidade
@@ -9,9 +10,14 @@ export interface IMobilidadeService {
   /**
    * Cria uma nova mobilidade no sistema
    * @param {unknown} data - Dados da mobilidade a ser criada
+   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando a mobilidade
+   * - O usuário autenticado é obrigatório para criar uma mobilidade
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade criada
    */
-  create(data: unknown): Promise<MobilidadeResponseDTO>
+  create(
+    data: unknown,
+    user: JWTPayload | undefined
+  ): Promise<MobilidadeResponseDTO>
 
   /**
    * Busca uma mobilidade específica pelo ID

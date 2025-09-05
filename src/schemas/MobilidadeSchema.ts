@@ -101,3 +101,21 @@ export const createMobilidadeSchema = z.object({
  * - Mantém as mesmas regras de validação do schema de criação
  */
 export const updateMobilidadeSchema = createMobilidadeSchema.partial()
+
+/**
+ * Schema de validação Zod para o campo status de mobilidade isoladamente
+ */
+export const statusMobilidadeSchema = z
+  .string({
+    invalid_type_error: 'O status deve ser uma string.'
+  })
+  .transform((val) => val.trim().toUpperCase())
+  .refine(
+    (val) => Object.values(StatusMobilidade).includes(val as StatusMobilidade),
+    {
+      message: `Status inválido. Valores aceitos: ${Object.values(
+        StatusMobilidade
+      ).join(', ')}`
+    }
+  )
+  .transform((val) => val as StatusMobilidade)

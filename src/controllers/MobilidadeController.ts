@@ -1,5 +1,5 @@
 import { IMobilidadeService } from '../interfaces/services/IMobilidadeService'
-import { ControllerRequest } from '../types/RequestTypes'
+import { AuthenticatedRequest, ControllerRequest } from '../types/RequestTypes'
 import { HandleSuccess } from '../utils/HandleSuccess'
 
 /**
@@ -10,12 +10,11 @@ export class MobilidadeController {
 
   /**
    * Cria uma nova mobilidade no sistema
-   * @type {ControllerRequest}
+   * @type {ControllerRequest<AuthenticatedRequest>}
    */
-  create: ControllerRequest = async (req, res, next) => {
+  create: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
-      const mobilidade = await this.mobilidadeService.create(req.body)
-
+      const mobilidade = await this.mobilidadeService.create(req.body, req.user)
       HandleSuccess.created(res, mobilidade, 'Mobilidade criada com sucesso')
     } catch (error: unknown) {
       next(error)
@@ -30,7 +29,6 @@ export class MobilidadeController {
     try {
       const { id } = req.params
       const mobilidade = await this.mobilidadeService.findById(id)
-
       HandleSuccess.found(res, mobilidade)
     } catch (error: unknown) {
       next(error)
@@ -45,7 +43,6 @@ export class MobilidadeController {
     try {
       const { id } = req.params
       const mobilidade = await this.mobilidadeService.update(id, req.body)
-
       HandleSuccess.updated(
         res,
         mobilidade,
@@ -64,7 +61,6 @@ export class MobilidadeController {
     try {
       const { id } = req.params
       await this.mobilidadeService.delete(id)
-
       HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)
@@ -75,10 +71,9 @@ export class MobilidadeController {
    * Lista todas as mobilidades do sistema
    * @type {ControllerRequest}
    */
-  findAll: ControllerRequest = async (req, res, next) => {
+  findAll: ControllerRequest = async (_req, res, next) => {
     try {
       const mobilidades = await this.mobilidadeService.findAll()
-
       HandleSuccess.list(res, mobilidades)
     } catch (error: unknown) {
       next(error)
@@ -93,7 +88,6 @@ export class MobilidadeController {
     try {
       const { usuarioId } = req.params
       const mobilidades = await this.mobilidadeService.findByUsuario(usuarioId)
-
       HandleSuccess.list(res, mobilidades)
     } catch (error: unknown) {
       next(error)
@@ -108,7 +102,6 @@ export class MobilidadeController {
     try {
       const { status } = req.params
       const mobilidades = await this.mobilidadeService.findByStatus(status)
-
       HandleSuccess.list(res, mobilidades)
     } catch (error: unknown) {
       next(error)

@@ -1,15 +1,20 @@
 import { MobilidadeResponseDTO } from '../dtos/response/MobilidadeResponseDTO'
+import { HttpStatusCode } from '../enums'
 import { IMobilidadeAccess } from '../interfaces/access/IMobilidadeAccess'
+import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
 import { IMobilidadeService } from '../interfaces/services/IMobilidadeService'
 import {
   toCreateMobilidadeDTO,
-  toUpdateMobilidadeDTO
+  toUpdateMobilidadeDTO,
+  toValidateMobilidadeStatus
 } from '../mappers/input/mobilidadeInputMapper'
 import {
   toMobilidadeResponseDTO,
   toMobilidadesResponseDTO
 } from '../mappers/output/mobilidadeOutputMapper'
 import { throwIfNotFound } from '../utils/entityValidator'
+import { HttpError } from '../utils/HttpError'
+import { JWTPayload } from '../utils/jwtUtils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a mobilidades:
@@ -21,17 +26,35 @@ export class MobilidadeService implements IMobilidadeService {
    * Construtor do serviço de mobilidades
    * @param {IMobilidadeAccess} mobilidadeRepository - Repositório para acesso aos dados de mobilidades
    */
-  constructor(private mobilidadeRepository: IMobilidadeAccess) {}
+  constructor(
+    private mobilidadeRepository: IMobilidadeAccess,
+    private usuarioRepository: IUsuarioAccess
+  ) {}
 
   /**
    * Cria uma nova mobilidade no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
    * @param {unknown} data - Dados da mobilidade a ser criada
+   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando a mobilidade
+   * - O usuário autenticado é obrigatório para criar uma mobilidade
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade criada
    */
-  async create(data: unknown): Promise<MobilidadeResponseDTO> {
+  async create(
+    data: unknown,
+    user: JWTPayload | undefined
+  ): Promise<MobilidadeResponseDTO> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
     return toMobilidadeResponseDTO(
-      await this.mobilidadeRepository.create(await toCreateMobilidadeDTO(data))
+      await this.mobilidadeRepository.create(
+        toCreateMobilidadeDTO(data),
+        user.userId
+      )
     )
   }
 
@@ -67,7 +90,7 @@ export class MobilidadeService implements IMobilidadeService {
 
     const mobilidade = await this.mobilidadeRepository.update(
       id,
-      await toUpdateMobilidadeDTO(data)
+      toUpdateMobilidadeDTO(data)
     )
 
     return toMobilidadeResponseDTO(mobilidade)
@@ -111,7 +134,14 @@ export class MobilidadeService implements IMobilidadeService {
    * @returns {Promise<MobilidadeResponseDTO[]>} Lista de mobilidades do usuário
    */
   async findByUsuario(usuarioId: string): Promise<MobilidadeResponseDTO[]> {
-    const mobilidades = await this.mobilidadeRepository.findByUsuario(usuarioId)
+    const usuario = throwIfNotFound(
+      await this.usuarioRepository.findById(usuarioId),
+      'Usuário não encontrado.'
+    )
+
+    const mobilidades = await this.mobilidadeRepository.findByUsuario(
+      usuario.id
+    )
 
     if (!mobilidades || mobilidades.length === 0) {
       return []
@@ -127,7 +157,9 @@ export class MobilidadeService implements IMobilidadeService {
    * @returns {Promise<MobilidadeResponseDTO[]>} Lista de mobilidades com o status especificado
    */
   async findByStatus(status: string): Promise<MobilidadeResponseDTO[]> {
-    const mobilidades = await this.mobilidadeRepository.findByStatus(status)
+    const mobilidades = await this.mobilidadeRepository.findByStatus(
+      toValidateMobilidadeStatus(status)
+    )
 
     if (!mobilidades || mobilidades.length === 0) {
       return []

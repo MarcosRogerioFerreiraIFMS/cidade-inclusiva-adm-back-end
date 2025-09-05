@@ -11,9 +11,13 @@ export interface IMobilidadeAccess {
   /**
    * Cria uma nova mobilidade no sistema
    * @param {MobilidadeCreateDTO} data - Dados da mobilidade a ser criada
+   * @param {string} userId - ID do usuário que está criando a mobilidade
    * @returns {Promise<MobilidadeCompletions>} Mobilidade criada com todas as relações
    */
-  create(data: MobilidadeCreateDTO): Promise<MobilidadeCompletions>
+  create(
+    data: MobilidadeCreateDTO,
+    userId: string
+  ): Promise<MobilidadeCompletions>
 
   /**
    * Busca uma mobilidade pelo seu ID único

@@ -50,7 +50,7 @@ export class ComentarioService implements IComentarioService {
   ): Promise<ComentarioResponseDTO> {
     if (!user) {
       throw new HttpError(
-        'Usuário autenticado é obrigatório para criar um comentário.',
+        'Usuário não autenticado.',
         HttpStatusCode.UNAUTHORIZED
       )
     }

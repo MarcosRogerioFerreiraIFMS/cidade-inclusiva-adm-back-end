@@ -1,4 +1,5 @@
 import { NextFunction, Response } from 'express'
+import { UsuarioDependencies } from '../dependencies/UsuarioDependencies'
 import { HttpStatusCode } from '../enums'
 import { AuthenticatedRequest } from '../types/RequestTypes'
 import { JWTUtils } from '../utils/jwtUtils'
@@ -6,15 +7,16 @@ import { JWTUtils } from '../utils/jwtUtils'
 /**
  * - Middleware de autenticação obrigatório que valida o token JWT
  * - Rejeita requisições sem token válido
+ * - Verifica se o userId do token existe no banco de dados
  * @param {AuthenticatedRequest} req - Request com dados do usuário autenticado
  * @param {Response} res - Response do Express
  * @param {NextFunction} next - Função para continuar para o próximo middleware
  */
-export const authMiddleware = (
+export const authMiddleware = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization
 
@@ -45,6 +47,19 @@ export const authMiddleware = (
     }
 
     const decoded = JWTUtils.verifyToken(token)
+
+    // Verifica se o usuário ainda existe no banco de dados
+    const user = await UsuarioDependencies.dao.findById(decoded.userId)
+
+    if (!user) {
+      res.status(HttpStatusCode.UNAUTHORIZED).json({
+        success: false,
+        error: 'Token inválido: usuário não encontrado',
+        code: 'USER_NOT_FOUND'
+      })
+      return
+    }
+
     req.user = decoded
 
     next()
@@ -90,15 +105,16 @@ export const authMiddleware = (
 /**
  * - Middleware de autenticação opcional que valida o token JWT quando presente
  * - Permite requisições mesmo sem token, mas autentica se fornecido
+ * - Verifica se o userId do token existe no banco de dados quando token for válido
  * @param {AuthenticatedRequest} req - Request com dados do usuário autenticado (opcional)
  * @param {Response} _res - Response do Express (não utilizado)
  * @param {NextFunction} next - Função para continuar para o próximo middleware
  */
-export const optionalAuthMiddleware = (
+export const optionalAuthMiddleware = async (
   req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization
 
@@ -112,7 +128,14 @@ export const optionalAuthMiddleware = (
     if (token) {
       try {
         const decoded = JWTUtils.verifyToken(token)
-        req.user = decoded
+
+        // Verifica se o usuário ainda existe no banco de dados
+        const user = await UsuarioDependencies.dao.findById(decoded.userId)
+
+        // Se o usuário não existe, não autentica mas continua a requisição
+        if (user) {
+          req.user = decoded
+        }
       } catch {
         // Token inválido ou expirado, mas não é obrigatório
         // Continua sem o usuário autenticado

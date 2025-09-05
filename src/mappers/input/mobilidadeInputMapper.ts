@@ -1,7 +1,11 @@
 import { MobilidadeCreateDTO } from '../../dtos/create/MobilidadeCreateDTO'
-import { MobilidadeUpdateDTO } from '../../dtos/update/MobilidadeUpdateDTO'
+import {
+  MobilidadeUpdateDTO,
+  StatusMobilidade
+} from '../../dtos/update/MobilidadeUpdateDTO'
 import {
   createMobilidadeSchema,
+  statusMobilidadeSchema,
   updateMobilidadeSchema
 } from '../../schemas/MobilidadeSchema'
 
@@ -9,24 +13,30 @@ import {
  * - Converte dados não tipados para DTO de criação de mobilidade
  * - Aplica validação usando Zod schema e retorna dados tipados e validados
  * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
- * @returns {Promise<MobilidadeCreateDTO>} DTO validado para criação de mobilidade
+ * @returns {MobilidadeCreateDTO} DTO validado para criação de mobilidade
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateMobilidadeDTO(
-  input: unknown
-): Promise<MobilidadeCreateDTO> {
-  return createMobilidadeSchema.parseAsync(input)
+export function toCreateMobilidadeDTO(input: unknown): MobilidadeCreateDTO {
+  return createMobilidadeSchema.parse(input)
 }
 
 /**
  * - Converte dados não tipados para DTO de atualização de mobilidade
  * - Aplica validação usando Zod schema e retorna dados tipados e validados
  * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
- * @returns {Promise<MobilidadeUpdateDTO>} DTO validado para atualização de mobilidade
+ * @returns {MobilidadeUpdateDTO} DTO validado para atualização de mobilidade
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateMobilidadeDTO(
-  input: unknown
-): Promise<MobilidadeUpdateDTO> {
-  return updateMobilidadeSchema.parseAsync(input)
+export function toUpdateMobilidadeDTO(input: unknown): MobilidadeUpdateDTO {
+  return updateMobilidadeSchema.parse(input)
+}
+
+/**
+ * - Valida e tipa o status de mobilidade
+ * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
+ * @returns {StatusMobilidade} Objeto validado contendo o status
+ * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
+ */
+export function toValidateMobilidadeStatus(input: unknown): StatusMobilidade {
+  return statusMobilidadeSchema.parse(input)
 }

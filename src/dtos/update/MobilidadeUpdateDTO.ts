@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { updateMobilidadeSchema } from '../../schemas/MobilidadeSchema'
+import {
+  statusMobilidadeSchema,
+  updateMobilidadeSchema
+} from '../../schemas/MobilidadeSchema'
 
 /**
  * - DTO (Data Transfer Object) para atualização de mobilidade
@@ -7,3 +10,5 @@ import { updateMobilidadeSchema } from '../../schemas/MobilidadeSchema'
  * - Permite atualizações parciais dos campos de mobilidade
  */
 export type MobilidadeUpdateDTO = z.infer<typeof updateMobilidadeSchema>
+
+export type StatusMobilidade = z.infer<typeof statusMobilidadeSchema>

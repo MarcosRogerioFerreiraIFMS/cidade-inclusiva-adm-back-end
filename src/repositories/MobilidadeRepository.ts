@@ -23,10 +23,14 @@ export class MobilidadeRepository implements IMobilidadeAccess {
   /**
    * Cria uma nova mobilidade
    * @param {MobilidadeCreateDTO} data - Dados da mobilidade a ser criada
+   * @param {string} userId - ID do usuário que está criando a mobilidade
    * @returns {Promise<MobilidadeCompletions>} Mobilidade criada com todas as relações
    */
-  async create(data: MobilidadeCreateDTO): Promise<MobilidadeCompletions> {
-    return await this.dao.create(data)
+  async create(
+    data: MobilidadeCreateDTO,
+    userId: string
+  ): Promise<MobilidadeCompletions> {
+    return await this.dao.create(data, userId)
   }
 
   /**

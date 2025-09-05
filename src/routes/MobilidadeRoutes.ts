@@ -60,16 +60,6 @@ MobilidadeRoutes.get(
 )
 
 /**
- * GET /mobilidades/:id - Busca mobilidade por ID
- * Público, sem necessidade de autenticação
- */
-MobilidadeRoutes.get(
-  '/:id',
-  ...mobilidadeOperations.view,
-  MobilidadeDependencies.controller.findById
-)
-
-/**
  * PUT /mobilidades/:id - Atualiza mobilidade existente
  * Requer autenticação e verifica se é o proprietário ou admin
  */

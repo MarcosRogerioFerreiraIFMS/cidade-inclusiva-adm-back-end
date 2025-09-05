@@ -6,16 +6,13 @@ import { MobilidadeUpdateDTO } from '../dtos/update/MobilidadeUpdateDTO'
  * - Gera dados formatados para criação de mobilidade no Prisma
  * - Converte DTO de criação em input do Prisma, aplicando valores padrão
  * @param {MobilidadeCreateDTO} data - Dados da mobilidade vindos do DTO
+ * @param {string} userId - ID do usuário que está criando a mobilidade
  * @returns {Prisma.MobilidadeCreateInput} Dados formatados para o Prisma
  */
-export function generateDataMobilidadeCreate({
-  latitude,
-  longitude,
-  descricao,
-  status,
-  usuarioId,
-  dataRegistro
-}: MobilidadeCreateDTO): Prisma.MobilidadeCreateInput {
+export function generateDataMobilidadeCreate(
+  { latitude, longitude, descricao, status, dataRegistro }: MobilidadeCreateDTO,
+  userId: string
+): Prisma.MobilidadeCreateInput {
   const data: Prisma.MobilidadeCreateInput = {
     latitude,
     longitude,
@@ -24,9 +21,9 @@ export function generateDataMobilidadeCreate({
     dataRegistro: dataRegistro ? new Date(dataRegistro) : new Date()
   }
 
-  if (usuarioId) {
+  if (userId) {
     data.usuario = {
-      connect: { id: usuarioId }
+      connect: { id: userId }
     }
   }
 

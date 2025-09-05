@@ -18,10 +18,14 @@ export class MobilidadeDAO implements IMobilidadeAccess {
   /**
    * Cria uma nova mobilidade no banco de dados
    * @param {MobilidadeCreateDTO} data - Dados da mobilidade a ser criada
+   * @param {string} userId - ID do usuário que está criando a mobilidade
    * @returns {Promise<MobilidadeCompletions>} Mobilidade criada
    */
-  async create(data: MobilidadeCreateDTO): Promise<MobilidadeCompletions> {
-    const dataToCreate = generateDataMobilidadeCreate(data)
+  async create(
+    data: MobilidadeCreateDTO,
+    userId: string
+  ): Promise<MobilidadeCompletions> {
+    const dataToCreate = generateDataMobilidadeCreate(data, userId)
 
     const mobilidade = await db.mobilidade.create({
       data: dataToCreate,
@@ -114,12 +118,14 @@ export class MobilidadeDAO implements IMobilidadeAccess {
 
   /**
    * Busca mobilidades por status
-   * @param {string} status - Status das mobilidades
+   * @param {StatusMobilidade} status - Status das mobilidades
    * @returns {Promise<MobilidadeCompletions[]>} Lista de mobilidades com o status especificado
    */
-  async findByStatus(status: string): Promise<MobilidadeCompletions[]> {
+  async findByStatus(
+    status: StatusMobilidade
+  ): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
-      where: { status: status as StatusMobilidade },
+      where: { status: status },
       include: {
         usuario: true
       },

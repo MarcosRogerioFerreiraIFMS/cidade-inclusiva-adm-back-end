@@ -1,6 +1,8 @@
 import { MobilidadeController } from '../controllers/MobilidadeController'
 import { MobilidadeDAO } from '../daos/MobilidadeDAO'
+import { UsuarioDAO } from '../daos/UsuarioDAO'
 import { MobilidadeRepository } from '../repositories/MobilidadeRepository'
+import { UsuarioRepository } from '../repositories/UsuarioRepository'
 import { MobilidadeService } from '../services/MobilidadeService'
 
 /**
@@ -8,8 +10,15 @@ import { MobilidadeService } from '../services/MobilidadeService'
  * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
  */
 const mobilidadeDAO = new MobilidadeDAO()
+const usuarioDAO = new UsuarioDAO()
+
 const mobilidadeRepository = new MobilidadeRepository(mobilidadeDAO)
-const mobilidadeService = new MobilidadeService(mobilidadeRepository)
+const usuarioRepository = new UsuarioRepository(usuarioDAO)
+
+const mobilidadeService = new MobilidadeService(
+  mobilidadeRepository,
+  usuarioRepository
+)
 const mobilidadeController = new MobilidadeController(mobilidadeService)
 
 /**

@@ -49,6 +49,12 @@ async function main() {
     console.log(chalk.gray('   • Removendo comentários...'))
     await prisma.comentario.deleteMany()
 
+    console.log(chalk.gray('   • Removendo veículos...'))
+    await prisma.veiculo.deleteMany()
+
+    console.log(chalk.gray('   • Removendo motoristas...'))
+    await prisma.motorista.deleteMany()
+
     console.log(chalk.gray('   • Removendo endereços...'))
     await prisma.endereco.deleteMany()
 
@@ -315,7 +321,11 @@ async function main() {
       data: {
         nome: 'Administrador do Sistema',
         telefone: '(11) 99999-9999',
-        foto: 'https://i.pravatar.cc/400?img=admin',
+        foto: {
+          create: {
+            url: 'https://i.pravatar.cc/400?img=admin'
+          }
+        },
         email: 'admin@cidadeinclusiva.com.br',
         senha: adminPassword,
         tipo: TipoUsuario.ADMIN,
@@ -360,7 +370,11 @@ async function main() {
         data: {
           nome: usuarioData.nome,
           telefone: usuarioData.telefone,
-          foto: usuarioData.foto,
+          foto: {
+            create: {
+              url: usuarioData.foto
+            }
+          },
           email: usuarioData.email,
           senha: hashedPassword,
           tipo: usuarioData.tipo,
@@ -588,15 +602,32 @@ async function main() {
     }))
 
     const startProfCreation = Date.now()
-    const profissionais = await prisma.profissional.createMany({
-      data: profissionaisComTimestamps
-    })
+    // Não podemos usar createMany com relações, então criamos um por vez
+    const profissionaisResult = []
+    for (const profData of profissionaisComTimestamps) {
+      const profissional = await prisma.profissional.create({
+        data: {
+          nome: profData.nome,
+          foto: {
+            create: {
+              url: profData.foto
+            }
+          },
+          telefone: profData.telefone,
+          email: profData.email,
+          especialidade: profData.especialidade,
+          criadoEm: profData.criadoEm,
+          atualizadoEm: profData.atualizadoEm
+        }
+      })
+      profissionaisResult.push(profissional)
+    }
     const profCreationTime = Date.now() - startProfCreation
 
     console.log(
       chalk.green(
         `✅ ${
-          profissionais.count
+          profissionaisResult.length
         } profissionais criados com sucesso! ${chalk.gray(
           `(${profCreationTime}ms)`
         )}`
@@ -619,7 +650,7 @@ async function main() {
     console.log('')
 
     // Buscar os profissionais criados para usar seus IDs nos comentários
-    const profissionaisCriados = await prisma.profissional.findMany()
+    const profissionaisCriados = profissionaisResult
 
     // Criar notícias com dados mais realistas e abrangentes
     console.log(chalk.blue.bold('📰 Criando notícias...'))
@@ -818,14 +849,34 @@ async function main() {
 
     console.log(chalk.cyan('💾 Salvando notícias no banco de dados...'))
     const startNewsCreation = Date.now()
-    const noticias = await prisma.noticia.createMany({
-      data: noticiasData
-    })
+    // Não podemos usar createMany com relações, então criamos uma por vez
+    const noticiasResult = []
+    for (const noticiaData of noticiasData) {
+      const noticia = await prisma.noticia.create({
+        data: {
+          titulo: noticiaData.titulo,
+          conteudo: noticiaData.conteudo,
+          categoria: noticiaData.categoria,
+          url: noticiaData.url,
+          foto: noticiaData.foto
+            ? {
+                create: {
+                  url: noticiaData.foto
+                }
+              }
+            : undefined,
+          dataPublicacao: noticiaData.dataPublicacao,
+          criadoEm: noticiaData.criadoEm,
+          atualizadoEm: noticiaData.atualizadoEm
+        }
+      })
+      noticiasResult.push(noticia)
+    }
     const newsCreationTime = Date.now() - startNewsCreation
 
     console.log(
       chalk.green(
-        `✅ ${noticias.count} notícias criadas com sucesso! ${chalk.gray(
+        `✅ ${noticiasResult.length} notícias criadas com sucesso! ${chalk.gray(
           `(${newsCreationTime}ms)`
         )}`
       )
@@ -981,6 +1032,234 @@ async function main() {
     )
     console.log('')
 
+    // Criar motoristas e veículos
+    console.log(chalk.blue.bold('🚗 Criando motoristas e veículos...'))
+    console.log(chalk.cyan('🚕 Gerando dados de transporte...'))
+
+    // Função para gerar motorista com dados realistas
+    const generateMotorista = (existingEmails: Set<string>) => {
+      const firstName = faker.person.firstName()
+      const lastName = faker.person.lastName()
+
+      // Gerar email único
+      let email: string
+      let attempts = 0
+      do {
+        email = faker.internet.email({ firstName, lastName }).toLowerCase()
+        attempts++
+        if (attempts > 10) {
+          email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}.driver.${Date.now()}@email.com`
+          break
+        }
+      } while (existingEmails.has(email))
+
+      existingEmails.add(email)
+
+      return {
+        nome: `${firstName} ${lastName}`,
+        telefone: generateValidPhoneNumber(),
+        email,
+        foto: faker.image.avatar(),
+        criadoEm: faker.date.past({ years: 0.3 }),
+        atualizadoEm: faker.date.recent({ days: 30 })
+      }
+    }
+
+    // Função para gerar veículo com dados realistas
+    const generateVeiculo = (motoristaId: string) => {
+      const marcas = [
+        'Toyota',
+        'Honda',
+        'Volkswagen',
+        'Chevrolet',
+        'Ford',
+        'Fiat',
+        'Hyundai',
+        'Nissan',
+        'Renault',
+        'Peugeot'
+      ]
+      const modelos = [
+        'Corolla',
+        'Civic',
+        'Gol',
+        'Onix',
+        'Ka',
+        'Uno',
+        'HB20',
+        'March',
+        'Sandero',
+        '208'
+      ]
+      const cores = [
+        'Branco',
+        'Prata',
+        'Preto',
+        'Azul',
+        'Vermelho',
+        'Cinza',
+        'Bege',
+        'Verde'
+      ]
+
+      // Gerar placa válida (formato antigo ou Mercosul)
+      const isMercosul = faker.datatype.boolean()
+      let placa: string
+
+      if (isMercosul) {
+        // Formato Mercosul: ABC1D23
+        placa =
+          faker.string.alpha({ length: 3, casing: 'upper' }) +
+          faker.string.numeric(1) +
+          faker.string.alpha({ length: 1, casing: 'upper' }) +
+          faker.string.numeric(2)
+      } else {
+        // Formato antigo: ABC1234
+        placa =
+          faker.string.alpha({ length: 3, casing: 'upper' }) +
+          faker.string.numeric(4)
+      }
+
+      const marca = faker.helpers.arrayElement(marcas)
+      const modelo = faker.helpers.arrayElement(modelos)
+      const cor = faker.helpers.arrayElement(cores)
+
+      // Gerar entre 1-3 fotos para o veículo
+      const numFotos = faker.number.int({ min: 1, max: 3 })
+      const fotos = []
+      for (let i = 0; i < numFotos; i++) {
+        fotos.push(
+          faker.image.urlLoremFlickr({
+            category: 'car',
+            width: 800,
+            height: 600
+          })
+        )
+      }
+
+      return {
+        placa,
+        marca,
+        modelo,
+        cor,
+        motoristaId,
+        fotos,
+        criadoEm: faker.date.past({ years: 0.3 }),
+        atualizadoEm: faker.date.recent({ days: 30 })
+      }
+    }
+
+    // Gerar 8 motoristas com emails únicos
+    const existingEmailsMotoristas = new Set<string>()
+    // Adicionar emails já existentes para evitar conflitos
+    usuariosData.forEach((user) => existingEmailsMotoristas.add(user.email))
+    profissionaisComTimestamps.forEach((prof) =>
+      existingEmailsMotoristas.add(prof.email)
+    )
+
+    const motoristasData = []
+    for (let i = 0; i < 8; i++) {
+      motoristasData.push(generateMotorista(existingEmailsMotoristas))
+    }
+
+    console.log(chalk.cyan('💾 Salvando motoristas no banco de dados...'))
+    const startDriverCreation = Date.now()
+
+    const motoristas = []
+    for (const motoristaData of motoristasData) {
+      const motorista = await prisma.motorista.create({
+        data: {
+          nome: motoristaData.nome,
+          telefone: motoristaData.telefone,
+          email: motoristaData.email,
+          foto: {
+            create: {
+              url: motoristaData.foto
+            }
+          },
+          criadoEm: motoristaData.criadoEm,
+          atualizadoEm: motoristaData.atualizadoEm
+        }
+      })
+      motoristas.push(motorista)
+    }
+
+    const driverCreationTime = Date.now() - startDriverCreation
+    console.log(
+      chalk.green(
+        `✅ ${motoristas.length} motoristas criados com sucesso! ${chalk.gray(
+          `(${driverCreationTime}ms)`
+        )}`
+      )
+    )
+
+    console.log(chalk.cyan('🚙 Criando veículos para os motoristas...'))
+    const startVehicleCreation = Date.now()
+
+    const veiculos = []
+    const placasUsadas = new Set<string>()
+
+    for (const motorista of motoristas) {
+      let veiculoData
+      let placaUnica
+
+      // Garantir que a placa seja única
+      do {
+        veiculoData = generateVeiculo(motorista.id)
+        placaUnica = veiculoData.placa
+      } while (placasUsadas.has(placaUnica))
+
+      placasUsadas.add(placaUnica)
+
+      const veiculo = await prisma.veiculo.create({
+        data: {
+          placa: veiculoData.placa,
+          marca: veiculoData.marca,
+          modelo: veiculoData.modelo,
+          cor: veiculoData.cor,
+          motorista: {
+            connect: { id: veiculoData.motoristaId }
+          },
+          fotos: {
+            create: veiculoData.fotos.map((url) => ({ url }))
+          },
+          criadoEm: veiculoData.criadoEm,
+          atualizadoEm: veiculoData.atualizadoEm
+        }
+      })
+      veiculos.push(veiculo)
+    }
+
+    const vehicleCreationTime = Date.now() - startVehicleCreation
+    console.log(
+      chalk.green(
+        `✅ ${veiculos.length} veículos criados com sucesso! ${chalk.gray(
+          `(${vehicleCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas das marcas
+    const marcaStats = veiculos.reduce((acc, veiculo) => {
+      acc[veiculo.marca] = (acc[veiculo.marca] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    console.log(chalk.gray('   • Marcas de veículos criadas:'))
+    Object.entries(marcaStats).forEach(([marca, count]) => {
+      console.log(chalk.gray(`     - ${marca}: ${count}`))
+    })
+
+    // Contar total de fotos de veículos
+    const totalFotosVeiculos = await prisma.foto.count({
+      where: { veiculoId: { not: null } }
+    })
+
+    console.log(
+      chalk.gray(`   • Total de fotos de veículos: ${totalFotosVeiculos}`)
+    )
+    console.log('')
+
     // Resumo final
     const totalTime = Date.now() - startTime
     console.log('')
@@ -999,13 +1278,13 @@ async function main() {
     console.log(
       chalk.white(
         `   👥 Profissionais: ${chalk.green.bold(
-          profissionais.count.toString()
+          profissionaisResult.length.toString()
         )}`
       )
     )
     console.log(
       chalk.white(
-        `   📰 Notícias: ${chalk.green.bold(noticias.count.toString())}`
+        `   📰 Notícias: ${chalk.green.bold(noticiasResult.length.toString())}`
       )
     )
     console.log(
@@ -1021,6 +1300,16 @@ async function main() {
     console.log(
       chalk.white(
         `   👍 Likes: ${chalk.green.bold(likesData.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   🚗 Motoristas: ${chalk.green.bold(motoristas.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   🚙 Veículos: ${chalk.green.bold(veiculos.length.toString())}`
       )
     )
     console.log('')

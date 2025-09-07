@@ -2,6 +2,7 @@ import { NoticiaResponseDTO } from '../../dtos/response/NoticiaResponseDTO'
 import { NoticiaCompletions } from '../../types/NoticiaTypes'
 
 import { capitalizeWords } from '../../utils/stringUtils'
+import { toFotoResponseDTO } from './fotoOutputMapper'
 
 /**
  * - Converte entidade Noticia completa para DTO de resposta
@@ -19,7 +20,7 @@ export function toNoticiaResponseDTO(
     dataPublicacao: noticia.dataPublicacao,
     categoria: capitalizeWords(noticia.categoria),
     criadoEm: noticia.criadoEm,
-    foto: noticia.foto ?? undefined,
+    foto: toFotoResponseDTO(noticia.foto),
     url: noticia.url ?? undefined
   }
 }

@@ -29,7 +29,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       }
     })
 
@@ -53,7 +54,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       }
     })
   }
@@ -75,7 +77,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       }
     })
   }
@@ -99,7 +102,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       }
     })
   }
@@ -114,7 +118,7 @@ export class ProfissionalDAO implements IProfissionalAccess {
     id: string,
     data: ProfissionalUpdateDTO
   ): Promise<ProfissionalCompletions> {
-    const dataToUpdate = generateDataProfissionalUpdate(data)
+    const dataToUpdate = await generateDataProfissionalUpdate(data, id)
 
     const profissional = await db.profissional.update({
       where: { id },
@@ -127,7 +131,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       }
     })
 
@@ -158,7 +163,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
           include: {
             likesUsuarios: true
           }
-        }
+        },
+        foto: true
       },
       orderBy: {
         nome: 'asc'

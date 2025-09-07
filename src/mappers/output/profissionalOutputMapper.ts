@@ -3,6 +3,7 @@ import { ProfissionalCompletions } from '../../types/ProfissionalTypes'
 
 import { capitalizeWords } from '../../utils/stringUtils'
 import { toComentarioResponseDTO } from './comentarioOutputMapper'
+import { toFotoResponseDTO } from './fotoOutputMapper'
 
 /**
  * - Converte entidade Profissional completa para DTO de resposta
@@ -16,7 +17,7 @@ export function toProfissionalResponseDTO(
   return {
     id: profissional.id,
     nome: profissional.nome,
-    foto: profissional.foto ?? undefined,
+    foto: toFotoResponseDTO(profissional.foto),
     telefone: profissional.telefone,
     email: profissional.email,
     especialidade: capitalizeWords(profissional.especialidade),

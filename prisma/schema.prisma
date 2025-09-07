@@ -14,37 +14,39 @@ model Noticia {
   dataPublicacao DateTime         @default(now())
   categoria      CategoriaNoticia
   url            String?
-  foto           String?
   criadoEm       DateTime         @default(now())
   atualizadoEm   DateTime         @updatedAt
+  foto           Foto?
 }
 
 model Profissional {
   id            String                    @id @default(uuid())
   nome          String
-  foto          String?
   telefone      String                    @unique
   email         String                    @unique
   especialidade EspecialidadeProfissional
-  comentarios   Comentario[]
   criadoEm      DateTime                  @default(now())
   atualizadoEm  DateTime                  @updatedAt
+  fotoId        String?
+  comentarios   Comentario[]
+  foto          Foto?
 }
 
 model Usuario {
   id               String       @id @default(uuid())
   nome             String
   telefone         String       @unique
-  foto             String?
   email            String       @unique
   senha            String
   tipo             TipoUsuario  @default(USUARIO)
-  endereco         Endereco?
-  comentarios      Comentario[]
-  likesComentarios Like[]
-  mobilidades      Mobilidade[]
   criadoEm         DateTime     @default(now())
   atualizadoEm     DateTime     @updatedAt
+  fotoId           String?
+  comentarios      Comentario[]
+  endereco         Endereco?
+  foto             Foto?
+  likesComentarios Like[]
+  mobilidades      Mobilidade[]
 }
 
 model Endereco {
@@ -58,26 +60,22 @@ model Endereco {
   estado       String
   pais         String   @default("Brasil")
   usuarioId    String   @unique
-  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }
 
 model Comentario {
-  id       String  @id @default(uuid())
-  conteudo String
-  visivel  Boolean @default(true)
-
-  usuarioId String
-  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
+  id             String        @id @default(uuid())
+  conteudo       String
+  visivel        Boolean       @default(true)
+  usuarioId      String
   profissionalId String?
-  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
-
-  likesUsuarios Like[]
-
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  criadoEm       DateTime      @default(now())
+  atualizadoEm   DateTime      @updatedAt
+  profissional   Profissional? @relation(fields: [profissionalId], references: [id])
+  usuario        Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  likesUsuarios  Like[]
 
   @@index([usuarioId])
   @@index([profissionalId])
@@ -86,10 +84,10 @@ model Comentario {
 model Like {
   id           String     @id @default(uuid())
   usuarioId    String
-  usuario      Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   comentarioId String
-  comentario   Comentario @relation(fields: [comentarioId], references: [id], onDelete: Cascade)
   criadoEm     DateTime   @default(now())
+  comentario   Comentario @relation(fields: [comentarioId], references: [id], onDelete: Cascade)
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, comentarioId])
   @@index([comentarioId])
@@ -103,9 +101,50 @@ model Mobilidade {
   dataRegistro DateTime         @default(now())
   status       StatusMobilidade @default(PENDENTE)
   usuarioId    String?
-  usuario      Usuario?         @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
   criadoEm     DateTime         @default(now())
   atualizadoEm DateTime         @updatedAt
+  usuario      Usuario?         @relation(fields: [usuarioId], references: [id])
+}
+
+model Motorista {
+  id           String   @id @default(uuid())
+  nome         String
+  telefone     String   @unique
+  email        String   @unique
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  foto         Foto?
+  veiculo      Veiculo?
+}
+
+model Veiculo {
+  id           String    @id @default(uuid())
+  placa        String    @unique
+  marca        String
+  modelo       String
+  cor          String
+  motoristaId  String    @unique
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  fotos        Foto[]
+  motorista    Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
+}
+
+model Foto {
+  id             String        @id @default(uuid())
+  url            String
+  noticiaId      String?       @unique
+  ProfissionalId String?       @unique
+  usuarioId      String?       @unique
+  veiculoId      String?
+  motoristaId    String?       @unique
+  criadoEm       DateTime      @default(now())
+  atualizadoEm   DateTime      @updatedAt
+  motorista      Motorista?    @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
+  veiculo        Veiculo?      @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  usuario        Usuario?      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  Profissional   Profissional? @relation(fields: [ProfissionalId], references: [id], onDelete: Cascade)
+  noticia        Noticia?      @relation(fields: [noticiaId], references: [id], onDelete: Cascade)
 }
 
 enum CategoriaNoticia {

@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { db } from '../database/prisma'
 import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
 import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
 import { hashPassword } from '../utils/passwordUtils'
@@ -22,7 +23,11 @@ export async function generateDataUsuarioCreate({
   return {
     nome,
     telefone,
-    foto: foto ?? null,
+    foto: {
+      create: {
+        url: foto ?? ''
+      }
+    },
     email,
     senha: hashedPassword,
     endereco: {
@@ -45,16 +50,13 @@ export async function generateDataUsuarioCreate({
  * - Converte DTO de atualização em input do Prisma, incluindo upsert do endereço
  * - Apenas campos definidos são incluídos na atualização
  * @param {UsuarioUpdateDTO} data - Dados de atualização vindos do DTO
+ * @param {string} usuarioId - ID do usuário que está sendo atualizado
  * @returns {Promise<Prisma.UsuarioUpdateInput>} Dados formatados para o Prisma
  */
-export async function generateDataUsuarioUpdate({
-  nome,
-  telefone,
-  foto,
-  email,
-  senha,
-  endereco
-}: UsuarioUpdateDTO): Promise<Prisma.UsuarioUpdateInput> {
+export async function generateDataUsuarioUpdate(
+  { nome, telefone, foto, email, senha, endereco }: UsuarioUpdateDTO,
+  usuarioId: string
+): Promise<Prisma.UsuarioUpdateInput> {
   const dataToUpdate: Prisma.UsuarioUpdateInput = {}
 
   if (nome !== undefined) {
@@ -64,7 +66,29 @@ export async function generateDataUsuarioUpdate({
     dataToUpdate.telefone = telefone
   }
   if (foto !== undefined) {
-    dataToUpdate.foto = foto
+    await db.$transaction(async (tx) => {
+      const usuario = await tx.usuario.findUnique({
+        where: { id: usuarioId },
+        include: { foto: true }
+      })
+
+      if (!usuario) {
+        throw new Error('Usuário não encontrado')
+      }
+
+      // Se não houver foto associada, cria uma nova
+      if (!usuario.foto) {
+        dataToUpdate.foto = { create: { url: foto } }
+      }
+
+      // Se já houver uma foto associada e ela for diferente da nova
+      if (usuario.foto && usuario.foto.url !== foto) {
+        await tx.foto.delete({ where: { id: usuario.foto.id } })
+
+        // Cria uma nova foto
+        dataToUpdate.foto = { create: { url: foto } }
+      }
+    })
   }
   if (email !== undefined) {
     dataToUpdate.email = email

@@ -23,7 +23,8 @@ export class NoticiaDAO implements INoticiaAccess {
     const dataToCreate = generateDataNoticiaCreate(data)
 
     const noticia = await db.noticia.create({
-      data: dataToCreate
+      data: dataToCreate,
+      include: { foto: true }
     })
 
     return noticia
@@ -36,7 +37,8 @@ export class NoticiaDAO implements INoticiaAccess {
    */
   async findById(id: string): Promise<NoticiaCompletions | null> {
     return await db.noticia.findUnique({
-      where: { id }
+      where: { id },
+      include: { foto: true }
     })
   }
 
@@ -50,11 +52,12 @@ export class NoticiaDAO implements INoticiaAccess {
     id: string,
     data: NoticiaUpdateDTO
   ): Promise<NoticiaCompletions> {
-    const dataToUpdate = generateDataNoticiaUpdate(data)
+    const dataToUpdate = await generateDataNoticiaUpdate(data, id)
 
     const noticia = await db.noticia.update({
       where: { id },
-      data: dataToUpdate
+      data: dataToUpdate,
+      include: { foto: true }
     })
 
     return noticia
@@ -78,7 +81,8 @@ export class NoticiaDAO implements INoticiaAccess {
     return await db.noticia.findMany({
       orderBy: {
         dataPublicacao: 'desc'
-      }
+      },
+      include: { foto: true }
     })
   }
 }

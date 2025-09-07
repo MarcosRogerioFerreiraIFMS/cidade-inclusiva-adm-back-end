@@ -1,3 +1,5 @@
+import { FotoResponseDTO } from './FotoResponseDTO'
+
 /**
  * - DTO (Data Transfer Object) de resposta para usuário
  * - Define a estrutura dos dados de usuário retornados pela API
@@ -11,7 +13,7 @@ export interface UsuarioResponseDTO {
   /** Número de telefone do usuário */
   telefone: string
   /** URL da foto do perfil (opcional) */
-  foto?: string
+  foto?: FotoResponseDTO
   /** Endereço de email do usuário */
   email: string
   /** Endereço completo do usuário (opcional) */

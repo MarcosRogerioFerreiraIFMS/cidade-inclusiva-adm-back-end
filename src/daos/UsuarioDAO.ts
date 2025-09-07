@@ -23,7 +23,8 @@ export class UsuarioDAO implements IUsuarioAccess {
     return await db.usuario.create({
       data: dataToCreate,
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }
@@ -37,7 +38,8 @@ export class UsuarioDAO implements IUsuarioAccess {
     return await db.usuario.findUnique({
       where: { id },
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }
@@ -51,7 +53,8 @@ export class UsuarioDAO implements IUsuarioAccess {
     return await db.usuario.findUnique({
       where: { email },
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }
@@ -65,7 +68,8 @@ export class UsuarioDAO implements IUsuarioAccess {
     return await db.usuario.findUnique({
       where: { telefone },
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }
@@ -80,13 +84,14 @@ export class UsuarioDAO implements IUsuarioAccess {
     id: string,
     data: UsuarioUpdateDTO
   ): Promise<UsuarioCompletions> {
-    const dataToUpdate = await generateDataUsuarioUpdate(data)
+    const dataToUpdate = await generateDataUsuarioUpdate(data, id)
 
     return await db.usuario.update({
       where: { id },
       data: dataToUpdate,
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }
@@ -109,7 +114,8 @@ export class UsuarioDAO implements IUsuarioAccess {
   async findAll(): Promise<UsuarioCompletions[]> {
     return await db.usuario.findMany({
       include: {
-        endereco: true
+        endereco: true,
+        foto: true
       }
     })
   }

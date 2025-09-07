@@ -1,3 +1,5 @@
+import { FotoResponseDTO } from './FotoResponseDTO'
+
 /**
  * - DTO (Data Transfer Object) de resposta para notícia
  * - Define a estrutura dos dados de notícia retornados pela API
@@ -6,7 +8,7 @@ export interface NoticiaResponseDTO {
   /** ID único da notícia */
   id: string
   /** URL da imagem da notícia (opcional) */
-  foto?: string
+  foto?: FotoResponseDTO
   /** Título da notícia */
   titulo: string
   /** Conteúdo completo da notícia */

@@ -1,0 +1,58 @@
+import { MotoristaCreateDTO } from '../../dtos/create/MotoristaCreateDTO'
+import { MotoristaUpdateDTO } from '../../dtos/update/MotoristaUpdateDTO'
+import { MotoristaCompletions } from '../../types/MotoristaTypes'
+
+/**
+ * Interface de acesso a dados de motoristas
+ * Define os contratos para operações de persistência e consulta no repositório/DAO
+ */
+export interface IMotoristaAccess {
+  /**
+   * Cria um novo motorista
+   * @param data - Dados do motorista a ser criado
+   * @returns Promise com o motorista criado incluindo relacionamentos
+   */
+  create(data: MotoristaCreateDTO): Promise<MotoristaCompletions>
+
+  /**
+   * Busca um motorista por ID
+   * @param id - ID único do motorista
+   * @returns Promise com o motorista encontrado ou null se não existir
+   */
+  findById(id: string): Promise<MotoristaCompletions | null>
+
+  /**
+   * Busca um motorista por telefone
+   * @param telefone - Telefone do motorista
+   * @returns Promise com o motorista encontrado ou null se não existir
+   */
+  findByTelefone(telefone: string): Promise<MotoristaCompletions | null>
+
+  /**
+   * Busca um motorista por email
+   * @param email - Email do motorista
+   * @returns Promise com o motorista encontrado ou null se não existir
+   */
+  findByEmail(email: string): Promise<MotoristaCompletions | null>
+
+  /**
+   * Lista todos os motoristas
+   * @returns Promise com array de todos os motoristas
+   */
+  findAll(): Promise<MotoristaCompletions[]>
+
+  /**
+   * Atualiza os dados de um motorista
+   * @param id - ID único do motorista
+   * @param data - Dados a serem atualizados
+   * @returns Promise com o motorista atualizado
+   */
+  update(id: string, data: MotoristaUpdateDTO): Promise<MotoristaCompletions>
+
+  /**
+   * Remove um motorista do sistema
+   * @param id - ID único do motorista a ser removido
+   * @returns Promise vazia
+   */
+  delete(id: string): Promise<void>
+}

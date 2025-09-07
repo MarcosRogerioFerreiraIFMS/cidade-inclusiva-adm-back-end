@@ -58,23 +58,23 @@ export const usuarioOperations = {
   /** GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um */
   viewProfile: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO)
+    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
+    validateUUID('id')
   ],
 
   /** PUT /usuarios/:id - Usuário pode editar próprio perfil, admin pode editar qualquer um */
   updateProfile: [
     authMiddleware,
+    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
     validateUUID('id'),
-    validateRequiredBody([]),
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO)
+    validateRequiredBody([])
   ],
 
   /** DELETE /usuarios/:id - Usuário pode deletar próprio perfil, admin pode deletar qualquer um */
   deleteProfile: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO)
+    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
+    validateUUID('id')
   ],
 
   /** POST /usuarios - Registro público (não requer autenticação) */
@@ -157,8 +157,8 @@ export const comentarioOperations = {
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
   view: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
+    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
+    validateUUID('id')
   ],
 
   /** GET /comentarios/visiveis - Público pode visualizar comentários visíveis */
@@ -170,16 +170,16 @@ export const comentarioOperations = {
   /** PUT /comentarios/:id - Apenas o autor ou admin podem editar */
   update: [
     authMiddleware,
+    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id'),
-    validateRequiredBody([]),
-    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
+    validateRequiredBody([])
   ],
 
   /** DELETE /comentarios/:id - Apenas o autor ou admin podem deletar */
   delete: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO)
+    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
+    validateUUID('id')
   ],
 
   /** GET /comentarios/profissional/:profissionalId - Público pode visualizar comentários de um profissional */
@@ -192,7 +192,7 @@ export const comentarioOperations = {
   ],
 
   /** GET /comentarios/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus comentários */
-  findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin]
+  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
 }
 
 /**
@@ -206,23 +206,23 @@ export const likeOperations = {
   /** PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos */
   toggle: [
     authMiddleware,
+    requireSelfLikeAction, // Verifica se o usuário pode dar like por si mesmo
     validateUUID('usuarioId'),
-    validateUUID('comentarioId'),
-    requireSelfLikeAction // Verifica se o usuário pode dar like por si mesmo
+    validateUUID('comentarioId')
   ],
 
   /** DELETE /likes/:id - Apenas o autor ou admin podem deletar */
   delete: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.LIKE)
+    requireOwnershipOrAdmin(TipoRecurso.LIKE),
+    validateUUID('id')
   ],
 
   /** GET /likes/comentario/:comentarioId - Público pode visualizar likes de um comentário */
   findByComment: [optionalAuthMiddleware, validateUUID('comentarioId')],
 
   /** GET /likes/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus likes */
-  findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin]
+  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
 }
 
 /**
@@ -257,23 +257,83 @@ export const mobilidadeOperations = {
   /** PUT /mobilidades/:id - Proprietário ou admin podem editar */
   update: [
     authMiddleware,
+    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
     validateUUID('id'),
-    validateRequiredBody([]),
-    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE)
+    validateRequiredBody([])
   ],
 
   /** DELETE /mobilidades/:id - Proprietário ou admin podem deletar */
   delete: [
     authMiddleware,
-    validateUUID('id'),
-    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE)
+    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
+    validateUUID('id')
   ],
 
   /** GET /mobilidades/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver suas mobilidades */
-  findByUser: [authMiddleware, validateUUID('usuarioId'), requireSelfOrAdmin],
+  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')],
 
   /** GET /mobilidades/status/:status - Público pode visualizar por status */
   findByStatus: [optionalAuthMiddleware]
+}
+
+/**
+ * - Middlewares para operações de MOTORISTAS
+ * - Incluem validações específicas para gerenciamento de dados de motoristas
+ */
+export const motoristaOperations = {
+  /** GET /motoristas - Público pode visualizar */
+  list: [optionalAuthMiddleware],
+
+  /** GET /motoristas/:id - Público pode visualizar */
+  view: [optionalAuthMiddleware, validateUUID('id')],
+
+  /** POST /motoristas - Apenas administradores podem criar */
+  create: [
+    authMiddleware,
+    requireAdmin,
+    validateRequiredBody(['nome', 'cpf', 'email', 'telefone'])
+  ],
+
+  /** PUT /motoristas/:id - Apenas administradores podem editar */
+  update: [
+    authMiddleware,
+    requireAdmin,
+    validateUUID('id'),
+    validateRequiredBody([])
+  ],
+
+  /** DELETE /motoristas/:id - Apenas administradores podem deletar */
+  delete: [authMiddleware, requireAdmin, validateUUID('id')]
+}
+
+/**
+ * - Middlewares para operações de VEÍCULOS
+ * - Incluem validações específicas para gerenciamento de dados de veículos
+ */
+export const veiculoOperations = {
+  /** GET /veiculos - Público pode visualizar */
+  list: [optionalAuthMiddleware],
+
+  /** GET /veiculos/:id - Público pode visualizar */
+  view: [optionalAuthMiddleware, validateUUID('id')],
+
+  /** POST /veiculos - Apenas administradores podem criar */
+  create: [
+    authMiddleware,
+    requireAdmin,
+    validateRequiredBody(['placa', 'marca', 'modelo', 'cor', 'motoristaId'])
+  ],
+
+  /** PUT /veiculos/:id - Apenas administradores podem editar */
+  update: [
+    authMiddleware,
+    requireAdmin,
+    validateUUID('id'),
+    validateRequiredBody([])
+  ],
+
+  /** DELETE /veiculos/:id - Apenas administradores podem deletar */
+  delete: [authMiddleware, requireAdmin, validateUUID('id')]
 }
 
 /**

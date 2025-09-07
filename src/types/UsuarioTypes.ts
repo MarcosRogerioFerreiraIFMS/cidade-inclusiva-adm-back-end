@@ -6,5 +6,5 @@ import { Prisma } from '@prisma/client'
  * Utilizado para operações que necessitam de dados completos do usuário
  */
 export type UsuarioCompletions = Prisma.UsuarioGetPayload<{
-  include: { endereco: true }
+  include: { endereco: true; foto: true }
 }>

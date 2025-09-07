@@ -1,4 +1,5 @@
 import { ComentarioResponseDTO } from './ComentarioResponseDTO'
+import { FotoResponseDTO } from './FotoResponseDTO'
 
 /**
  * - DTO (Data Transfer Object) de resposta para profissional
@@ -11,7 +12,7 @@ export interface ProfissionalResponseDTO {
   /** Nome completo do profissional */
   nome: string
   /** URL da foto do perfil (opcional) */
-  foto?: string
+  foto?: FotoResponseDTO
   /** Número de telefone do profissional */
   telefone: string
   /** Endereço de email do profissional */

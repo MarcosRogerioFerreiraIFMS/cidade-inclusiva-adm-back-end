@@ -11,9 +11,11 @@ import { AuthRoutes } from './routes/AuthRoutes'
 import { ComentarioRoutes } from './routes/ComentarioRoutes'
 import { LikeRoutes } from './routes/LikeRoutes'
 import { MobilidadeRoutes } from './routes/MobilidadeRoutes'
+import { MotoristaRoutes } from './routes/MotoristaRoutes'
 import { NoticiaRoutes } from './routes/NoticiaRoutes'
 import { ProfissionalRoutes } from './routes/ProfissionalRoutes'
 import { UsuarioRoutes } from './routes/UsuarioRoutes'
+import { VeiculoRoutes } from './routes/VeiculoRoutes'
 
 /**
  * Instância principal da aplicação Express
@@ -56,6 +58,8 @@ app.use(ROUTES.COMENTARIO, ComentarioRoutes)
 app.use(ROUTES.USUARIO, UsuarioRoutes)
 app.use(ROUTES.LIKE, LikeRoutes)
 app.use(ROUTES.MOBILIDADE, MobilidadeRoutes)
+app.use(ROUTES.MOTORISTA, MotoristaRoutes)
+app.use(ROUTES.VEICULO, VeiculoRoutes)
 
 /**
  * Handler para rotas não encontradas

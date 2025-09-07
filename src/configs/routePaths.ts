@@ -17,5 +17,9 @@ export const ROUTES = {
   /** Rotas para operações de autenticação */
   AUTH: '/auth',
   /** Rotas para operações de mobilidade */
-  MOBILIDADE: '/mobilidades'
+  MOBILIDADE: '/mobilidades',
+  /** Rotas para operações de motoristas */
+  MOTORISTA: '/motoristas',
+  /** Rotas para operações de veículos */
+  VEICULO: '/veiculos'
 } as const

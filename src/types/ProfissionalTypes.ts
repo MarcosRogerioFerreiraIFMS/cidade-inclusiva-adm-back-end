@@ -12,5 +12,6 @@ export type ProfissionalCompletions = Prisma.ProfissionalGetPayload<{
         likesUsuarios: true
       }
     }
+    foto: true
   }
 }>

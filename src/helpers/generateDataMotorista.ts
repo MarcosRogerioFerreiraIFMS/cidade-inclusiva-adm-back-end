@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 import { MotoristaCreateDTO } from '../dtos/create/MotoristaCreateDTO'
 import { MotoristaUpdateDTO } from '../dtos/update/MotoristaUpdateDTO'
+import {
+  generateDataFotoMotoristaCreate,
+  generateDataFotoMotoristaUpdate
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de motorista no Prisma
@@ -19,13 +22,7 @@ export function generateDataMotoristaCreate({
     nome,
     telefone,
     email,
-    foto: foto
-      ? {
-          create: {
-            url: foto
-          }
-        }
-      : undefined
+    foto: generateDataFotoMotoristaCreate(foto)
   }
 }
 
@@ -53,29 +50,10 @@ export async function generateDataMotoristaUpdate(
     dataToUpdate.email = email
   }
   if (foto !== undefined) {
-    await db.$transaction(async (tx) => {
-      const motorista = await tx.motorista.findUnique({
-        where: { id: motoristaId },
-        include: { foto: true }
-      })
-
-      if (!motorista) {
-        throw new Error('Motorista não encontrado')
-      }
-
-      // Se não houver foto associada, cria uma nova
-      if (!motorista.foto) {
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-
-      // Se já houver uma foto associada e ela for diferente da nova
-      if (motorista.foto && motorista.foto.url !== foto) {
-        await tx.foto.delete({ where: { id: motorista.foto.id } })
-
-        // Cria uma nova foto
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-    })
+    const fotoUpdate = await generateDataFotoMotoristaUpdate(foto, motoristaId)
+    if (fotoUpdate) {
+      dataToUpdate.foto = fotoUpdate
+    }
   }
 
   return dataToUpdate

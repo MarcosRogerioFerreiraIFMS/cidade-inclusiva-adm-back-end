@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 import { VeiculoCreateDTO } from '../dtos/create/VeiculoCreateDTO'
 import { VeiculoUpdateDTO } from '../dtos/update/VeiculoUpdateDTO'
+import {
+  generateDataFotosVeiculoCreate,
+  generateDataFotosVeiculoUpdate
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de veículo no Prisma
@@ -27,12 +30,7 @@ export function generateDataVeiculoCreate({
         id: motoristaId
       }
     },
-    fotos:
-      fotos.length > 0
-        ? {
-            create: fotos.map((url) => ({ url }))
-          }
-        : undefined
+    fotos: generateDataFotosVeiculoCreate(fotos)
   }
 }
 
@@ -70,41 +68,10 @@ export async function generateDataVeiculoUpdate(
     }
   }
   if (fotos !== undefined) {
-    await db.$transaction(async (tx) => {
-      const veiculo = await tx.veiculo.findUnique({
-        where: { id: veiculoId },
-        include: { fotos: true }
-      })
-
-      if (!veiculo) {
-        throw new Error('Veículo não encontrado')
-      }
-
-      // Remove apenas as fotos que não estão nas URLs passadas
-      const existingFotos = veiculo.fotos.map((foto) => foto.url)
-      const fotosToRemove = existingFotos.filter(
-        (urlExisting) => !fotos.includes(urlExisting)
-      )
-
-      if (fotosToRemove.length > 0) {
-        await tx.foto.deleteMany({
-          where: {
-            veiculoId: veiculoId,
-            url: {
-              in: fotosToRemove
-            }
-          }
-        })
-      }
-
-      // Adiciona apenas as novas fotos (que não existem)
-      const newfotos = fotos.filter((url) => !existingFotos.includes(url))
-      if (newfotos.length > 0) {
-        dataToUpdate.fotos = {
-          create: newfotos.map((url) => ({ url }))
-        }
-      }
-    })
+    const fotosUpdate = await generateDataFotosVeiculoUpdate(fotos, veiculoId)
+    if (fotosUpdate) {
+      dataToUpdate.fotos = fotosUpdate
+    }
   }
 
   return dataToUpdate

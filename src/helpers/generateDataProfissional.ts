@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 import { ProfissionalCreateDTO } from '../dtos/create/ProfissionalCreateDTO'
 import { ProfissionalUpdateDTO } from '../dtos/update/ProfissionalUpdateDTO'
+import {
+  generateDataFotoProfissionalCreate,
+  generateDataFotoProfissionalUpdate
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de profissional no Prisma
@@ -18,11 +21,7 @@ export function generateDataProfissionalCreate({
 }: ProfissionalCreateDTO): Prisma.ProfissionalCreateInput {
   return {
     nome,
-    foto: {
-      create: {
-        url: foto ?? ''
-      }
-    },
+    foto: generateDataFotoProfissionalCreate(foto),
     telefone,
     email,
     especialidade
@@ -47,29 +46,13 @@ export async function generateDataProfissionalUpdate(
     dataToUpdate.nome = nome
   }
   if (foto !== undefined) {
-    await db.$transaction(async (tx) => {
-      const profissional = await tx.profissional.findUnique({
-        where: { id: profissionalId },
-        include: { foto: true }
-      })
-
-      if (!profissional) {
-        throw new Error('Profissional não encontrado')
-      }
-
-      // Se não houver foto associada, cria uma nova
-      if (!profissional.foto) {
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-
-      // Se já houver uma foto associada e ela for diferente da nova
-      if (profissional.foto && profissional.foto.url !== foto) {
-        await tx.foto.delete({ where: { id: profissional.foto.id } })
-
-        // Cria uma nova foto
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-    })
+    const fotoUpdate = await generateDataFotoProfissionalUpdate(
+      foto,
+      profissionalId
+    )
+    if (fotoUpdate) {
+      dataToUpdate.foto = fotoUpdate
+    }
   }
   if (telefone !== undefined) {
     dataToUpdate.telefone = telefone

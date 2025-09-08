@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 import { NoticiaCreateDTO } from '../dtos/create/NoticiaCreateDTO'
 import { NoticiaUpdateDTO } from '../dtos/update/NoticiaUpdateDTO'
+import {
+  generateDataFotoNoticiaCreate,
+  generateDataFotoNoticiaUpdate
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de notícia no Prisma
@@ -21,11 +24,7 @@ export function generateDataNoticiaCreate({
     titulo,
     conteudo,
     url: url ?? '',
-    foto: {
-      create: {
-        url: foto ?? ''
-      }
-    },
+    foto: generateDataFotoNoticiaCreate(foto),
     categoria,
     dataPublicacao: dataPublicacao ? new Date(dataPublicacao) : new Date()
   }
@@ -55,29 +54,10 @@ export async function generateDataNoticiaUpdate(
     dataToUpdate.url = url
   }
   if (foto !== undefined) {
-    await db.$transaction(async (tx) => {
-      const noticia = await tx.noticia.findUnique({
-        where: { id: noticiaId },
-        include: { foto: true }
-      })
-
-      if (!noticia) {
-        throw new Error('Notícia não encontrada')
-      }
-
-      // Se não houver foto associada, cria uma nova
-      if (!noticia.foto) {
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-
-      // Se já houver uma foto associada e ela for diferente da nova
-      if (noticia.foto && noticia.foto.url !== foto) {
-        await tx.foto.delete({ where: { id: noticia.foto.id } })
-
-        // Cria uma nova foto
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-    })
+    const fotoUpdate = await generateDataFotoNoticiaUpdate(foto, noticiaId)
+    if (fotoUpdate) {
+      dataToUpdate.foto = fotoUpdate
+    }
   }
 
   if (categoria !== undefined) {

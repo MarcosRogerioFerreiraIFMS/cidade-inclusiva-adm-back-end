@@ -1,8 +1,11 @@
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
 import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
 import { hashPassword } from '../utils/passwordUtils'
+import {
+  generateDataFotoUsuarioCreate,
+  generateDataFotoUsuarioUpdate
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de usuário no Prisma
@@ -23,11 +26,7 @@ export async function generateDataUsuarioCreate({
   return {
     nome,
     telefone,
-    foto: {
-      create: {
-        url: foto ?? ''
-      }
-    },
+    foto: generateDataFotoUsuarioCreate(foto),
     email,
     senha: hashedPassword,
     endereco: {
@@ -66,29 +65,10 @@ export async function generateDataUsuarioUpdate(
     dataToUpdate.telefone = telefone
   }
   if (foto !== undefined) {
-    await db.$transaction(async (tx) => {
-      const usuario = await tx.usuario.findUnique({
-        where: { id: usuarioId },
-        include: { foto: true }
-      })
-
-      if (!usuario) {
-        throw new Error('Usuário não encontrado')
-      }
-
-      // Se não houver foto associada, cria uma nova
-      if (!usuario.foto) {
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-
-      // Se já houver uma foto associada e ela for diferente da nova
-      if (usuario.foto && usuario.foto.url !== foto) {
-        await tx.foto.delete({ where: { id: usuario.foto.id } })
-
-        // Cria uma nova foto
-        dataToUpdate.foto = { create: { url: foto } }
-      }
-    })
+    const fotoUpdate = await generateDataFotoUsuarioUpdate(foto, usuarioId)
+    if (fotoUpdate) {
+      dataToUpdate.foto = fotoUpdate
+    }
   }
   if (email !== undefined) {
     dataToUpdate.email = email

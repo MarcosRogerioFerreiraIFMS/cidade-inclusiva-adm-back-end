@@ -106,6 +106,7 @@ export const authMiddleware = async (
  * - Middleware de autenticação opcional que valida o token JWT quando presente
  * - Permite requisições mesmo sem token, mas autentica se fornecido
  * - Verifica se o userId do token existe no banco de dados quando token for válido
+ * - Pode ser usado para mudar comportamento de rotas públicas quando usuário está logado
  * @param {AuthenticatedRequest} req - Request com dados do usuário autenticado (opcional)
  * @param {Response} _res - Response do Express (não utilizado)
  * @param {NextFunction} next - Função para continuar para o próximo middleware

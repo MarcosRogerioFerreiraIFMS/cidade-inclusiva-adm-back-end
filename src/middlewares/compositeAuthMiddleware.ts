@@ -53,7 +53,7 @@ export const userOnly = [authMiddleware, requireRole([TipoUsuario.USUARIO])]
  */
 export const usuarioOperations = {
   /** GET /usuarios - Apenas admins podem listar todos os usuários */
-  listAll: [authMiddleware, requireAdmin],
+  listAll: [adminOnly],
 
   /** GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um */
   viewProfile: [
@@ -83,7 +83,7 @@ export const usuarioOperations = {
   ],
 
   /** GET /usuarios/email/:email - Apenas admins podem buscar por email */
-  findByEmail: [authMiddleware, requireAdmin]
+  findByEmail: [adminOnly]
 }
 
 /**
@@ -92,28 +92,22 @@ export const usuarioOperations = {
  */
 export const noticiaOperations = {
   /** GET /noticias - Público pode visualizar, mas dados extras para usuários autenticados */
-  list: [optionalAuthMiddleware],
+  list: [],
 
   /** GET /noticias/:id - Público pode visualizar, mas dados extras para usuários autenticados */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** POST /noticias - Apenas admins podem criar */
   create: [
-    authMiddleware,
-    requireAdmin,
+    adminOnly,
     validateRequiredBody(['titulo', 'conteudo', 'categoria'])
   ],
 
   /** PUT /noticias/:id - Apenas admins podem editar */
-  update: [
-    authMiddleware,
-    requireAdmin,
-    validateUUID('id'),
-    validateRequiredBody([])
-  ],
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /noticias/:id - Apenas admins podem deletar */
-  delete: [authMiddleware, requireAdmin, validateUUID('id')]
+  delete: [adminOnly, validateUUID('id')]
 }
 
 /**
@@ -122,28 +116,22 @@ export const noticiaOperations = {
  */
 export const profissionalOperations = {
   /** GET /profissionais - Público pode visualizar */
-  list: [optionalAuthMiddleware],
+  list: [],
 
   /** GET /profissionais/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** POST /profissionais - Apenas admins podem criar */
   create: [
-    authMiddleware,
-    requireAdmin,
+    adminOnly,
     validateRequiredBody(['nome', 'telefone', 'email', 'especialidade'])
   ],
 
   /** PUT /profissionais/:id - Apenas admins podem editar */
-  update: [
-    authMiddleware,
-    requireAdmin,
-    validateUUID('id'),
-    validateRequiredBody([])
-  ],
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /profissionais/:id - Apenas admins podem deletar */
-  delete: [authMiddleware, requireAdmin, validateUUID('id')]
+  delete: [adminOnly, validateUUID('id')]
 }
 
 /**
@@ -152,7 +140,7 @@ export const profissionalOperations = {
  */
 export const comentarioOperations = {
   /** GET /comentarios - Apenas administradores podem visualizar */
-  list: [authMiddleware, requireAdmin],
+  list: [adminOnly],
 
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
   view: [
@@ -162,7 +150,7 @@ export const comentarioOperations = {
   ],
 
   /** GET /comentarios/visiveis - Público pode visualizar comentários visíveis */
-  findVisible: [optionalAuthMiddleware],
+  findVisible: [],
 
   /** POST /comentarios - Apenas usuários autenticados podem criar */
   create: [authMiddleware, validateRequiredBody(['conteudo', 'entidadeId'])],
@@ -183,13 +171,10 @@ export const comentarioOperations = {
   ],
 
   /** GET /comentarios/profissional/:profissionalId - Público pode visualizar comentários de um profissional */
-  findByProfessional: [optionalAuthMiddleware, validateUUID('profissionalId')],
+  findByProfessional: [validateUUID('profissionalId')],
 
   /** GET /comentarios/profissional/:profissionalId/visiveis - Público pode visualizar comentários visíveis */
-  findVisibleByProfessional: [
-    optionalAuthMiddleware,
-    validateUUID('profissionalId')
-  ],
+  findVisibleByProfessional: [validateUUID('profissionalId')],
 
   /** GET /comentarios/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus comentários */
   findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
@@ -201,7 +186,7 @@ export const comentarioOperations = {
  */
 export const likeOperations = {
   /** GET /likes/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos */
   toggle: [
@@ -219,7 +204,7 @@ export const likeOperations = {
   ],
 
   /** GET /likes/comentario/:comentarioId - Público pode visualizar likes de um comentário */
-  findByComment: [optionalAuthMiddleware, validateUUID('comentarioId')],
+  findByComment: [validateUUID('comentarioId')],
 
   /** GET /likes/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus likes */
   findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
@@ -243,10 +228,10 @@ export const authOperations = {
  */
 export const mobilidadeOperations = {
   /** GET /mobilidades - Público pode visualizar */
-  list: [optionalAuthMiddleware],
+  list: [],
 
   /** GET /mobilidades/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** POST /mobilidades - Usuários autenticados podem criar */
   create: [
@@ -273,7 +258,7 @@ export const mobilidadeOperations = {
   findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')],
 
   /** GET /mobilidades/status/:status - Público pode visualizar por status */
-  findByStatus: [optionalAuthMiddleware]
+  findByStatus: []
 }
 
 /**
@@ -282,28 +267,22 @@ export const mobilidadeOperations = {
  */
 export const motoristaOperations = {
   /** GET /motoristas - Público pode visualizar */
-  list: [optionalAuthMiddleware],
+  list: [],
 
   /** GET /motoristas/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** POST /motoristas - Apenas administradores podem criar */
   create: [
-    authMiddleware,
-    requireAdmin,
+    adminOnly,
     validateRequiredBody(['nome', 'cpf', 'email', 'telefone'])
   ],
 
   /** PUT /motoristas/:id - Apenas administradores podem editar */
-  update: [
-    authMiddleware,
-    requireAdmin,
-    validateUUID('id'),
-    validateRequiredBody([])
-  ],
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /motoristas/:id - Apenas administradores podem deletar */
-  delete: [authMiddleware, requireAdmin, validateUUID('id')]
+  delete: [adminOnly, validateUUID('id')]
 }
 
 /**
@@ -312,28 +291,22 @@ export const motoristaOperations = {
  */
 export const veiculoOperations = {
   /** GET /veiculos - Público pode visualizar */
-  list: [optionalAuthMiddleware],
+  list: [],
 
   /** GET /veiculos/:id - Público pode visualizar */
-  view: [optionalAuthMiddleware, validateUUID('id')],
+  view: [validateUUID('id')],
 
   /** POST /veiculos - Apenas administradores podem criar */
   create: [
-    authMiddleware,
-    requireAdmin,
+    adminOnly,
     validateRequiredBody(['placa', 'marca', 'modelo', 'cor', 'motoristaId'])
   ],
 
   /** PUT /veiculos/:id - Apenas administradores podem editar */
-  update: [
-    authMiddleware,
-    requireAdmin,
-    validateUUID('id'),
-    validateRequiredBody([])
-  ],
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /veiculos/:id - Apenas administradores podem deletar */
-  delete: [authMiddleware, requireAdmin, validateUUID('id')]
+  delete: [adminOnly, validateUUID('id')]
 }
 
 /**

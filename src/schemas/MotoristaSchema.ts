@@ -1,11 +1,6 @@
 import { z } from 'zod'
-import { sanitizeString } from '../utils/stringUtils'
-import {
-  isImageUrl,
-  normalizeUrl,
-  transformUrl,
-  verifyUrl
-} from '../utils/urlUtils'
+import { sanitizeString } from '../utils'
+import { createEmailSchema, fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para nomes de motoristas */
 const NOME_MIN_LENGTH = 2
@@ -60,30 +55,9 @@ export const createMotoristaSchema = z.object({
       message: 'Telefone deve ser um celular (terceiro dígito deve ser 9).'
     }),
 
-  email: z
-    .string({
-      required_error: 'O email é obrigatório.',
-      invalid_type_error: 'O email deve ser uma string.'
-    })
-    .email('Email deve ter um formato válido.')
-    .transform((val) => val.toLowerCase().trim()),
+  email: createEmailSchema,
 
-  foto: z
-    .string({ invalid_type_error: 'A URL da foto deve ser uma string.' })
-    .optional()
-    .transform((val) => (val ? normalizeUrl(val.trim()) : val))
-    .refine(
-      async (val) => {
-        if (!val) return true
-        if (!verifyUrl(val)) return false
-        return await isImageUrl(val, process.env.NODE_ENV === 'test')
-      },
-      {
-        message:
-          'A URL da foto deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/imagem.jpg)'
-      }
-    )
-    .transform(transformUrl)
+  foto: fotoOpcionalSchema
 })
 
 /**

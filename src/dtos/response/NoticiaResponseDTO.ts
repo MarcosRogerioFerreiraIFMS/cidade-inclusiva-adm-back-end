@@ -1,4 +1,4 @@
-import { FotoResponseDTO } from './FotoResponseDTO'
+import { FotoResponseDTO } from './'
 
 /**
  * - DTO (Data Transfer Object) de resposta para notícia

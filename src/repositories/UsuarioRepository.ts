@@ -1,7 +1,7 @@
-import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
-import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
-import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
-import { UsuarioCompletions } from '../types/UsuarioTypes'
+import { UsuarioCreateDTO } from '../dtos/create'
+import { UsuarioUpdateDTO } from '../dtos/update'
+import { IUsuarioAccess } from '../interfaces/access'
+import { UsuarioCompletions } from '../types'
 
 /**
  * Repository para operações de usuários:

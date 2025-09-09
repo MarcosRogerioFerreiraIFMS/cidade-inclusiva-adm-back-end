@@ -1,9 +1,7 @@
-import { ProfissionalResponseDTO } from '../../dtos/response/ProfissionalResponseDTO'
-import { ProfissionalCompletions } from '../../types/ProfissionalTypes'
-
-import { capitalizeWords } from '../../utils/stringUtils'
-import { toComentarioResponseDTO } from './comentarioOutputMapper'
-import { toFotoResponseDTO } from './fotoOutputMapper'
+import { ProfissionalResponseDTO } from '../../dtos/response'
+import { ProfissionalCompletions } from '../../types'
+import { capitalizeWords } from '../../utils'
+import { toComentarioResponseDTO, toFotoResponseDTO } from './'
 
 /**
  * - Converte entidade Profissional completa para DTO de resposta

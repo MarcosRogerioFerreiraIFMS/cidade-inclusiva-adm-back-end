@@ -1,6 +1,6 @@
-import { IComentarioService } from '../interfaces/services/IComentarioService'
-import { AuthenticatedRequest, ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { IComentarioService } from '../interfaces/services'
+import { AuthenticatedRequest, ControllerRequest } from '../types'
+import { HandleSuccess } from '../utils'
 
 /**
  * Controller responsável pelo gerenciamento de comentários

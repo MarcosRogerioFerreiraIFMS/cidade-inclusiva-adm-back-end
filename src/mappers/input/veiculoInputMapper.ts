@@ -1,9 +1,6 @@
-import { VeiculoCreateDTO } from '../../dtos/create/VeiculoCreateDTO'
-import { VeiculoUpdateDTO } from '../../dtos/update/VeiculoUpdateDTO'
-import {
-  createVeiculoSchema,
-  updateVeiculoSchema
-} from '../../schemas/VeiculoSchema'
+import { VeiculoCreateDTO } from '../../dtos/create'
+import { VeiculoUpdateDTO } from '../../dtos/update'
+import { createVeiculoSchema, updateVeiculoSchema } from '../../schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de veículo

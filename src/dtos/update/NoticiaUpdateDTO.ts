@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { updateNoticiaSchema } from '../../schemas/NoticiaSchema'
+import { updateNoticiaSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de notícia

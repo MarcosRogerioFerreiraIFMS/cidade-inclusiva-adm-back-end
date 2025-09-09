@@ -1,4 +1,4 @@
-import { VeiculoResponseDTO } from '../../dtos/response/VeiculoResponseDTO'
+import { VeiculoResponseDTO } from '../../dtos/response'
 
 /**
  * Interface do serviço de veículos

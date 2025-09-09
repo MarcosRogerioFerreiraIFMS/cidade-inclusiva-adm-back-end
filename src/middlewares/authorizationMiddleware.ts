@@ -3,7 +3,7 @@ import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
 import { LikeDependencies } from '../dependencies/LikeDependencies'
 import { MobilidadeDependencies } from '../dependencies/MobilidadeDependencies'
 import { HttpStatusCode, TipoRecurso, TipoUsuario } from '../enums'
-import { AuthenticatedRequest } from '../types/RequestTypes'
+import { AuthenticatedRequest } from '../types'
 
 /**
  * - Módulo de middlewares de autorização

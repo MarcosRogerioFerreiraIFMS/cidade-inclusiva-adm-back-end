@@ -1,4 +1,4 @@
-import { UsuarioResponseDTO } from '../../dtos/response/UsuarioResponseDTO'
+import { UsuarioResponseDTO } from '../../dtos/response'
 
 /**
  * Interface do serviço de usuários

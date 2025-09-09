@@ -3,10 +3,6 @@ import { ProfissionalDAO } from '../daos/ProfissionalDAO'
 import { ProfissionalRepository } from '../repositories/ProfissionalRepository'
 import { ProfissionalService } from '../services/ProfissionalService'
 
-/**
- * Instâncias das dependências do módulo Profissional
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const profissionalDAO = new ProfissionalDAO()
 const profissionalRepository = new ProfissionalRepository(profissionalDAO)
 const profissionalService = new ProfissionalService(profissionalRepository)

@@ -7,15 +7,18 @@ import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums'
 import { globalErrorHandler } from './middlewares/errorMiddleware'
 import { requestTimeout } from './middlewares/timeoutMiddleware'
-import { AuthRoutes } from './routes/AuthRoutes'
-import { ComentarioRoutes } from './routes/ComentarioRoutes'
-import { LikeRoutes } from './routes/LikeRoutes'
-import { MobilidadeRoutes } from './routes/MobilidadeRoutes'
-import { MotoristaRoutes } from './routes/MotoristaRoutes'
-import { NoticiaRoutes } from './routes/NoticiaRoutes'
-import { ProfissionalRoutes } from './routes/ProfissionalRoutes'
-import { UsuarioRoutes } from './routes/UsuarioRoutes'
-import { VeiculoRoutes } from './routes/VeiculoRoutes'
+import {
+  AuthRoutes,
+  ComentarioRoutes,
+  LikeRoutes,
+  ManutencaoRoutes,
+  MobilidadeRoutes,
+  MotoristaRoutes,
+  NoticiaRoutes,
+  ProfissionalRoutes,
+  UsuarioRoutes,
+  VeiculoRoutes
+} from './routes'
 
 /**
  * Instância principal da aplicação Express
@@ -60,6 +63,7 @@ app.use(ROUTES.LIKE, LikeRoutes)
 app.use(ROUTES.MOBILIDADE, MobilidadeRoutes)
 app.use(ROUTES.MOTORISTA, MotoristaRoutes)
 app.use(ROUTES.VEICULO, VeiculoRoutes)
+app.use(ROUTES.MANUTENCAO, ManutencaoRoutes)
 
 /**
  * Handler para rotas não encontradas

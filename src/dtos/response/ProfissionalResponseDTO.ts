@@ -1,5 +1,4 @@
-import { ComentarioResponseDTO } from './ComentarioResponseDTO'
-import { FotoResponseDTO } from './FotoResponseDTO'
+import { ComentarioResponseDTO, FotoResponseDTO } from './'
 
 /**
  * - DTO (Data Transfer Object) de resposta para profissional

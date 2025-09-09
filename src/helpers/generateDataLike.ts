@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { LikeCreateDTO } from '../dtos/create/LikeCreateDTO'
+import { LikeCreateDTO } from '../dtos/create'
 
 /**
  * - Gera dados formatados para criação de like no Prisma

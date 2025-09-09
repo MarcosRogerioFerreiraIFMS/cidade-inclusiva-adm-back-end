@@ -1,5 +1,5 @@
-import { ComentarioResponseDTO } from '../../dtos/response/ComentarioResponseDTO'
-import { JWTPayload } from '../../utils/jwtUtils'
+import { ComentarioResponseDTO } from '../../dtos/response'
+import { JWTPayload } from '../../utils'
 
 /**
  * Interface para serviço de comentários

@@ -1,20 +1,17 @@
-import { MobilidadeResponseDTO } from '../dtos/response/MobilidadeResponseDTO'
+import { MobilidadeResponseDTO } from '../dtos/response'
 import { HttpStatusCode } from '../enums'
-import { IMobilidadeAccess } from '../interfaces/access/IMobilidadeAccess'
-import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
-import { IMobilidadeService } from '../interfaces/services/IMobilidadeService'
+import { IMobilidadeAccess, IUsuarioAccess } from '../interfaces/access'
+import { IMobilidadeService } from '../interfaces/services'
 import {
   toCreateMobilidadeDTO,
   toUpdateMobilidadeDTO,
   toValidateMobilidadeStatus
-} from '../mappers/input/mobilidadeInputMapper'
+} from '../mappers/input'
 import {
   toMobilidadeResponseDTO,
   toMobilidadesResponseDTO
-} from '../mappers/output/mobilidadeOutputMapper'
-import { throwIfNotFound } from '../utils/entityValidator'
-import { HttpError } from '../utils/HttpError'
-import { JWTPayload } from '../utils/jwtUtils'
+} from '../mappers/output'
+import { HttpError, JWTPayload, throwIfNotFound } from '../utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a mobilidades:

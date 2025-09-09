@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { MotoristaCreateDTO } from '../dtos/create/MotoristaCreateDTO'
-import { MotoristaUpdateDTO } from '../dtos/update/MotoristaUpdateDTO'
+import { MotoristaCreateDTO } from '../dtos/create'
+import { MotoristaUpdateDTO } from '../dtos/update'
 import {
   generateDataFotoMotoristaCreate,
   generateDataFotoMotoristaUpdate
-} from './generateDataFoto'
+} from './'
 
 /**
  * - Gera dados formatados para criação de motorista no Prisma

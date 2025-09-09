@@ -105,10 +105,12 @@ export async function generateDataFotoUsuarioUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza
   if (usuario.foto.url !== novaUrl) {
-    await db.foto.delete({ where: { id: usuario.foto.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: usuario.foto.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se a foto for igual, não faz nada
@@ -143,10 +145,12 @@ export async function generateDataFotoProfissionalUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza
   if (profissional.foto.url !== novaUrl) {
-    await db.foto.delete({ where: { id: profissional.foto.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: profissional.foto.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se a foto for igual, não faz nada
@@ -181,10 +185,12 @@ export async function generateDataFotoNoticiaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza
   if (noticia.foto.url !== novaUrl) {
-    await db.foto.delete({ where: { id: noticia.foto.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: noticia.foto.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se a foto for igual, não faz nada
@@ -219,10 +225,12 @@ export async function generateDataFotoMotoristaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza
   if (motorista.foto.url !== novaUrl) {
-    await db.foto.delete({ where: { id: motorista.foto.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: motorista.foto.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se a foto for igual, não faz nada
@@ -278,5 +286,125 @@ export async function generateDataFotosVeiculoUpdate(
     }
   }
 
+  return undefined
+}
+
+/**
+ * Gera dados para criação de múltiplas fotos para manutenção
+ * @param urls - Array de URLs das fotos
+ * @returns Dados formatados para criação de múltiplas fotos no Prisma
+ */
+export function generateDataFotoManutencaoCreate(
+  urls: string[] = []
+): Prisma.FotoCreateNestedManyWithoutManutencaoInput | undefined {
+  return urls.length > 0
+    ? {
+        create: urls.map((url) => ({ url }))
+      }
+    : undefined
+}
+
+/**
+ * Gera dados para criação de uma única foto de logo para manutenção
+ * @param url - URL do logo (opcional)
+ * @returns Dados formatados para criação de logo único no Prisma
+ */
+export function generateDataLogoManutencaoCreate(
+  url: string | undefined
+): Prisma.FotoCreateNestedOneWithoutManutencaoLogoInput | undefined {
+  return url
+    ? {
+        create: { url }
+      }
+    : undefined
+}
+
+/**
+ * Gera dados para atualização de múltiplas fotos de manutenção
+ * Remove fotos que não estão na nova lista e adiciona fotos novas
+ * @param novasUrls - Array com as novas URLs das fotos
+ * @param manutencaoId - ID da manutenção
+ * @returns Dados formatados para atualização de múltiplas fotos no Prisma
+ */
+export async function generateDataFotoManutencaoUpdate(
+  novasUrls: string[] | undefined,
+  manutencaoId: string
+): Promise<Prisma.FotoUpdateManyWithoutManutencaoNestedInput | undefined> {
+  if (novasUrls === undefined) {
+    return undefined
+  }
+
+  const manutencao = await db.manutencao.findUnique({
+    where: { id: manutencaoId },
+    include: { fotos: true }
+  })
+
+  if (!manutencao) {
+    throw new Error('Manutenção não encontrada')
+  }
+
+  // Remove apenas as fotos que não estão nas URLs passadas
+  const existingUrls = manutencao.fotos.map((foto) => foto.url)
+  const urlsToRemove = existingUrls.filter(
+    (urlExisting) => !novasUrls.includes(urlExisting)
+  )
+
+  if (urlsToRemove.length > 0) {
+    await db.foto.deleteMany({
+      where: {
+        manutencaoId: manutencaoId,
+        url: {
+          in: urlsToRemove
+        }
+      }
+    })
+  }
+
+  // Adiciona apenas as novas fotos (que não existem)
+  const newUrls = novasUrls.filter((url) => !existingUrls.includes(url))
+  if (newUrls.length > 0) {
+    return {
+      create: newUrls.map((url) => ({ url }))
+    }
+  }
+
+  return undefined
+}
+
+/**
+ * Gera dados para atualização de uma única foto de logo de manutenção
+ * @param novaUrl - Nova URL do logo
+ * @param manutencaoId - ID da manutenção
+ * @returns Dados formatados para atualização de logo único no Prisma
+ */
+export async function generateDataLogoManutencaoUpdate(
+  novaUrl: string | undefined,
+  manutencaoId: string
+): Promise<Prisma.FotoUpdateOneWithoutManutencaoLogoNestedInput | undefined> {
+  if (novaUrl === undefined) {
+    return undefined
+  }
+
+  const manutencao = await db.manutencao.findUnique({
+    where: { id: manutencaoId },
+    include: { logo: true }
+  })
+
+  if (!manutencao) {
+    throw new Error('Manutenção não encontrada')
+  }
+
+  // Se não houver logo associado, cria um novo
+  if (!manutencao.logo) {
+    return { create: { url: novaUrl } }
+  }
+
+  // Se já houver um logo associado e ele for diferente do novo
+  if (manutencao.logo.url !== novaUrl) {
+    await db.foto.delete({ where: { id: manutencao.logo.id } })
+    return { create: { url: novaUrl } }
+  }
+
+  // Se o logo for igual, não faz nada
   return undefined
 }

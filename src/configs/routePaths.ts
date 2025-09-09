@@ -21,5 +21,7 @@ export const ROUTES = {
   /** Rotas para operações de motoristas */
   MOTORISTA: '/motoristas',
   /** Rotas para operações de veículos */
-  VEICULO: '/veiculos'
+  VEICULO: '/veiculos',
+  /** Rotas para operações de manutenções */
+  MANUTENCAO: '/manutencoes'
 } as const

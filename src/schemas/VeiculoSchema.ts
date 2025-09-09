@@ -1,11 +1,6 @@
 import { z } from 'zod'
-import { sanitizeString } from '../utils/stringUtils'
-import {
-  isImageUrl,
-  normalizeUrl,
-  transformUrl,
-  verifyUrl
-} from '../utils/urlUtils'
+import { sanitizeString } from '../utils'
+import { fotosArraySchema } from './'
 
 /** Comprimento mínimo permitido para marcas de veículos */
 const MARCA_MIN_LENGTH = 2
@@ -27,23 +22,6 @@ const COR_MAX_LENGTH = 30
  * - Define regras de validação, transformação e refinamento para todos os campos
  * - Inclui validações para placa, marca, modelo e cor
  */
-
-const fotoSchema = z
-  .string({ invalid_type_error: 'A URL da foto deve ser uma string.' })
-  .trim()
-  .transform((val) => (val ? normalizeUrl(val) : val))
-  .refine(
-    async (val) => {
-      if (!val) return true
-      if (!verifyUrl(val)) return false
-      return await isImageUrl(val, process.env.NODE_ENV === 'test')
-    },
-    {
-      message:
-        'A URL da foto deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/imagem.jpg)'
-    }
-  )
-  .transform(transformUrl)
 
 export const createVeiculoSchema = z.object({
   placa: z
@@ -111,12 +89,7 @@ export const createVeiculoSchema = z.object({
     })
     .uuid('O ID do motorista deve ser um UUID válido.'),
 
-  fotos: z
-    .array(fotoSchema, {
-      invalid_type_error: 'O campo fotos deve ser uma lista de URLs.'
-    })
-    .optional()
-    .default([])
+  fotos: fotosArraySchema
 })
 
 /**

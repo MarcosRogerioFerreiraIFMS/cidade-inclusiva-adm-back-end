@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { updateComentarioSchema } from '../../schemas/ComentarioSchema'
+import { updateComentarioSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de comentário

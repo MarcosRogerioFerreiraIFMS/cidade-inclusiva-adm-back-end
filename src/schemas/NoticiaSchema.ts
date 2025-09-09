@@ -1,12 +1,13 @@
 import { z } from 'zod'
 import { CategoriaNoticia } from '../enums'
-import { sanitizeContent, sanitizeString } from '../utils/stringUtils'
 import {
-  isImageUrl,
   normalizeUrl,
+  sanitizeContent,
+  sanitizeString,
   transformUrl,
   verifyUrl
-} from '../utils/urlUtils'
+} from '../utils'
+import { fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para títulos de notícias */
 const TITULO_MIN_LENGTH = 3
@@ -65,22 +66,7 @@ export const createNoticiaSchema = z.object({
     )
     .transform(transformUrl),
 
-  foto: z
-    .string({ invalid_type_error: 'A URL da foto deve ser uma string.' })
-    .optional()
-    .transform((val) => (val ? normalizeUrl(val.trim()) : val))
-    .refine(
-      async (val) => {
-        if (!val) return true
-        if (!verifyUrl(val)) return false
-        return await isImageUrl(val, process.env.NODE_ENV === 'test')
-      },
-      {
-        message:
-          'A URL da foto deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/imagem.jpg)'
-      }
-    )
-    .transform(transformUrl),
+  foto: fotoOpcionalSchema,
 
   categoria: z
     .string({

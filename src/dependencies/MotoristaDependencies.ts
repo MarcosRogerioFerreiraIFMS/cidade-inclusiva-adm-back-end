@@ -3,10 +3,6 @@ import { MotoristaDAO } from '../daos/MotoristaDAO'
 import { MotoristaRepository } from '../repositories/MotoristaRepository'
 import { MotoristaService } from '../services/MotoristaService'
 
-/**
- * Instâncias das dependências do módulo Motorista
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const motoristaDAO = new MotoristaDAO()
 const motoristaRepository = new MotoristaRepository(motoristaDAO)
 const motoristaService = new MotoristaService(motoristaRepository)

@@ -1,12 +1,7 @@
 import { z } from 'zod'
 import { EspecialidadeProfissional } from '../enums'
-import { sanitizeString, sanitizeTelefone } from '../utils/stringUtils'
-import {
-  isImageUrl,
-  normalizeUrl,
-  transformUrl,
-  verifyUrl
-} from '../utils/urlUtils'
+import { sanitizeString, sanitizeTelefone } from '../utils'
+import { createEmailSchema, fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para nomes de profissionais */
 const NOME_MIN_LENGTH = 2
@@ -40,22 +35,7 @@ export const createProfissionalSchema = z.object({
       message: 'O nome deve conter pelo menos nome e sobrenome.'
     }),
 
-  foto: z
-    .string({ invalid_type_error: 'A URL da foto deve ser uma string.' })
-    .optional()
-    .transform((val) => (val ? normalizeUrl(val.trim()) : val))
-    .refine(
-      async (val) => {
-        if (!val) return true
-        if (!verifyUrl(val)) return false
-        return await isImageUrl(val, process.env.NODE_ENV === 'test')
-      },
-      {
-        message:
-          'A URL da foto deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/imagem.jpg).'
-      }
-    )
-    .transform(transformUrl),
+  foto: fotoOpcionalSchema,
 
   telefone: z
     .string({
@@ -152,22 +132,7 @@ export const createProfissionalSchema = z.object({
       }
     ),
 
-  email: z
-    .string({
-      required_error: 'O email é obrigatório.',
-      invalid_type_error: 'O email deve ser uma string.'
-    })
-    .email('O email deve ter um formato válido (ex: profissional@dominio.com).')
-    .transform((val) => val.trim().toLowerCase())
-    .refine((val) => val.length <= 254, {
-      message: 'O email deve ter no máximo 254 caracteres.'
-    })
-    .refine((val) => !val.includes('..'), {
-      message: 'O email não pode conter pontos consecutivos.'
-    })
-    .refine((val) => !val.startsWith('.') && !val.endsWith('.'), {
-      message: 'O email não pode começar ou terminar com ponto.'
-    }),
+  email: createEmailSchema,
 
   especialidade: z
     .string({

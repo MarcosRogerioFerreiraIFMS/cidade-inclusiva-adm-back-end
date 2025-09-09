@@ -1,23 +1,14 @@
 import { MobilidadeController } from '../controllers/MobilidadeController'
 import { MobilidadeDAO } from '../daos/MobilidadeDAO'
-import { UsuarioDAO } from '../daos/UsuarioDAO'
 import { MobilidadeRepository } from '../repositories/MobilidadeRepository'
-import { UsuarioRepository } from '../repositories/UsuarioRepository'
 import { MobilidadeService } from '../services/MobilidadeService'
+import { UsuarioDependencies } from './UsuarioDependencies'
 
-/**
- * Instâncias das dependências do módulo Mobilidade
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const mobilidadeDAO = new MobilidadeDAO()
-const usuarioDAO = new UsuarioDAO()
-
 const mobilidadeRepository = new MobilidadeRepository(mobilidadeDAO)
-const usuarioRepository = new UsuarioRepository(usuarioDAO)
-
 const mobilidadeService = new MobilidadeService(
   mobilidadeRepository,
-  usuarioRepository
+  UsuarioDependencies.repository
 )
 const mobilidadeController = new MobilidadeController(mobilidadeService)
 

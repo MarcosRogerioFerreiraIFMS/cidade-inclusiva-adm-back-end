@@ -1,4 +1,4 @@
-import { NoticiaResponseDTO } from '../../dtos/response/NoticiaResponseDTO'
+import { NoticiaResponseDTO } from '../../dtos/response'
 
 /**
  * Interface para serviço de notícias

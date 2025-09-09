@@ -1,13 +1,13 @@
 import { db } from '../database/prisma'
-import { MobilidadeCreateDTO } from '../dtos/create/MobilidadeCreateDTO'
-import { MobilidadeUpdateDTO } from '../dtos/update/MobilidadeUpdateDTO'
+import { MobilidadeCreateDTO } from '../dtos/create'
+import { MobilidadeUpdateDTO } from '../dtos/update'
 import { StatusMobilidade } from '../enums'
 import {
   generateDataMobilidadeCreate,
   generateDataMobilidadeUpdate
-} from '../helpers/generateDataMobilidade'
-import { IMobilidadeAccess } from '../interfaces/access/IMobilidadeAccess'
-import { MobilidadeCompletions } from '../types/MobilidadeTypes'
+} from '../helpers'
+import { IMobilidadeAccess } from '../interfaces/access'
+import { MobilidadeCompletions } from '../types'
 
 /**
  * DAO (Data Access Object) para operações de mobilidade no banco de dados

@@ -1,8 +1,5 @@
 import { z } from 'zod'
-import {
-  statusMobilidadeSchema,
-  updateMobilidadeSchema
-} from '../../schemas/MobilidadeSchema'
+import { statusMobilidadeSchema, updateMobilidadeSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de mobilidade

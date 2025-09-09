@@ -1,26 +1,8 @@
 import { AuthController } from '../controllers/AuthController'
-import { UsuarioDAO } from '../daos/UsuarioDAO'
-import { UsuarioRepository } from '../repositories/UsuarioRepository'
 import { AuthService } from '../services/AuthService'
+import { UsuarioDependencies } from './UsuarioDependencies'
 
-/**
- * Instância do DAO de usuários para acesso aos dados
- */
-const usuarioDAO = new UsuarioDAO()
-
-/**
- * Instância do repositório de usuários com DAO injetado
- */
-const usuarioRepository = new UsuarioRepository(usuarioDAO)
-
-/**
- * Instância do serviço de autenticação com repositório injetado
- */
-const authService = new AuthService(usuarioRepository)
-
-/**
- * Instância do controller de autenticação com serviço injetado
- */
+const authService = new AuthService(UsuarioDependencies.repository)
 const authController = new AuthController(authService)
 
 /**

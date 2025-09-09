@@ -1,6 +1,6 @@
-import { INoticiaService } from '../interfaces/services/INoticiaService'
-import { ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { INoticiaService } from '../interfaces/services'
+import { ControllerRequest } from '../types'
+import { HandleSuccess } from '../utils'
 
 /**
  * Controller responsável pelas operações CRUD de notícias

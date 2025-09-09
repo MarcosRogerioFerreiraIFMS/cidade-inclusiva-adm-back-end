@@ -1,6 +1,7 @@
-import { MotoristaResponseDTO } from '../../dtos/response/MotoristaResponseDTO'
-import { MotoristaCompletions } from '../../types/MotoristaTypes'
-import { toFotoResponseDTO } from './fotoOutputMapper'
+import { MotoristaResponseDTO } from '../../dtos/response'
+import { MotoristaCompletions } from '../../types'
+import { formatPhoneNumber } from '../../utils'
+import { toFotoResponseDTO } from './'
 
 /**
  * - Converte entidade Motorista completa para DTO de resposta
@@ -45,20 +46,6 @@ export function toMotoristasResponseDTO(
   motoristas: MotoristaCompletions[]
 ): MotoristaResponseDTO[] {
   return motoristas.map(toMotoristaResponseDTO)
-}
-
-/**
- * Formata o número de telefone para exibição
- * @param telefone - Telefone no formato numérico (11999999999)
- * @returns Telefone formatado (11) 99999-9999
- */
-function formatPhoneNumber(telefone: string): string {
-  if (telefone.length === 11) {
-    return `(${telefone.slice(0, 2)}) ${telefone.slice(2, 7)}-${telefone.slice(
-      7
-    )}`
-  }
-  return telefone
 }
 
 /**

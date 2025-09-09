@@ -3,10 +3,6 @@ import { NoticiaDAO } from '../daos/NoticiaDAO'
 import { NoticiaRepository } from '../repositories/NoticiaRepository'
 import { NoticiaService } from '../services/NoticiaService'
 
-/**
- * Instâncias das dependências do módulo Noticia
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const noticiaDAO = new NoticiaDAO()
 const noticiaRepository = new NoticiaRepository(noticiaDAO)
 const noticiaService = new NoticiaService(noticiaRepository)

@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import * as net from 'net'
 import app from './app'
-import { EnvValidator } from './utils/envValidator'
+import { EnvValidator } from './utils'
 
 /**
  * Porta do servidor configurada pela variável de ambiente PORT ou 5555 como padrão

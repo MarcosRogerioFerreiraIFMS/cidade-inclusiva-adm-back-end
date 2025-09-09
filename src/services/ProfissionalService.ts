@@ -1,15 +1,15 @@
-import { ProfissionalResponseDTO } from '../dtos/response/ProfissionalResponseDTO'
-import { IProfissionalAccess } from '../interfaces/access/IProfissionalAccess'
-import { IProfissionalService } from '../interfaces/services/IProfissionalService'
+import { ProfissionalResponseDTO } from '../dtos/response'
+import { IProfissionalAccess } from '../interfaces/access'
+import { IProfissionalService } from '../interfaces/services'
 import {
   toCreateProfissionalDTO,
   toUpdateProfissionalDTO
-} from '../mappers/input/profissionalInputMapper'
+} from '../mappers/input'
 import {
   toProfissionaisResponseDTO,
   toProfissionalResponseDTO
-} from '../mappers/output/profissionalOutputMapper'
-import { throwIfAlreadyExists, throwIfNotFound } from '../utils/entityValidator'
+} from '../mappers/output'
+import { throwIfAlreadyExists, throwIfNotFound } from '../utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a profissionais:

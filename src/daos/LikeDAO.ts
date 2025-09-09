@@ -1,8 +1,8 @@
 import { db } from '../database/prisma'
-import { LikeCreateDTO } from '../dtos/create/LikeCreateDTO'
-import { generateDataLikeCreate } from '../helpers/generateDataLike'
-import { ILikeAccess } from '../interfaces/access/ILikeAccess'
-import { LikeCompletions } from '../types/LikeTypes'
+import { LikeCreateDTO } from '../dtos/create'
+import { generateDataLikeCreate } from '../helpers'
+import { ILikeAccess } from '../interfaces/access'
+import { LikeCompletions } from '../types'
 
 /**
  * DAO (Data Access Object) para operações de likes no banco de dados

@@ -1,6 +1,6 @@
-import { IUsuarioService } from '../interfaces/services/IUsuarioService'
-import { ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { IUsuarioService } from '../interfaces/services'
+import { ControllerRequest } from '../types'
+import { HandleSuccess } from '../utils'
 
 /**
  * Controller responsável pelas operações CRUD de usuários

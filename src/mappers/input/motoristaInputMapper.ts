@@ -1,9 +1,6 @@
-import { MotoristaCreateDTO } from '../../dtos/create/MotoristaCreateDTO'
-import { MotoristaUpdateDTO } from '../../dtos/update/MotoristaUpdateDTO'
-import {
-  createMotoristaSchema,
-  updateMotoristaSchema
-} from '../../schemas/MotoristaSchema'
+import { MotoristaCreateDTO } from '../../dtos/create'
+import { MotoristaUpdateDTO } from '../../dtos/update'
+import { createMotoristaSchema, updateMotoristaSchema } from '../../schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de motorista

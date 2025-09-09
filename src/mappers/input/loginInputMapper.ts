@@ -1,5 +1,5 @@
-import { LoginCreateDTO } from '../../dtos/create/LoginCreateDTO'
-import { createLoginSchema } from '../../schemas/LoginSchema'
+import { LoginCreateDTO } from '../../dtos/create'
+import { createLoginSchema } from '../../schemas'
 
 /**
  * - Converte dados não tipados em LoginCreateDTO validado

@@ -3,10 +3,6 @@ import { UsuarioDAO } from '../daos/UsuarioDAO'
 import { UsuarioRepository } from '../repositories/UsuarioRepository'
 import { UsuarioService } from '../services/UsuarioService'
 
-/**
- * Instâncias das dependências do módulo Usuario
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const usuarioDAO = new UsuarioDAO()
 const usuarioRepository = new UsuarioRepository(usuarioDAO)
 const usuarioService = new UsuarioService(usuarioRepository)

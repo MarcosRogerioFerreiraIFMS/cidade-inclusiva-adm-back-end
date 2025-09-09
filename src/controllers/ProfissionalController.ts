@@ -1,6 +1,6 @@
-import { IProfissionalService } from '../interfaces/services/IProfissionalService'
-import { ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { IProfissionalService } from '../interfaces/services'
+import { ControllerRequest } from '../types'
+import { HandleSuccess } from '../utils'
 
 /**
  * Controller responsável pelo gerenciamento de profissionais

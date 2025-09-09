@@ -1,6 +1,6 @@
-import { VeiculoCreateDTO } from '../../dtos/create/VeiculoCreateDTO'
-import { VeiculoUpdateDTO } from '../../dtos/update/VeiculoUpdateDTO'
-import { VeiculoCompletions } from '../../types/VeiculoTypes'
+import { VeiculoCreateDTO } from '../../dtos/create'
+import { VeiculoUpdateDTO } from '../../dtos/update'
+import { VeiculoCompletions } from '../../types'
 
 /**
  * Interface de acesso a dados de veículos

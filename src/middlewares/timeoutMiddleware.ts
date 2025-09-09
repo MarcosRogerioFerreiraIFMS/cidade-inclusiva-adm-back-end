@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { NextFunction, Request, Response } from 'express'
 import { HttpStatusCode } from '../enums'
-import { HttpError } from '../utils/HttpError'
+import { HttpError } from '../utils'
 
 /**
  * - Middleware para controle de timeout de requisições

@@ -1,23 +1,14 @@
 import { VeiculoController } from '../controllers/VeiculoController'
-import { MotoristaDAO } from '../daos/MotoristaDAO'
 import { VeiculoDAO } from '../daos/VeiculoDAO'
-import { MotoristaRepository } from '../repositories/MotoristaRepository'
 import { VeiculoRepository } from '../repositories/VeiculoRepository'
 import { VeiculoService } from '../services/VeiculoService'
+import { MotoristaDependencies } from './MotoristaDependencies'
 
-/**
- * Instâncias das dependências do módulo Veículo
- * Implementa o padrão de injeção de dependência seguindo a arquitetura em camadas
- */
 const veiculoDAO = new VeiculoDAO()
-const motoristaDAO = new MotoristaDAO()
-
-const motoristaRepository = new MotoristaRepository(motoristaDAO)
 const veiculoRepository = new VeiculoRepository(veiculoDAO)
-
 const veiculoService = new VeiculoService(
   veiculoRepository,
-  motoristaRepository
+  MotoristaDependencies.repository
 )
 const veiculoController = new VeiculoController(veiculoService)
 

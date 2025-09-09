@@ -1,6 +1,7 @@
-import { VeiculoResponseDTO } from '../../dtos/response/VeiculoResponseDTO'
-import { VeiculoCompletions } from '../../types/VeiculoTypes'
-import { toFotoResponseDTO, toFotosResponseDTO } from './fotoOutputMapper'
+import { VeiculoResponseDTO } from '../../dtos/response'
+import { VeiculoCompletions } from '../../types'
+import { formatPhoneNumber } from '../../utils'
+import { toFotoResponseDTO, toFotosResponseDTO } from './'
 
 /**
  * - Converte entidade Veiculo completa para DTO de resposta
@@ -40,20 +41,6 @@ export function toVeiculosResponseDTO(
   veiculos: VeiculoCompletions[]
 ): VeiculoResponseDTO[] {
   return veiculos.map(toVeiculoResponseDTO)
-}
-
-/**
- * Formata o número de telefone para exibição
- * @param telefone - Telefone no formato numérico (11999999999)
- * @returns Telefone formatado (11) 99999-9999
- */
-function formatPhoneNumber(telefone: string): string {
-  if (telefone.length === 11) {
-    return `(${telefone.slice(0, 2)}) ${telefone.slice(2, 7)}-${telefone.slice(
-      7
-    )}`
-  }
-  return telefone
 }
 
 /**

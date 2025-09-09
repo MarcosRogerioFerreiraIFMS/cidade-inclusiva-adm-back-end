@@ -1,13 +1,12 @@
-import { LikeResponseDTO } from '../dtos/response/LikeResponseDTO'
-import { IComentarioAccess } from '../interfaces/access/IComentarioAccess'
-import { ILikeAccess } from '../interfaces/access/ILikeAccess'
-import { IUsuarioAccess } from '../interfaces/access/IUsuarioAccess'
-import { ILikeService } from '../interfaces/services/ILikeService'
+import { LikeResponseDTO } from '../dtos/response'
 import {
-  toLikeResponseDTO,
-  toLikesResponseDTO
-} from '../mappers/output/likeOutputMapper'
-import { throwIfNotFound } from '../utils/entityValidator'
+  IComentarioAccess,
+  ILikeAccess,
+  IUsuarioAccess
+} from '../interfaces/access'
+import { ILikeService } from '../interfaces/services'
+import { toLikeResponseDTO, toLikesResponseDTO } from '../mappers/output'
+import { throwIfNotFound } from '../utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a likes:

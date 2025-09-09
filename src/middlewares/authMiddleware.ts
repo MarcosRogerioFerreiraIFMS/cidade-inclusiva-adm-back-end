@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express'
 import { UsuarioDependencies } from '../dependencies/UsuarioDependencies'
 import { HttpStatusCode } from '../enums'
-import { AuthenticatedRequest } from '../types/RequestTypes'
-import { JWTUtils } from '../utils/jwtUtils'
+import { AuthenticatedRequest } from '../types'
+import { JWTUtils } from '../utils'
 
 /**
  * - Middleware de autenticação obrigatório que valida o token JWT

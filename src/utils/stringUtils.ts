@@ -70,6 +70,33 @@ export const sanitizeTelefone = (str: string): string => {
 }
 
 /**
+ * Formata número de telefone brasileiro
+ * @param {string} phone - Número de telefone (apenas dígitos ou com formatação)
+ * @returns {string} Telefone formatado no padrão brasileiro (xx) xxxxx-xxxx ou (xx) xxxx-xxxx
+ */
+export const formatPhoneNumber = (phone: string): string => {
+  if (!phone || typeof phone !== 'string') return ''
+
+  // Remove todos os caracteres não numéricos
+  const digits = phone.replace(/\D/g, '')
+
+  // Verifica se tem o número correto de dígitos
+  if (digits.length < 10 || digits.length > 11) return phone
+
+  // Para números com 11 dígitos (celular com 9)
+  if (digits.length === 11) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
+  }
+
+  // Para números com 10 dígitos (fixo)
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
+  }
+
+  return phone
+}
+
+/**
  * Valida se uma string está dentro do comprimento especificado
  * @param {string} str - String a ser validada
  * @param {number} min - Comprimento mínimo

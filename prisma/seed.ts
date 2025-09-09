@@ -1,3 +1,30 @@
+/**
+ * 🌱 SCRIPT DE SEED - CIDADE INCLUSIVA
+ *
+ * Este script popula o banco de dados com dados de teste para desenvolvimento.
+ *
+ * 🚨 PROTEÇÕES DE SEGURANÇA IMPLEMENTADAS:
+ *
+ * 1. 🛡️ Bloqueio por NODE_ENV:
+ *    - Bloqueia execução se NODE_ENV === 'production' ou 'prod'
+ *    - Permite apenas em 'development', 'test' ou undefined
+ *
+ * 2. 🔍 Verificação de URL suspeita:
+ *    - Detecta padrões de produção na DATABASE_URL
+ *    - Bloqueia se URL contém: prod, amazonaws, heroku, etc.
+ *
+ * 3. 📊 Verificação de volume de dados:
+ *    - Conta registros existentes antes da limpeza
+ *    - Bloqueia se >500 registros (exceto em NODE_ENV=development)
+ *
+ * 💡 Para executar com segurança:
+ *    - Defina NODE_ENV=development
+ *    - Use DATABASE_URL apontando para banco local/teste
+ *    - Certifique-se de estar em ambiente de desenvolvimento
+ *
+ * ⚠️ ATENÇÃO: Este script REMOVE TODOS OS DADOS existentes!
+ */
+
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import {
   CategoriaNoticia,
@@ -8,7 +35,7 @@ import {
 } from '@prisma/client'
 import api from 'brasilapi-js'
 import chalk from 'chalk'
-import { hashPassword } from '../src/utils/passwordUtils'
+import { hashPassword } from '../src/utils'
 
 /** Configurar seed para garantir resultados fixos */
 faker.seed(123)
@@ -24,8 +51,74 @@ const prisma = new PrismaClient()
  * Executa todas as operações de população do banco em sequência
  */
 async function main() {
+  // 🚨 PROTEÇÃO CONTRA EXECUÇÃO EM PRODUÇÃO
+  const nodeEnv = process.env.NODE_ENV
+  const isProduction = nodeEnv === 'production' || nodeEnv === 'prod'
+
+  if (isProduction) {
+    console.log(chalk.red.bold('🚨 ERRO: SEED BLOQUEADO EM PRODUÇÃO! 🚨'))
+    console.log('')
+    console.log(
+      chalk.red(
+        '❌ O script de seed não pode ser executado em ambiente de produção.'
+      )
+    )
+    console.log(chalk.yellow('💡 Motivos de segurança:'))
+    console.log(chalk.yellow('   • Remove todos os dados existentes do banco'))
+    console.log(chalk.yellow('   • Popula com dados de teste/desenvolvimento'))
+    console.log(chalk.yellow('   • Pode causar perda irreversível de dados'))
+    console.log('')
+    console.log(chalk.cyan('🔧 Para executar o seed:'))
+    console.log(chalk.cyan('   • Defina NODE_ENV como "development" ou "test"'))
+    console.log(chalk.cyan('   • Ou remova a variável NODE_ENV'))
+    console.log('')
+    console.log(
+      chalk.gray(`Ambiente atual: ${chalk.white(nodeEnv || 'undefined')}`)
+    )
+    process.exit(1)
+  }
+
+  // Verificação adicional de URL do banco para extra segurança
+  const databaseUrl = process.env.DATABASE_URL || ''
+  const suspiciousPatterns = [
+    'prod',
+    'production',
+    'live',
+    'staging',
+    'amazonaws.com',
+    'digitalocean.com',
+    'heroku.com',
+    'railway.app',
+    'vercel.com',
+    'supabase.co',
+    'planetscale.com'
+  ]
+
+  const hasSuspiciousPattern = suspiciousPatterns.some((pattern) =>
+    databaseUrl.toLowerCase().includes(pattern)
+  )
+
+  if (hasSuspiciousPattern && nodeEnv !== 'development') {
+    console.log(chalk.red.bold('🚨 AVISO: URL DE BANCO SUSPEITA DETECTADA! 🚨'))
+    console.log('')
+    console.log(chalk.red('❌ A URL do banco parece ser de produção/staging.'))
+    console.log(chalk.yellow('🔍 URL detectada contém padrões de produção'))
+    console.log(chalk.yellow('💡 Para forçar execução em desenvolvimento:'))
+    console.log(chalk.yellow('   • Defina NODE_ENV=development'))
+    console.log('')
+    console.log(
+      chalk.gray(
+        `URL: ${chalk.white(databaseUrl.replace(/\/\/.*@/, '//***:***@'))}`
+      )
+    )
+    process.exit(1)
+  }
+
   console.log(chalk.green.bold('🌱 Iniciando seed do banco de dados...'))
   console.log(chalk.cyan('📝 Configurações:'))
+  console.log(
+    chalk.gray(`   • Ambiente: ${chalk.white(nodeEnv || 'development')}`)
+  )
   console.log(
     chalk.gray(`   • Seed: ${chalk.white('123')} (resultados reproduzíveis)`)
   )
@@ -35,6 +128,59 @@ async function main() {
   console.log('')
 
   try {
+    // 🛡️ VERIFICAÇÃO FINAL ANTES DA LIMPEZA
+    console.log(chalk.yellow.bold('🛡️  Verificação final de segurança...'))
+
+    // Contar registros existentes para detectar banco com dados importantes
+    const existingCounts = {
+      usuarios: await prisma.usuario.count(),
+      profissionais: await prisma.profissional.count(),
+      noticias: await prisma.noticia.count(),
+      mobilidades: await prisma.mobilidade.count(),
+      comentarios: await prisma.comentario.count(),
+      manutencoes: await prisma.manutencao.count()
+    }
+
+    const totalRecords = Object.values(existingCounts).reduce(
+      (sum, count) => sum + count,
+      0
+    )
+
+    if (totalRecords > 500 && nodeEnv !== 'development') {
+      console.log(chalk.red.bold('🚨 ALTO VOLUME DE DADOS DETECTADO! 🚨'))
+      console.log('')
+      console.log(
+        chalk.red(
+          `❌ Banco contém ${totalRecords} registros. Muito alto para um ambiente de teste!`
+        )
+      )
+      console.log(chalk.yellow('📊 Distribuição dos dados:'))
+      Object.entries(existingCounts).forEach(([table, count]) => {
+        if (count > 0) {
+          console.log(chalk.yellow(`   • ${table}: ${count} registros`))
+        }
+      })
+      console.log('')
+      console.log(chalk.cyan('💡 Para forçar execução:'))
+      console.log(chalk.cyan('   • Defina NODE_ENV=development'))
+      console.log(
+        chalk.cyan(
+          '   • Certifique-se de que este é realmente um ambiente de desenvolvimento'
+        )
+      )
+      process.exit(1)
+    }
+
+    if (totalRecords > 0) {
+      console.log(
+        chalk.gray(
+          `   • Banco contém ${totalRecords} registros que serão removidos`
+        )
+      )
+    } else {
+      console.log(chalk.gray('   • Banco vazio, pronto para popular'))
+    }
+
     // Limpar dados existentes na ordem correta (respeitando foreign keys)
     console.log(chalk.yellow.bold('🧹 Limpando dados existentes...'))
 
@@ -54,6 +200,12 @@ async function main() {
 
     console.log(chalk.gray('   • Removendo motoristas...'))
     await prisma.motorista.deleteMany()
+
+    console.log(chalk.gray('   • Removendo especialidades de manutenção...'))
+    await prisma.especialidadeManutencao.deleteMany()
+
+    console.log(chalk.gray('   • Removendo manutenções...'))
+    await prisma.manutencao.deleteMany()
 
     console.log(chalk.gray('   • Removendo endereços...'))
     await prisma.endereco.deleteMany()
@@ -1032,6 +1184,221 @@ async function main() {
     )
     console.log('')
 
+    // Criar empresas de manutenção
+    console.log(chalk.blue.bold('🔧 Criando empresas de manutenção...'))
+    console.log(chalk.cyan('🏢 Gerando dados de manutenção...'))
+
+    // Função para gerar empresa de manutenção com dados realistas
+    const generateManutencao = (existingEmails: Set<string>) => {
+      const tiposEmpresa = [
+        'Oficina',
+        'Auto Center',
+        'Mecânica',
+        'Serviços Automotivos',
+        'Centro Automotivo',
+        'Garage',
+        'Auto Service'
+      ]
+
+      const nomes = [
+        'Boa Viagem',
+        'Confiança',
+        'Rápido',
+        'Expert',
+        'Premium',
+        'Central',
+        'União',
+        'Nova Era',
+        'Progresso',
+        'Futuro',
+        'Master',
+        'Top',
+        'Elite',
+        'Super',
+        'Mega'
+      ]
+
+      const tipoEmpresa = faker.helpers.arrayElement(tiposEmpresa)
+      const nomeEmpresa = faker.helpers.arrayElement(nomes)
+      const nomeCompleto = `${tipoEmpresa} ${nomeEmpresa}`
+
+      // Gerar email único baseado no nome da empresa
+      let email: string
+      let attempts = 0
+      const emailBase = nomeCompleto.toLowerCase().replace(/\s+/g, '')
+      do {
+        email =
+          attempts === 0
+            ? `contato@${emailBase}.com.br`
+            : `contato${attempts}@${emailBase}.com.br`
+        attempts++
+        if (attempts > 10) {
+          email = `manutencao.${Date.now()}@empresa.com.br`
+          break
+        }
+      } while (existingEmails.has(email))
+
+      existingEmails.add(email)
+
+      // Especialidades possíveis para manutenção automotiva
+      const especialidadesPossiveis = [
+        'Freios',
+        'Suspensão',
+        'Motor',
+        'Transmissão',
+        'Sistema Elétrico',
+        'Ar Condicionado',
+        'Pneus e Rodas',
+        'Escapamento',
+        'Injeção Eletrônica',
+        'Radiador',
+        'Bateria',
+        'Alinhamento e Balanceamento',
+        'Troca de Óleo',
+        'Revisão Geral',
+        'Funilaria',
+        'Pintura',
+        'Vidros',
+        'Sistema de Direção',
+        'Embreagem',
+        'Acessibilidade Veicular'
+      ]
+
+      // Cada empresa terá entre 3-8 especialidades
+      const numEspecialidades = faker.number.int({ min: 3, max: 8 })
+      const especialidades = faker.helpers.arrayElements(
+        especialidadesPossiveis,
+        numEspecialidades
+      )
+
+      const endereco = getRandomRealAddress()
+
+      return {
+        nome: nomeCompleto,
+        telefone: generateValidPhoneNumber(),
+        email,
+        endereco,
+        especialidades,
+        logo: faker.image.urlLoremFlickr({
+          category: 'business',
+          width: 400,
+          height: 400
+        }),
+        // Gerar entre 2-5 fotos da empresa
+        fotos: Array.from(
+          { length: faker.number.int({ min: 2, max: 5 }) },
+          () =>
+            faker.image.urlLoremFlickr({
+              category: 'garage',
+              width: 800,
+              height: 600
+            })
+        ),
+        criadoEm: faker.date.past({ years: 0.4 }),
+        atualizadoEm: faker.date.recent({ days: 45 })
+      }
+    }
+
+    // Gerar 6 empresas de manutenção com emails únicos
+    const existingEmailsManutencao = new Set<string>()
+    // Adicionar emails já existentes para evitar conflitos
+    usuariosData.forEach((user) => existingEmailsManutencao.add(user.email))
+    profissionaisComTimestamps.forEach((prof) =>
+      existingEmailsManutencao.add(prof.email)
+    )
+
+    const manutencoesData = []
+    for (let i = 0; i < 6; i++) {
+      manutencoesData.push(generateManutencao(existingEmailsManutencao))
+    }
+
+    console.log(
+      chalk.cyan('💾 Salvando empresas de manutenção no banco de dados...')
+    )
+    const startMaintenanceCreation = Date.now()
+
+    const manutencoes = []
+    for (const manutencaoData of manutencoesData) {
+      const manutencao = await prisma.manutencao.create({
+        data: {
+          nome: manutencaoData.nome,
+          telefone: manutencaoData.telefone,
+          email: manutencaoData.email,
+          endereco: {
+            create: {
+              ...manutencaoData.endereco,
+              criadoEm: manutencaoData.criadoEm,
+              atualizadoEm: manutencaoData.atualizadoEm
+            }
+          },
+          logo: {
+            create: {
+              url: manutencaoData.logo
+            }
+          },
+          fotos: {
+            create: manutencaoData.fotos.map((url) => ({ url }))
+          },
+          especialidades: {
+            create: manutencaoData.especialidades.map((nome) => ({
+              nome,
+              criadoEm: manutencaoData.criadoEm,
+              atualizadoEm: manutencaoData.atualizadoEm
+            }))
+          },
+          criadoEm: manutencaoData.criadoEm,
+          atualizadoEm: manutencaoData.atualizadoEm
+        }
+      })
+      manutencoes.push(manutencao)
+    }
+
+    const maintenanceCreationTime = Date.now() - startMaintenanceCreation
+    console.log(
+      chalk.green(
+        `✅ ${
+          manutencoes.length
+        } empresas de manutenção criadas com sucesso! ${chalk.gray(
+          `(${maintenanceCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas das especialidades mais comuns
+    const allEspecialidades = manutencoesData.flatMap((m) => m.especialidades)
+    const especialidadeManutencaoStats = allEspecialidades.reduce(
+      (acc, esp) => {
+        acc[esp] = (acc[esp] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>
+    )
+
+    console.log(chalk.gray('   • Especialidades mais oferecidas:'))
+    Object.entries(especialidadeManutencaoStats)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .forEach(([esp, count]) => {
+        console.log(chalk.gray(`     - ${esp}: ${count} empresas`))
+      })
+
+    // Contar total de fotos e especialidades
+    const totalEspecialidades = await prisma.especialidadeManutencao.count()
+    const totalFotosManutencao = await prisma.foto.count({
+      where: {
+        OR: [
+          { manutencaoId: { not: null } },
+          { manutencaoLogoId: { not: null } }
+        ]
+      }
+    })
+
+    console.log(
+      chalk.gray(`   • Total de especialidades: ${totalEspecialidades}`)
+    )
+    console.log(chalk.gray(`   • Total de fotos: ${totalFotosManutencao}`))
+    console.log('')
+
     // Criar motoristas e veículos
     console.log(chalk.blue.bold('🚗 Criando motoristas e veículos...'))
     console.log(chalk.cyan('🚕 Gerando dados de transporte...'))
@@ -1272,7 +1639,9 @@ async function main() {
     )
     console.log(
       chalk.white(
-        `   🏠 Endereços: ${chalk.green.bold(usuarios.length.toString())}`
+        `   🏠 Endereços: ${chalk.green.bold(
+          (usuarios.length + manutencoes.length).toString()
+        )}`
       )
     )
     console.log(
@@ -1300,6 +1669,11 @@ async function main() {
     console.log(
       chalk.white(
         `   👍 Likes: ${chalk.green.bold(likesData.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   🔧 Manutenções: ${chalk.green.bold(manutencoes.length.toString())}`
       )
     )
     console.log(

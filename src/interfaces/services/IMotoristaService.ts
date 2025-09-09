@@ -1,4 +1,4 @@
-import { MotoristaResponseDTO } from '../../dtos/response/MotoristaResponseDTO'
+import { MotoristaResponseDTO } from '../../dtos/response'
 
 /**
  * Interface do serviço de motoristas

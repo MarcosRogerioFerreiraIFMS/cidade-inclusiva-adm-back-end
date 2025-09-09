@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { createLikeSchema } from '../../schemas/LikeSchema'
+import { createLikeSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para criação de like

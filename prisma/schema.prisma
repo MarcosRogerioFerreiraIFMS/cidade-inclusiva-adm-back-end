@@ -59,10 +59,14 @@ model Endereco {
   cep          String
   estado       String
   pais         String   @default("Brasil")
-  usuarioId    String   @unique
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
-  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  usuarioId String?  @unique
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  manutencaoId String?     @unique
+  manutencao   Manutencao? @relation(fields: [manutencaoId], references: [id], onDelete: Cascade)
 }
 
 model Comentario {
@@ -131,20 +135,56 @@ model Veiculo {
 }
 
 model Foto {
-  id             String        @id @default(uuid())
-  url            String
-  noticiaId      String?       @unique
-  ProfissionalId String?       @unique
-  usuarioId      String?       @unique
-  veiculoId      String?
-  motoristaId    String?       @unique
-  criadoEm       DateTime      @default(now())
-  atualizadoEm   DateTime      @updatedAt
-  motorista      Motorista?    @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
-  veiculo        Veiculo?      @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
-  usuario        Usuario?      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  Profissional   Profissional? @relation(fields: [ProfissionalId], references: [id], onDelete: Cascade)
-  noticia        Noticia?      @relation(fields: [noticiaId], references: [id], onDelete: Cascade)
+  id           String   @id @default(uuid())
+  url          String
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  noticiaId String?  @unique
+  noticia   Noticia? @relation(fields: [noticiaId], references: [id], onDelete: Cascade)
+
+  profissionalId String?       @unique
+  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: Cascade)
+
+  usuarioId String?  @unique
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  motoristaId String?    @unique
+  motorista   Motorista? @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
+
+  veiculoId String?
+  veiculo   Veiculo? @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+
+  manutencaoId String?
+  manutencao   Manutencao? @relation("FotosManutencao", fields: [manutencaoId], references: [id], onDelete: Cascade)
+
+  manutencaoLogoId String?     @unique
+  manutencaoLogo   Manutencao? @relation("LogoManutencao", fields: [manutencaoLogoId], references: [id], onDelete: Cascade)
+}
+
+model Manutencao {
+  id             String                    @id @default(uuid())
+  nome           String
+  telefone       String
+  email          String                    @unique
+  endereco       Endereco?
+  fotos          Foto[]                    @relation("FotosManutencao")
+  logo           Foto?                     @relation("LogoManutencao")
+  criadoEm       DateTime                  @default(now())
+  atualizadoEm   DateTime                  @updatedAt
+  especialidades EspecialidadeManutencao[]
+}
+
+model EspecialidadeManutencao {
+  id           String     @id @default(uuid())
+  nome         String
+  manutencaoId String
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+  manutencao   Manutencao @relation(fields: [manutencaoId], references: [id], onDelete: Cascade)
+
+  @@unique([nome, manutencaoId])
+  @@index([manutencaoId])
 }
 
 enum CategoriaNoticia {

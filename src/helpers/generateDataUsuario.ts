@@ -1,11 +1,11 @@
 import { Prisma } from '@prisma/client'
-import { UsuarioCreateDTO } from '../dtos/create/UsuarioCreateDTO'
-import { UsuarioUpdateDTO } from '../dtos/update/UsuarioUpdateDTO'
+import { UsuarioCreateDTO } from '../dtos/create'
+import { UsuarioUpdateDTO } from '../dtos/update'
 import { hashPassword } from '../utils/passwordUtils'
 import {
   generateDataFotoUsuarioCreate,
   generateDataFotoUsuarioUpdate
-} from './generateDataFoto'
+} from './'
 
 /**
  * - Gera dados formatados para criação de usuário no Prisma

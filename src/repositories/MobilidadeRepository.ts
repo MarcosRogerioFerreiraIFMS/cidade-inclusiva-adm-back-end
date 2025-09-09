@@ -1,7 +1,7 @@
-import { MobilidadeCreateDTO } from '../dtos/create/MobilidadeCreateDTO'
-import { MobilidadeUpdateDTO } from '../dtos/update/MobilidadeUpdateDTO'
-import { IMobilidadeAccess } from '../interfaces/access/IMobilidadeAccess'
-import { MobilidadeCompletions } from '../types/MobilidadeTypes'
+import { MobilidadeCreateDTO } from '../dtos/create'
+import { MobilidadeUpdateDTO } from '../dtos/update'
+import { IMobilidadeAccess } from '../interfaces/access'
+import { MobilidadeCompletions } from '../types'
 
 /**
  * - Repository para operações de mobilidade:

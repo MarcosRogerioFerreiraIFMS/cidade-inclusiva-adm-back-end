@@ -1,6 +1,6 @@
-import { MotoristaCreateDTO } from '../../dtos/create/MotoristaCreateDTO'
-import { MotoristaUpdateDTO } from '../../dtos/update/MotoristaUpdateDTO'
-import { MotoristaCompletions } from '../../types/MotoristaTypes'
+import { MotoristaCreateDTO } from '../../dtos/create'
+import { MotoristaUpdateDTO } from '../../dtos/update'
+import { MotoristaCompletions } from '../../types'
 
 /**
  * Interface de acesso a dados de motoristas

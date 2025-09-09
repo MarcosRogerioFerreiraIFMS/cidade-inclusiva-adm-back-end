@@ -1,6 +1,6 @@
-import { IVeiculoService } from '../interfaces/services/IVeiculoService'
-import { ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { IVeiculoService } from '../interfaces/services'
+import { ControllerRequest } from '../types'
+import { HandleSuccess } from '../utils'
 
 /**
  * Controller responsável pelas operações CRUD de veículos

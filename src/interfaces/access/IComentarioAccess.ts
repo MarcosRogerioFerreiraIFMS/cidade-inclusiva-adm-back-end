@@ -1,6 +1,6 @@
-import { ComentarioCreateRelationalDTO } from '../../dtos/create/ComentarioCreateDTO'
-import { ComentarioUpdateDTO } from '../../dtos/update/ComentarioUpdateDTO'
-import { ComentarioCompletions } from '../../types/ComentarioTypes'
+import { ComentarioCreateRelationalDTO } from '../../dtos/create'
+import { ComentarioUpdateDTO } from '../../dtos/update'
+import { ComentarioCompletions } from '../../types'
 
 /**
  * Interface de acesso a dados de comentários

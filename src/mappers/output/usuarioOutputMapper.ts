@@ -1,7 +1,6 @@
-import { Endereco } from '@prisma/client'
-import { UsuarioResponseDTO } from '../../dtos/response/UsuarioResponseDTO'
-import { UsuarioCompletions } from '../../types/UsuarioTypes'
-import { toFotoResponseDTO } from './fotoOutputMapper'
+import { UsuarioResponseDTO } from '../../dtos/response'
+import { UsuarioCompletions } from '../../types'
+import { toEnderecoResponseDTO, toFotoResponseDTO } from './'
 
 /**
  * - Converte entidade Usuario completa para DTO de resposta
@@ -33,28 +32,4 @@ export function toUsuariosResponseDTO(
   usuarios: UsuarioCompletions[]
 ): UsuarioResponseDTO[] {
   return usuarios.map(toUsuarioResponseDTO)
-}
-
-/**
- * - Converte entidade Endereco para DTO de resposta
- * - Trata valores opcionais e estrutura dados de endereço
- * @param {Endereco | null} endereco - Entidade endereco do banco de dados
- * @returns {UsuarioResponseDTO['endereco'] | undefined} DTO de endereço ou undefined se não existir
- */
-export function toEnderecoResponseDTO(
-  endereco: Endereco | null | undefined
-): UsuarioResponseDTO['endereco'] | undefined {
-  if (!endereco) return undefined
-
-  return {
-    id: endereco.id,
-    logradouro: endereco.logradouro,
-    numero: endereco.numero,
-    complemento: endereco.complemento ?? '',
-    cidade: endereco.cidade,
-    bairro: endereco.bairro,
-    cep: endereco.cep,
-    estado: endereco.estado,
-    pais: endereco.pais
-  }
 }

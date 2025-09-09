@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client'
-import { NoticiaCreateDTO } from '../dtos/create/NoticiaCreateDTO'
-import { NoticiaUpdateDTO } from '../dtos/update/NoticiaUpdateDTO'
+import { NoticiaCreateDTO } from '../dtos/create'
+import { NoticiaUpdateDTO } from '../dtos/update'
 import {
   generateDataFotoNoticiaCreate,
   generateDataFotoNoticiaUpdate
-} from './generateDataFoto'
+} from './'
 
 /**
  * - Gera dados formatados para criação de notícia no Prisma

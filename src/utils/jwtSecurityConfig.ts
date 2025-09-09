@@ -62,7 +62,7 @@ export class JWTSecurityConfig {
    * @param {boolean} verbose - Se deve exibir logs detalhados durante a validação
    * @returns {boolean} True se todas as configurações estiverem válidas, false caso contrário
    */
-  static initialize(verbose = false): boolean {
+  static initialize = (verbose: boolean = false): boolean => {
     const secret = process.env.JWT_SECRET || ''
     const expiresIn = process.env.JWT_EXPIRES_IN || '7d'
     const isProduction = process.env.NODE_ENV === 'production'

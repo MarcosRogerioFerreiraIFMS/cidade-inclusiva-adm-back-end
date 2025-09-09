@@ -310,6 +310,42 @@ export const veiculoOperations = {
 }
 
 /**
+ * - Middlewares para operações de MANUTENÇÕES
+ * - Incluem validações específicas para gerenciamento de dados de empresas de manutenção
+ */
+export const manutencaoOperations = {
+  /** GET /manutencoes - Público pode visualizar */
+  list: [],
+
+  /** GET /manutencoes/:id - Público pode visualizar */
+  view: [validateUUID('id')],
+
+  /** POST /manutencoes - Apenas administradores podem criar */
+  create: [
+    adminOnly,
+    validateRequiredBody([
+      'nome',
+      'telefone',
+      'email',
+      'especialidades',
+      'endereco'
+    ])
+  ],
+
+  /** PUT /manutencoes/:id - Apenas administradores podem editar */
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+
+  /** DELETE /manutencoes/:id - Apenas administradores podem deletar */
+  delete: [adminOnly, validateUUID('id')],
+
+  /** GET /manutencoes/email/:email - Apenas admins podem buscar por email */
+  findByEmail: [adminOnly],
+
+  /** GET /manutencoes/especialidade/:especialidade - Público pode buscar por especialidade */
+  findByEspecialidade: []
+}
+
+/**
  * Funções utilitárias para criação de middlewares customizados
  */
 

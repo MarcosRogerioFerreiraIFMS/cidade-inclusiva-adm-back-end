@@ -1,13 +1,10 @@
-import { MobilidadeCreateDTO } from '../../dtos/create/MobilidadeCreateDTO'
-import {
-  MobilidadeUpdateDTO,
-  StatusMobilidade
-} from '../../dtos/update/MobilidadeUpdateDTO'
+import { MobilidadeCreateDTO } from '../../dtos/create'
+import { MobilidadeUpdateDTO, StatusMobilidade } from '../../dtos/update'
 import {
   createMobilidadeSchema,
   statusMobilidadeSchema,
   updateMobilidadeSchema
-} from '../../schemas/MobilidadeSchema'
+} from '../../schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de mobilidade

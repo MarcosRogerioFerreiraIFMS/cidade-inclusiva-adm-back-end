@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express'
 import { HttpStatusCode, TipoUsuario } from '../enums'
-import { AuthenticatedRequest } from '../types/RequestTypes'
+import { AuthenticatedRequest } from '../types'
 
 /**
  * - Middleware que verifica se o usuário pode fazer operações de like

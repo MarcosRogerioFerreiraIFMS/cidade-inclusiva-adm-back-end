@@ -1,9 +1,9 @@
-import { Mobilidade, Usuario } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 /**
  * Tipo completo da mobilidade
  * Representa uma mobilidade com todos os seus campos e relacionamentos
  */
-export type MobilidadeCompletions = Mobilidade & {
-  usuario?: Usuario | null
-}
+export type MobilidadeCompletions = Prisma.MobilidadeGetPayload<{
+  include: { usuario: true }
+}>

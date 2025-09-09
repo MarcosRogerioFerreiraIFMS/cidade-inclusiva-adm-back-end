@@ -1,8 +1,7 @@
-import { NoticiaResponseDTO } from '../../dtos/response/NoticiaResponseDTO'
-import { NoticiaCompletions } from '../../types/NoticiaTypes'
-
-import { capitalizeWords } from '../../utils/stringUtils'
-import { toFotoResponseDTO } from './fotoOutputMapper'
+import { NoticiaResponseDTO } from '../../dtos/response'
+import { NoticiaCompletions } from '../../types'
+import { capitalizeWords } from '../../utils'
+import { toFotoResponseDTO } from './'
 
 /**
  * - Converte entidade Noticia completa para DTO de resposta

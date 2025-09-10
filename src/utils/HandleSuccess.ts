@@ -1,5 +1,5 @@
+import { HttpStatusCode } from '@/enums'
 import { Response } from 'express'
-import { HttpStatusCode } from '../enums'
 
 /**
  * Interface para respostas de sucesso padronizadas

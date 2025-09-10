@@ -1,4 +1,4 @@
-import { TipoRecurso, TipoUsuario } from '../enums'
+import { TipoRecurso, TipoUsuario } from '@/enums'
 import { authMiddleware, optionalAuthMiddleware } from './authMiddleware'
 import {
   requireAdmin,

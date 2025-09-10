@@ -1,5 +1,5 @@
+import { EnderecoResponseDTO } from '@/dtos/response'
 import { Endereco } from '@prisma/client'
-import { EnderecoResponseDTO } from '../../dtos/response'
 
 /**
  * - Converte entidade Endereco para DTO de resposta

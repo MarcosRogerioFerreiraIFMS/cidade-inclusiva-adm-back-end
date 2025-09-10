@@ -1,6 +1,6 @@
+import { StatusMobilidade } from '@/enums'
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
-import { StatusMobilidade } from '../enums'
-import { sanitizeString } from '../utils'
 
 /** Comprimento mínimo permitido para descrição de mobilidade */
 const DESCRICAO_MIN_LENGTH = 5

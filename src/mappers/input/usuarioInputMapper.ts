@@ -1,6 +1,6 @@
-import { UsuarioCreateDTO } from '../../dtos/create'
-import { UsuarioUpdateDTO } from '../../dtos/update'
-import { createUsuarioSchema, updateUsuarioSchema } from '../../schemas'
+import { UsuarioCreateDTO } from '@/dtos/create'
+import { UsuarioUpdateDTO } from '@/dtos/update'
+import { createUsuarioSchema, updateUsuarioSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de usuário

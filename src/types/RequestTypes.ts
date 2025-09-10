@@ -1,5 +1,5 @@
+import { JWTPayload } from '@/utils'
 import { NextFunction, Request, Response } from 'express'
-import { JWTPayload } from '../utils'
 
 /**
  * Interface que estende Request do Express para incluir dados do usuário autenticado

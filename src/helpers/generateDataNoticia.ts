@@ -1,6 +1,6 @@
+import { NoticiaCreateDTO } from '@/dtos/create'
+import { NoticiaUpdateDTO } from '@/dtos/update'
 import { Prisma } from '@prisma/client'
-import { NoticiaCreateDTO } from '../dtos/create'
-import { NoticiaUpdateDTO } from '../dtos/update'
 import {
   generateDataFotoNoticiaCreate,
   generateDataFotoNoticiaUpdate

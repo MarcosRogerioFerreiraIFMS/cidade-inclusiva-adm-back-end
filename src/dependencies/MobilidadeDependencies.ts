@@ -1,7 +1,7 @@
-import { MobilidadeController } from '../controllers/MobilidadeController'
-import { MobilidadeDAO } from '../daos/MobilidadeDAO'
-import { MobilidadeRepository } from '../repositories/MobilidadeRepository'
-import { MobilidadeService } from '../services/MobilidadeService'
+import { MobilidadeController } from '@/controllers/MobilidadeController'
+import { MobilidadeDAO } from '@/daos/MobilidadeDAO'
+import { MobilidadeRepository } from '@/repositories/MobilidadeRepository'
+import { MobilidadeService } from '@/services/MobilidadeService'
 import { UsuarioDependencies } from './UsuarioDependencies'
 
 const mobilidadeDAO = new MobilidadeDAO()

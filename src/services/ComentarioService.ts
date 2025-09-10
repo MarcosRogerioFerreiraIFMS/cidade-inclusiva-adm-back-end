@@ -1,18 +1,19 @@
-import { ComentarioCreateRelationalDTO } from '../dtos/create'
-import { ComentarioResponseDTO } from '../dtos/response'
-import { HttpStatusCode } from '../enums'
+import { HttpStatusCode } from '@/enums'
 import {
   IComentarioAccess,
   IProfissionalAccess,
   IUsuarioAccess
-} from '../interfaces/access'
-import { IComentarioService } from '../interfaces/services'
-import { toCreateComentarioDTO, toUpdateComentarioDTO } from '../mappers/input'
+} from '@/interfaces/access'
+
+import { ComentarioCreateRelationalDTO } from '@/dtos/create'
+import { ComentarioResponseDTO } from '@/dtos/response'
+import { IComentarioService } from '@/interfaces/services'
+import { toCreateComentarioDTO, toUpdateComentarioDTO } from '@/mappers/input'
 import {
   toComentarioResponseDTO,
   toComentariosResponseDTO
-} from '../mappers/output'
-import { HttpError, JWTPayload, throwIfNotFound } from '../utils'
+} from '@/mappers/output'
+import { HttpError, JWTPayload, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a comentários:

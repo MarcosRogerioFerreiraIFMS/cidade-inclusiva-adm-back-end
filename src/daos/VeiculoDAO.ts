@@ -1,12 +1,9 @@
-import { db } from '../database/prisma'
-import { VeiculoCreateDTO } from '../dtos/create'
-import { VeiculoUpdateDTO } from '../dtos/update'
-import {
-  generateDataVeiculoCreate,
-  generateDataVeiculoUpdate
-} from '../helpers'
-import { IVeiculoAccess } from '../interfaces/access'
-import { VeiculoCompletions } from '../types'
+import { db } from '@/database/prisma'
+import { VeiculoCreateDTO } from '@/dtos/create'
+import { VeiculoUpdateDTO } from '@/dtos/update'
+import { generateDataVeiculoCreate, generateDataVeiculoUpdate } from '@/helpers'
+import { IVeiculoAccess } from '@/interfaces/access'
+import { VeiculoCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de veículos no banco de dados

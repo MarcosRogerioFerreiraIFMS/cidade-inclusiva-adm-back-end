@@ -1,16 +1,16 @@
-import { ManutencaoResponseDTO } from '../dtos/response'
-import { IManutencaoAccess } from '../interfaces/access'
-import { IManutencaoService } from '../interfaces/services'
+import { ManutencaoResponseDTO } from '@/dtos/response'
+import { IManutencaoAccess } from '@/interfaces/access'
+import { IManutencaoService } from '@/interfaces/services'
 import {
   toCreateEmailDTO,
   toCreateManutencaoDTO,
   toUpdateManutencaoDTO
-} from '../mappers/input'
+} from '@/mappers/input'
 import {
   toManutencaoResponseDTO,
   toManutencoesResponseDTO
-} from '../mappers/output'
-import { throwIfAlreadyExists, throwIfNotFound } from '../utils'
+} from '@/mappers/output'
+import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio de manutenções:

@@ -1,9 +1,9 @@
-import { NoticiaResponseDTO } from '../dtos/response'
-import { INoticiaAccess } from '../interfaces/access'
-import { INoticiaService } from '../interfaces/services'
-import { toCreateNoticiaDTO, toUpdateNoticiaDTO } from '../mappers/input'
-import { toNoticiaResponseDTO, toNoticiasResponseDTO } from '../mappers/output'
-import { throwIfNotFound } from '../utils'
+import { NoticiaResponseDTO } from '@/dtos/response'
+import { INoticiaAccess } from '@/interfaces/access'
+import { INoticiaService } from '@/interfaces/services'
+import { toCreateNoticiaDTO, toUpdateNoticiaDTO } from '@/mappers/input'
+import { toNoticiaResponseDTO, toNoticiasResponseDTO } from '@/mappers/output'
+import { throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a notícias:

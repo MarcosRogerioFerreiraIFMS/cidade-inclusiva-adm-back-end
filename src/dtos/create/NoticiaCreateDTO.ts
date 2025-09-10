@@ -1,5 +1,5 @@
+import { createNoticiaSchema } from '@/schemas'
 import { z } from 'zod'
-import { createNoticiaSchema } from '../../schemas/NoticiaSchema'
 
 /**
  * - DTO (Data Transfer Object) para criação de notícia

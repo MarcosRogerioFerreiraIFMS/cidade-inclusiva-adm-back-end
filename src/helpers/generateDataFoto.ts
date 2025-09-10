@@ -1,5 +1,5 @@
+import { db } from '@/database/prisma'
 import { Prisma } from '@prisma/client'
-import { db } from '../database/prisma'
 
 /**
  * Gera dados para criação de uma única foto para usuário

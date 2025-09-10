@@ -1,7 +1,7 @@
-import { ManutencaoController } from '../controllers/ManutencaoController'
-import { ManutencaoDAO } from '../daos/ManutencaoDAO'
-import { ManutencaoRepository } from '../repositories/ManutencaoRepository'
-import { ManutencaoService } from '../services/ManutencaoService'
+import { ManutencaoController } from '@/controllers/ManutencaoController'
+import { ManutencaoDAO } from '@/daos/ManutencaoDAO'
+import { ManutencaoRepository } from '@/repositories/ManutencaoRepository'
+import { ManutencaoService } from '@/services/ManutencaoService'
 
 const manutencaoDAO = new ManutencaoDAO()
 const manutencaoRepository = new ManutencaoRepository(manutencaoDAO)

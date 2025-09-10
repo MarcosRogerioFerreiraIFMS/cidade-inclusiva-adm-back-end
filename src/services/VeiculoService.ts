@@ -1,9 +1,9 @@
-import { VeiculoResponseDTO } from '../dtos/response'
-import { IMotoristaAccess, IVeiculoAccess } from '../interfaces/access'
-import { IVeiculoService } from '../interfaces/services'
-import { toCreateVeiculoDTO, toUpdateVeiculoDTO } from '../mappers/input'
-import { toVeiculoResponseDTO, toVeiculosResponseDTO } from '../mappers/output'
-import { throwIfAlreadyExists, throwIfNotFound } from '../utils'
+import { VeiculoResponseDTO } from '@/dtos/response'
+import { IMotoristaAccess, IVeiculoAccess } from '@/interfaces/access'
+import { IVeiculoService } from '@/interfaces/services'
+import { toCreateVeiculoDTO, toUpdateVeiculoDTO } from '@/mappers/input'
+import { toVeiculoResponseDTO, toVeiculosResponseDTO } from '@/mappers/output'
+import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a veículos:

@@ -1,4 +1,4 @@
-import { LikeResponseDTO } from '../../dtos/response'
+import { LikeResponseDTO } from '@/dtos/response'
 
 /**
  * Interface para serviço de likes

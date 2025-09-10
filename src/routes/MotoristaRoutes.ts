@@ -1,15 +1,13 @@
-import { Router } from 'express'
-import { MotoristaDependencies } from '../dependencies/MotoristaDependencies'
-import { motoristaOperations } from '../middlewares/compositeAuthMiddleware'
+import { MotoristaDependencies } from '@/dependencies/MotoristaDependencies'
 import {
   contentCreationRateLimit,
   modificationRateLimit,
-  readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
-import {
+  motoristaOperations,
+  readOperationsRateLimit,
   validateRequiredBody,
   validateUUID
-} from '../middlewares/validationMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de motoristas

@@ -1,3 +1,4 @@
+import { TipoUsuario } from '@/enums'
 import chalk from 'chalk'
 import jwt, {
   JsonWebTokenError,
@@ -6,7 +7,6 @@ import jwt, {
   TokenExpiredError,
   VerifyOptions
 } from 'jsonwebtoken'
-import { TipoUsuario } from '../enums'
 import { JWTSecurityConfig } from './jwtSecurityConfig'
 
 /**

@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { MobilidadeDependencies } from '../dependencies/MobilidadeDependencies'
-import { mobilidadeOperations } from '../middlewares/compositeAuthMiddleware'
+import { MobilidadeDependencies } from '@/dependencies/MobilidadeDependencies'
 import {
   contentCreationRateLimit,
+  mobilidadeOperations,
   modificationRateLimit,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de mobilidade

@@ -1,6 +1,6 @@
-import { ProfissionalResponseDTO } from '../../dtos/response'
-import { ProfissionalCompletions } from '../../types'
-import { capitalizeWords } from '../../utils'
+import { ProfissionalResponseDTO } from '@/dtos/response'
+import { ProfissionalCompletions } from '@/types'
+import { capitalizeWords } from '@/utils'
 import { toComentarioResponseDTO, toFotoResponseDTO } from './'
 
 /**

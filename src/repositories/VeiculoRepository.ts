@@ -1,7 +1,7 @@
-import { VeiculoCreateDTO } from '../dtos/create'
-import { VeiculoUpdateDTO } from '../dtos/update'
-import { IVeiculoAccess } from '../interfaces/access'
-import { VeiculoCompletions } from '../types'
+import { VeiculoCreateDTO } from '@/dtos/create'
+import { VeiculoUpdateDTO } from '@/dtos/update'
+import { IVeiculoAccess } from '@/interfaces/access'
+import { VeiculoCompletions } from '@/types'
 
 /**
  * - Repository para operações de veículos:

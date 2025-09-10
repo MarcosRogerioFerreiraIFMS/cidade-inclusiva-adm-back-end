@@ -1,7 +1,7 @@
-import { ManutencaoCreateDTO } from '../dtos/create'
-import { ManutencaoUpdateDTO } from '../dtos/update'
-import { IManutencaoAccess } from '../interfaces/access'
-import { ManutencaoCompletions } from '../types'
+import { ManutencaoCreateDTO } from '@/dtos/create'
+import { ManutencaoUpdateDTO } from '@/dtos/update'
+import { IManutencaoAccess } from '@/interfaces/access'
+import { ManutencaoCompletions } from '@/types'
 
 /**
  * Repository para operações de manutenções:

@@ -1,6 +1,6 @@
-import { NoticiaCreateDTO } from '../../dtos/create'
-import { NoticiaUpdateDTO } from '../../dtos/update'
-import { createNoticiaSchema, updateNoticiaSchema } from '../../schemas'
+import { NoticiaCreateDTO } from '@/dtos/create'
+import { NoticiaUpdateDTO } from '@/dtos/update'
+import { createNoticiaSchema, updateNoticiaSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de notícia

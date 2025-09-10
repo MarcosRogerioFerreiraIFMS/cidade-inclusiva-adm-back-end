@@ -1,5 +1,5 @@
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
-import { sanitizeString } from '../utils'
 import { fotosArraySchema } from './'
 
 /** Comprimento mínimo permitido para marcas de veículos */

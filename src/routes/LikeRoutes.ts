@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { LikeDependencies } from '../dependencies/LikeDependencies'
-import { likeOperations } from '../middlewares/compositeAuthMiddleware'
+import { LikeDependencies } from '@/dependencies/LikeDependencies'
 import {
   contentCreationRateLimit,
+  likeOperations,
   modificationRateLimit,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de likes

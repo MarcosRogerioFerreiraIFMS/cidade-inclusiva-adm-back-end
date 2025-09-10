@@ -1,5 +1,5 @@
-import { ComentarioResponseDTO } from '../../dtos/response'
-import { ComentarioCompletions } from '../../types'
+import { ComentarioResponseDTO } from '@/dtos/response'
+import { ComentarioCompletions } from '@/types'
 import { toLikeResponseDTO } from './'
 
 /**

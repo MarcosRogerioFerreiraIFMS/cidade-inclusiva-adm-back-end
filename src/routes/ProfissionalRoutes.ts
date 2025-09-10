@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { ProfissionalDependencies } from '../dependencies/ProfissionalDependencies'
-import { profissionalOperations } from '../middlewares/compositeAuthMiddleware'
+import { ProfissionalDependencies } from '@/dependencies/ProfissionalDependencies'
 import {
   contentCreationRateLimit,
   modificationRateLimit,
+  profissionalOperations,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de profissionais

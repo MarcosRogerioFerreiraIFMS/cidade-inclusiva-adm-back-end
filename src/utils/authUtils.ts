@@ -1,7 +1,7 @@
-import { HttpStatusCode } from '../enums'
-import { IUsuarioAccess } from '../interfaces/access'
-import { UsuarioCompletions } from '../types'
-import { comparePassword, HttpError } from '../utils'
+import { HttpStatusCode } from '@/enums'
+import { IUsuarioAccess } from '@/interfaces/access'
+import { UsuarioCompletions } from '@/types'
+import { comparePassword, HttpError } from '@/utils'
 
 /**
  * Autentica um usuário verificando email e senha

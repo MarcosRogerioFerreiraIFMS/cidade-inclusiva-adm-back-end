@@ -14,11 +14,11 @@
  * - npm run check
  */
 
+import { EnvValidator } from '@/utils'
 import chalk from 'chalk'
 import 'dotenv/config'
 import { execSync } from 'node:child_process'
 import semver from 'semver'
-import { EnvValidator } from '../src/utils/envValidator'
 
 /** Formatação para títulos principais */
 const title = chalk.bold.blue

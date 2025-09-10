@@ -1,6 +1,6 @@
-import { IMotoristaService } from '../interfaces/services'
-import { ControllerRequest } from '../types'
-import { HandleSuccess } from '../utils'
+import { IMotoristaService } from '@/interfaces/services'
+import { ControllerRequest } from '@/types'
+import { HandleSuccess } from '@/utils'
 
 /**
  * Controller responsável pelas operações CRUD de motoristas

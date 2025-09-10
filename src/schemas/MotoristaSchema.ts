@@ -1,5 +1,5 @@
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
-import { sanitizeString } from '../utils'
 import { createEmailSchema, fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para nomes de motoristas */

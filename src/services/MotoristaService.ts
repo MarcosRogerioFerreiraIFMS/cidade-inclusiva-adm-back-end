@@ -1,12 +1,12 @@
-import { MotoristaResponseDTO } from '../dtos/response'
-import { IMotoristaAccess } from '../interfaces/access'
-import { IMotoristaService } from '../interfaces/services'
-import { toCreateMotoristaDTO, toUpdateMotoristaDTO } from '../mappers/input'
+import { MotoristaResponseDTO } from '@/dtos/response'
+import { IMotoristaAccess } from '@/interfaces/access'
+import { IMotoristaService } from '@/interfaces/services'
+import { toCreateMotoristaDTO, toUpdateMotoristaDTO } from '@/mappers/input'
 import {
   toMotoristaResponseDTO,
   toMotoristasResponseDTO
-} from '../mappers/output'
-import { throwIfAlreadyExists, throwIfNotFound } from '../utils'
+} from '@/mappers/output'
+import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a motoristas:

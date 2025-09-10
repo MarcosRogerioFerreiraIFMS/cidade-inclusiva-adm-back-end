@@ -1,10 +1,10 @@
-import { Router } from 'express'
-import { AuthDependencies } from '../dependencies/AuthDependencies'
-import { authOperations } from '../middlewares/compositeAuthMiddleware'
+import { AuthDependencies } from '@/dependencies/AuthDependencies'
 import {
+  authOperations,
   loginRateLimit,
   tokenValidationRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Rotas para operações de autenticação

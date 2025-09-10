@@ -1,7 +1,7 @@
-import { ProfissionalController } from '../controllers/ProfissionalController'
-import { ProfissionalDAO } from '../daos/ProfissionalDAO'
-import { ProfissionalRepository } from '../repositories/ProfissionalRepository'
-import { ProfissionalService } from '../services/ProfissionalService'
+import { ProfissionalController } from '@/controllers/ProfissionalController'
+import { ProfissionalDAO } from '@/daos/ProfissionalDAO'
+import { ProfissionalRepository } from '@/repositories/ProfissionalRepository'
+import { ProfissionalService } from '@/services/ProfissionalService'
 
 const profissionalDAO = new ProfissionalDAO()
 const profissionalRepository = new ProfissionalRepository(profissionalDAO)

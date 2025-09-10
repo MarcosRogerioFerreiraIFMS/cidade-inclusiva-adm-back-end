@@ -1,5 +1,5 @@
+import { createMobilidadeSchema } from '@/schemas'
 import { z } from 'zod'
-import { createMobilidadeSchema } from '../../schemas/MobilidadeSchema'
 
 /**
  * - DTO (Data Transfer Object) para criação de mobilidade

@@ -25,6 +25,7 @@
  * ⚠️ ATENÇÃO: Este script REMOVE TODOS OS DADOS existentes!
  */
 
+import { hashPassword } from '@/utils'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import {
   CategoriaNoticia,
@@ -35,7 +36,6 @@ import {
 } from '@prisma/client'
 import api from 'brasilapi-js'
 import chalk from 'chalk'
-import { hashPassword } from '../src/utils'
 
 /** Configurar seed para garantir resultados fixos */
 faker.seed(123)

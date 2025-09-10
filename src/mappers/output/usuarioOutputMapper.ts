@@ -1,5 +1,5 @@
-import { UsuarioResponseDTO } from '../../dtos/response'
-import { UsuarioCompletions } from '../../types'
+import { UsuarioResponseDTO } from '@/dtos/response'
+import { UsuarioCompletions } from '@/types'
 import { toEnderecoResponseDTO, toFotoResponseDTO } from './'
 
 /**

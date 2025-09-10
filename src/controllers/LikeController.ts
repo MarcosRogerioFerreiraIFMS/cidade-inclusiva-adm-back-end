@@ -1,6 +1,6 @@
-import { ILikeService } from '../interfaces/services'
-import { ControllerRequest } from '../types'
-import { HandleSuccess } from '../utils'
+import { ILikeService } from '@/interfaces/services'
+import { ControllerRequest } from '@/types'
+import { HandleSuccess } from '@/utils'
 
 /**
  * Controller responsável pelo gerenciamento de likes

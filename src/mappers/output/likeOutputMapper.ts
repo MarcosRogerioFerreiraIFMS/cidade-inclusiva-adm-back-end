@@ -1,5 +1,5 @@
-import { LikeResponseDTO } from '../../dtos/response'
-import { LikeCompletions } from '../../types'
+import { LikeResponseDTO } from '@/dtos/response'
+import { LikeCompletions } from '@/types'
 
 /**
  * - Converte entidade Like completa para DTO de resposta

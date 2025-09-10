@@ -1,5 +1,5 @@
-import { LikeCreateDTO } from '../../dtos/create'
-import { createLikeSchema } from '../../schemas'
+import { LikeCreateDTO } from '@/dtos/create'
+import { createLikeSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de like

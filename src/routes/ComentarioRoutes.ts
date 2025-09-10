@@ -1,12 +1,12 @@
-import { Router } from 'express'
-import { ComentarioDependencies } from '../dependencies/ComentarioDependencies'
-import { comentarioOperations } from '../middlewares/compositeAuthMiddleware'
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import {
   adminOperationsRateLimit,
+  comentarioOperations,
   contentCreationRateLimit,
   modificationRateLimit,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de comentários

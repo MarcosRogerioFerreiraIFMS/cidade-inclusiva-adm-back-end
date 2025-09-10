@@ -1,6 +1,6 @@
+import { ComentarioCreateRelationalDTO } from '@/dtos/create'
+import { ComentarioUpdateDTO } from '@/dtos/update'
 import { Prisma } from '@prisma/client'
-import { ComentarioCreateRelationalDTO } from '../dtos/create'
-import { ComentarioUpdateDTO } from '../dtos/update'
 
 /**
  * - Gera dados formatados para criação de comentário no Prisma

@@ -1,12 +1,12 @@
-import { LikeResponseDTO } from '../dtos/response'
+import { LikeResponseDTO } from '@/dtos/response'
 import {
   IComentarioAccess,
   ILikeAccess,
   IUsuarioAccess
-} from '../interfaces/access'
-import { ILikeService } from '../interfaces/services'
-import { toLikeResponseDTO, toLikesResponseDTO } from '../mappers/output'
-import { throwIfNotFound } from '../utils'
+} from '@/interfaces/access'
+import { ILikeService } from '@/interfaces/services'
+import { toLikeResponseDTO, toLikesResponseDTO } from '@/mappers/output'
+import { throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a likes:

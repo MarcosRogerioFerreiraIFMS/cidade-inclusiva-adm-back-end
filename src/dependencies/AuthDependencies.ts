@@ -1,5 +1,5 @@
-import { AuthController } from '../controllers/AuthController'
-import { AuthService } from '../services/AuthService'
+import { AuthController } from '@/controllers/AuthController'
+import { AuthService } from '@/services/AuthService'
 import { UsuarioDependencies } from './UsuarioDependencies'
 
 const authService = new AuthService(UsuarioDependencies.repository)

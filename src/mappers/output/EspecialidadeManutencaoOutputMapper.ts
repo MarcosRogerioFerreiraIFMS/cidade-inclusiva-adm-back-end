@@ -1,5 +1,5 @@
-import { EspecialidadeManutencaoResponseDTO } from '../../dtos/response'
-import { ManutencaoCompletions } from '../../types'
+import { EspecialidadeManutencaoResponseDTO } from '@/dtos/response'
+import { ManutencaoCompletions } from '@/types'
 
 export function toEspecialidadeManutencoesResponseDTO(
   especialidades: ManutencaoCompletions['especialidades']

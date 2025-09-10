@@ -1,5 +1,5 @@
+import { updateVeiculoSchema } from '@/schemas'
 import { z } from 'zod'
-import { updateVeiculoSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de veículo

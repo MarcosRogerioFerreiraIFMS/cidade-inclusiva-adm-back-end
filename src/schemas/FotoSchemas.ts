@@ -1,5 +1,5 @@
+import { isImageUrl, normalizeUrl, transformUrl, verifyUrl } from '@/utils'
 import { z } from 'zod'
-import { isImageUrl, normalizeUrl, transformUrl, verifyUrl } from '../utils'
 
 /**
  * Schema base para validação de URLs de fotos/imagens

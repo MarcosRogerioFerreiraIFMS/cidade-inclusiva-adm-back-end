@@ -1,13 +1,13 @@
-import { Router } from 'express'
-import { UsuarioDependencies } from '../dependencies/UsuarioDependencies'
-import { usuarioOperations } from '../middlewares/compositeAuthMiddleware'
+import { UsuarioDependencies } from '@/dependencies/UsuarioDependencies'
 import {
   adminOperationsRateLimit,
   emailSearchRateLimit,
   modificationRateLimit,
   readOperationsRateLimit,
-  registerRateLimit
-} from '../middlewares/rateLimitMiddleware'
+  registerRateLimit,
+  usuarioOperations
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Rotas para operações de usuários

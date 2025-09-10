@@ -1,12 +1,12 @@
-import { z } from 'zod'
-import { CategoriaNoticia } from '../enums'
+import { CategoriaNoticia } from '@/enums'
 import {
   normalizeUrl,
   sanitizeContent,
   sanitizeString,
   transformUrl,
   verifyUrl
-} from '../utils'
+} from '@/utils'
+import { z } from 'zod'
 import { fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para títulos de notícias */

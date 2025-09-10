@@ -1,6 +1,6 @@
-import { UsuarioCreateDTO } from '../../dtos/create'
-import { UsuarioUpdateDTO } from '../../dtos/update'
-import { UsuarioCompletions } from '../../types'
+import { UsuarioCreateDTO } from '@/dtos/create'
+import { UsuarioUpdateDTO } from '@/dtos/update'
+import { UsuarioCompletions } from '@/types'
 
 /**
  * Interface de acesso a dados de usuários

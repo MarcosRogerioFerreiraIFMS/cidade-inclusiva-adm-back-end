@@ -1,6 +1,6 @@
+import { ManutencaoCreateDTO } from '@/dtos/create'
+import { ManutencaoUpdateDTO } from '@/dtos/update'
 import { Prisma } from '@prisma/client'
-import { ManutencaoCreateDTO } from '../dtos/create'
-import { ManutencaoUpdateDTO } from '../dtos/update'
 import {
   generateDataFotoManutencaoCreate,
   generateDataFotoManutencaoUpdate,

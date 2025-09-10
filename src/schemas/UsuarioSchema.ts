@@ -1,11 +1,11 @@
-import { z } from 'zod'
 import {
   sanitizeString,
   sanitizeTelefone,
   validateBrazilianCellPhone,
   validatePersonName,
   validateStrongPassword
-} from '../utils'
+} from '@/utils'
+import { z } from 'zod'
 import { createEmailSchema, enderecoSchema, fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para senhas */

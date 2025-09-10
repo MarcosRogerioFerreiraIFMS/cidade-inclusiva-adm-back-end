@@ -1,15 +1,13 @@
-import { Router } from 'express'
-import { VeiculoDependencies } from '../dependencies/VeiculoDependencies'
-import { veiculoOperations } from '../middlewares/compositeAuthMiddleware'
+import { VeiculoDependencies } from '@/dependencies/VeiculoDependencies'
 import {
   contentCreationRateLimit,
   modificationRateLimit,
-  readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
-import {
+  readOperationsRateLimit,
   validateRequiredBody,
-  validateUUID
-} from '../middlewares/validationMiddleware'
+  validateUUID,
+  veiculoOperations
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de veículos

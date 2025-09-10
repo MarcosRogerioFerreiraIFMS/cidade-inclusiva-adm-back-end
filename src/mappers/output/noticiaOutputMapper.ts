@@ -1,6 +1,6 @@
-import { NoticiaResponseDTO } from '../../dtos/response'
-import { NoticiaCompletions } from '../../types'
-import { capitalizeWords } from '../../utils'
+import { NoticiaResponseDTO } from '@/dtos/response'
+import { NoticiaCompletions } from '@/types'
+import { capitalizeWords } from '@/utils'
 import { toFotoResponseDTO } from './'
 
 /**

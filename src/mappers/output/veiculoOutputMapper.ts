@@ -1,6 +1,6 @@
-import { VeiculoResponseDTO } from '../../dtos/response'
-import { VeiculoCompletions } from '../../types'
-import { formatPhoneNumber } from '../../utils'
+import { VeiculoResponseDTO } from '@/dtos/response'
+import { VeiculoCompletions } from '@/types'
+import { formatPhoneNumber } from '@/utils'
 import { toFotoResponseDTO, toFotosResponseDTO } from './'
 
 /**

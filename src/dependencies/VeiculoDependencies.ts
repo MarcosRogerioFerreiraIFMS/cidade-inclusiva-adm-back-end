@@ -1,7 +1,7 @@
-import { VeiculoController } from '../controllers/VeiculoController'
-import { VeiculoDAO } from '../daos/VeiculoDAO'
-import { VeiculoRepository } from '../repositories/VeiculoRepository'
-import { VeiculoService } from '../services/VeiculoService'
+import { VeiculoController } from '@/controllers/VeiculoController'
+import { VeiculoDAO } from '@/daos/VeiculoDAO'
+import { VeiculoRepository } from '@/repositories/VeiculoRepository'
+import { VeiculoService } from '@/services/VeiculoService'
 import { MotoristaDependencies } from './MotoristaDependencies'
 
 const veiculoDAO = new VeiculoDAO()

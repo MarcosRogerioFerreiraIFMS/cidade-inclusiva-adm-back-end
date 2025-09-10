@@ -1,6 +1,6 @@
+import { EspecialidadeProfissional } from '@/enums'
+import { sanitizeString, sanitizeTelefone } from '@/utils'
 import { z } from 'zod'
-import { EspecialidadeProfissional } from '../enums'
-import { sanitizeString, sanitizeTelefone } from '../utils'
 import { createEmailSchema, fotoOpcionalSchema } from './'
 
 /** Comprimento mínimo permitido para nomes de profissionais */

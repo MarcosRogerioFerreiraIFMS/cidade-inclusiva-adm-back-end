@@ -1,5 +1,5 @@
+import { createVeiculoSchema } from '@/schemas/VeiculoSchema'
 import { z } from 'zod'
-import { createVeiculoSchema } from '../../schemas/VeiculoSchema'
 
 /**
  * - DTO (Data Transfer Object) para criação de veículo

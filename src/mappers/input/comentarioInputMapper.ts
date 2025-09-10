@@ -1,6 +1,6 @@
-import { ComentarioCreateDTO } from '../../dtos/create'
-import { ComentarioUpdateDTO } from '../../dtos/update'
-import { createComentarioSchema, updateComentarioSchema } from '../../schemas'
+import { ComentarioCreateDTO } from '@/dtos/create'
+import { ComentarioUpdateDTO } from '@/dtos/update'
+import { createComentarioSchema, updateComentarioSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de comentário

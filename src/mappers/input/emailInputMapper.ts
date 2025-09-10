@@ -1,4 +1,4 @@
-import { createEmailSchema } from '../../schemas'
+import { createEmailSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para email validado

@@ -1,5 +1,5 @@
+import { createUsuarioSchema } from '@/schemas/UsuarioSchema'
 import { z } from 'zod'
-import { createUsuarioSchema } from '../../schemas/UsuarioSchema'
 
 /**
  * - DTO (Data Transfer Object) para criação de usuário

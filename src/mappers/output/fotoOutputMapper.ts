@@ -1,5 +1,5 @@
-import { FotoResponseDTO } from '../../dtos/response'
-import { FotoCompletions } from '../../types'
+import { FotoResponseDTO } from '@/dtos/response'
+import { FotoCompletions } from '@/types'
 
 export function toFotoResponseDTO(
   foto: FotoCompletions | null | undefined

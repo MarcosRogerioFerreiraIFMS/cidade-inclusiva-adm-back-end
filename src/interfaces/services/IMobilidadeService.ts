@@ -1,5 +1,5 @@
-import { MobilidadeResponseDTO } from '../../dtos/response'
-import { JWTPayload } from '../../utils'
+import { MobilidadeResponseDTO } from '@/dtos/response'
+import { JWTPayload } from '@/utils'
 
 /**
  * Interface que define o contrato de serviços para mobilidade

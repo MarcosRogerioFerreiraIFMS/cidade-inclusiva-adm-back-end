@@ -10,8 +10,8 @@
  * - npm run validate-env
  */
 
+import { EnvValidator } from '@/utils'
 import 'dotenv/config'
-import { EnvValidator } from '../src/utils/envValidator'
 
 /**
  * Função principal do script de validação

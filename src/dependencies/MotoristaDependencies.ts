@@ -1,7 +1,7 @@
-import { MotoristaController } from '../controllers/MotoristaController'
-import { MotoristaDAO } from '../daos/MotoristaDAO'
-import { MotoristaRepository } from '../repositories/MotoristaRepository'
-import { MotoristaService } from '../services/MotoristaService'
+import { MotoristaController } from '@/controllers/MotoristaController'
+import { MotoristaDAO } from '@/daos/MotoristaDAO'
+import { MotoristaRepository } from '@/repositories/MotoristaRepository'
+import { MotoristaService } from '@/services/MotoristaService'
 
 const motoristaDAO = new MotoristaDAO()
 const motoristaRepository = new MotoristaRepository(motoristaDAO)

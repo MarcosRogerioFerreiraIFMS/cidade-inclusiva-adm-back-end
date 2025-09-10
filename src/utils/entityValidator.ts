@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../enums'
+import { HttpStatusCode } from '@/enums'
 import { HttpError } from './HttpError'
 
 /**

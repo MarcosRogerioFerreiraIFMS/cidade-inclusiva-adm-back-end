@@ -1,12 +1,12 @@
-import { db } from '../database/prisma'
-import { ManutencaoCreateDTO } from '../dtos/create'
-import { ManutencaoUpdateDTO } from '../dtos/update'
+import { db } from '@/database/prisma'
+import { ManutencaoCreateDTO } from '@/dtos/create'
+import { ManutencaoUpdateDTO } from '@/dtos/update'
 import {
   generateDataManutencaoCreate,
   generateDataManutencaoUpdate
-} from '../helpers'
-import { IManutencaoAccess } from '../interfaces/access'
-import { ManutencaoCompletions } from '../types'
+} from '@/helpers'
+import { IManutencaoAccess } from '@/interfaces/access'
+import { ManutencaoCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de manutenções no banco de dados

@@ -1,12 +1,12 @@
-import { db } from '../database/prisma'
-import { ComentarioCreateRelationalDTO } from '../dtos/create'
-import { ComentarioUpdateDTO } from '../dtos/update'
+import { db } from '@/database/prisma'
+import { ComentarioCreateRelationalDTO } from '@/dtos/create'
+import { ComentarioUpdateDTO } from '@/dtos/update'
 import {
   generateDataComentarioCreate,
   generateDataComentarioUpdate
-} from '../helpers'
-import { IComentarioAccess } from '../interfaces/access'
-import { ComentarioCompletions } from '../types'
+} from '@/helpers'
+import { IComentarioAccess } from '@/interfaces/access'
+import { ComentarioCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de comentários no banco de dados

@@ -1,10 +1,10 @@
-import api from 'brasilapi-js'
-import z from 'zod'
 import {
   sanitizeString,
   validateBrazilianCEP,
   validateBrazilianStates
-} from '../utils'
+} from '@/utils'
+import api from 'brasilapi-js'
+import z from 'zod'
 
 export const enderecoSchema = z.object(
   {

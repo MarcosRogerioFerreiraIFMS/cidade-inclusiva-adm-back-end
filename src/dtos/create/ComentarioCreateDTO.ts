@@ -1,5 +1,5 @@
+import { createComentarioSchema } from '@/schemas'
 import { z } from 'zod'
-import { createComentarioSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para criação de comentário

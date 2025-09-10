@@ -1,6 +1,6 @@
-import { IMobilidadeService } from '../interfaces/services'
-import { AuthenticatedRequest, ControllerRequest } from '../types'
-import { HandleSuccess } from '../utils'
+import { IMobilidadeService } from '@/interfaces/services'
+import { AuthenticatedRequest, ControllerRequest } from '@/types'
+import { HandleSuccess } from '@/utils'
 
 /**
  * Controller responsável pelas operações CRUD de mobilidades

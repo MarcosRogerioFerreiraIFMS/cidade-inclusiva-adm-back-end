@@ -1,7 +1,7 @@
-import { ComentarioController } from '../controllers/ComentarioController'
-import { ComentarioDAO } from '../daos/ComentarioDAO'
-import { ComentarioRepository } from '../repositories/ComentarioRepository'
-import { ComentarioService } from '../services/ComentarioService'
+import { ComentarioController } from '@/controllers/ComentarioController'
+import { ComentarioDAO } from '@/daos/ComentarioDAO'
+import { ComentarioRepository } from '@/repositories/ComentarioRepository'
+import { ComentarioService } from '@/services/ComentarioService'
 import { ProfissionalDependencies } from './ProfissionalDependencies'
 import { UsuarioDependencies } from './UsuarioDependencies'
 

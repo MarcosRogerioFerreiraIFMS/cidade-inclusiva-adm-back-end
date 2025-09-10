@@ -1,7 +1,7 @@
-import { HttpStatusCode } from '../enums'
-import { IAuthService } from '../interfaces/services'
-import { ControllerRequest } from '../types'
-import { HandleSuccess } from '../utils'
+import { HttpStatusCode } from '@/enums'
+import { IAuthService } from '@/interfaces/services'
+import { ControllerRequest } from '@/types'
+import { HandleSuccess } from '@/utils'
 
 /**
  * Controller responsável pelas operações de autenticação

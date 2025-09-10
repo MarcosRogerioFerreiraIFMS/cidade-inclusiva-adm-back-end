@@ -1,6 +1,6 @@
-import { ManutencaoCreateDTO } from '../../dtos/create'
-import { ManutencaoUpdateDTO } from '../../dtos/update'
-import { ManutencaoCompletions } from '../../types'
+import { ManutencaoCreateDTO } from '@/dtos/create'
+import { ManutencaoUpdateDTO } from '@/dtos/update'
+import { ManutencaoCompletions } from '@/types'
 
 /**
  * Interface de acesso a dados de manutenções

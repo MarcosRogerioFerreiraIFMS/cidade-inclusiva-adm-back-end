@@ -1,4 +1,4 @@
-import { ManutencaoResponseDTO } from '../../dtos/response'
+import { ManutencaoResponseDTO } from '@/dtos/response'
 
 /**
  * Interface de serviço de manutenções

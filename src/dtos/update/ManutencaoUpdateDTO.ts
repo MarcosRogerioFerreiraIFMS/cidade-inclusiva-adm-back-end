@@ -1,5 +1,5 @@
+import { updateManutencaoSchema } from '@/schemas'
 import { z } from 'zod'
-import { updateManutencaoSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de manutenção

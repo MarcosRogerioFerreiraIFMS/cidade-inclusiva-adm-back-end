@@ -11,9 +11,8 @@
  * - npm run validate-jwt
  */
 
+import { EnvValidator, JWTSecurityConfig } from '@/utils'
 import 'dotenv/config'
-import { EnvValidator } from '../src/utils/envValidator'
-import { JWTSecurityConfig } from '../src/utils/jwtSecurityConfig'
 
 /**
  * Função principal do script de validação JWT

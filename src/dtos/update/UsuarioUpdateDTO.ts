@@ -1,5 +1,5 @@
+import { updateUsuarioSchema } from '@/schemas'
 import { z } from 'zod'
-import { updateUsuarioSchema } from '../../schemas'
 
 /**
  * - DTO (Data Transfer Object) para atualização de usuário

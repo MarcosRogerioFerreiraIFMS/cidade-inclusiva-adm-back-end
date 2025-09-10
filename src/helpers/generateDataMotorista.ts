@@ -1,6 +1,6 @@
+import { MotoristaCreateDTO } from '@/dtos/create'
+import { MotoristaUpdateDTO } from '@/dtos/update'
 import { Prisma } from '@prisma/client'
-import { MotoristaCreateDTO } from '../dtos/create'
-import { MotoristaUpdateDTO } from '../dtos/update'
 import {
   generateDataFotoMotoristaCreate,
   generateDataFotoMotoristaUpdate

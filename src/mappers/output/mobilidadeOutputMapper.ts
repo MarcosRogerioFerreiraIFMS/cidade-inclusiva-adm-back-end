@@ -1,7 +1,7 @@
-import { MobilidadeResponseDTO } from '../../dtos/response'
-import { MobilidadeCompletions } from '../../types'
+import { MobilidadeResponseDTO } from '@/dtos/response'
+import { MobilidadeCompletions } from '@/types'
 
-import { capitalizeWords } from '../../utils'
+import { capitalizeWords } from '@/utils'
 
 /**
  * - Converte entidade Mobilidade completa para DTO de resposta

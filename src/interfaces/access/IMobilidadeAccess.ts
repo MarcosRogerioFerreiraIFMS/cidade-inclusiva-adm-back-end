@@ -1,6 +1,6 @@
-import { MobilidadeCreateDTO } from '../../dtos/create'
-import { MobilidadeUpdateDTO } from '../../dtos/update'
-import { MobilidadeCompletions } from '../../types'
+import { MobilidadeCreateDTO } from '@/dtos/create'
+import { MobilidadeUpdateDTO } from '@/dtos/update'
+import { MobilidadeCompletions } from '@/types'
 
 /**
  * Interface que define o contrato para acesso aos dados de mobilidade

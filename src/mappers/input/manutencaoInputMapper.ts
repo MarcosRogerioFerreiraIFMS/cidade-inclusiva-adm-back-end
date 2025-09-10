@@ -1,6 +1,6 @@
-import { ManutencaoCreateDTO } from '../../dtos/create'
-import { ManutencaoUpdateDTO } from '../../dtos/update'
-import { createManutencaoSchema, updateManutencaoSchema } from '../../schemas'
+import { ManutencaoCreateDTO } from '@/dtos/create'
+import { ManutencaoUpdateDTO } from '@/dtos/update'
+import { createManutencaoSchema, updateManutencaoSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de manutenção

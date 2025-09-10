@@ -1,7 +1,7 @@
-import { UsuarioController } from '../controllers/UsuarioController'
-import { UsuarioDAO } from '../daos/UsuarioDAO'
-import { UsuarioRepository } from '../repositories/UsuarioRepository'
-import { UsuarioService } from '../services/UsuarioService'
+import { UsuarioController } from '@/controllers/UsuarioController'
+import { UsuarioDAO } from '@/daos/UsuarioDAO'
+import { UsuarioRepository } from '@/repositories/UsuarioRepository'
+import { UsuarioService } from '@/services/UsuarioService'
 
 const usuarioDAO = new UsuarioDAO()
 const usuarioRepository = new UsuarioRepository(usuarioDAO)

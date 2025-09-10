@@ -1,6 +1,6 @@
+import { HttpStatusCode } from '@/enums'
+import { HttpError } from '@/utils'
 import { NextFunction, Request, Response } from 'express'
-import { HttpStatusCode } from '../enums'
-import { HttpError } from '../utils'
 
 /**
  * Middleware para validação de UUID em parâmetros da rota

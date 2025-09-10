@@ -1,10 +1,10 @@
-import { z } from 'zod'
 import {
   sanitizeString,
   sanitizeTelefone,
   validateBrazilianCellPhone,
   validatePersonName
-} from '../utils'
+} from '@/utils'
+import { z } from 'zod'
 import {
   createEmailSchema,
   enderecoSchema,

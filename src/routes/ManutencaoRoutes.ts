@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { ManutencaoDependencies } from '../dependencies/ManutencaoDependencies'
-import { manutencaoOperations } from '../middlewares/compositeAuthMiddleware'
+import { ManutencaoDependencies } from '@/dependencies/ManutencaoDependencies'
 import {
   emailSearchRateLimit,
+  manutencaoOperations,
   modificationRateLimit,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Rotas para operações de manutenções

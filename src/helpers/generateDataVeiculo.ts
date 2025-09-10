@@ -1,6 +1,6 @@
+import { VeiculoCreateDTO } from '@/dtos/create'
+import { VeiculoUpdateDTO } from '@/dtos/update'
 import { Prisma } from '@prisma/client'
-import { VeiculoCreateDTO } from '../dtos/create'
-import { VeiculoUpdateDTO } from '../dtos/update'
 import {
   generateDataFotosVeiculoCreate,
   generateDataFotosVeiculoUpdate

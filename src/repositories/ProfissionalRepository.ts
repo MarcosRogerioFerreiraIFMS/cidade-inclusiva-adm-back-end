@@ -1,7 +1,7 @@
-import { ProfissionalCreateDTO } from '../dtos/create'
-import { ProfissionalUpdateDTO } from '../dtos/update'
-import { IProfissionalAccess } from '../interfaces/access'
-import { ProfissionalCompletions } from '../types'
+import { ProfissionalCreateDTO } from '@/dtos/create'
+import { ProfissionalUpdateDTO } from '@/dtos/update'
+import { IProfissionalAccess } from '@/interfaces/access'
+import { ProfissionalCompletions } from '@/types'
 
 /**
  * - Repository para operações de profissionais:

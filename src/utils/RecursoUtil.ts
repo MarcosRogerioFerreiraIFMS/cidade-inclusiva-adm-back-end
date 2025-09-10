@@ -1,4 +1,4 @@
-import { TipoRecurso, isTipoRecursoValido } from '../enums'
+import { TipoRecurso, isTipoRecursoValido } from '@/enums'
 
 /**
  * Utilitário para trabalhar com recursos do sistema

@@ -1,12 +1,9 @@
-import { db } from '../database/prisma'
-import { UsuarioCreateDTO } from '../dtos/create'
-import { UsuarioUpdateDTO } from '../dtos/update'
-import {
-  generateDataUsuarioCreate,
-  generateDataUsuarioUpdate
-} from '../helpers'
-import { IUsuarioAccess } from '../interfaces/access'
-import { UsuarioCompletions } from '../types'
+import { db } from '@/database/prisma'
+import { UsuarioCreateDTO } from '@/dtos/create'
+import { UsuarioUpdateDTO } from '@/dtos/update'
+import { generateDataUsuarioCreate, generateDataUsuarioUpdate } from '@/helpers'
+import { IUsuarioAccess } from '@/interfaces/access'
+import { UsuarioCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de usuários no banco de dados

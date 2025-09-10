@@ -5,8 +5,7 @@ import express, { Request, Response } from 'express'
 import helmet from 'helmet'
 import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums'
-import { globalErrorHandler } from './middlewares/errorMiddleware'
-import { requestTimeout } from './middlewares/timeoutMiddleware'
+import { globalErrorHandler, requestTimeout } from './middlewares'
 import {
   AuthRoutes,
   ComentarioRoutes,

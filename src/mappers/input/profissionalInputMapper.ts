@@ -1,9 +1,6 @@
-import { ProfissionalCreateDTO } from '../../dtos/create'
-import { ProfissionalUpdateDTO } from '../../dtos/update'
-import {
-  createProfissionalSchema,
-  updateProfissionalSchema
-} from '../../schemas'
+import { ProfissionalCreateDTO } from '@/dtos/create'
+import { ProfissionalUpdateDTO } from '@/dtos/update'
+import { createProfissionalSchema, updateProfissionalSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de profissional

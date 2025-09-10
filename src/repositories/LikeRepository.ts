@@ -1,6 +1,6 @@
-import { LikeCreateDTO } from '../dtos/create'
-import { ILikeAccess } from '../interfaces/access'
-import { LikeCompletions } from '../types'
+import { LikeCreateDTO } from '@/dtos/create'
+import { ILikeAccess } from '@/interfaces/access'
+import { LikeCompletions } from '@/types'
 
 /**
  * - Repository para operações de likes:

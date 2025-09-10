@@ -1,5 +1,5 @@
-import { ManutencaoResponseDTO } from '../../dtos/response'
-import { ManutencaoCompletions } from '../../types'
+import { ManutencaoResponseDTO } from '@/dtos/response'
+import { ManutencaoCompletions } from '@/types'
 import {
   toEnderecoResponseDTO,
   toEspecialidadeManutencoesResponseDTO,

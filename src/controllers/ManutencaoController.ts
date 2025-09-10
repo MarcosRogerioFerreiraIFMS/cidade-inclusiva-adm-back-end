@@ -1,6 +1,6 @@
-import { IManutencaoService } from '../interfaces/services/IManutencaoService'
-import { ControllerRequest } from '../types/RequestTypes'
-import { HandleSuccess } from '../utils/HandleSuccess'
+import { IManutencaoService } from '@/interfaces/services/IManutencaoService'
+import { ControllerRequest } from '@/types/RequestTypes'
+import { HandleSuccess } from '@/utils'
 
 /**
  * Controller responsável pelas operações CRUD de manutenções

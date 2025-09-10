@@ -1,7 +1,7 @@
+import { UsuarioCreateDTO } from '@/dtos/create'
+import { UsuarioUpdateDTO } from '@/dtos/update'
+import { hashPassword } from '@/utils'
 import { Prisma } from '@prisma/client'
-import { UsuarioCreateDTO } from '../dtos/create'
-import { UsuarioUpdateDTO } from '../dtos/update'
-import { hashPassword } from '../utils/passwordUtils'
 import {
   generateDataFotoUsuarioCreate,
   generateDataFotoUsuarioUpdate

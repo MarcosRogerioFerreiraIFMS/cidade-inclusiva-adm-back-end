@@ -1,6 +1,6 @@
-import { NoticiaCreateDTO } from '../../dtos/create'
-import { NoticiaUpdateDTO } from '../../dtos/update'
-import { NoticiaCompletions } from '../../types'
+import { NoticiaCreateDTO } from '@/dtos/create'
+import { NoticiaUpdateDTO } from '@/dtos/update'
+import { NoticiaCompletions } from '@/types'
 
 /**
  * Interface de acesso a dados de notícias

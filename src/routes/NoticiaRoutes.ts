@@ -1,11 +1,11 @@
-import { Router } from 'express'
-import { NoticiaDependencies } from '../dependencies/NoticiaDependencies'
-import { noticiaOperations } from '../middlewares/compositeAuthMiddleware'
+import { NoticiaDependencies } from '@/dependencies/NoticiaDependencies'
 import {
   contentCreationRateLimit,
   modificationRateLimit,
+  noticiaOperations,
   readOperationsRateLimit
-} from '../middlewares/rateLimitMiddleware'
+} from '@/middlewares'
+import { Router } from 'express'
 
 /**
  * - Router para rotas de notícias

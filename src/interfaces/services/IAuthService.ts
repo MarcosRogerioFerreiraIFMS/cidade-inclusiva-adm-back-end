@@ -1,4 +1,4 @@
-import { LoginResponseDTO } from '../../dtos/response'
+import { LoginResponseDTO } from '@/dtos/response'
 
 /**
  * Interface do serviço de autenticação

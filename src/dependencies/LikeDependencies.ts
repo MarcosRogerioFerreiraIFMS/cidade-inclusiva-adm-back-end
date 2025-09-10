@@ -1,7 +1,7 @@
-import { LikeController } from '../controllers/LikeController'
-import { LikeDAO } from '../daos/LikeDAO'
-import { LikeRepository } from '../repositories/LikeRepository'
-import { LikeService } from '../services/LikeService'
+import { LikeController } from '@/controllers/LikeController'
+import { LikeDAO } from '@/daos/LikeDAO'
+import { LikeRepository } from '@/repositories/LikeRepository'
+import { LikeService } from '@/services/LikeService'
 import { ComentarioDependencies } from './ComentarioDependencies'
 import { UsuarioDependencies } from './UsuarioDependencies'
 

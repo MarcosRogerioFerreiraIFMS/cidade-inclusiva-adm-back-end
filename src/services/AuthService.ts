@@ -1,11 +1,11 @@
+import { LoginResponseDTO } from '@/dtos/response'
+import { HttpStatusCode } from '@/enums'
+import { IUsuarioAccess } from '@/interfaces/access'
+import { IAuthService } from '@/interfaces/services'
+import { toCreateLoginDTO } from '@/mappers/input'
+import { toUsuarioResponseDTO } from '@/mappers/output'
+import { HttpError, JWTUtils, throwIfNotFound } from '@/utils'
 import { compareSync } from 'bcryptjs'
-import { LoginResponseDTO } from '../dtos/response'
-import { HttpStatusCode } from '../enums'
-import { IUsuarioAccess } from '../interfaces/access'
-import { IAuthService } from '../interfaces/services'
-import { toCreateLoginDTO } from '../mappers/input'
-import { toUsuarioResponseDTO } from '../mappers/output'
-import { HttpError, JWTUtils, throwIfNotFound } from '../utils'
 
 /**
  * Serviço responsável pelas operações de autenticação e autorização

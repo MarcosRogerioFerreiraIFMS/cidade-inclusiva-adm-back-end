@@ -1,9 +1,9 @@
-import { UsuarioResponseDTO } from '../dtos/response'
-import { IUsuarioAccess } from '../interfaces/access'
-import { IUsuarioService } from '../interfaces/services'
-import { toCreateUsuarioDTO, toUpdateUsuarioDTO } from '../mappers/input'
-import { toUsuarioResponseDTO, toUsuariosResponseDTO } from '../mappers/output'
-import { throwIfAlreadyExists, throwIfNotFound } from '../utils'
+import { UsuarioResponseDTO } from '@/dtos/response'
+import { IUsuarioAccess } from '@/interfaces/access'
+import { IUsuarioService } from '@/interfaces/services'
+import { toCreateUsuarioDTO, toUpdateUsuarioDTO } from '@/mappers/input'
+import { toUsuarioResponseDTO, toUsuariosResponseDTO } from '@/mappers/output'
+import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio de usuários:

@@ -1,5 +1,5 @@
+import { sanitizeContent } from '@/utils'
 import { z } from 'zod'
-import { sanitizeContent } from '../utils'
 
 /** Comprimento mínimo permitido para conteúdo de comentários */
 const CONTEUDO_MIN_LENGTH = 1

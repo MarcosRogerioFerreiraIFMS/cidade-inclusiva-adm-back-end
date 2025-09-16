@@ -1,6 +1,6 @@
 import { HttpStatusCode } from '@/enums'
-import { IAuthService } from '@/interfaces/services'
-import { ControllerRequest } from '@/types'
+import type { IAuthService } from '@/interfaces/services'
+import type { ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

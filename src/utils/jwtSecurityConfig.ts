@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import jwt from 'jsonwebtoken'
+import type jwt from 'jsonwebtoken'
 
 /**
  * Classe responsável pela configuração e validação de segurança JWT

@@ -17,7 +17,7 @@ const veiculoController = new VeiculoController(veiculoService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de veículos
  * Facilita a manutenção e testes através da inversão de controle
  */
-const VeiculoDependencies = {
+export const VeiculoDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: veiculoController,
   /** Serviço responsável pelas regras de negócio */
@@ -26,6 +26,4 @@ const VeiculoDependencies = {
   repository: veiculoRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: veiculoDAO
-}
-
-export { VeiculoDependencies }
+} as const

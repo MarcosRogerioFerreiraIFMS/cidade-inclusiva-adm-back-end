@@ -1,3 +1,4 @@
+export * from './AcessibilidadeUrbanaSchema'
 export * from './ComentarioSchema'
 export * from './EmailSchema'
 export * from './EnderecoSchema'

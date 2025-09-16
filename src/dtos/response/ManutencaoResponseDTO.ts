@@ -1,8 +1,6 @@
-import {
-  EnderecoResponseDTO,
-  EspecialidadeManutencaoResponseDTO,
-  FotoResponseDTO
-} from './'
+import type { EnderecoResponseDTO } from './EnderecoResponseDTO'
+import type { EspecialidadeManutencaoResponseDTO } from './EspecialidadeManutencaoResponseDTO'
+import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
  * - DTO (Data Transfer Object) para resposta de manutenção
@@ -18,4 +16,5 @@ export interface ManutencaoResponseDTO {
   fotos: FotoResponseDTO[]
   logo?: FotoResponseDTO
   especialidades: EspecialidadeManutencaoResponseDTO[]
+  criadoEm: Date
 }

@@ -13,7 +13,7 @@ const manutencaoController = new ManutencaoController(manutencaoService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de manutenções
  * Facilita a manutenção e testes através da inversão de controle
  */
-const ManutencaoDependencies = {
+export const ManutencaoDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: manutencaoController,
   /** Serviço responsável pelas regras de negócio */
@@ -22,6 +22,4 @@ const ManutencaoDependencies = {
   repository: manutencaoRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: manutencaoDAO
-}
-
-export { ManutencaoDependencies }
+} as const

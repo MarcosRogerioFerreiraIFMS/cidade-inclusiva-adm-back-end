@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 /**
  * Tipo completo do usuário com todos os relacionamentos

@@ -1,5 +1,5 @@
-import { INoticiaService } from '@/interfaces/services'
-import { ControllerRequest } from '@/types'
+import type { INoticiaService } from '@/interfaces/services'
+import type { ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

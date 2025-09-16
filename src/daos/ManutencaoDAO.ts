@@ -1,12 +1,12 @@
 import { db } from '@/database/prisma'
-import { ManutencaoCreateDTO } from '@/dtos/create'
-import { ManutencaoUpdateDTO } from '@/dtos/update'
+import type { ManutencaoCreateDTO } from '@/dtos/create'
+import type { ManutencaoUpdateDTO } from '@/dtos/update'
 import {
   generateDataManutencaoCreate,
   generateDataManutencaoUpdate
 } from '@/helpers'
-import { IManutencaoAccess } from '@/interfaces/access'
-import { ManutencaoCompletions } from '@/types'
+import type { IManutencaoAccess } from '@/interfaces/access'
+import type { ManutencaoCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de manutenções no banco de dados
@@ -125,6 +125,7 @@ export class ManutencaoDAO implements IManutencaoAccess {
    */
   async findAll(): Promise<ManutencaoCompletions[]> {
     return await db.manutencao.findMany({
+      orderBy: { criadoEm: 'desc' },
       include: {
         endereco: true,
         fotos: true,

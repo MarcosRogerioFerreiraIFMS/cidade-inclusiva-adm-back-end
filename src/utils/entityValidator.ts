@@ -3,7 +3,7 @@ import { HttpError } from './HttpError'
 
 /**
  * Valida se uma entidade existe e lança erro HTTP 404 se não encontrada
- * Utility function para validação de existência de entidades no banco de dados
+ * Se o item for null, significa que a entidade não foi encontrada
  * @template T - Tipo genérico da entidade
  * @param {T | null} item - Item a ser validado (pode ser null)
  * @param {string} message - Mensagem de erro a ser exibida se o item não for encontrado
@@ -19,7 +19,7 @@ export function throwIfNotFound<T>(item: T | null, message: string): T {
 
 /**
  * Valida se uma entidade já existe e lança erro HTTP 409 (Conflict) se encontrada
- * Utility function para validação de duplicação de entidades no banco de dados
+ * Se o item não for null, significa que já existe uma entidade com os mesmos critérios
  * @template T - Tipo genérico da entidade
  * @param {T | null} item - Item a ser validado (deve ser null para passar na validação)
  * @param {string} message - Mensagem de erro a ser exibida se o item já existir

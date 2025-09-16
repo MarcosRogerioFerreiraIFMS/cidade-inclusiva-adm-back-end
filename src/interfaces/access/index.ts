@@ -1,3 +1,4 @@
+export * from './IAcessibilidadeUrbanaAccess'
 export * from './IComentarioAccess'
 export * from './ILikeAccess'
 export * from './IManutencaoAccess'

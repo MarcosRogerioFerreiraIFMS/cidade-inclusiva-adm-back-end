@@ -1,6 +1,8 @@
 /**
  * Enum global para definir os tipos de recursos do sistema
  * - Usado para identificar e validar recursos em middlewares e serviços
+ * - Este enum não está vinculado a nenhum ORM ou banco de dados
+ * - Ele serve apenas para rastrear as entidades do sistema
  */
 export enum TipoRecurso {
   USUARIO = 'USUARIO',
@@ -9,7 +11,8 @@ export enum TipoRecurso {
   MOBILIDADE = 'MOBILIDADE',
   NOTICIA = 'NOTICIA',
   PROFISSIONAL = 'PROFISSIONAL',
-  MANUTENCAO = 'MANUTENCAO'
+  MANUTENCAO = 'MANUTENCAO',
+  ACESSIBILIDADE_URBANA = 'ACESSIBILIDADE_URBANA'
 }
 
 /**

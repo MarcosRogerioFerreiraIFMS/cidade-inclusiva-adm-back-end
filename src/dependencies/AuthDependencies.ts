@@ -9,11 +9,9 @@ const authController = new AuthController(authService)
  * Container de dependências para operações de autenticação
  * Centraliza as instâncias configuradas de controller e service
  */
-const AuthDependencies = {
+export const AuthDependencies = {
   /** Controller de autenticação configurado */
   controller: authController,
   /** Serviço de autenticação configurado */
   service: authService
-}
-
-export { AuthDependencies }
+} as const

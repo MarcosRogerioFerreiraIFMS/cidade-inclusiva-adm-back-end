@@ -1,5 +1,5 @@
-import { LikeCreateDTO } from '@/dtos/create'
-import { LikeCompletions } from '@/types'
+import type { LikeCreateDTO } from '@/dtos/create'
+import type { LikeCompletions } from '@/types'
 
 /**
  * Interface de acesso a dados de likes

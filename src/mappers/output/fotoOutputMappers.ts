@@ -1,5 +1,5 @@
-import { FotoResponseDTO } from '@/dtos/response'
-import { FotoCompletions } from '@/types'
+import type { FotoResponseDTO, LogoResponseDTO } from '@/dtos/response'
+import type { FotoCompletions, LogoCompletions } from '@/types'
 
 export function toFotoResponseDTO(
   foto: FotoCompletions | null | undefined
@@ -18,4 +18,15 @@ export function toFotosResponseDTO(
   return fotos
     .map(toFotoResponseDTO)
     .filter((foto): foto is FotoResponseDTO => foto !== undefined)
+}
+
+export function toLogoResponseDTO(
+  logo: LogoCompletions | null | undefined
+): LogoResponseDTO | undefined {
+  if (!logo) return undefined
+
+  return {
+    id: logo.id,
+    url: logo.url
+  }
 }

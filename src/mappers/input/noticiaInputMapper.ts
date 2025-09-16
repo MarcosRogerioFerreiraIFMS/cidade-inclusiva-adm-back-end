@@ -1,5 +1,5 @@
-import { NoticiaCreateDTO } from '@/dtos/create'
-import { NoticiaUpdateDTO } from '@/dtos/update'
+import type { NoticiaCreateDTO } from '@/dtos/create'
+import type { NoticiaUpdateDTO } from '@/dtos/update'
 import { createNoticiaSchema, updateNoticiaSchema } from '@/schemas'
 
 /**
@@ -9,8 +9,10 @@ import { createNoticiaSchema, updateNoticiaSchema } from '@/schemas'
  * @returns {Promise<NoticiaCreateDTO>} DTO validado para criação de notícia
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateNoticiaDTO(input: unknown): Promise<NoticiaCreateDTO> {
-  return createNoticiaSchema.parseAsync(input)
+export async function toCreateNoticiaDTO(
+  input: unknown
+): Promise<NoticiaCreateDTO> {
+  return await createNoticiaSchema.parseAsync(input)
 }
 
 /**
@@ -20,6 +22,8 @@ export function toCreateNoticiaDTO(input: unknown): Promise<NoticiaCreateDTO> {
  * @returns {Promise<NoticiaUpdateDTO>} DTO validado para atualização de notícia
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateNoticiaDTO(input: unknown): Promise<NoticiaUpdateDTO> {
-  return updateNoticiaSchema.parseAsync(input)
+export async function toUpdateNoticiaDTO(
+  input: unknown
+): Promise<NoticiaUpdateDTO> {
+  return await updateNoticiaSchema.parseAsync(input)
 }

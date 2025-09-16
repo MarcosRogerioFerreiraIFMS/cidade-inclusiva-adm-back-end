@@ -1,12 +1,12 @@
-import { ManutencaoCreateDTO } from '@/dtos/create'
-import { ManutencaoUpdateDTO } from '@/dtos/update'
-import { Prisma } from '@prisma/client'
+import type { ManutencaoCreateDTO } from '@/dtos/create'
+import type { ManutencaoUpdateDTO } from '@/dtos/update'
+import type { Prisma } from '@prisma/client'
 import {
   generateDataFotoManutencaoCreate,
   generateDataFotoManutencaoUpdate,
   generateDataLogoManutencaoCreate,
   generateDataLogoManutencaoUpdate
-} from './'
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de manutenção no Prisma

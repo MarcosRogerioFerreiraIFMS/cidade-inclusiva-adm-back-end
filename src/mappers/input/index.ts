@@ -1,3 +1,4 @@
+export * from './acessibilidadeUrbanaInputMapper'
 export * from './comentarioInputMapper'
 export * from './emailInputMapper'
 export * from './likeInputMapper'

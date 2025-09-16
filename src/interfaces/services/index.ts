@@ -1,3 +1,4 @@
+export * from './IAcessibilidadeUrbanaService'
 export * from './IAuthService'
 export * from './IComentarioService'
 export * from './ILikeService'

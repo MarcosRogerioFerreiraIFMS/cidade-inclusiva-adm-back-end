@@ -1,7 +1,7 @@
-import { MotoristaResponseDTO } from '@/dtos/response'
-import { MotoristaCompletions } from '@/types'
+import type { MotoristaResponseDTO } from '@/dtos/response'
+import type { MotoristaCompletions } from '@/types'
 import { formatPhoneNumber } from '@/utils'
-import { toFotoResponseDTO } from './'
+import { toFotoResponseDTO } from './fotoOutputMappers'
 
 /**
  * - Converte entidade Motorista completa para DTO de resposta

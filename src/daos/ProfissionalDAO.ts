@@ -1,12 +1,12 @@
 import { db } from '@/database/prisma'
-import { ProfissionalCreateDTO } from '@/dtos/create'
-import { ProfissionalUpdateDTO } from '@/dtos/update'
+import type { ProfissionalCreateDTO } from '@/dtos/create'
+import type { ProfissionalUpdateDTO } from '@/dtos/update'
 import {
   generateDataProfissionalCreate,
   generateDataProfissionalUpdate
 } from '@/helpers'
-import { IProfissionalAccess } from '@/interfaces/access'
-import { ProfissionalCompletions } from '@/types'
+import type { IProfissionalAccess } from '@/interfaces/access'
+import type { ProfissionalCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de profissionais no banco de dados

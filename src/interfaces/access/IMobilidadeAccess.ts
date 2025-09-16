@@ -1,6 +1,6 @@
-import { MobilidadeCreateDTO } from '@/dtos/create'
-import { MobilidadeUpdateDTO } from '@/dtos/update'
-import { MobilidadeCompletions } from '@/types'
+import type { MobilidadeCreateDTO } from '@/dtos/create'
+import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type { MobilidadeCompletions } from '@/types'
 
 /**
  * Interface que define o contrato para acesso aos dados de mobilidade
@@ -60,12 +60,4 @@ export interface IMobilidadeAccess {
    * @returns {Promise<MobilidadeCompletions[]>} Lista de mobilidades com o status especificado
    */
   findByStatus(status: string): Promise<MobilidadeCompletions[]>
-
-  /**
-   * Verifica se o usuário é proprietário da mobilidade
-   * @param {string} mobilidadeId - ID único da mobilidade
-   * @param {string} userId - ID único do usuário
-   * @returns {Promise<boolean>} True se o usuário for proprietário, false caso contrário
-   */
-  isMobilidadeOwner(mobilidadeId: string, userId: string): Promise<boolean>
 }

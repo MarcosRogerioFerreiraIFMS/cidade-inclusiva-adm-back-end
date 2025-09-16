@@ -1,6 +1,6 @@
-import { MobilidadeCreateDTO } from '@/dtos/create'
-import { MobilidadeUpdateDTO } from '@/dtos/update'
-import { Prisma } from '@prisma/client'
+import type { MobilidadeCreateDTO } from '@/dtos/create'
+import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type { Prisma } from '@prisma/client'
 
 /**
  * - Gera dados formatados para criação de mobilidade no Prisma

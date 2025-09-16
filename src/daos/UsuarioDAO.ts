@@ -1,9 +1,9 @@
 import { db } from '@/database/prisma'
-import { UsuarioCreateDTO } from '@/dtos/create'
-import { UsuarioUpdateDTO } from '@/dtos/update'
+import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { UsuarioUpdateDTO } from '@/dtos/update'
 import { generateDataUsuarioCreate, generateDataUsuarioUpdate } from '@/helpers'
-import { IUsuarioAccess } from '@/interfaces/access'
-import { UsuarioCompletions } from '@/types'
+import type { IUsuarioAccess } from '@/interfaces/access'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de usuários no banco de dados
@@ -110,6 +110,7 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async findAll(): Promise<UsuarioCompletions[]> {
     return await db.usuario.findMany({
+      orderBy: { criadoEm: 'desc' },
       include: {
         endereco: true,
         foto: true

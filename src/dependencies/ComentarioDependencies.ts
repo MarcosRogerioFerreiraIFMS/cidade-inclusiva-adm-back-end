@@ -19,7 +19,7 @@ const comentarioController = new ComentarioController(comentarioService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de comentários
  * Facilita a manutenção e testes através da inversão de controle
  */
-const ComentarioDependencies = {
+export const ComentarioDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: comentarioController,
   /** Serviço responsável pelas regras de negócio */
@@ -28,6 +28,4 @@ const ComentarioDependencies = {
   repository: comentarioRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: comentarioDAO
-}
-
-export { ComentarioDependencies }
+} as const

@@ -1,5 +1,5 @@
-import { createProfissionalSchema } from '@/schemas/ProfissionalSchema'
-import { z } from 'zod'
+import type { createProfissionalSchema } from '@/schemas'
+import type { z } from 'zod'
 
 /**
  * - DTO (Data Transfer Object) para criação de profissional

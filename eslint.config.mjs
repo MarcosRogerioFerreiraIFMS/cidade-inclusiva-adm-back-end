@@ -17,7 +17,12 @@ export default [
           argsIgnorePattern: '^_'
         }
       ],
-      'require-await': 'error'
+      'require-await': 'error',
+      'no-unreachable': 'error',
+      'no-fallthrough': 'error',
+      'consistent-return': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      'object-shorthand': ['error', 'always']
     }
   }
 ]

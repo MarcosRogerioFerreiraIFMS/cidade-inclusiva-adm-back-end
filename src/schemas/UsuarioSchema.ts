@@ -6,7 +6,9 @@ import {
   validateStrongPassword
 } from '@/utils'
 import { z } from 'zod'
-import { createEmailSchema, enderecoSchema, fotoOpcionalSchema } from './'
+import { createEmailSchema } from './EmailSchema'
+import { enderecoSchema } from './EnderecoSchema'
+import { fotoOpcionalSchema } from './FotoSchemas'
 
 /** Comprimento mínimo permitido para senhas */
 const SENHA_MIN_LENGTH = 8

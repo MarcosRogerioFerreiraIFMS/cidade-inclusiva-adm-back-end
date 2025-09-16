@@ -1,5 +1,5 @@
-import { ILikeService } from '@/interfaces/services'
-import { ControllerRequest } from '@/types'
+import type { ILikeService } from '@/interfaces/services'
+import type { ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

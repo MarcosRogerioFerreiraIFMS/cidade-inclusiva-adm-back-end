@@ -1,10 +1,10 @@
-import { VeiculoCreateDTO } from '@/dtos/create'
-import { VeiculoUpdateDTO } from '@/dtos/update'
-import { Prisma } from '@prisma/client'
+import type { VeiculoCreateDTO } from '@/dtos/create'
+import type { VeiculoUpdateDTO } from '@/dtos/update'
+import type { Prisma } from '@prisma/client'
 import {
   generateDataFotosVeiculoCreate,
   generateDataFotosVeiculoUpdate
-} from './'
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de veículo no Prisma

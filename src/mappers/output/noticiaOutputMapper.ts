@@ -1,7 +1,7 @@
-import { NoticiaResponseDTO } from '@/dtos/response'
-import { NoticiaCompletions } from '@/types'
+import type { NoticiaResponseDTO } from '@/dtos/response'
+import type { NoticiaCompletions } from '@/types'
 import { capitalizeWords } from '@/utils'
-import { toFotoResponseDTO } from './'
+import { toFotoResponseDTO } from './fotoOutputMappers'
 
 /**
  * - Converte entidade Noticia completa para DTO de resposta

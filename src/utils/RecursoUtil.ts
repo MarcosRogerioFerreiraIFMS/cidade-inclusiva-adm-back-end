@@ -23,7 +23,7 @@ export class RecursoUtil {
    */
   static stringParaTipoRecurso(valor: string): TipoRecurso | null {
     if (isTipoRecursoValido(valor)) {
-      return valor as TipoRecurso
+      return valor
     }
     return null
   }

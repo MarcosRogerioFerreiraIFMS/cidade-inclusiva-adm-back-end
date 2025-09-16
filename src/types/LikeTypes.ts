@@ -1,4 +1,4 @@
-import { Like } from '@prisma/client'
+import type { Like } from '@prisma/client'
 
 /**
  * Tipo completo do like

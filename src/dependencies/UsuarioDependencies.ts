@@ -13,7 +13,7 @@ const usuarioController = new UsuarioController(usuarioService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de usuários
  * Facilita a manutenção e testes através da inversão de controle
  */
-const UsuarioDependencies = {
+export const UsuarioDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: usuarioController,
   /** Serviço responsável pelas regras de negócio */
@@ -22,6 +22,4 @@ const UsuarioDependencies = {
   repository: usuarioRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: usuarioDAO
-}
-
-export { UsuarioDependencies }
+} as const

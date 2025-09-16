@@ -1,6 +1,6 @@
-import { MotoristaResponseDTO } from '@/dtos/response'
-import { IMotoristaAccess } from '@/interfaces/access'
-import { IMotoristaService } from '@/interfaces/services'
+import type { MotoristaResponseDTO } from '@/dtos/response'
+import type { IMotoristaAccess } from '@/interfaces/access'
+import type { IMotoristaService } from '@/interfaces/services'
 import { toCreateMotoristaDTO, toUpdateMotoristaDTO } from '@/mappers/input'
 import {
   toMotoristaResponseDTO,
@@ -78,6 +78,7 @@ export class MotoristaService implements IMotoristaService {
    * @returns {Promise<MotoristaResponseDTO>} Dados do motorista atualizado
    */
   async update(id: string, data: unknown): Promise<MotoristaResponseDTO> {
+    // TODO: Padronizar a verificação de existência antes de atualizar em todos os serviços
     throwIfNotFound(
       await this.motoristaRepository.findById(id),
       'Motorista não encontrado.'

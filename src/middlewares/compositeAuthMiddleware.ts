@@ -139,7 +139,7 @@ export const profissionalOperations = {
  * - Incluem validações específicas para sistema de comentários e moderação
  */
 export const comentarioOperations = {
-  /** GET /comentarios - Apenas administradores podem visualizar */
+  /** GET /comentarios - Apenas admins podem visualizar */
   list: [adminOnly],
 
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
@@ -272,16 +272,16 @@ export const motoristaOperations = {
   /** GET /motoristas/:id - Público pode visualizar */
   view: [validateUUID('id')],
 
-  /** POST /motoristas - Apenas administradores podem criar */
+  /** POST /motoristas - Apenas admins podem criar */
   create: [
     adminOnly,
     validateRequiredBody(['nome', 'cpf', 'email', 'telefone'])
   ],
 
-  /** PUT /motoristas/:id - Apenas administradores podem editar */
+  /** PUT /motoristas/:id - Apenas admins podem editar */
   update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
-  /** DELETE /motoristas/:id - Apenas administradores podem deletar */
+  /** DELETE /motoristas/:id - Apenas admins podem deletar */
   delete: [adminOnly, validateUUID('id')]
 }
 
@@ -296,16 +296,16 @@ export const veiculoOperations = {
   /** GET /veiculos/:id - Público pode visualizar */
   view: [validateUUID('id')],
 
-  /** POST /veiculos - Apenas administradores podem criar */
+  /** POST /veiculos - Apenas admins podem criar */
   create: [
     adminOnly,
     validateRequiredBody(['placa', 'marca', 'modelo', 'cor', 'motoristaId'])
   ],
 
-  /** PUT /veiculos/:id - Apenas administradores podem editar */
+  /** PUT /veiculos/:id - Apenas admins podem editar */
   update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
-  /** DELETE /veiculos/:id - Apenas administradores podem deletar */
+  /** DELETE /veiculos/:id - Apenas admins podem deletar */
   delete: [adminOnly, validateUUID('id')]
 }
 
@@ -320,7 +320,7 @@ export const manutencaoOperations = {
   /** GET /manutencoes/:id - Público pode visualizar */
   view: [validateUUID('id')],
 
-  /** POST /manutencoes - Apenas administradores podem criar */
+  /** POST /manutencoes - Apenas admins podem criar */
   create: [
     adminOnly,
     validateRequiredBody([
@@ -332,10 +332,10 @@ export const manutencaoOperations = {
     ])
   ],
 
-  /** PUT /manutencoes/:id - Apenas administradores podem editar */
+  /** PUT /manutencoes/:id - Apenas admins podem editar */
   update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
 
-  /** DELETE /manutencoes/:id - Apenas administradores podem deletar */
+  /** DELETE /manutencoes/:id - Apenas admins podem deletar */
   delete: [adminOnly, validateUUID('id')],
 
   /** GET /manutencoes/email/:email - Apenas admins podem buscar por email */
@@ -343,6 +343,36 @@ export const manutencaoOperations = {
 
   /** GET /manutencoes/especialidade/:especialidade - Público pode buscar por especialidade */
   findByEspecialidade: []
+}
+
+/**
+ * - Middlewares para operações de ACESSIBILIDADE URBANA
+ * - Incluem validações específicas para gerenciamento de dados de acessibilidade urbana
+ */
+export const acessibilidadeUrbanaOperations = {
+  /** GET /acessibilidade-urbana - Público pode visualizar */
+  list: [],
+
+  /** GET /acessibilidade-urbana/:id - Público pode visualizar */
+  view: [validateUUID('id')],
+
+  /** POST /acessibilidade-urbana - Apenas admins podem criar */
+  create: [
+    adminOnly,
+    validateRequiredBody(['nome', 'telefone', 'email', 'categoria', 'endereco'])
+  ],
+
+  /** PUT /acessibilidade-urbana/:id - Apenas admins podem editar */
+  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+
+  /** DELETE /acessibilidade-urbana/:id - Apenas admins podem deletar */
+  delete: [adminOnly, validateUUID('id')],
+
+  /** GET /acessibilidade-urbana/categoria/:categoria - Público pode visualizar por categoria */
+  findByCategoria: [],
+
+  /** GET /acessibilidade-urbana/email/:email - Apenas admins podem buscar por email */
+  findByEmail: [adminOnly]
 }
 
 /**

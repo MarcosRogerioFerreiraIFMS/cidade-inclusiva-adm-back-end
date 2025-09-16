@@ -1,12 +1,12 @@
 import { db } from '@/database/prisma'
-import { MotoristaCreateDTO } from '@/dtos/create'
-import { MotoristaUpdateDTO } from '@/dtos/update'
+import type { MotoristaCreateDTO } from '@/dtos/create'
+import type { MotoristaUpdateDTO } from '@/dtos/update'
 import {
   generateDataMotoristaCreate,
   generateDataMotoristaUpdate
 } from '@/helpers'
-import { IMotoristaAccess } from '@/interfaces/access'
-import { MotoristaCompletions } from '@/types'
+import type { IMotoristaAccess } from '@/interfaces/access'
+import type { MotoristaCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de motoristas no banco de dados

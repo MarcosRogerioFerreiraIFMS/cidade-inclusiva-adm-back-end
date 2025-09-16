@@ -19,7 +19,7 @@ const likeController = new LikeController(likeService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de likes
  * Facilita a manutenção e testes através da inversão de controle
  */
-const LikeDependencies = {
+export const LikeDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: likeController,
   /** Serviço responsável pelas regras de negócio */
@@ -28,6 +28,4 @@ const LikeDependencies = {
   repository: likeRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: likeDAO
-}
-
-export { LikeDependencies }
+} as const

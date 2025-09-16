@@ -1,5 +1,5 @@
-import { MobilidadeCreateDTO } from '@/dtos/create'
-import { MobilidadeUpdateDTO, StatusMobilidade } from '@/dtos/update'
+import type { MobilidadeCreateDTO } from '@/dtos/create'
+import type { MobilidadeUpdateDTO, StatusMobilidade } from '@/dtos/update'
 import {
   createMobilidadeSchema,
   statusMobilidadeSchema,
@@ -34,6 +34,6 @@ export function toUpdateMobilidadeDTO(input: unknown): MobilidadeUpdateDTO {
  * @returns {StatusMobilidade} Objeto validado contendo o status
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toValidateMobilidadeStatus(input: unknown): StatusMobilidade {
+export function toCreateMobilidadeStatusDTO(input: unknown): StatusMobilidade {
   return statusMobilidadeSchema.parse(input)
 }

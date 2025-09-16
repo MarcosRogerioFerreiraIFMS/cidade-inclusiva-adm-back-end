@@ -1,10 +1,10 @@
-import { LikeResponseDTO } from '@/dtos/response'
-import {
+import type { LikeResponseDTO } from '@/dtos/response'
+import type {
   IComentarioAccess,
   ILikeAccess,
   IUsuarioAccess
 } from '@/interfaces/access'
-import { ILikeService } from '@/interfaces/services'
+import type { ILikeService } from '@/interfaces/services'
 import { toLikeResponseDTO, toLikesResponseDTO } from '@/mappers/output'
 import { throwIfNotFound } from '@/utils'
 

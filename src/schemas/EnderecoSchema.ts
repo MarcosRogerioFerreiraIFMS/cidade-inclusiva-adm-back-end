@@ -4,7 +4,7 @@ import {
   validateBrazilianStates
 } from '@/utils'
 import api from 'brasilapi-js'
-import z from 'zod'
+import { z } from 'zod'
 
 export const enderecoSchema = z.object(
   {

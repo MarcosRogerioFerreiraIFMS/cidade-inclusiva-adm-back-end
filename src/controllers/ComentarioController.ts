@@ -1,5 +1,5 @@
-import { IComentarioService } from '@/interfaces/services'
-import { AuthenticatedRequest, ControllerRequest } from '@/types'
+import type { IComentarioService } from '@/interfaces/services'
+import type { AuthenticatedRequest, ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

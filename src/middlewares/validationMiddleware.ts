@@ -1,6 +1,6 @@
 import { HttpStatusCode } from '@/enums'
 import { HttpError } from '@/utils'
-import { NextFunction, Request, Response } from 'express'
+import type { NextFunction, Request, Response } from 'express'
 
 /**
  * Middleware para validação de UUID em parâmetros da rota
@@ -31,7 +31,7 @@ export const validateUUID = (paramName: string = 'id') => {
       )
     }
 
-    next()
+    return next()
   }
 }
 
@@ -68,7 +68,7 @@ export const validateRequiredBody = (requiredFields: string[]) => {
       )
     }
 
-    next()
+    return next()
   }
 }
 
@@ -93,7 +93,7 @@ export const validateContentType = (
       )
     }
 
-    next()
+    return next()
   }
 }
 
@@ -117,7 +117,7 @@ export const validateRequestSize = (maxSizeInMB: number = 10) => {
       )
     }
 
-    next()
+    return next()
   }
 }
 
@@ -143,7 +143,7 @@ export const validateQueryParams = (allowedParams: string[]) => {
       )
     }
 
-    next()
+    return next()
   }
 }
 
@@ -199,6 +199,6 @@ export const validateNumericParam = (
       )
     }
 
-    next()
+    return next()
   }
 }

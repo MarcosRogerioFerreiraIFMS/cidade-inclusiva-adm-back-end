@@ -1,7 +1,7 @@
-import { ComentarioCreateRelationalDTO } from '@/dtos/create'
-import { ComentarioUpdateDTO } from '@/dtos/update'
-import { IComentarioAccess } from '@/interfaces/access'
-import { ComentarioCompletions } from '@/types'
+import type { ComentarioCreateRelationalDTO } from '@/dtos/create'
+import type { ComentarioUpdateDTO } from '@/dtos/update'
+import type { IComentarioAccess } from '@/interfaces/access'
+import type { ComentarioCompletions } from '@/types'
 
 /**
  * Repository para operações de comentários:

@@ -1,12 +1,14 @@
 import compression from 'compression'
 import cors from 'cors'
 import 'dotenv/config'
-import express, { Request, Response } from 'express'
+import type { Request, Response } from 'express'
+import express from 'express'
 import helmet from 'helmet'
 import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums'
 import { globalErrorHandler, requestTimeout } from './middlewares'
 import {
+  AcessibilidadeUrbanaRoutes,
   AuthRoutes,
   ComentarioRoutes,
   LikeRoutes,
@@ -63,6 +65,7 @@ app.use(ROUTES.MOBILIDADE, MobilidadeRoutes)
 app.use(ROUTES.MOTORISTA, MotoristaRoutes)
 app.use(ROUTES.VEICULO, VeiculoRoutes)
 app.use(ROUTES.MANUTENCAO, ManutencaoRoutes)
+app.use(ROUTES.ACESSIBILIDADE_URBANA, AcessibilidadeUrbanaRoutes)
 
 /**
  * Handler para rotas não encontradas

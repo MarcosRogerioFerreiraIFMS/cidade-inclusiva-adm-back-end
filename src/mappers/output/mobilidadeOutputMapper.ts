@@ -1,6 +1,5 @@
-import { MobilidadeResponseDTO } from '@/dtos/response'
-import { MobilidadeCompletions } from '@/types'
-
+import type { MobilidadeResponseDTO } from '@/dtos/response'
+import type { MobilidadeCompletions } from '@/types'
 import { capitalizeWords } from '@/utils'
 
 /**

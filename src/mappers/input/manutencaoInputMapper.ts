@@ -1,5 +1,5 @@
-import { ManutencaoCreateDTO } from '@/dtos/create'
-import { ManutencaoUpdateDTO } from '@/dtos/update'
+import type { ManutencaoCreateDTO } from '@/dtos/create'
+import type { ManutencaoUpdateDTO } from '@/dtos/update'
 import { createManutencaoSchema, updateManutencaoSchema } from '@/schemas'
 
 /**
@@ -9,10 +9,10 @@ import { createManutencaoSchema, updateManutencaoSchema } from '@/schemas'
  * @returns {Promise<ManutencaoCreateDTO>} DTO validado para criação de manutenção
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateManutencaoDTO(
+export async function toCreateManutencaoDTO(
   data: unknown
 ): Promise<ManutencaoCreateDTO> {
-  return createManutencaoSchema.parseAsync(data)
+  return await createManutencaoSchema.parseAsync(data)
 }
 
 /**
@@ -22,8 +22,8 @@ export function toCreateManutencaoDTO(
  * @returns {Promise<ManutencaoUpdateDTO>} DTO validado para atualização de manutenção
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateManutencaoDTO(
+export async function toUpdateManutencaoDTO(
   data: unknown
 ): Promise<ManutencaoUpdateDTO> {
-  return updateManutencaoSchema.parseAsync(data)
+  return await updateManutencaoSchema.parseAsync(data)
 }

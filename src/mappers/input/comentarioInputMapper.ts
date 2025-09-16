@@ -1,5 +1,5 @@
-import { ComentarioCreateDTO } from '@/dtos/create'
-import { ComentarioUpdateDTO } from '@/dtos/update'
+import type { ComentarioCreateDTO } from '@/dtos/create'
+import type { ComentarioUpdateDTO } from '@/dtos/update'
 import { createComentarioSchema, updateComentarioSchema } from '@/schemas'
 
 /**

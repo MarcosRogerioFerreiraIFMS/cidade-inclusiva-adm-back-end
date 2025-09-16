@@ -1,6 +1,6 @@
-import { ProfissionalResponseDTO } from '@/dtos/response'
-import { IProfissionalAccess } from '@/interfaces/access'
-import { IProfissionalService } from '@/interfaces/services'
+import type { ProfissionalResponseDTO } from '@/dtos/response'
+import type { IProfissionalAccess } from '@/interfaces/access'
+import type { IProfissionalService } from '@/interfaces/services'
 import {
   toCreateProfissionalDTO,
   toUpdateProfissionalDTO

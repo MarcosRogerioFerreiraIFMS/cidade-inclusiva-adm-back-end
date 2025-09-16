@@ -1,6 +1,6 @@
-import { ComentarioCreateRelationalDTO } from '@/dtos/create'
-import { ComentarioUpdateDTO } from '@/dtos/update'
-import { Prisma } from '@prisma/client'
+import type { ComentarioCreateRelationalDTO } from '@/dtos/create'
+import type { ComentarioUpdateDTO } from '@/dtos/update'
+import type { Prisma } from '@prisma/client'
 
 /**
  * - Gera dados formatados para criação de comentário no Prisma
@@ -14,7 +14,7 @@ export const generateDataComentarioCreate = ({
   profissionalId
 }: ComentarioCreateRelationalDTO): Prisma.ComentarioCreateInput => {
   return {
-    conteudo: conteudo,
+    conteudo,
     visivel: true, // Comentários são visíveis por padrão
     usuario: {
       connect: {

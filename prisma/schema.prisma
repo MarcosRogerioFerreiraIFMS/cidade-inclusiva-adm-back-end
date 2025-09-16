@@ -67,19 +67,33 @@ model Endereco {
 
   manutencaoId String?     @unique
   manutencao   Manutencao? @relation(fields: [manutencaoId], references: [id], onDelete: Cascade)
+
+  acessibilidadeUrbanaId String?               @unique
+  acessibilidadeUrbana   AcessibilidadeUrbana? @relation(fields: [acessibilidadeUrbanaId], references: [id], onDelete: Cascade)
 }
 
 model Comentario {
-  id             String        @id @default(uuid())
-  conteudo       String
-  visivel        Boolean       @default(true)
-  usuarioId      String
+  id           String   @id @default(uuid())
+  conteudo     String
+  visivel      Boolean  @default(true)
+  usuarioId    String
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
   profissionalId String?
-  criadoEm       DateTime      @default(now())
-  atualizadoEm   DateTime      @updatedAt
-  profissional   Profissional? @relation(fields: [profissionalId], references: [id])
-  usuario        Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  likesUsuarios  Like[]
+  profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
+
+  motoristaId String?
+  motorista   Motorista? @relation(fields: [motoristaId], references: [id], onDelete: SetNull)
+
+  manutencaoId String?
+  manutencao   Manutencao? @relation(fields: [manutencaoId], references: [id], onDelete: SetNull)
+
+  acessibilidadeUrbanaId String?
+  acessibilidadeUrbana   AcessibilidadeUrbana? @relation(fields: [acessibilidadeUrbanaId], references: [id], onDelete: SetNull)
+
+  likesUsuarios Like[]
 
   @@index([usuarioId])
   @@index([profissionalId])
@@ -111,14 +125,15 @@ model Mobilidade {
 }
 
 model Motorista {
-  id           String   @id @default(uuid())
+  id           String       @id @default(uuid())
   nome         String
-  telefone     String   @unique
-  email        String   @unique
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
+  telefone     String       @unique
+  email        String       @unique
+  criadoEm     DateTime     @default(now())
+  atualizadoEm DateTime     @updatedAt
   foto         Foto?
   veiculo      Veiculo?
+  comentarios  Comentario[]
 }
 
 model Veiculo {
@@ -160,12 +175,18 @@ model Foto {
 
   manutencaoLogoId String?     @unique
   manutencaoLogo   Manutencao? @relation("LogoManutencao", fields: [manutencaoLogoId], references: [id], onDelete: Cascade)
+
+  acessibilidadeUrbanaId String?
+  acessibilidadeUrbana   AcessibilidadeUrbana? @relation("FotosAcessibilidadeUrbana", fields: [acessibilidadeUrbanaId], references: [id], onDelete: Cascade)
+
+  acessibilidadeUrbanaLogoId String?               @unique
+  acessibilidadeUrbanaLogo   AcessibilidadeUrbana? @relation("LogoAcessibilidadeUrbana", fields: [acessibilidadeUrbanaLogoId], references: [id], onDelete: Cascade)
 }
 
 model Manutencao {
   id             String                    @id @default(uuid())
   nome           String
-  telefone       String
+  telefone       String                    @unique
   email          String                    @unique
   endereco       Endereco?
   fotos          Foto[]                    @relation("FotosManutencao")
@@ -173,6 +194,7 @@ model Manutencao {
   criadoEm       DateTime                  @default(now())
   atualizadoEm   DateTime                  @updatedAt
   especialidades EspecialidadeManutencao[]
+  comentarios    Comentario[]
 }
 
 model EspecialidadeManutencao {
@@ -185,6 +207,31 @@ model EspecialidadeManutencao {
 
   @@unique([nome, manutencaoId])
   @@index([manutencaoId])
+}
+
+model AcessibilidadeUrbana {
+  id           String                        @id @default(uuid())
+  nome         String
+  fotos        Foto[]                        @relation("FotosAcessibilidadeUrbana")
+  logo         Foto?                         @relation("LogoAcessibilidadeUrbana")
+  telefone     String                        @unique
+  email        String                        @unique
+  categoria    CategoriaAcessibilidadeUrbana
+  endereco     Endereco?
+  criadoEm     DateTime                      @default(now())
+  atualizadoEm DateTime                      @updatedAt
+  recursos     AcessibilidadeUrbanaRecurso[]
+  comentarios  Comentario[]
+}
+
+model AcessibilidadeUrbanaRecurso {
+  id                     String                @id @default(uuid())
+  simbolo                SimboloAcessibilidade
+  descricao              String?
+  criadoEm               DateTime              @default(now())
+  atualizadoEm           DateTime              @updatedAt
+  acessibilidadeUrbanaId String
+  acessibilidadeUrbana   AcessibilidadeUrbana  @relation(fields: [acessibilidadeUrbanaId], references: [id], onDelete: Cascade)
 }
 
 enum CategoriaNoticia {
@@ -200,6 +247,52 @@ enum CategoriaNoticia {
   ESPORTE
   ACESSIBILIDADE
   OUTROS
+}
+
+enum CategoriaAcessibilidadeUrbana {
+  RESTAURANTE
+  LANCHONETE
+  BAR
+  CAFETERIA
+  HOTEL
+  SALAO_DE_BELEZA
+  ACADEMIA
+  PARQUE
+  MUSEU
+  CINEMA
+  TEATRO
+  AQUARIO
+  ZOOLOGICO
+  BIBLIOTECA
+  SHOPPING
+  SUPERMERCADO
+  HOSPITAL
+  POSTO_DE_SAUDE
+  FARMACIA
+  ESCOLA
+  UNIVERSIDADE
+  AEROPORTO
+  PONTO_DE_ONIBUS
+  RODOVIARIA
+  ESTACIONAMENTO
+  OUTROS
+}
+
+enum SimboloAcessibilidade {
+  CADEIRA_DE_RODAS
+  BRAILLE
+  LIBRAS
+  AUDIO_DESCRICAO
+  CLOSED_CAPTION
+  RAMPA
+  ELEVADOR
+  SINALIZACAO_TATIL
+  BANHEIRO_ACESSIVEL
+  ESTACIONAMENTO_ACESSIVEL
+  ATENDIMENTO_PRIORIZADO
+  ANIMAIS_DE_ASSISTENCIA_PERMITIDOS
+  MOBILIARIO_ACESSIVEL
+  COMUNICACAO_SIMPLIFICADA
 }
 
 enum EspecialidadeProfissional {

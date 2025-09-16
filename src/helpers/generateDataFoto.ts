@@ -1,5 +1,5 @@
 import { db } from '@/database/prisma'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 /**
  * Gera dados para criação de uma única foto para usuário
@@ -270,7 +270,7 @@ export async function generateDataFotosVeiculoUpdate(
   if (urlsToRemove.length > 0) {
     await db.foto.deleteMany({
       where: {
-        veiculoId: veiculoId,
+        veiculoId,
         url: {
           in: urlsToRemove
         }
@@ -352,7 +352,7 @@ export async function generateDataFotoManutencaoUpdate(
   if (urlsToRemove.length > 0) {
     await db.foto.deleteMany({
       where: {
-        manutencaoId: manutencaoId,
+        manutencaoId,
         url: {
           in: urlsToRemove
         }
@@ -402,6 +402,130 @@ export async function generateDataLogoManutencaoUpdate(
   // Se já houver um logo associado e ele for diferente do novo
   if (manutencao.logo.url !== novaUrl) {
     await db.foto.delete({ where: { id: manutencao.logo.id } })
+    return { create: { url: novaUrl } }
+  }
+
+  // Se o logo for igual, não faz nada
+  return undefined
+}
+
+/**
+ * Gera dados para criação de múltiplas fotos para acessibilidade urbana
+ * @param urls - Array de URLs das fotos
+ * @returns Dados formatados para criação de múltiplas fotos no Prisma
+ */
+export function generateDataFotoAcessibilidadeUrbanaCreate(
+  urls: string[] = []
+): Prisma.FotoCreateNestedManyWithoutAcessibilidadeUrbanaInput | undefined {
+  return urls.length > 0
+    ? {
+        create: urls.map((url) => ({ url }))
+      }
+    : undefined
+}
+
+/**
+ * Gera dados para criação de uma única foto de logo para acessibilidade urbana
+ * @param url - URL do logo (opcional)
+ * @returns Dados formatados para criação de logo único no Prisma
+ */
+export function generateDataLogoAcessibilidadeUrbanaCreate(
+  url: string | undefined
+): Prisma.FotoCreateNestedOneWithoutAcessibilidadeUrbanaLogoInput | undefined {
+  return url
+    ? {
+        create: { url }
+      }
+    : undefined
+}
+
+/**
+ * Gera dados para atualização de múltiplas fotos de acessibilidade urbana
+ * Remove fotos que não estão na nova lista e adiciona fotos novas
+ * @param novasUrls - Array com as novas URLs das fotos
+ * @param acessibilidadeUrbanaId - ID da acessibilidade urbana
+ * @returns Dados formatados para atualização de múltiplas fotos no Prisma
+ */
+export async function generateDataFotoAcessibilidadeUrbanaUpdate(
+  novasUrls: string[] | undefined,
+  acessibilidadeUrbanaId: string
+): Promise<
+  Prisma.FotoUpdateManyWithoutAcessibilidadeUrbanaNestedInput | undefined
+> {
+  if (novasUrls === undefined) {
+    return undefined
+  }
+
+  const acessibilidadeUrbana = await db.acessibilidadeUrbana.findUnique({
+    where: { id: acessibilidadeUrbanaId },
+    include: { fotos: true }
+  })
+
+  if (!acessibilidadeUrbana) {
+    throw new Error('Acessibilidade urbana não encontrada')
+  }
+
+  // Remove apenas as fotos que não estão nas URLs passadas
+  const existingUrls = acessibilidadeUrbana.fotos.map((foto) => foto.url)
+  const urlsToRemove = existingUrls.filter(
+    (urlExisting) => !novasUrls.includes(urlExisting)
+  )
+
+  if (urlsToRemove.length > 0) {
+    await db.foto.deleteMany({
+      where: {
+        acessibilidadeUrbanaId,
+        url: {
+          in: urlsToRemove
+        }
+      }
+    })
+  }
+
+  // Adiciona apenas as novas fotos (que não existem)
+  const newUrls = novasUrls.filter((url) => !existingUrls.includes(url))
+  if (newUrls.length > 0) {
+    return {
+      create: newUrls.map((url) => ({ url }))
+    }
+  }
+
+  return undefined
+}
+
+/**
+ * Gera dados para atualização de uma única foto de logo de acessibilidade urbana
+ * @param novaUrl - Nova URL do logo
+ * @param acessibilidadeUrbanaId - ID da acessibilidade urbana
+ * @returns Dados formatados para atualização de logo único no Prisma
+ */
+export async function generateDataLogoAcessibilidadeUrbanaUpdate(
+  novaUrl: string | undefined,
+  acessibilidadeUrbanaId: string
+): Promise<
+  Prisma.FotoUpdateOneWithoutAcessibilidadeUrbanaLogoNestedInput | undefined
+> {
+  if (novaUrl === undefined) {
+    return undefined
+  }
+
+  const acessibilidadeUrbana = await db.acessibilidadeUrbana.findUnique({
+    where: { id: acessibilidadeUrbanaId },
+    include: { logo: true }
+  })
+
+  if (!acessibilidadeUrbana) {
+    throw new Error('Acessibilidade urbana não encontrada')
+  }
+
+  // Se não houver logo associado, cria um novo
+  if (!acessibilidadeUrbana.logo) {
+    return { create: { url: novaUrl } }
+  }
+
+  // Se já houver um logo associado e ele for diferente do novo
+  if (acessibilidadeUrbana.logo.url !== novaUrl) {
+    await db.foto.delete({ where: { id: acessibilidadeUrbana.logo.id } })
     return { create: { url: novaUrl } }
   }
 

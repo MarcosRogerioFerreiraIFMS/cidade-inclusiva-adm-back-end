@@ -1,5 +1,6 @@
-import { HandleError, HttpError } from '@/utils'
-import { NextFunction, Request, Response } from 'express'
+import type { HttpError } from '@/utils'
+import { HandleError } from '@/utils'
+import type { NextFunction, Request, Response } from 'express'
 
 /**
  * - Middleware global para tratamento de erros da aplicação

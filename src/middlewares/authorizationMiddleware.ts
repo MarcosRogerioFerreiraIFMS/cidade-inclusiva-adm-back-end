@@ -1,9 +1,8 @@
 import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { LikeDependencies } from '@/dependencies/LikeDependencies'
-import { MobilidadeDependencies } from '@/dependencies/MobilidadeDependencies'
 import { HttpStatusCode, TipoRecurso, TipoUsuario } from '@/enums'
-import { AuthenticatedRequest } from '@/types'
-import { NextFunction, Response } from 'express'
+import type { AuthenticatedRequest } from '@/types'
+import type { NextFunction, Response } from 'express'
 
 /**
  * - Módulo de middlewares de autorização
@@ -70,7 +69,8 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
 
     // Admins podem tudo
     if (req.user.tipo === TipoUsuario.ADMIN) {
-      return next()
+      next()
+      return
     }
 
     const { id: recursoId } = req.params
@@ -134,16 +134,6 @@ async function verifyOwnership(
         userId
       )
       return like
-    }
-
-    case TipoRecurso.MOBILIDADE: {
-      // Para mobilidades, verificar se o usuário é o criador
-      const mobilidade =
-        await MobilidadeDependencies.repository.isMobilidadeOwner(
-          recursoId,
-          userId
-        )
-      return mobilidade
     }
 
     default:

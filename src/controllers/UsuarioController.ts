@@ -1,5 +1,5 @@
-import { IUsuarioService } from '@/interfaces/services'
-import { ControllerRequest } from '@/types'
+import type { IUsuarioService } from '@/interfaces/services'
+import type { ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

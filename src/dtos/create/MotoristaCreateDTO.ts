@@ -1,5 +1,5 @@
-import { createMotoristaSchema } from '@/schemas'
-import { z } from 'zod'
+import type { createMotoristaSchema } from '@/schemas'
+import type { z } from 'zod'
 
 /**
  * - DTO (Data Transfer Object) para criação de motorista

@@ -1,9 +1,9 @@
 import { db } from '@/database/prisma'
-import { NoticiaCreateDTO } from '@/dtos/create'
-import { NoticiaUpdateDTO } from '@/dtos/update'
+import type { NoticiaCreateDTO } from '@/dtos/create'
+import type { NoticiaUpdateDTO } from '@/dtos/update'
 import { generateDataNoticiaCreate, generateDataNoticiaUpdate } from '@/helpers'
-import { INoticiaAccess } from '@/interfaces/access'
-import { NoticiaCompletions } from '@/types'
+import type { INoticiaAccess } from '@/interfaces/access'
+import type { NoticiaCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de notícias no banco de dados

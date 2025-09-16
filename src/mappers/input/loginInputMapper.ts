@@ -1,4 +1,4 @@
-import { LoginCreateDTO } from '@/dtos/create'
+import type { LoginCreateDTO } from '@/dtos/create'
 import { createLoginSchema } from '@/schemas'
 
 /**

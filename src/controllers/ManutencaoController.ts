@@ -1,5 +1,5 @@
-import { IManutencaoService } from '@/interfaces/services/IManutencaoService'
-import { ControllerRequest } from '@/types/RequestTypes'
+import type { IManutencaoService } from '@/interfaces/services/IManutencaoService'
+import type { ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

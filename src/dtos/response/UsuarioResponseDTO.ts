@@ -1,4 +1,5 @@
-import { EnderecoResponseDTO, FotoResponseDTO } from './'
+import type { EnderecoResponseDTO } from './EnderecoResponseDTO'
+import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
  * - DTO (Data Transfer Object) de resposta para usuário

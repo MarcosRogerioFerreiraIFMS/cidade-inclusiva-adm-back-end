@@ -1,13 +1,13 @@
 import { db } from '@/database/prisma'
-import { MobilidadeCreateDTO } from '@/dtos/create'
-import { MobilidadeUpdateDTO } from '@/dtos/update'
-import { StatusMobilidade } from '@/enums'
+import type { MobilidadeCreateDTO } from '@/dtos/create'
+import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type { StatusMobilidade } from '@/enums'
 import {
   generateDataMobilidadeCreate,
   generateDataMobilidadeUpdate
 } from '@/helpers'
-import { IMobilidadeAccess } from '@/interfaces/access'
-import { MobilidadeCompletions } from '@/types'
+import type { IMobilidadeAccess } from '@/interfaces/access'
+import type { MobilidadeCompletions } from '@/types'
 
 /**
  * DAO (Data Access Object) para operações de mobilidade no banco de dados
@@ -125,7 +125,7 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     status: StatusMobilidade
   ): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
-      where: { status: status },
+      where: { status },
       include: {
         usuario: true
       },
@@ -133,23 +133,5 @@ export class MobilidadeDAO implements IMobilidadeAccess {
         dataRegistro: 'desc'
       }
     })
-  }
-
-  /**
-   * Verifica se o usuário é proprietário da mobilidade
-   * @param {string} mobilidadeId - ID único da mobilidade
-   * @param {string} userId - ID único do usuário
-   * @returns {Promise<boolean>} True se o usuário for proprietário, false caso contrário
-   */
-  async isMobilidadeOwner(
-    mobilidadeId: string,
-    userId: string
-  ): Promise<boolean> {
-    const mobilidade = await db.mobilidade.findUnique({
-      where: { id: mobilidadeId },
-      select: { usuarioId: true }
-    })
-
-    return mobilidade?.usuarioId === userId
   }
 }

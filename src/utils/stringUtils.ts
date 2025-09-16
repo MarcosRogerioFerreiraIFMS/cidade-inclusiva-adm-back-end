@@ -9,18 +9,44 @@ export function capitalizeFirstLetter(word: string): string {
 }
 
 /**
- * Capitaliza a primeira letra de cada palavra em um texto
- * @param {string} text - Texto com múltiplas palavras
- * @returns {string} Texto com cada palavra capitalizada
+ * Capitaliza a primeira letra de cada palavra, exceto palavras comuns (ex: "de", "da", "e"),
+ * que permanecem minúsculas — exceto se forem a primeira palavra.
+ * Também substitui underscores por espaços.
+ * @param {string} text - Texto com múltiplas palavras ou enum no formato SCREAMING_SNAKE_CASE
+ * @returns {string} Texto com palavras capitalizadas adequadamente
  */
 export function capitalizeWords(text: string): string {
   if (!text || typeof text !== 'string') return ''
+
+  const lowercaseWords = [
+    'de',
+    'da',
+    'do',
+    'das',
+    'dos',
+    'e',
+    'em',
+    'com',
+    'para',
+    'por',
+    'a',
+    'o',
+    'as',
+    'os'
+  ]
+
   return text
+    .replace(/_/g, ' ')
     .trim()
+    .toLowerCase()
     .replace(/\s+/g, ' ')
     .split(' ')
-    .filter((word) => word.length > 0)
-    .map(capitalizeFirstLetter)
+    .map((word, index) => {
+      if (index === 0 || !lowercaseWords.includes(word)) {
+        return capitalizeFirstLetter(word)
+      }
+      return word
+    })
     .join(' ')
 }
 

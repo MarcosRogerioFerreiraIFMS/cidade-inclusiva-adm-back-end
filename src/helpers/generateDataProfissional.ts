@@ -1,10 +1,10 @@
-import { ProfissionalCreateDTO } from '@/dtos/create'
-import { ProfissionalUpdateDTO } from '@/dtos/update'
-import { Prisma } from '@prisma/client'
+import type { ProfissionalCreateDTO } from '@/dtos/create'
+import type { ProfissionalUpdateDTO } from '@/dtos/update'
+import type { Prisma } from '@prisma/client'
 import {
   generateDataFotoProfissionalCreate,
   generateDataFotoProfissionalUpdate
-} from './'
+} from './generateDataFoto'
 
 /**
  * - Gera dados formatados para criação de profissional no Prisma

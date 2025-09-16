@@ -1,7 +1,7 @@
-import { UsuarioCreateDTO } from '@/dtos/create'
-import { UsuarioUpdateDTO } from '@/dtos/update'
-import { IUsuarioAccess } from '@/interfaces/access'
-import { UsuarioCompletions } from '@/types'
+import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { UsuarioUpdateDTO } from '@/dtos/update'
+import type { IUsuarioAccess } from '@/interfaces/access'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * Repository para operações de usuários:
@@ -64,7 +64,7 @@ export class UsuarioRepository implements IUsuarioAccess {
     id: string,
     data: UsuarioUpdateDTO
   ): Promise<UsuarioCompletions> {
-    return (await this.dao.update(id, data)) as UsuarioCompletions
+    return await this.dao.update(id, data)
   }
 
   /**
@@ -81,6 +81,6 @@ export class UsuarioRepository implements IUsuarioAccess {
    * @returns {Promise<UsuarioCompletions[]>} Lista de todos os usuários
    */
   async findAll(): Promise<UsuarioCompletions[]> {
-    return (await this.dao.findAll()) as UsuarioCompletions[]
+    return await this.dao.findAll()
   }
 }

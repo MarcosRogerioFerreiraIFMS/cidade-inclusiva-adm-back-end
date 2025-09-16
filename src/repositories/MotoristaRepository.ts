@@ -1,7 +1,7 @@
-import { MotoristaCreateDTO } from '@/dtos/create'
-import { MotoristaUpdateDTO } from '@/dtos/update'
-import { IMotoristaAccess } from '@/interfaces/access'
-import { MotoristaCompletions } from '@/types'
+import type { MotoristaCreateDTO } from '@/dtos/create'
+import type { MotoristaUpdateDTO } from '@/dtos/update'
+import type { IMotoristaAccess } from '@/interfaces/access'
+import type { MotoristaCompletions } from '@/types'
 
 /**
  * - Repository para operações de motoristas:

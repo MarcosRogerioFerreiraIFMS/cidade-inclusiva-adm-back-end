@@ -1,7 +1,7 @@
-import { VeiculoResponseDTO } from '@/dtos/response'
-import { VeiculoCompletions } from '@/types'
+import type { VeiculoResponseDTO } from '@/dtos/response'
+import type { VeiculoCompletions } from '@/types'
 import { formatPhoneNumber } from '@/utils'
-import { toFotoResponseDTO, toFotosResponseDTO } from './'
+import { toFotoResponseDTO, toFotosResponseDTO } from './fotoOutputMappers'
 
 /**
  * - Converte entidade Veiculo completa para DTO de resposta

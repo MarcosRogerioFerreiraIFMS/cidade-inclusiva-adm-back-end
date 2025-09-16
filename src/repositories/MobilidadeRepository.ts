@@ -1,7 +1,7 @@
-import { MobilidadeCreateDTO } from '@/dtos/create'
-import { MobilidadeUpdateDTO } from '@/dtos/update'
-import { IMobilidadeAccess } from '@/interfaces/access'
-import { MobilidadeCompletions } from '@/types'
+import type { MobilidadeCreateDTO } from '@/dtos/create'
+import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type { IMobilidadeAccess } from '@/interfaces/access'
+import type { MobilidadeCompletions } from '@/types'
 
 /**
  * - Repository para operações de mobilidade:
@@ -88,18 +88,5 @@ export class MobilidadeRepository implements IMobilidadeAccess {
    */
   async findByStatus(status: string): Promise<MobilidadeCompletions[]> {
     return await this.dao.findByStatus(status)
-  }
-
-  /**
-   * Verifica se o usuário é proprietário da mobilidade
-   * @param {string} mobilidadeId - ID único da mobilidade
-   * @param {string} userId - ID único do usuário
-   * @returns {Promise<boolean>} True se o usuário for proprietário, false caso contrário
-   */
-  async isMobilidadeOwner(
-    mobilidadeId: string,
-    userId: string
-  ): Promise<boolean> {
-    return await this.dao.isMobilidadeOwner(mobilidadeId, userId)
   }
 }

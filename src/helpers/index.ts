@@ -1,3 +1,4 @@
+export * from './generateDataAcessibilidadeUrbana'
 export * from './generateDataComentario'
 export * from './generateDataFoto'
 export * from './generateDataLike'

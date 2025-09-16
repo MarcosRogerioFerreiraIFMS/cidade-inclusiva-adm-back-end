@@ -1,3 +1,4 @@
+export * from './AcessibilidadeUrbanaTypes'
 export * from './ComentarioTypes'
 export * from './FotoTypes'
 export * from './LikeTypes'

@@ -1,4 +1,4 @@
-import { ProfissionalResponseDTO } from '@/dtos/response'
+import type { ProfissionalResponseDTO } from '@/dtos/response'
 
 /**
  * Interface para serviço de profissionais

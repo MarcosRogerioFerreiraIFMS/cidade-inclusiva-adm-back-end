@@ -1,5 +1,5 @@
-import { createLoginSchema } from '@/schemas'
-import { z } from 'zod'
+import type { createLoginSchema } from '@/schemas'
+import type { z } from 'zod'
 
 /**
  * - DTO para criação/validação de dados de login

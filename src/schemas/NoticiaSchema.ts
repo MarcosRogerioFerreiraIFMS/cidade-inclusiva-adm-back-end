@@ -7,7 +7,7 @@ import {
   verifyUrl
 } from '@/utils'
 import { z } from 'zod'
-import { fotoOpcionalSchema } from './'
+import { fotoOpcionalSchema } from './FotoSchemas'
 
 /** Comprimento mínimo permitido para títulos de notícias */
 const TITULO_MIN_LENGTH = 3

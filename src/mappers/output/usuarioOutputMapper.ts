@@ -1,6 +1,7 @@
-import { UsuarioResponseDTO } from '@/dtos/response'
-import { UsuarioCompletions } from '@/types'
-import { toEnderecoResponseDTO, toFotoResponseDTO } from './'
+import type { UsuarioResponseDTO } from '@/dtos/response'
+import type { UsuarioCompletions } from '@/types'
+import { toEnderecoResponseDTO } from './enderecoOutputMapper'
+import { toFotoResponseDTO } from './fotoOutputMappers'
 
 /**
  * - Converte entidade Usuario completa para DTO de resposta

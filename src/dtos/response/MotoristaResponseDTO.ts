@@ -1,4 +1,4 @@
-import { FotoResponseDTO } from './'
+import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
  * - DTO (Data Transfer Object) para resposta de motorista

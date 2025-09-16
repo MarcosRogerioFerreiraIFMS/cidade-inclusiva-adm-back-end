@@ -1,3 +1,4 @@
+export * from './AcessibilidadeUrbanaRoutes'
 export * from './AuthRoutes'
 export * from './ComentarioRoutes'
 export * from './LikeRoutes'

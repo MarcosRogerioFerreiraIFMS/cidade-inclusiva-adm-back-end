@@ -1,17 +1,18 @@
-import { MobilidadeResponseDTO } from '@/dtos/response'
+import type { MobilidadeResponseDTO } from '@/dtos/response'
 import { HttpStatusCode } from '@/enums'
-import { IMobilidadeAccess, IUsuarioAccess } from '@/interfaces/access'
-import { IMobilidadeService } from '@/interfaces/services'
+import type { IMobilidadeAccess, IUsuarioAccess } from '@/interfaces/access'
+import type { IMobilidadeService } from '@/interfaces/services'
 import {
   toCreateMobilidadeDTO,
-  toUpdateMobilidadeDTO,
-  toValidateMobilidadeStatus
+  toCreateMobilidadeStatusDTO,
+  toUpdateMobilidadeDTO
 } from '@/mappers/input'
 import {
   toMobilidadeResponseDTO,
   toMobilidadesResponseDTO
 } from '@/mappers/output'
-import { HttpError, JWTPayload, throwIfNotFound } from '@/utils'
+import type { JWTPayload } from '@/utils'
+import { HttpError, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a mobilidades:
@@ -155,7 +156,7 @@ export class MobilidadeService implements IMobilidadeService {
    */
   async findByStatus(status: string): Promise<MobilidadeResponseDTO[]> {
     const mobilidades = await this.mobilidadeRepository.findByStatus(
-      toValidateMobilidadeStatus(status)
+      toCreateMobilidadeStatusDTO(status)
     )
 
     if (!mobilidades || mobilidades.length === 0) {

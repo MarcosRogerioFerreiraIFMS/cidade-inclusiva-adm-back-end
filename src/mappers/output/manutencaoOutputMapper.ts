@@ -1,10 +1,8 @@
-import { ManutencaoResponseDTO } from '@/dtos/response'
-import { ManutencaoCompletions } from '@/types'
-import {
-  toEnderecoResponseDTO,
-  toEspecialidadeManutencoesResponseDTO,
-  toFotosResponseDTO
-} from './'
+import type { ManutencaoResponseDTO } from '@/dtos/response'
+import type { ManutencaoCompletions } from '@/types'
+import { toEnderecoResponseDTO } from './enderecoOutputMapper'
+import { toEspecialidadeManutencoesResponseDTO } from './EspecialidadeManutencaoOutputMapper'
+import { toFotosResponseDTO, toLogoResponseDTO } from './fotoOutputMappers'
 
 /**
  * - Converte dados de manutenção do banco para DTO de resposta
@@ -22,15 +20,11 @@ export function toManutencaoResponseDTO(
     email: manutencao.email,
     endereco: toEnderecoResponseDTO(manutencao.endereco),
     fotos: toFotosResponseDTO(manutencao.fotos),
-    logo: manutencao.logo
-      ? {
-          id: manutencao.logo.id,
-          url: manutencao.logo.url
-        }
-      : undefined,
+    logo: toLogoResponseDTO(manutencao.logo),
     especialidades: toEspecialidadeManutencoesResponseDTO(
       manutencao.especialidades
-    )
+    ),
+    criadoEm: manutencao.criadoEm
   }
 }
 

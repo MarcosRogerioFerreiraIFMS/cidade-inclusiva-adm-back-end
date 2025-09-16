@@ -1,7 +1,7 @@
-import { NoticiaCreateDTO } from '@/dtos/create'
-import { NoticiaUpdateDTO } from '@/dtos/update'
-import { INoticiaAccess } from '@/interfaces/access'
-import { NoticiaCompletions } from '@/types'
+import type { NoticiaCreateDTO } from '@/dtos/create'
+import type { NoticiaUpdateDTO } from '@/dtos/update'
+import type { INoticiaAccess } from '@/interfaces/access'
+import type { NoticiaCompletions } from '@/types'
 
 /**
  * - Repository para operações de notícias:

@@ -13,7 +13,7 @@ const motoristaController = new MotoristaController(motoristaService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de motoristas
  * Facilita a manutenção e testes através da inversão de controle
  */
-const MotoristaDependencies = {
+export const MotoristaDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: motoristaController,
   /** Serviço responsável pelas regras de negócio */
@@ -22,6 +22,4 @@ const MotoristaDependencies = {
   repository: motoristaRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: motoristaDAO
-}
-
-export { MotoristaDependencies }
+} as const

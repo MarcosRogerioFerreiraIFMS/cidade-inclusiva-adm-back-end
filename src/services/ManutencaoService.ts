@@ -1,6 +1,6 @@
-import { ManutencaoResponseDTO } from '@/dtos/response'
-import { IManutencaoAccess } from '@/interfaces/access'
-import { IManutencaoService } from '@/interfaces/services'
+import type { ManutencaoResponseDTO } from '@/dtos/response'
+import type { IManutencaoAccess } from '@/interfaces/access'
+import type { IManutencaoService } from '@/interfaces/services'
 import {
   toCreateEmailDTO,
   toCreateManutencaoDTO,
@@ -37,11 +37,13 @@ export class ManutencaoService implements IManutencaoService {
       this.manutencaoRepository.findByTelefone(manutencaoData.telefone)
     ])
 
+    // Verificar se já existe uma manutenção com o mesmo email
     throwIfAlreadyExists(
       manutencaoWithEmail,
       'Já existe uma empresa de manutenção cadastrada com este email.'
     )
 
+    // Verificar se já existe uma manutenção com o mesmo telefone
     throwIfAlreadyExists(
       manutencaoWithTelefone,
       'Já existe uma empresa de manutenção cadastrada com este telefone.'

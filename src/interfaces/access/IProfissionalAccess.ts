@@ -1,6 +1,6 @@
-import { ProfissionalCreateDTO } from '@/dtos/create'
-import { ProfissionalUpdateDTO } from '@/dtos/update'
-import { ProfissionalCompletions } from '@/types'
+import type { ProfissionalCreateDTO } from '@/dtos/create'
+import type { ProfissionalUpdateDTO } from '@/dtos/update'
+import type { ProfissionalCompletions } from '@/types'
 
 /**
  * Interface de acesso a dados de profissionais

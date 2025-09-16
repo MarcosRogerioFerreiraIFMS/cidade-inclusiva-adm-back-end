@@ -1,4 +1,4 @@
-import { LikeCreateDTO } from '@/dtos/create'
+import type { LikeCreateDTO } from '@/dtos/create'
 import { createLikeSchema } from '@/schemas'
 
 /**
@@ -8,6 +8,6 @@ import { createLikeSchema } from '@/schemas'
  * @returns {LikeCreateDTO} DTO validado para criação de like
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateLikeDTO(data: unknown): LikeCreateDTO {
-  return createLikeSchema.parse(data)
+export async function toCreateLikeDTO(data: unknown): Promise<LikeCreateDTO> {
+  return await createLikeSchema.parseAsync(data)
 }

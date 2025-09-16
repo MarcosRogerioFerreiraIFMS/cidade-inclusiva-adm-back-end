@@ -1,3 +1,4 @@
+export * from './AcessibilidadeUrbanaUpdateDTO'
 export * from './ComentarioUpdateDTO'
 export * from './ManutencaoUpdateDTO'
 export * from './MobilidadeUpdateDTO'

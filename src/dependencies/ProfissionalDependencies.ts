@@ -13,7 +13,7 @@ const profissionalController = new ProfissionalController(profissionalService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de profissionais
  * Facilita a manutenção e testes através da inversão de controle
  */
-const ProfissionalDependencies = {
+export const ProfissionalDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: profissionalController,
   /** Serviço responsável pelas regras de negócio */
@@ -22,6 +22,4 @@ const ProfissionalDependencies = {
   repository: profissionalRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: profissionalDAO
-}
-
-export { ProfissionalDependencies }
+} as const

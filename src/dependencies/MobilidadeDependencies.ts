@@ -17,7 +17,7 @@ const mobilidadeController = new MobilidadeController(mobilidadeService)
  * Centraliza todas as instâncias relacionadas ao gerenciamento de mobilidades
  * Facilita a manutenção e testes através da inversão de controle
  */
-const MobilidadeDependencies = {
+export const MobilidadeDependencies = {
   /** Controlador responsável pelo tratamento das requisições HTTP */
   controller: mobilidadeController,
   /** Serviço responsável pelas regras de negócio */
@@ -26,6 +26,4 @@ const MobilidadeDependencies = {
   repository: mobilidadeRepository,
   /** DAO responsável pelas operações diretas no banco de dados */
   dao: mobilidadeDAO
-}
-
-export { MobilidadeDependencies }
+} as const

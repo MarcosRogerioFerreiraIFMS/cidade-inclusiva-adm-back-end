@@ -1,4 +1,4 @@
-import { UsuarioResponseDTO } from './'
+import type { UsuarioResponseDTO } from './UsuarioResponseDTO'
 
 /**
  * - DTO de resposta para operações de login

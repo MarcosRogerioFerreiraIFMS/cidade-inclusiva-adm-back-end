@@ -1,5 +1,5 @@
-import { IMobilidadeService } from '@/interfaces/services'
-import { AuthenticatedRequest, ControllerRequest } from '@/types'
+import type { IMobilidadeService } from '@/interfaces/services'
+import type { AuthenticatedRequest, ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**

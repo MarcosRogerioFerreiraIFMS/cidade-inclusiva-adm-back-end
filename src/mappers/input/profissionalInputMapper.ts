@@ -1,5 +1,5 @@
-import { ProfissionalCreateDTO } from '@/dtos/create'
-import { ProfissionalUpdateDTO } from '@/dtos/update'
+import type { ProfissionalCreateDTO } from '@/dtos/create'
+import type { ProfissionalUpdateDTO } from '@/dtos/update'
 import { createProfissionalSchema, updateProfissionalSchema } from '@/schemas'
 
 /**
@@ -9,10 +9,10 @@ import { createProfissionalSchema, updateProfissionalSchema } from '@/schemas'
  * @returns {Promise<ProfissionalCreateDTO>} DTO validado para criação de profissional
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateProfissionalDTO(
+export async function toCreateProfissionalDTO(
   input: unknown
 ): Promise<ProfissionalCreateDTO> {
-  return createProfissionalSchema.parseAsync(input)
+  return await createProfissionalSchema.parseAsync(input)
 }
 
 /**
@@ -22,8 +22,8 @@ export function toCreateProfissionalDTO(
  * @returns {Promise<ProfissionalUpdateDTO>} DTO validado para atualização de profissional
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateProfissionalDTO(
+export async function toUpdateProfissionalDTO(
   input: unknown
 ): Promise<ProfissionalUpdateDTO> {
-  return updateProfissionalSchema.parseAsync(input)
+  return await updateProfissionalSchema.parseAsync(input)
 }

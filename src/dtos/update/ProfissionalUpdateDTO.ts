@@ -1,5 +1,5 @@
-import { updateProfissionalSchema } from '@/schemas'
-import { z } from 'zod'
+import type { updateProfissionalSchema } from '@/schemas'
+import type { z } from 'zod'
 
 /**
  * - DTO (Data Transfer Object) para atualização de profissional

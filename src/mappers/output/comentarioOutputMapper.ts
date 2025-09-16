@@ -1,6 +1,6 @@
-import { ComentarioResponseDTO } from '@/dtos/response'
-import { ComentarioCompletions } from '@/types'
-import { toLikeResponseDTO } from './'
+import type { ComentarioResponseDTO } from '@/dtos/response'
+import type { ComentarioCompletions } from '@/types'
+import { toLikeResponseDTO } from './likeOutputMapper'
 
 /**
  * - Converte entidade Comentario completa para DTO de resposta

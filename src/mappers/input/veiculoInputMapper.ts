@@ -1,5 +1,5 @@
-import { VeiculoCreateDTO } from '@/dtos/create'
-import { VeiculoUpdateDTO } from '@/dtos/update'
+import type { VeiculoCreateDTO } from '@/dtos/create'
+import type { VeiculoUpdateDTO } from '@/dtos/update'
 import { createVeiculoSchema, updateVeiculoSchema } from '@/schemas'
 
 /**
@@ -20,6 +20,8 @@ export function toCreateVeiculoDTO(input: unknown): Promise<VeiculoCreateDTO> {
  * @returns {Promise<VeiculoUpdateDTO>} DTO validado para atualização de veículo
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateVeiculoDTO(input: unknown): Promise<VeiculoUpdateDTO> {
-  return updateVeiculoSchema.parseAsync(input)
+export async function toUpdateVeiculoDTO(
+  input: unknown
+): Promise<VeiculoUpdateDTO> {
+  return await updateVeiculoSchema.parseAsync(input)
 }

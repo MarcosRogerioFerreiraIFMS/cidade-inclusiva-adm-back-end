@@ -1,4 +1,4 @@
-import { LikeResponseDTO } from './'
+import type { LikeResponseDTO } from './LikeResponseDTO'
 
 /**
  * - DTO (Data Transfer Object) de resposta para comentário

@@ -1,6 +1,6 @@
 import { HttpStatusCode } from '@/enums'
 import chalk from 'chalk'
-import { Response } from 'express'
+import type { Response } from 'express'
 import { HttpError } from './HttpError'
 
 /**

@@ -25,15 +25,17 @@
  * ⚠️ ATENÇÃO: Este script REMOVE TODOS OS DADOS existentes!
  */
 
-import { hashPassword } from '@/utils'
-import { fakerPT_BR as faker } from '@faker-js/faker'
 import {
+  CategoriaAcessibilidadeUrbana,
   CategoriaNoticia,
   EspecialidadeProfissional,
-  PrismaClient,
+  SimboloAcessibilidade,
   StatusMobilidade,
   TipoUsuario
-} from '@prisma/client'
+} from '@/enums'
+import { hashPassword } from '@/utils'
+import { fakerPT_BR as faker } from '@faker-js/faker'
+import { PrismaClient } from '@prisma/client'
 import api from 'brasilapi-js'
 import chalk from 'chalk'
 
@@ -138,7 +140,10 @@ async function main() {
       noticias: await prisma.noticia.count(),
       mobilidades: await prisma.mobilidade.count(),
       comentarios: await prisma.comentario.count(),
-      manutencoes: await prisma.manutencao.count()
+      manutencoes: await prisma.manutencao.count(),
+      motoristas: await prisma.motorista.count(),
+      veiculos: await prisma.veiculo.count(),
+      acessibilidadesUrbanas: await prisma.acessibilidadeUrbana.count()
     }
 
     const totalRecords = Object.values(existingCounts).reduce(
@@ -186,6 +191,14 @@ async function main() {
 
     const startTime = Date.now()
 
+    console.log(
+      chalk.gray('   • Removendo recursos de acessibilidade urbana...')
+    )
+    await prisma.acessibilidadeUrbanaRecurso.deleteMany()
+
+    console.log(chalk.gray('   • Removendo locais de acessibilidade urbana...'))
+    await prisma.acessibilidadeUrbana.deleteMany()
+
     console.log(chalk.gray('   • Removendo mobilidades...'))
     await prisma.mobilidade.deleteMany()
 
@@ -218,6 +231,9 @@ async function main() {
 
     console.log(chalk.gray('   • Removendo notícias...'))
     await prisma.noticia.deleteMany()
+
+    console.log(chalk.gray('   • Removendo fotos...'))
+    await prisma.foto.deleteMany()
 
     const cleanupTime = Date.now() - startTime
     console.log(
@@ -374,7 +390,7 @@ async function main() {
           )
           // Fallback para dados gerados com CEP válido
           realCEPsCache.push({
-            cep: cep,
+            cep,
             logradouro: faker.location.streetAddress(),
             bairro: faker.location.state({ abbreviated: false }),
             cidade: faker.location.city(),
@@ -1627,6 +1643,646 @@ async function main() {
     )
     console.log('')
 
+    // Criar lugares de acessibilidade urbana
+    console.log(
+      chalk.blue.bold('🏢 Criando lugares de acessibilidade urbana...')
+    )
+    console.log(chalk.cyan('♿ Gerando dados de acessibilidade...'))
+
+    // Função para gerar lugar de acessibilidade urbana com dados realistas
+    const generateAcessibilidadeUrbana = (existingEmails: Set<string>) => {
+      const categoria = faker.helpers.arrayElement(
+        Object.values(CategoriaAcessibilidadeUrbana)
+      )
+
+      // Nomes baseados na categoria
+      const getNomeEmpresa = (cat: CategoriaAcessibilidadeUrbana) => {
+        const nomes = {
+          [CategoriaAcessibilidadeUrbana.RESTAURANTE]: [
+            'Sabor & Arte',
+            'Cantinho Gourmet',
+            'Mesa Real',
+            'Paladar Fino',
+            'Tempero & Sabor'
+          ],
+          [CategoriaAcessibilidadeUrbana.LANCHONETE]: [
+            'Quick Bite',
+            'Lanche Express',
+            'Sabor Rápido',
+            'Big Burger',
+            'Sanduicheria Central'
+          ],
+          [CategoriaAcessibilidadeUrbana.BAR]: [
+            'Bar do João',
+            'Boteco Tradicional',
+            'Cervejaria Premium',
+            'Bar Central',
+            'Chopp & Cia'
+          ],
+          [CategoriaAcessibilidadeUrbana.CAFETERIA]: [
+            'Café com Arte',
+            'Coffee House',
+            'Grão Especial',
+            'Café Central',
+            'Aromas'
+          ],
+          [CategoriaAcessibilidadeUrbana.HOTEL]: [
+            'Hotel Conforto',
+            'Pousada Aconchego',
+            'Grand Hotel',
+            'Hotel Central',
+            'Suítes Premium'
+          ],
+          [CategoriaAcessibilidadeUrbana.SALAO_DE_BELEZA]: [
+            'Beleza Total',
+            'Studio Hair',
+            'Salão Charme',
+            'Beauty Center',
+            'Cabelos & Cia'
+          ],
+          [CategoriaAcessibilidadeUrbana.ACADEMIA]: [
+            'Fitness Total',
+            'Academia Forma',
+            'Strong Gym',
+            'Body Center',
+            'Movimento Fit'
+          ],
+          [CategoriaAcessibilidadeUrbana.PARQUE]: [
+            'Parque das Flores',
+            'Parque Verde',
+            'Parque Central',
+            'Bosque Municipal',
+            'Parque da Paz'
+          ],
+          [CategoriaAcessibilidadeUrbana.MUSEU]: [
+            'Museu da História',
+            'Museu de Arte',
+            'Museu Cultural',
+            'Centro Cultural',
+            'Museu Memorial'
+          ],
+          [CategoriaAcessibilidadeUrbana.CINEMA]: [
+            'Cine Center',
+            'Multiplex',
+            'Cinema Arte',
+            'Cine Popular',
+            'Movies Plaza'
+          ],
+          [CategoriaAcessibilidadeUrbana.TEATRO]: [
+            'Teatro Municipal',
+            'Teatro Cultura',
+            'Casa de Espetáculos',
+            'Teatro Real',
+            'Arena Cultural'
+          ],
+          [CategoriaAcessibilidadeUrbana.AQUARIO]: [
+            'Aquário Azul',
+            'Mundo Marinho',
+            'Aquário Central',
+            'Oceano Vivo',
+            'Vida Aquática'
+          ],
+          [CategoriaAcessibilidadeUrbana.ZOOLOGICO]: [
+            'Zoo Safari',
+            'Zoológico Municipal',
+            'Parque dos Animais',
+            'Zoo Vida',
+            'Reino Animal'
+          ],
+          [CategoriaAcessibilidadeUrbana.BIBLIOTECA]: [
+            'Biblioteca Central',
+            'Casa do Saber',
+            'Biblioteca Municipal',
+            'Centro de Leitura',
+            'Espaço Livros'
+          ],
+          [CategoriaAcessibilidadeUrbana.SHOPPING]: [
+            'Shopping Center',
+            'Plaza Mall',
+            'Center Norte',
+            'Boulevard Shopping',
+            'Mega Center'
+          ],
+          [CategoriaAcessibilidadeUrbana.SUPERMERCADO]: [
+            'Supermercado Central',
+            'Mercado Bom Preço',
+            'Super Família',
+            'Market Place',
+            'Hiper Centro'
+          ],
+          [CategoriaAcessibilidadeUrbana.HOSPITAL]: [
+            'Hospital São Lucas',
+            'Centro Médico',
+            'Hospital da Saúde',
+            'Clínica Vida',
+            'Hospital Central'
+          ],
+          [CategoriaAcessibilidadeUrbana.POSTO_DE_SAUDE]: [
+            'UBS Central',
+            'Posto de Saúde',
+            'Centro de Saúde',
+            'Unidade Básica',
+            'Posto Família'
+          ],
+          [CategoriaAcessibilidadeUrbana.FARMACIA]: [
+            'Farmácia Saúde',
+            'Drogaria Central',
+            'Farmácia Popular',
+            'Medicamentos & Cia',
+            'Pharma Plus'
+          ],
+          [CategoriaAcessibilidadeUrbana.ESCOLA]: [
+            'Escola Municipal',
+            'Colégio Futuro',
+            'Centro Educacional',
+            'Escola Progresso',
+            'Instituto Saber'
+          ],
+          [CategoriaAcessibilidadeUrbana.UNIVERSIDADE]: [
+            'Universidade Central',
+            'Centro Universitário',
+            'Faculdade Futuro',
+            'Instituto Superior',
+            'Universidade do Saber'
+          ],
+          [CategoriaAcessibilidadeUrbana.AEROPORTO]: [
+            'Aeroporto Internacional',
+            'Terminal Aéreo',
+            'Aeroporto Regional',
+            'Base Aérea',
+            'Airport Center'
+          ],
+          [CategoriaAcessibilidadeUrbana.PONTO_DE_ONIBUS]: [
+            'Terminal Central',
+            'Ponto Principal',
+            'Estação Rodoviária',
+            'Terminal Norte',
+            'Parada Central'
+          ],
+          [CategoriaAcessibilidadeUrbana.RODOVIARIA]: [
+            'Rodoviária Central',
+            'Terminal Rodoviário',
+            'Estação de Ônibus',
+            'Central de Transportes',
+            'Terminal Sul'
+          ],
+          [CategoriaAcessibilidadeUrbana.ESTACIONAMENTO]: [
+            'Estacionamento Central',
+            'Park Center',
+            'Auto Park',
+            'Zona Azul',
+            'Parking Plaza'
+          ],
+          [CategoriaAcessibilidadeUrbana.OUTROS]: [
+            'Centro Comercial',
+            'Espaço Cultural',
+            'Complexo Multi',
+            'Centro de Serviços',
+            'Plaza Central'
+          ]
+        }
+
+        return faker.helpers.arrayElement(
+          nomes[cat] || nomes[CategoriaAcessibilidadeUrbana.OUTROS]
+        )
+      }
+
+      const nome = getNomeEmpresa(categoria)
+
+      // Gerar email único
+      let email: string
+      let attempts = 0
+      const emailBase = nome
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .replace(/[^a-z0-9]/g, '')
+      do {
+        email =
+          attempts === 0
+            ? `contato@${emailBase}.com.br`
+            : `contato${attempts}@${emailBase}.com.br`
+        attempts++
+        if (attempts > 10) {
+          email = `acessibilidade.${Date.now()}@local.com.br`
+          break
+        }
+      } while (existingEmails.has(email))
+
+      existingEmails.add(email)
+
+      const endereco = getRandomRealAddress()
+
+      // Símbolos de acessibilidade possíveis
+      const simbolosPossiveis = Object.values(SimboloAcessibilidade)
+
+      // Cada local terá entre 3-8 recursos de acessibilidade
+      const numRecursos = faker.number.int({ min: 3, max: 8 })
+      const simbolos = faker.helpers.arrayElements(
+        simbolosPossiveis,
+        numRecursos
+      )
+
+      const recursos = simbolos.map((simbolo) => {
+        // Descrições específicas para cada tipo de símbolo
+        const descricoes = {
+          [SimboloAcessibilidade.CADEIRA_DE_RODAS]:
+            'Acesso facilitado para cadeirantes com rampas e espaços amplos',
+          [SimboloAcessibilidade.BRAILLE]:
+            'Sinalização em braille disponível em elevadores e pontos principais',
+          [SimboloAcessibilidade.LIBRAS]:
+            'Atendimento em Língua Brasileira de Sinais disponível',
+          [SimboloAcessibilidade.AUDIO_DESCRICAO]:
+            'Audiodescrição disponível para pessoas com deficiência visual',
+          [SimboloAcessibilidade.CLOSED_CAPTION]:
+            'Legendas fechadas disponíveis em apresentações e vídeos',
+          [SimboloAcessibilidade.RAMPA]:
+            'Rampas de acesso em todas as entradas do estabelecimento',
+          [SimboloAcessibilidade.ELEVADOR]:
+            'Elevadores adaptados com botões em braille e comando de voz',
+          [SimboloAcessibilidade.SINALIZACAO_TATIL]:
+            'Piso tátil para orientação de pessoas com deficiência visual',
+          [SimboloAcessibilidade.BANHEIRO_ACESSIVEL]:
+            'Banheiros adaptados com barras de apoio e espaço para cadeirantes',
+          [SimboloAcessibilidade.ESTACIONAMENTO_ACESSIVEL]:
+            'Vagas reservadas próximas à entrada principal',
+          [SimboloAcessibilidade.ATENDIMENTO_PRIORIZADO]:
+            'Atendimento preferencial para pessoas com deficiência',
+          [SimboloAcessibilidade.ANIMAIS_DE_ASSISTENCIA_PERMITIDOS]:
+            'Permite entrada de cães-guia e animais de assistência',
+          [SimboloAcessibilidade.MOBILIARIO_ACESSIVEL]:
+            'Mobiliário adaptado com alturas adequadas',
+          [SimboloAcessibilidade.COMUNICACAO_SIMPLIFICADA]:
+            'Comunicação clara e simplificada para melhor compreensão'
+        }
+
+        return {
+          simbolo,
+          descricao:
+            descricoes[simbolo] || 'Recurso de acessibilidade disponível'
+        }
+      })
+
+      return {
+        nome,
+        telefone: generateValidPhoneNumber(),
+        email,
+        categoria,
+        endereco,
+        recursos,
+        logo: faker.image.urlLoremFlickr({
+          category: 'business',
+          width: 400,
+          height: 400
+        }),
+        // Gerar entre 2-5 fotos do local
+        fotos: Array.from(
+          { length: faker.number.int({ min: 2, max: 5 }) },
+          () =>
+            faker.image.urlLoremFlickr({
+              category: 'building',
+              width: 800,
+              height: 600
+            })
+        ),
+        criadoEm: faker.date.past({ years: 0.4 }),
+        atualizadoEm: faker.date.recent({ days: 45 })
+      }
+    }
+
+    // Gerar 12 locais de acessibilidade urbana com emails únicos
+    const existingEmailsAcessibilidade = new Set<string>()
+    // Adicionar emails já existentes para evitar conflitos
+    usuariosData.forEach((user) => existingEmailsAcessibilidade.add(user.email))
+    profissionaisComTimestamps.forEach((prof) =>
+      existingEmailsAcessibilidade.add(prof.email)
+    )
+    manutencoesData.forEach((man) =>
+      existingEmailsAcessibilidade.add(man.email)
+    )
+
+    const acessibilidadesData = []
+    for (let i = 0; i < 12; i++) {
+      acessibilidadesData.push(
+        generateAcessibilidadeUrbana(existingEmailsAcessibilidade)
+      )
+    }
+
+    console.log(
+      chalk.cyan('💾 Salvando locais de acessibilidade no banco de dados...')
+    )
+    const startAccessibilityCreation = Date.now()
+
+    const acessibilidades = []
+    for (const acessData of acessibilidadesData) {
+      // Primeiro criar a acessibilidade urbana
+      const acessibilidade = await prisma.acessibilidadeUrbana.create({
+        data: {
+          nome: acessData.nome,
+          telefone: acessData.telefone,
+          email: acessData.email,
+          categoria: acessData.categoria,
+          logo: {
+            create: {
+              url: acessData.logo
+            }
+          },
+          fotos: {
+            create: acessData.fotos.map((url) => ({ url }))
+          },
+          recursos: {
+            create: acessData.recursos.map((recurso) => ({
+              simbolo: recurso.simbolo,
+              descricao: recurso.descricao,
+              criadoEm: acessData.criadoEm,
+              atualizadoEm: acessData.atualizadoEm
+            }))
+          },
+          criadoEm: acessData.criadoEm,
+          atualizadoEm: acessData.atualizadoEm
+        }
+      })
+
+      // Depois criar o endereço associado
+      await prisma.endereco.create({
+        data: {
+          ...acessData.endereco,
+          acessibilidadeUrbanaId: acessibilidade.id,
+          criadoEm: acessData.criadoEm,
+          atualizadoEm: acessData.atualizadoEm
+        }
+      })
+
+      acessibilidades.push(acessibilidade)
+    }
+
+    const accessibilityCreationTime = Date.now() - startAccessibilityCreation
+    console.log(
+      chalk.green(
+        `✅ ${
+          acessibilidades.length
+        } locais de acessibilidade criados com sucesso! ${chalk.gray(
+          `(${accessibilityCreationTime}ms)`
+        )}`
+      )
+    )
+
+    // Mostrar estatísticas das categorias
+    const categoriaAcessStats = acessibilidadesData.reduce((acc, local) => {
+      acc[local.categoria] = (acc[local.categoria] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    console.log(chalk.gray('   • Categorias de locais:'))
+    Object.entries(categoriaAcessStats).forEach(([cat, count]) => {
+      console.log(chalk.gray(`     - ${cat}: ${count}`))
+    })
+
+    // Contar recursos mais oferecidos
+    const allRecursos = acessibilidadesData.flatMap((local) =>
+      local.recursos.map((r) => r.simbolo)
+    )
+    const recursoStats = allRecursos.reduce((acc, simbolo) => {
+      acc[simbolo] = (acc[simbolo] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    console.log(chalk.gray('   • Recursos mais oferecidos:'))
+    Object.entries(recursoStats)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .forEach(([recurso, count]) => {
+        console.log(chalk.gray(`     - ${recurso}: ${count} locais`))
+      })
+
+    // Contar totais
+    const totalRecursos = await prisma.acessibilidadeUrbanaRecurso.count()
+    const totalFotosAcessibilidade = await prisma.foto.count({
+      where: {
+        OR: [
+          { acessibilidadeUrbanaId: { not: null } },
+          { acessibilidadeUrbanaLogoId: { not: null } }
+        ]
+      }
+    })
+
+    console.log(chalk.gray(`   • Total de recursos: ${totalRecursos}`))
+    console.log(chalk.gray(`   • Total de fotos: ${totalFotosAcessibilidade}`))
+    console.log('')
+
+    // Criar comentários adicionais para motoristas, manutenções e acessibilidade urbana
+    console.log(chalk.blue.bold('💬 Criando comentários adicionais...'))
+    console.log(
+      chalk.cyan(
+        '📝 Gerando feedback para motoristas, manutenções e locais de acessibilidade...'
+      )
+    )
+
+    const comentariosAdicionais = []
+    const startAdditionalComments = Date.now()
+
+    // Comentários para motoristas (1-2 por motorista)
+    for (const motorista of motoristas) {
+      const numComentarios = faker.number.int({ min: 1, max: 2 })
+
+      const comentariosMotorista = [
+        'Motorista muito educado e pontual, recomendo!',
+        'Excelente profissional, dirigiu com muito cuidado.',
+        'Muito atencioso com passageiros com necessidades especiais.',
+        'Veículo limpo e motorista muito prestativo.',
+        'Profissional exemplar, sempre muito cordial.',
+        'Dirigiu com segurança e foi muito respeitoso.',
+        'Ótimo atendimento, motorista muito competente.',
+        'Muito paciente e cuidadoso, adorei o serviço.',
+        'Profissional de confiança, super recomendo.',
+        'Excelente condução, me senti muito seguro.'
+      ]
+
+      for (let i = 0; i < numComentarios; i++) {
+        const usuarioAleatorio = faker.helpers.arrayElement(usuarios)
+        const dataComentario = faker.date.past({ years: 0.5 })
+
+        const comentario = await prisma.comentario.create({
+          data: {
+            conteudo: faker.helpers.arrayElement(comentariosMotorista),
+            usuarioId: usuarioAleatorio.id,
+            motoristaId: motorista.id,
+            criadoEm: dataComentario,
+            atualizadoEm: dataComentario
+          }
+        })
+        comentariosAdicionais.push(comentario)
+      }
+    }
+
+    // Comentários para manutenções (2-3 por empresa)
+    for (const manutencao of manutencoes) {
+      const numComentarios = faker.number.int({ min: 2, max: 3 })
+
+      const comentariosManutencao = [
+        'Serviço de qualidade, oficina muito bem equipada!',
+        'Profissionais competentes, preço justo e trabalho bem feito.',
+        'Excelente atendimento, resolveram o problema rapidamente.',
+        'Oficina de confiança, sempre levo meu carro aqui.',
+        'Serviço impecável, super recomendo esta empresa.',
+        'Trabalho bem feito, prazo cumprido e preço bom.',
+        'Profissionais honestos, explicaram tudo detalhadamente.',
+        'Ótima manutenção preventiva, carro ficou novinho.',
+        'Atendimento excepcional, voltarei com certeza.',
+        'Empresa séria, trabalho de primeira qualidade.'
+      ]
+
+      for (let i = 0; i < numComentarios; i++) {
+        const usuarioAleatorio = faker.helpers.arrayElement(usuarios)
+        const dataComentario = faker.date.past({ years: 0.5 })
+
+        const comentario = await prisma.comentario.create({
+          data: {
+            conteudo: faker.helpers.arrayElement(comentariosManutencao),
+            usuarioId: usuarioAleatorio.id,
+            manutencaoId: manutencao.id,
+            criadoEm: dataComentario,
+            atualizadoEm: dataComentario
+          }
+        })
+        comentariosAdicionais.push(comentario)
+      }
+    }
+
+    // Comentários para locais de acessibilidade (1-3 por local)
+    for (const acessibilidade of acessibilidades) {
+      const numComentarios = faker.number.int({ min: 1, max: 3 })
+
+      const comentariosAcessibilidade = [
+        'Local muito acessível, parabéns pela estrutura!',
+        'Finalmente um lugar que pensa na inclusão de verdade.',
+        'Excelente acessibilidade, me senti muito bem acolhido.',
+        'Estrutura impecável para pessoas com deficiência.',
+        'Local modelo em questão de acessibilidade.',
+        'Muito bem adaptado, recomendo para todos.',
+        'Atendimento inclusivo e estrutura perfeita.',
+        'Lugar que realmente se preocupa com a acessibilidade.',
+        'Exemplo a ser seguido por outros estabelecimentos.',
+        'Acessibilidade nota 10, voltarei sempre.'
+      ]
+
+      for (let i = 0; i < numComentarios; i++) {
+        const usuarioAleatorio = faker.helpers.arrayElement(usuarios)
+        const dataComentario = faker.date.past({ years: 0.5 })
+
+        const comentario = await prisma.comentario.create({
+          data: {
+            conteudo: faker.helpers.arrayElement(comentariosAcessibilidade),
+            usuarioId: usuarioAleatorio.id,
+            acessibilidadeUrbanaId: acessibilidade.id,
+            criadoEm: dataComentario,
+            atualizadoEm: dataComentario
+          }
+        })
+        comentariosAdicionais.push(comentario)
+      }
+    }
+
+    const additionalCommentsTime = Date.now() - startAdditionalComments
+    console.log(
+      chalk.green(
+        `✅ ${
+          comentariosAdicionais.length
+        } comentários adicionais criados com sucesso! ${chalk.gray(
+          `(${additionalCommentsTime}ms)`
+        )}`
+      )
+    )
+
+    const totalComentarios = comentarios.length + comentariosAdicionais.length
+    console.log(
+      chalk.gray(`   • Total geral de comentários: ${totalComentarios}`)
+    )
+    console.log(
+      chalk.gray(
+        `   • Comentários para motoristas: ${
+          comentariosAdicionais.filter((c) => c.motoristaId).length
+        }`
+      )
+    )
+    console.log(
+      chalk.gray(
+        `   • Comentários para manutenções: ${
+          comentariosAdicionais.filter((c) => c.manutencaoId).length
+        }`
+      )
+    )
+    console.log(
+      chalk.gray(
+        `   • Comentários para locais acessíveis: ${
+          comentariosAdicionais.filter((c) => c.acessibilidadeUrbanaId).length
+        }`
+      )
+    )
+    console.log('')
+
+    // Criar likes nos comentários adicionais
+    console.log(
+      chalk.blue.bold('👍 Criando likes nos comentários adicionais...')
+    )
+    console.log(chalk.cyan('❤️  Gerando mais interações dos usuários...'))
+
+    const likesAdicionais = []
+
+    for (const comentario of comentariosAdicionais) {
+      // Cada comentário recebe entre 0-4 likes
+      const numLikes = faker.number.int({ min: 0, max: 4 })
+      const usuariosQueJaDeuramLike = new Set()
+
+      for (
+        let j = 0;
+        j < numLikes && usuariosQueJaDeuramLike.size < usuarios.length;
+        j++
+      ) {
+        let usuarioAleatorio
+        do {
+          usuarioAleatorio = faker.helpers.arrayElement(usuarios)
+        } while (usuariosQueJaDeuramLike.has(usuarioAleatorio.id))
+
+        usuariosQueJaDeuramLike.add(usuarioAleatorio.id)
+
+        // Like deve ser posterior ao comentário
+        const comentarioDate = new Date(comentario.criadoEm)
+        const maxDate = new Date()
+        const dataLike = faker.date.between({
+          from: comentarioDate,
+          to: maxDate
+        })
+
+        likesAdicionais.push({
+          usuarioId: usuarioAleatorio.id,
+          comentarioId: comentario.id,
+          criadoEm: dataLike
+        })
+      }
+    }
+
+    // Criar os likes adicionais
+    const startAdditionalLikes = Date.now()
+    for (const likeData of likesAdicionais) {
+      await prisma.like.create({
+        data: likeData
+      })
+    }
+    const additionalLikesTime = Date.now() - startAdditionalLikes
+
+    const totalLikes = likesData.length + likesAdicionais.length
+    console.log(
+      chalk.green(
+        `✅ ${
+          likesAdicionais.length
+        } likes adicionais criados com sucesso! ${chalk.gray(
+          `(${additionalLikesTime}ms)`
+        )}`
+      )
+    )
+    console.log(chalk.gray(`   • Total geral de likes: ${totalLikes}`))
+    console.log('')
+
     // Resumo final
     const totalTime = Date.now() - startTime
     console.log('')
@@ -1634,14 +2290,21 @@ async function main() {
     console.log(chalk.cyan.bold('📊 Resumo dos dados criados:'))
     console.log(
       chalk.white(
-        `   👤 Usuários: ${chalk.green.bold(usuarios.length.toString())}`
+        `   👤 Usuários: ${chalk.green.bold(
+          (usuarios.length + 1).toString()
+        )} (incluindo admin)`
       )
     )
     console.log(
       chalk.white(
         `   🏠 Endereços: ${chalk.green.bold(
-          (usuarios.length + manutencoes.length).toString()
-        )}`
+          (
+            usuarios.length +
+            1 +
+            manutencoes.length +
+            acessibilidades.length
+          ).toString()
+        )} (usuários + admin + manutenções + acessibilidade)`
       )
     )
     console.log(
@@ -1663,13 +2326,11 @@ async function main() {
     )
     console.log(
       chalk.white(
-        `   💬 Comentários: ${chalk.green.bold(comentarios.length.toString())}`
+        `   💬 Comentários: ${chalk.green.bold(totalComentarios.toString())}`
       )
     )
     console.log(
-      chalk.white(
-        `   👍 Likes: ${chalk.green.bold(likesData.length.toString())}`
-      )
+      chalk.white(`   👍 Likes: ${chalk.green.bold(totalLikes.toString())}`)
     )
     console.log(
       chalk.white(
@@ -1684,6 +2345,20 @@ async function main() {
     console.log(
       chalk.white(
         `   🚙 Veículos: ${chalk.green.bold(veiculos.length.toString())}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   ♿ Locais Acessíveis: ${chalk.green.bold(
+          acessibilidades.length.toString()
+        )}`
+      )
+    )
+    console.log(
+      chalk.white(
+        `   📍 Recursos de Acessibilidade: ${chalk.green.bold(
+          totalRecursos.toString()
+        )}`
       )
     )
     console.log('')

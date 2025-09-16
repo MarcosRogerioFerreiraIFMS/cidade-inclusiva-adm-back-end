@@ -1,5 +1,5 @@
-import { UsuarioCreateDTO } from '@/dtos/create'
-import { UsuarioUpdateDTO } from '@/dtos/update'
+import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { UsuarioUpdateDTO } from '@/dtos/update'
 import { createUsuarioSchema, updateUsuarioSchema } from '@/schemas'
 
 /**
@@ -20,6 +20,8 @@ export function toCreateUsuarioDTO(data: unknown): Promise<UsuarioCreateDTO> {
  * @returns {Promise<UsuarioUpdateDTO>} DTO validado para atualização de usuário
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toUpdateUsuarioDTO(data: unknown): Promise<UsuarioUpdateDTO> {
-  return updateUsuarioSchema.parseAsync(data)
+export async function toUpdateUsuarioDTO(
+  data: unknown
+): Promise<UsuarioUpdateDTO> {
+  return await updateUsuarioSchema.parseAsync(data)
 }

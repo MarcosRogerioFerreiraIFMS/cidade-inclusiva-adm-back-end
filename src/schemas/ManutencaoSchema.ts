@@ -5,12 +5,9 @@ import {
   validatePersonName
 } from '@/utils'
 import { z } from 'zod'
-import {
-  createEmailSchema,
-  enderecoSchema,
-  fotosArraySchema,
-  logoSchema
-} from './'
+import { createEmailSchema } from './EmailSchema'
+import { enderecoSchema } from './EnderecoSchema'
+import { fotosArraySchema, logoSchema } from './FotoSchemas'
 
 /**
  * - Schema de validação Zod para criação de manutenção

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 /**
  * Tipo completo do comentário com todos os relacionamentos

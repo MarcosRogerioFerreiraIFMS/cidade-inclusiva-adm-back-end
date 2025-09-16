@@ -8,3 +8,8 @@ export interface FotoResponseDTO {
   /** URL da foto */
   url: string
 }
+
+/** DTO (Data Transfer Object) de resposta para logo
+ * Define a estrutura dos dados de logo retornados pela API
+ */
+export type LogoResponseDTO = FotoResponseDTO

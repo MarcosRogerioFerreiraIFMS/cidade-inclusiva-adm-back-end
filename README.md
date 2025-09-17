@@ -1,6 +1,17 @@
 # 🌆 Projeto Cidade Inclusiva - Painel Administrativo - API
 
-O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend desenvolvida para gerenciar e fornecer suporte à iniciativa **Cidade Inclusiva**, que visa melhorar a mobilidade urbana para cadeirantes. Este projeto utiliza tecnologias modernas para garantir eficiência, segurança e escalabilidade, permitindo que os administradores gerenciem dados e funcionalidades de forma intuitiva e confiável.
+O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend desenvolvida para gerenciar e fornecer suporte à iniciativa **Cidade Inclusiva**, que visa melhorar a mobilidade urbana para cadeirantes e pessoas com deficiência. Este projeto utiliza tecnologias modernas para garantir eficiência, segurança e escalabilidade, permitindo que os administradores gerenciem dados e funcionalidades de forma intuitiva e confiável.
+
+## 🎯 Objetivo do Projeto
+
+O sistema tem como objetivo principal facilitar a inclusão social e a mobilidade urbana através de:
+
+- **🚍 Gestão de Transporte:** Controle de veículos, motoristas e rotas acessíveis
+- **♿ Acessibilidade Urbana:** Catalogação e monitoramento de locais acessíveis na cidade
+- **🔧 Manutenção:** Gerenciamento de solicitações e acompanhamento de reparos
+- **📰 Comunicação:** Sistema de notícias e informações relevantes
+- **👥 Comunidade:** Plataforma de comentários e interação entre usuários
+- **🏥 Profissionais:** Cadastro e gestão de profissionais especializados
 
 ## 📋 Informações do Projeto
 
@@ -31,16 +42,45 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 | `start`       | Inicia o servidor em modo de produção (requer build)                   | `pnpm start`   |
 | `build`       | Compila o código TypeScript para JavaScript na pasta `dist/`           | `pnpm build`   |
 
+### 🌱 Script de Seed Avançado
+
+O script de seed é uma funcionalidade robusta que popula o banco de dados com dados realistas para desenvolvimento:
+
+#### 🛡️ Proteções de Segurança Implementadas
+
+1. **🔒 Bloqueio por NODE_ENV:**
+
+   - Bloqueia execução se `NODE_ENV === 'production'` ou `'prod'`
+   - Permite apenas em `'development'`, `'test'` ou `undefined`
+
+2. **🔍 Verificação de URL Suspeita:**
+
+   - Detecta padrões de produção na `DATABASE_URL`
+   - Bloqueia se URL contém: `prod`, `amazonaws`, `heroku`, `railway`, etc.
+
+3. **📊 Verificação de Volume de Dados:**
+   - Conta registros existentes antes da limpeza
+   - Bloqueia se >500 registros (exceto em `NODE_ENV=development`)
+
+#### 📊 Logs Informativos
+
+O seed fornece logs coloridos e detalhados mostrando:
+
+- ✅ Status de segurança e validações
+- 📈 Progresso de criação de dados
+- 📊 Estatísticas finais de registros criados
+- ⏱️ Tempo total de execução
+
 ### 🗄️ Scripts do Banco de Dados (Prisma)
 
-| 📜 **Script** | 📖 **Descrição**                                                                          | 🏃‍♂️ **Comando** |
-| ------------- | ----------------------------------------------------------------------------------------- | -------------- |
-| `migrate`     | Executa as migrações do banco de dados em modo desenvolvimento                            | `pnpm migrate` |
-| `seed`        | Popula o banco de dados com dados iniciais realistas usando logs coloridos e informativos | `pnpm seed`    |
-| `studio`      | Abre o Prisma Studio para visualizar e editar dados do banco                              | `pnpm studio`  |
-| `push`        | Aplica mudanças do schema diretamente no banco (sem criar migrações)                      | `pnpm push`    |
-| `pull`        | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma`                     | `pnpm pull`    |
-| `status`      | Mostra o status das migrações do banco de dados                                           | `pnpm status`  |
+| 📜 **Script** | 📖 **Descrição**                                                            | 🏃‍♂️ **Comando** |
+| ------------- | --------------------------------------------------------------------------- | -------------- |
+| `migrate`     | Executa as migrações do banco de dados em modo desenvolvimento              | `pnpm migrate` |
+| `seed`        | Popula o banco com dados realistas e protegidos contra execução em produção | `pnpm seed`    |
+| `studio`      | Abre o Prisma Studio para visualizar e editar dados do banco                | `pnpm studio`  |
+| `push`        | Aplica mudanças do schema diretamente no banco (sem criar migrações)        | `pnpm push`    |
+| `pull`        | Puxa o schema do banco de dados para o arquivo `prisma/schema.prisma`       | `pnpm pull`    |
+| `status`      | Mostra o status das migrações do banco de dados                             | `pnpm status`  |
 
 ### 🔧 Scripts de Sistema
 
@@ -65,7 +105,7 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 #### 🗃️ Scripts do Prisma
 
 - **`migrate`**: Executa `prisma migrate dev` para aplicar migrações pendentes ao banco de dados de desenvolvimento.
-- **`seed`**: Executa o arquivo `prisma/seed.ts` para popular o banco com dados iniciais realistas e bem estruturados, incluindo usuários com endereços reais (via BrasilAPI), profissionais, notícias categorizadas, comentários e likes. O processo inclui logs coloridos e informativos que mostram o progresso detalhado e estatísticas finais.
+- **`seed`**: Executa o arquivo `prisma/seed.ts` que popula o banco com dados iniciais realistas e bem estruturados. O script possui proteções avançadas contra execução em produção, incluindo verificação de `NODE_ENV`, detecção de URLs suspeitas e análise de volume de dados. Cria usuários com endereços reais (via BrasilAPI), profissionais especializados, notícias categorizadas, sistema completo de comentários e likes, dados de transporte, locais de acessibilidade urbana e solicitações de manutenção. Durante a execução, exibe logs coloridos e informativos com progresso detalhado, estatísticas finais e tempo de execução. ⚠️ **Remove todos os dados existentes** antes de popular!
 - **`studio`**: Abre uma interface web para visualizar e editar dados do banco de dados.
 - **`push`**: Aplica mudanças do schema diretamente no banco sem criar arquivos de migração.
 - **`pull`**: Sincroniza o schema do Prisma com a estrutura atual do banco de dados.
@@ -132,7 +172,7 @@ O projeto segue uma arquitetura bem organizada e modular, baseada em três entid
 
 - **📂 `prisma/`** - Configurações do banco de dados
   - **📂 `migrations/`** - 🔄 Controle de versões do banco
-  - **📄 `schema.prisma`** - 🎯 Estrutura das tabelas
+  - **📄 `schema.prisma`** - 🎯 Estrutura das tabelas e relacionamentos
   - **📄 `seed.ts`** - 🌱 Dados iniciais otimizados para desenvolvimento com logs coloridos e informativos
 
 ### 🏗️ **Arquitetura Principal (Camadas)**
@@ -389,21 +429,49 @@ pnpm pull
 
 ## 🎯 Funcionalidades Principais
 
+### 🏗️ Arquitetura e Desenvolvimento
+
 - ✅ **API RESTful** completa para gerenciamento de dados
-- ✅ **Validação de dados** com Zod
-- ✅ **ORM Prisma** para acesso ao banco de dados
-- ✅ **TypeScript** para tipagem estática
-- ✅ **Hot-reload** em desenvolvimento
-- ✅ **Migrações de banco** automatizadas
-- ✅ **Seed de dados** otimizado para desenvolvimento com logs coloridos
-- ✅ **CORS** configurado para requisições cross-origin
-- ✅ **Integração BrasilAPI** para dados geográficos do Brasil
+- ✅ **Arquitetura em camadas** (Controllers, Services, Repositories, DAOs)
+- ✅ **Injeção de dependências** para melhor manutenibilidade
+- ✅ **Validação de dados** robusta com Zod schemas
+- ✅ **TypeScript** completo para tipagem estática e melhor DX
+- ✅ **Hot-reload** em desenvolvimento com tsx watch
+- ✅ **Build otimizado** com TypeScript compiler e tsc-alias
+
+### 🗄️ Banco de Dados e ORM
+
+- ✅ **ORM Prisma** moderno para acesso ao banco de dados
+- ✅ **Migrações automatizadas** com versionamento completo
+- ✅ **Seed inteligente** com proteções de segurança contra produção
+- ✅ **Prisma Studio** para visualização e edição de dados
+- ✅ **SQLite** para desenvolvimento e **PostgreSQL** para produção
+
+### 🔐 Segurança e Autenticação
+
 - ✅ **Autenticação JWT** com jsonwebtoken para sessões seguras
-- ✅ **Hash de senhas** com bcryptjs para segurança
+- ✅ **Hash de senhas** com bcryptjs (salt rounds configuráveis)
 - ✅ **Rate Limiting** para proteção contra spam e ataques DDoS
-- ✅ **Helmet** para proteção com headers de segurança
-- ✅ **Compressão** de respostas para melhor performance
-- ✅ **Logs coloridos** com chalk para melhor experiência de desenvolvimento
+- ✅ **Helmet** para proteção com headers de segurança HTTP
+- ✅ **CORS configurável** para controle de origins permitidas
+- ✅ **Validação de ambiente** para prevenir execuções acidentais
+
+### 🌐 Integração e Performance
+
+- ✅ **Integração BrasilAPI** para dados geográficos brasileiros
+- ✅ **Compressão de respostas** para melhor performance
+- ✅ **Logs coloridos** com chalk para melhor DX
+- ✅ **Timeout configurável** para requisições HTTP
+- ✅ **Axios** para requisições HTTP externas
+
+### 🛠️ Qualidade e Manutenção
+
+- ✅ **ESLint** com zero tolerância a warnings
+- ✅ **Scripts de limpeza** automatizados
+- ✅ **Verificação de versão Node.js** (>=20.0.0)
+- ✅ **Validação completa de variáveis de ambiente**
+- ✅ **Geração segura de JWT secrets**
+- ✅ **Semver** para versionamento e compatibilidade
 
 ---
 

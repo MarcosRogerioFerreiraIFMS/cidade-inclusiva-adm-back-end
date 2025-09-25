@@ -1,3 +1,4 @@
+import type { TipoUsuario } from '@/enums'
 import type { EnderecoResponseDTO } from './EnderecoResponseDTO'
 import type { FotoResponseDTO } from './FotoResponsesDTO'
 
@@ -15,6 +16,8 @@ export interface UsuarioResponseDTO {
   telefone: string
   /** URL da foto do perfil (opcional) */
   foto?: FotoResponseDTO
+  /** Tipo de usuário */
+  tipo: TipoUsuario
   /** Endereço de email do usuário */
   email: string
   /** Endereço completo do usuário (opcional) */

@@ -17,6 +17,7 @@ export function toUsuarioResponseDTO(
     nome: usuario.nome,
     telefone: usuario.telefone,
     foto: toFotoResponseDTO(usuario.foto),
+    tipo: usuario.tipo,
     email: usuario.email,
     endereco: toEnderecoResponseDTO(usuario.endereco),
     criadoEm: usuario.criadoEm

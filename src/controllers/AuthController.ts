@@ -1,6 +1,5 @@
-import { HttpStatusCode } from '@/enums'
 import type { IAuthService } from '@/interfaces/services'
-import type { ControllerRequest } from '@/types'
+import type { AuthenticatedRequest, ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**
@@ -27,22 +26,15 @@ export class AuthController {
    * Valida se um token JWT está válido e retorna os dados do usuário
    * @type {ControllerRequest}
    */
-  validateToken: ControllerRequest = async (req, res, next) => {
+  me: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
-      const authHeader = req.headers.authorization
+      const result = await this.authService.me(req.user)
 
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.status(HttpStatusCode.UNAUTHORIZED).json({
-          success: false,
-          error: 'Token não fornecido ou formato inválido'
-        })
-        return
-      }
-
-      const token = authHeader.substring(7)
-      const result = await this.authService.validateToken(token)
-
-      HandleSuccess.ok(res, result, 'Token válido')
+      HandleSuccess.ok(
+        res,
+        result,
+        'Dados do usuário autenticado retornados com sucesso'
+      )
     } catch (error: unknown) {
       next(error)
     }

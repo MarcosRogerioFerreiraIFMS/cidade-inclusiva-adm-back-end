@@ -157,10 +157,6 @@ export class JWTUtils {
 
       return payload as JWTPayload
     } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(chalk.red('[JWT ERROR] Falha na verificação do token'))
-      }
-
       if (error instanceof TokenExpiredError) {
         if (process.env.NODE_ENV !== 'production') {
           console.error(
@@ -173,11 +169,6 @@ export class JWTUtils {
       }
 
       if (error instanceof JsonWebTokenError) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(
-            chalk.red('[JWT] Token malformado ou assinatura inválida')
-          )
-        }
         throw new Error('Token inválido')
       }
 

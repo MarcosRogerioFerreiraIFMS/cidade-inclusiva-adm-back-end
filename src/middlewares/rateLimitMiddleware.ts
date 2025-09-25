@@ -10,7 +10,7 @@ const baseRateLimitOptions = {
 const RATE_LIMIT_OPTIONS = {
   login: { windowMs: 15 * 60 * 1000, max: 10 }, // 15 minutos, 10 tentativas
   register: { windowMs: 60 * 60 * 1000, max: 5 }, // 1 hora, 5 registros
-  tokenValidation: { windowMs: 5 * 60 * 1000, max: 40 }, // 5 minutos, 40 validações
+  userDataRequest: { windowMs: 5 * 60 * 1000, max: 20 }, // 5 minutos, 20 validações
   adminOperations: { windowMs: 10 * 60 * 1000, max: 100 }, // 10 minutos, 100 operações
   contentCreation: { windowMs: 10 * 60 * 1000, max: 20 }, // 10 minutos, 20 criações
   modifications: { windowMs: 5 * 60 * 1000, max: 30 }, // 5 minutos, 30 modificações
@@ -51,25 +51,25 @@ export const registerRateLimit = rateLimit({
     } minutos.`,
     code: 'RATE_LIMIT_REGISTER'
   },
-  ...baseRateLimitOptions,
-  skipSuccessfulRequests: true
+  ...baseRateLimitOptions
 })
 
 /**
- * Rate limiting para validação de token
- * Previne abuso de verificação de tokens
+ * Rate limiting para obtenção de dados do usuário autenticado
+ * Previne abuso no uso de tokens para buscar dados de usuário
  */
-export const tokenValidationRateLimit = rateLimit({
-  windowMs: RATE_LIMIT_OPTIONS.tokenValidation.windowMs,
-  max: RATE_LIMIT_OPTIONS.tokenValidation.max,
+export const userDataRateLimit = rateLimit({
+  windowMs: RATE_LIMIT_OPTIONS.userDataRequest.windowMs,
+  max: RATE_LIMIT_OPTIONS.userDataRequest.max,
   message: {
     success: false,
-    error: `Muitas tentativas de validação de token. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.tokenValidation.windowMs / 1000 / 60
+    error: `Muitas tentativas de obtenção de dados do usuário. Tente novamente em ${
+      RATE_LIMIT_OPTIONS.userDataRequest.windowMs / 1000 / 60
     } minutos.`,
-    code: 'RATE_LIMIT_TOKEN_VALIDATION'
+    code: 'RATE_LIMIT_USER_DATA_REQUEST'
   },
-  ...baseRateLimitOptions
+  ...baseRateLimitOptions,
+  skipSuccessfulRequests: true
 })
 
 /**
@@ -86,7 +86,8 @@ export const adminOperationsRateLimit = rateLimit({
     } minutos.`,
     code: 'RATE_LIMIT_ADMIN_OPERATIONS'
   },
-  ...baseRateLimitOptions
+  ...baseRateLimitOptions,
+  skipSuccessfulRequests: true
 })
 
 /**
@@ -121,7 +122,8 @@ export const modificationRateLimit = rateLimit({
     } minutos.`,
     code: 'RATE_LIMIT_MODIFICATIONS'
   },
-  ...baseRateLimitOptions
+  ...baseRateLimitOptions,
+  skipSuccessfulRequests: true
 })
 
 /**

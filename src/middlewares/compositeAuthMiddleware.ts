@@ -53,7 +53,7 @@ export const userOnly = [authMiddleware, requireRole([TipoUsuario.USUARIO])]
  */
 export const usuarioOperations = {
   /** GET /usuarios - Apenas admins podem listar todos os usuários */
-  listAll: [adminOnly],
+  listAll: [...adminOnly],
 
   /** GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um */
   viewProfile: [
@@ -83,7 +83,7 @@ export const usuarioOperations = {
   ],
 
   /** GET /usuarios/email/:email - Apenas admins podem buscar por email */
-  findByEmail: [adminOnly]
+  findByEmail: [...adminOnly]
 }
 
 /**
@@ -99,15 +99,15 @@ export const noticiaOperations = {
 
   /** POST /noticias - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody(['titulo', 'conteudo', 'categoria'])
   ],
 
   /** PUT /noticias/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /noticias/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')]
+  delete: [...adminOnly, validateUUID('id')]
 }
 
 /**
@@ -123,15 +123,15 @@ export const profissionalOperations = {
 
   /** POST /profissionais - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody(['nome', 'telefone', 'email', 'especialidade'])
   ],
 
   /** PUT /profissionais/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /profissionais/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')]
+  delete: [...adminOnly, validateUUID('id')]
 }
 
 /**
@@ -140,7 +140,7 @@ export const profissionalOperations = {
  */
 export const comentarioOperations = {
   /** GET /comentarios - Apenas admins podem visualizar */
-  list: [adminOnly],
+  list: [...adminOnly],
 
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
   view: [
@@ -218,8 +218,8 @@ export const authOperations = {
   /** POST /auth/login - Público pode fazer login */
   login: [validateRequiredBody(['email', 'senha'])],
 
-  /** GET /auth/validate-token - Público pode validar token */
-  validateToken: []
+  /** GET /auth/me - Usuário autenticado pode ver seus dados */
+  me: [authMiddleware]
 }
 
 /**
@@ -274,15 +274,15 @@ export const motoristaOperations = {
 
   /** POST /motoristas - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody(['nome', 'cpf', 'email', 'telefone'])
   ],
 
   /** PUT /motoristas/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /motoristas/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')]
+  delete: [...adminOnly, validateUUID('id')]
 }
 
 /**
@@ -298,15 +298,15 @@ export const veiculoOperations = {
 
   /** POST /veiculos - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody(['placa', 'marca', 'modelo', 'cor', 'motoristaId'])
   ],
 
   /** PUT /veiculos/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /veiculos/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')]
+  delete: [...adminOnly, validateUUID('id')]
 }
 
 /**
@@ -322,7 +322,7 @@ export const manutencaoOperations = {
 
   /** POST /manutencoes - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody([
       'nome',
       'telefone',
@@ -333,13 +333,13 @@ export const manutencaoOperations = {
   ],
 
   /** PUT /manutencoes/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /manutencoes/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')],
+  delete: [...adminOnly, validateUUID('id')],
 
   /** GET /manutencoes/email/:email - Apenas admins podem buscar por email */
-  findByEmail: [adminOnly],
+  findByEmail: [...adminOnly],
 
   /** GET /manutencoes/especialidade/:especialidade - Público pode buscar por especialidade */
   findByEspecialidade: []
@@ -358,21 +358,21 @@ export const acessibilidadeUrbanaOperations = {
 
   /** POST /acessibilidade-urbana - Apenas admins podem criar */
   create: [
-    adminOnly,
+    ...adminOnly,
     validateRequiredBody(['nome', 'telefone', 'email', 'categoria', 'endereco'])
   ],
 
   /** PUT /acessibilidade-urbana/:id - Apenas admins podem editar */
-  update: [adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
 
   /** DELETE /acessibilidade-urbana/:id - Apenas admins podem deletar */
-  delete: [adminOnly, validateUUID('id')],
+  delete: [...adminOnly, validateUUID('id')],
 
   /** GET /acessibilidade-urbana/categoria/:categoria - Público pode visualizar por categoria */
   findByCategoria: [],
 
   /** GET /acessibilidade-urbana/email/:email - Apenas admins podem buscar por email */
-  findByEmail: [adminOnly]
+  findByEmail: [...adminOnly]
 }
 
 /**

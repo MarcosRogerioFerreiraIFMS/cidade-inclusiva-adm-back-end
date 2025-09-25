@@ -1,10 +1,10 @@
-import type { LoginResponseDTO } from '@/dtos/response'
+import type { LoginResponseDTO, UsuarioResponseDTO } from '@/dtos/response'
 import { HttpStatusCode } from '@/enums'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { IAuthService } from '@/interfaces/services'
 import { toCreateLoginDTO } from '@/mappers/input'
 import { toUsuarioResponseDTO } from '@/mappers/output'
-import { HttpError, JWTUtils, throwIfNotFound } from '@/utils'
+import { HttpError, JWTUtils, throwIfNotFound, type JWTPayload } from '@/utils'
 import { compareSync } from 'bcryptjs'
 
 /**
@@ -37,11 +37,11 @@ export class AuthService implements IAuthService {
       throw new HttpError('Credenciais inválidas', HttpStatusCode.UNAUTHORIZED)
     }
 
-    const token = `Bearer ${JWTUtils.generateToken({
+    const token = JWTUtils.generateToken({
       userId: usuario.id,
       email: usuario.email,
       tipo: usuario.tipo
-    })}`
+    })
 
     return {
       token,
@@ -50,32 +50,21 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * Valida um token JWT e retorna os dados básicos do usuário
-   * @param {string} token - Token JWT a ser validado
-   * @returns {Promise<{ userId: string; email: string }>} Dados básicos do usuário
+   * Valida um token JWT e retorna os dados do usuário autenticado
+   * @param {JWTPayload | undefined} user - Payload do token JWT
+   * @returns {Promise<{ userId: string; email: string }>} Dados do usuário
    * @throws {HttpError} Quando o token é inválido ou o usuário não existe
    */
-  async validateToken(
-    token: string
-  ): Promise<{ userId: string; email: string }> {
-    try {
-      const decoded = JWTUtils.verifyToken(token)
-
-      throwIfNotFound(
-        await this.usuarioRepository.findById(decoded.userId),
-        'Usuário não encontrado'
-      )
-
-      return {
-        userId: decoded.userId,
-        email: decoded.email
-      }
-    } catch (error) {
-      if (error instanceof HttpError) {
-        throw error
-      }
-
+  async me(user: JWTPayload | undefined): Promise<UsuarioResponseDTO> {
+    if (!user) {
       throw new HttpError('Token inválido', HttpStatusCode.UNAUTHORIZED)
     }
+
+    const usuario = throwIfNotFound(
+      await this.usuarioRepository.findById(user.userId),
+      'Usuário não encontrado'
+    )
+
+    return toUsuarioResponseDTO(usuario)
   }
 }

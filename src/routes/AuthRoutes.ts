@@ -2,7 +2,7 @@ import { AuthDependencies } from '@/dependencies/AuthDependencies'
 import {
   authOperations,
   loginRateLimit,
-  tokenValidationRateLimit
+  userDataRateLimit
 } from '@/middlewares'
 import { Router } from 'express'
 
@@ -24,14 +24,14 @@ AuthRoutes.post(
 )
 
 /**
- * GET /auth/validate-token
- * Endpoint para validação de token JWT
+ * GET /auth/me
+ * Endpoint para obter informações do usuário autenticado
  */
 AuthRoutes.get(
-  '/validate-token',
-  tokenValidationRateLimit,
-  ...authOperations.validateToken,
-  AuthDependencies.controller.validateToken
+  '/me',
+  userDataRateLimit,
+  ...authOperations.me,
+  AuthDependencies.controller.me
 )
 
 export { AuthRoutes }

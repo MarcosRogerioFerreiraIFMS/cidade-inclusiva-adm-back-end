@@ -484,7 +484,7 @@ async function main() {
     }
 
     console.log(chalk.cyan('👤 Criando usuário administrador...'))
-    const adminPassword = await hashPassword('admin123')
+    const adminPassword = await hashPassword('Adm1n!@#$')
     const admin = await prisma.usuario.create({
       data: {
         nome: 'Administrador do Sistema',

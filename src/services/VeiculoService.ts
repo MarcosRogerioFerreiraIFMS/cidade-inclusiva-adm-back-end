@@ -31,25 +31,22 @@ export class VeiculoService implements IVeiculoService {
   async create(data: unknown): Promise<VeiculoResponseDTO> {
     const veiculoData = await toCreateVeiculoDTO(data)
 
-    // Verificar se já existe veículo com a mesma placa
-    const existingByPlaca = await this.veiculoRepository.findByPlaca(
-      veiculoData.placa
+    // Executa todas as verificações em paralelo
+    const [existingByPlaca, motorista, existingByMotorista] = await Promise.all(
+      [
+        this.veiculoRepository.findByPlaca(veiculoData.placa),
+        this.motoristaRepository.findById(veiculoData.motoristaId),
+        this.veiculoRepository.findByMotoristaId(veiculoData.motoristaId)
+      ]
     )
+
     throwIfAlreadyExists(
       existingByPlaca,
       'Já existe um veículo cadastrado com esta placa.'
     )
 
-    // Verificar se o motorista existe
-    throwIfNotFound(
-      await this.motoristaRepository.findById(veiculoData.motoristaId),
-      'Motorista não encontrado.'
-    )
+    throwIfNotFound(motorista, 'Motorista não encontrado.')
 
-    // Verificar se o motorista já possui um veículo (relação 1:1)
-    const existingByMotorista = await this.veiculoRepository.findByMotoristaId(
-      veiculoData.motoristaId
-    )
     throwIfAlreadyExists(
       existingByMotorista,
       'Este motorista já possui um veículo cadastrado.'

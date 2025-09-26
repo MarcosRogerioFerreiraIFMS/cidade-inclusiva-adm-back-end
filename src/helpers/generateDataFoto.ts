@@ -399,10 +399,12 @@ export async function generateDataLogoManutencaoUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver um logo associado e ele for diferente do novo
+  // Se já houver um logo associado e ele for diferente do novo, atualiza
   if (manutencao.logo.url !== novaUrl) {
-    await db.foto.delete({ where: { id: manutencao.logo.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: manutencao.logo.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se o logo for igual, não faz nada
@@ -523,10 +525,12 @@ export async function generateDataLogoAcessibilidadeUrbanaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver um logo associado e ele for diferente do novo
+  // Se já houver um logo associado e ele for diferente do novo, atualiza
   if (acessibilidadeUrbana.logo.url !== novaUrl) {
-    await db.foto.delete({ where: { id: acessibilidadeUrbana.logo.id } })
-    return { create: { url: novaUrl } }
+    await db.foto.update({
+      where: { id: acessibilidadeUrbana.logo.id },
+      data: { url: novaUrl }
+    })
   }
 
   // Se o logo for igual, não faz nada

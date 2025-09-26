@@ -30,18 +30,14 @@ export class MotoristaService implements IMotoristaService {
   async create(data: unknown): Promise<MotoristaResponseDTO> {
     const motoristaData = await toCreateMotoristaDTO(data)
 
-    // Verificar se já existe motorista com o mesmo telefone
-    const existingByTelefone = await this.motoristaRepository.findByTelefone(
-      motoristaData.telefone
-    )
+    // Verificar se já existe motorista com o mesmo telefone e email em paralelo
+    const [existingByTelefone, existingByEmail] = await Promise.all([
+      this.motoristaRepository.findByTelefone(motoristaData.telefone),
+      this.motoristaRepository.findByEmail(motoristaData.email)
+    ])
     throwIfAlreadyExists(
       existingByTelefone,
       'Já existe um motorista cadastrado com este telefone.'
-    )
-
-    // Verificar se já existe motorista com o mesmo email
-    const existingByEmail = await this.motoristaRepository.findByEmail(
-      motoristaData.email
     )
     throwIfAlreadyExists(
       existingByEmail,
@@ -78,7 +74,6 @@ export class MotoristaService implements IMotoristaService {
    * @returns {Promise<MotoristaResponseDTO>} Dados do motorista atualizado
    */
   async update(id: string, data: unknown): Promise<MotoristaResponseDTO> {
-    // TODO: Padronizar a verificação de existência antes de atualizar em todos os serviços
     throwIfNotFound(
       await this.motoristaRepository.findById(id),
       'Motorista não encontrado.'

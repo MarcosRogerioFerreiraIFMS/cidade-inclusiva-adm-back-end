@@ -25,6 +25,7 @@ export class UsuarioService implements IUsuarioService {
   async create(data: unknown): Promise<UsuarioResponseDTO> {
     const usuarioData = await toCreateUsuarioDTO(data)
 
+    // Verificar se já existe usuário com o mesmo email ou telefone em paralelo
     const [usuarioWithEmail, usuarioWithTelefone] = await Promise.all([
       this.usuarioRepository.findByEmail(usuarioData.email),
       this.usuarioRepository.findByTelefone(usuarioData.telefone)

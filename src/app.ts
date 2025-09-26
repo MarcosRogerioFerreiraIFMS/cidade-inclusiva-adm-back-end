@@ -6,7 +6,7 @@ import express from 'express'
 import helmet from 'helmet'
 import { ROUTES } from './configs/routePaths'
 import { HttpStatusCode } from './enums'
-import { globalErrorHandler, requestTimeout } from './middlewares'
+import { globalErrorHandler, onlyJson, requestTimeout } from './middlewares'
 import {
   AcessibilidadeUrbanaRoutes,
   AuthRoutes,
@@ -41,6 +41,7 @@ app.use(
 )
 
 app.use(helmet()) // Headers de segurança
+app.use(onlyJson) // Middleware para aceitar apenas JSON
 app.use(express.json({ limit: '1mb' })) // Parser JSON com limite
 app.use(express.urlencoded({ extended: true, limit: '1mb' })) // Parser URL encoded
 

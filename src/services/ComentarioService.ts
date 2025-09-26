@@ -108,12 +108,12 @@ export class ComentarioService implements IComentarioService {
    * @throws {HttpError} Erro 404 se o comentário não for encontrado
    */
   async update(id: string, data: unknown): Promise<ComentarioResponseDTO> {
-    const comentarioData = toUpdateComentarioDTO(data)
-
     throwIfNotFound(
       await this.comentarioRepository.findById(id),
       'Comentário não encontrado.'
     )
+
+    const comentarioData = toUpdateComentarioDTO(data)
 
     const comentario = await this.comentarioRepository.update(
       id,

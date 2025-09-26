@@ -27,9 +27,9 @@ export const loginRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.login.max,
   message: {
     success: false,
-    error: `Muitas tentativas de login. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.login.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas tentativas de login. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.login.windowMs
+    )}.`,
     code: 'RATE_LIMIT_LOGIN'
   },
   ...baseRateLimitOptions,
@@ -46,9 +46,9 @@ export const registerRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.register.max,
   message: {
     success: false,
-    error: `Muitas tentativas de registro. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.register.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas tentativas de registro. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.register.windowMs
+    )}.`,
     code: 'RATE_LIMIT_REGISTER'
   },
   ...baseRateLimitOptions
@@ -63,9 +63,9 @@ export const userDataRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.userDataRequest.max,
   message: {
     success: false,
-    error: `Muitas tentativas de obtenção de dados do usuário. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.userDataRequest.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas tentativas de obtenção de dados do usuário. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.userDataRequest.windowMs
+    )}.`,
     code: 'RATE_LIMIT_USER_DATA_REQUEST'
   },
   ...baseRateLimitOptions,
@@ -81,9 +81,9 @@ export const adminOperationsRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.adminOperations.max,
   message: {
     success: false,
-    error: `Muitas operações administrativas. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.adminOperations.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas operações administrativas. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.adminOperations.windowMs
+    )}.`,
     code: 'RATE_LIMIT_ADMIN_OPERATIONS'
   },
   ...baseRateLimitOptions,
@@ -99,9 +99,9 @@ export const contentCreationRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.contentCreation.max,
   message: {
     success: false,
-    error: `Muitas criações de conteúdo. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.contentCreation.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas criações de conteúdo. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.contentCreation.windowMs
+    )}.`,
     code: 'RATE_LIMIT_CONTENT_CREATION'
   },
   ...baseRateLimitOptions,
@@ -117,9 +117,9 @@ export const modificationRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.modifications.max,
   message: {
     success: false,
-    error: `Muitas operações de modificação. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.modifications.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas operações de modificação. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.modifications.windowMs
+    )}.`,
     code: 'RATE_LIMIT_MODIFICATIONS'
   },
   ...baseRateLimitOptions,
@@ -135,9 +135,9 @@ export const readOperationsRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.readOperations.max,
   message: {
     success: false,
-    error: `Muitas operações de leitura. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.readOperations.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas operações de leitura. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.readOperations.windowMs
+    )}.`,
     code: 'RATE_LIMIT_READ_OPERATIONS'
   },
   ...baseRateLimitOptions
@@ -152,10 +152,31 @@ export const emailSearchRateLimit = rateLimit({
   max: RATE_LIMIT_OPTIONS.emailSearch.max,
   message: {
     success: false,
-    error: `Muitas buscas por email. Tente novamente em ${
-      RATE_LIMIT_OPTIONS.emailSearch.windowMs / 1000 / 60
-    } minutos.`,
+    error: `Muitas buscas por email. Tente novamente em ${formatWindowMs(
+      RATE_LIMIT_OPTIONS.emailSearch.windowMs
+    )}.`,
     code: 'RATE_LIMIT_EMAIL_SEARCH'
   },
   ...baseRateLimitOptions
 })
+
+/**
+ * Converte um tempo em milissegundos para uma string amigável
+ * @param ms Tempo em milissegundos
+ * @returns String no formato "X minutos e Y segundos" ou "X minutos" se não houver segundos
+ */
+export function formatWindowMs(ms: number): string {
+  const totalSeconds = Math.ceil(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+
+  if (minutes > 0 && seconds > 0) {
+    return `${minutes} minuto${minutes > 1 ? 's' : ''} e ${seconds} segundo${
+      seconds > 1 ? 's' : ''
+    }`
+  } else if (minutes > 0) {
+    return `${minutes} minuto${minutes > 1 ? 's' : ''}`
+  } else {
+    return `${seconds} segundo${seconds > 1 ? 's' : ''}`
+  }
+}

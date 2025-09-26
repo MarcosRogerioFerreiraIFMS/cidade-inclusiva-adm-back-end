@@ -5,6 +5,7 @@ import {
   requireOwnershipOrAdmin,
   requireRole
 } from './authorizationMiddleware'
+import { requiredFields } from './requiredFields'
 import {
   requireSelfLikeAction,
   requireSelfOrAdmin
@@ -53,34 +54,32 @@ export const userOnly = [authMiddleware, requireRole([TipoUsuario.USUARIO])]
  */
 export const usuarioOperations = {
   /** GET /usuarios - Apenas admins podem listar todos os usuários */
-  listAll: [...adminOnly],
+  list: [...adminOnly],
 
-  /** GET /usuarios/:id - Usuário pode ver próprio perfil, admin pode ver qualquer um */
-  viewProfile: [
-    authMiddleware,
+  /** GET /usuarios/:id - Usuário pode ver a si mesmo, admin pode ver qualquer um */
+  view: [
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.USUARIO),
     validateUUID('id')
   ],
 
-  /** PUT /usuarios/:id - Usuário pode editar próprio perfil, admin pode editar qualquer um */
-  updateProfile: [
-    authMiddleware,
+  /** PUT /usuarios/:id - Usuário pode editar a si mesmo, admin pode editar qualquer um */
+  update: [
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.USUARIO),
     validateUUID('id'),
-    validateRequiredBody([])
+    validateRequiredBody([...requiredFields.usuario.update])
   ],
 
-  /** DELETE /usuarios/:id - Usuário pode deletar próprio perfil, admin pode deletar qualquer um */
-  deleteProfile: [
-    authMiddleware,
+  /** DELETE /usuarios/:id - Usuário pode deletar a si mesmo, admin pode deletar qualquer um */
+  delete: [
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.USUARIO),
     validateUUID('id')
   ],
 
   /** POST /usuarios - Registro público (não requer autenticação) */
-  register: [
-    validateRequiredBody(['nome', 'telefone', 'email', 'senha', 'endereco'])
-  ],
+  create: [validateRequiredBody([...requiredFields.usuario.create])],
 
   /** GET /usuarios/email/:email - Apenas admins podem buscar por email */
   findByEmail: [...adminOnly]
@@ -91,20 +90,24 @@ export const usuarioOperations = {
  * - Incluem validações específicas para gerenciamento de conteúdo jornalístico
  */
 export const noticiaOperations = {
-  /** GET /noticias - Público pode visualizar, mas dados extras para usuários autenticados */
-  list: [],
+  /** GET /noticias - Requer autenticação para listar */
+  list: [...authenticated],
 
-  /** GET /noticias/:id - Público pode visualizar, mas dados extras para usuários autenticados */
-  view: [validateUUID('id')],
+  /** GET /noticias/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /noticias - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody(['titulo', 'conteudo', 'categoria'])
+    validateRequiredBody([...requiredFields.noticia.create])
   ],
 
   /** PUT /noticias/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.noticia.update])
+  ],
 
   /** DELETE /noticias/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')]
@@ -115,20 +118,24 @@ export const noticiaOperations = {
  * - Incluem validações específicas para gerenciamento de dados profissionais
  */
 export const profissionalOperations = {
-  /** GET /profissionais - Público pode visualizar */
-  list: [],
+  /** GET /profissionais - Requer autenticação para listar */
+  list: [...authenticated],
 
-  /** GET /profissionais/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /profissionais/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /profissionais - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody(['nome', 'telefone', 'email', 'especialidade'])
+    validateRequiredBody([...requiredFields.profissional.create])
   ],
 
   /** PUT /profissionais/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.profissional.update])
+  ],
 
   /** DELETE /profissionais/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')]
@@ -144,7 +151,7 @@ export const comentarioOperations = {
 
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
   view: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id')
   ],
@@ -153,31 +160,34 @@ export const comentarioOperations = {
   findVisible: [],
 
   /** POST /comentarios - Apenas usuários autenticados podem criar */
-  create: [authMiddleware, validateRequiredBody(['conteudo', 'entidadeId'])],
+  create: [
+    ...authenticated,
+    validateRequiredBody([...requiredFields.comentario.create])
+  ],
 
   /** PUT /comentarios/:id - Apenas o autor ou admin podem editar */
   update: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id'),
-    validateRequiredBody([])
+    validateRequiredBody([...requiredFields.comentario.update])
   ],
 
   /** DELETE /comentarios/:id - Apenas o autor ou admin podem deletar */
   delete: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id')
   ],
 
-  /** GET /comentarios/profissional/:profissionalId - Público pode visualizar comentários de um profissional */
-  findByProfessional: [validateUUID('profissionalId')],
+  /** GET /comentarios/profissional/:profissionalId - Apenas admins podem visualizar */
+  findByProfessional: [...adminOnly, validateUUID('profissionalId')],
 
-  /** GET /comentarios/profissional/:profissionalId/visiveis - Público pode visualizar comentários visíveis */
-  findVisibleByProfessional: [validateUUID('profissionalId')],
+  /** GET /comentarios/profissional/:profissionalId/visiveis - Requer autenticação para visualizar comentários visíveis */
+  findVisibleByProfessional: [...authenticated, validateUUID('profissionalId')],
 
   /** GET /comentarios/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus comentários */
-  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
+  findByUser: [...authenticated, requireSelfOrAdmin, validateUUID('usuarioId')]
 }
 
 /**
@@ -185,12 +195,12 @@ export const comentarioOperations = {
  * - Incluem validações específicas para sistema de likes e reações
  */
 export const likeOperations = {
-  /** GET /likes/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /likes/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos */
   toggle: [
-    authMiddleware,
+    ...authenticated,
     requireSelfLikeAction, // Verifica se o usuário pode dar like por si mesmo
     validateUUID('usuarioId'),
     validateUUID('comentarioId')
@@ -198,16 +208,16 @@ export const likeOperations = {
 
   /** DELETE /likes/:id - Apenas o autor ou admin podem deletar */
   delete: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.LIKE),
     validateUUID('id')
   ],
 
-  /** GET /likes/comentario/:comentarioId - Público pode visualizar likes de um comentário */
-  findByComment: [validateUUID('comentarioId')],
+  /** GET /likes/comentario/:comentarioId - Requer autenticação para visualizar */
+  findByComment: [...authenticated, validateUUID('comentarioId')],
 
   /** GET /likes/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus likes */
-  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')]
+  findByUser: [...authenticated, requireSelfOrAdmin, validateUUID('usuarioId')]
 }
 
 /**
@@ -216,10 +226,10 @@ export const likeOperations = {
  */
 export const authOperations = {
   /** POST /auth/login - Público pode fazer login */
-  login: [validateRequiredBody(['email', 'senha'])],
+  login: [validateRequiredBody([...requiredFields.auth.login])],
 
   /** GET /auth/me - Usuário autenticado pode ver seus dados */
-  me: [authMiddleware]
+  me: [...authenticated]
 }
 
 /**
@@ -227,38 +237,38 @@ export const authOperations = {
  * - Incluem validações específicas para gerenciamento de dados de mobilidade urbana
  */
 export const mobilidadeOperations = {
-  /** GET /mobilidades - Público pode visualizar */
-  list: [],
+  /** GET /mobilidades - Requer autenticação para visualizar */
+  list: [...authenticated],
 
-  /** GET /mobilidades/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /mobilidades/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /mobilidades - Usuários autenticados podem criar */
   create: [
-    authMiddleware,
-    validateRequiredBody(['latitude', 'longitude', 'descricao'])
+    ...authenticated,
+    validateRequiredBody([...requiredFields.mobilidade.create])
   ],
 
   /** PUT /mobilidades/:id - Proprietário ou admin podem editar */
   update: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
     validateUUID('id'),
-    validateRequiredBody([])
+    validateRequiredBody([...requiredFields.mobilidade.update])
   ],
 
   /** DELETE /mobilidades/:id - Proprietário ou admin podem deletar */
   delete: [
-    authMiddleware,
+    ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
     validateUUID('id')
   ],
 
   /** GET /mobilidades/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver suas mobilidades */
-  findByUser: [authMiddleware, requireSelfOrAdmin, validateUUID('usuarioId')],
+  findByUser: [...authenticated, requireSelfOrAdmin, validateUUID('usuarioId')],
 
-  /** GET /mobilidades/status/:status - Público pode visualizar por status */
-  findByStatus: []
+  /** GET /mobilidades/status/:status - Requer autenticação para visualizar por status */
+  findByStatus: [...authenticated]
 }
 
 /**
@@ -266,20 +276,24 @@ export const mobilidadeOperations = {
  * - Incluem validações específicas para gerenciamento de dados de motoristas
  */
 export const motoristaOperations = {
-  /** GET /motoristas - Público pode visualizar */
-  list: [],
+  /** GET /motoristas - Requer autenticação para visualizar */
+  list: [...authenticated],
 
-  /** GET /motoristas/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /motoristas/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /motoristas - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody(['nome', 'cpf', 'email', 'telefone'])
+    validateRequiredBody([...requiredFields.motorista.create])
   ],
 
   /** PUT /motoristas/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.motorista.update])
+  ],
 
   /** DELETE /motoristas/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')]
@@ -290,20 +304,24 @@ export const motoristaOperations = {
  * - Incluem validações específicas para gerenciamento de dados de veículos
  */
 export const veiculoOperations = {
-  /** GET /veiculos - Público pode visualizar */
-  list: [],
+  /** GET /veiculos - Requer autenticação para visualizar */
+  list: [...authenticated],
 
-  /** GET /veiculos/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /veiculos/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /veiculos - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody(['placa', 'marca', 'modelo', 'cor', 'motoristaId'])
+    validateRequiredBody([...requiredFields.veiculo.create])
   ],
 
   /** PUT /veiculos/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.veiculo.update])
+  ],
 
   /** DELETE /veiculos/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')]
@@ -314,26 +332,24 @@ export const veiculoOperations = {
  * - Incluem validações específicas para gerenciamento de dados de empresas de manutenção
  */
 export const manutencaoOperations = {
-  /** GET /manutencoes - Público pode visualizar */
-  list: [],
+  /** GET /manutencoes - Requer autenticação para visualizar */
+  list: [...authenticated],
 
-  /** GET /manutencoes/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /manutencoes/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /manutencoes - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody([
-      'nome',
-      'telefone',
-      'email',
-      'especialidades',
-      'endereco'
-    ])
+    validateRequiredBody([...requiredFields.manutencao.create])
   ],
 
   /** PUT /manutencoes/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.manutencao.update])
+  ],
 
   /** DELETE /manutencoes/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')],
@@ -341,8 +357,8 @@ export const manutencaoOperations = {
   /** GET /manutencoes/email/:email - Apenas admins podem buscar por email */
   findByEmail: [...adminOnly],
 
-  /** GET /manutencoes/especialidade/:especialidade - Público pode buscar por especialidade */
-  findByEspecialidade: []
+  /** GET /manutencoes/especialidade/:especialidade - Requer autenticação para buscar por especialidade */
+  findByEspecialidade: [...authenticated]
 }
 
 /**
@@ -350,26 +366,30 @@ export const manutencaoOperations = {
  * - Incluem validações específicas para gerenciamento de dados de acessibilidade urbana
  */
 export const acessibilidadeUrbanaOperations = {
-  /** GET /acessibilidade-urbana - Público pode visualizar */
-  list: [],
+  /** GET /acessibilidade-urbana - Requer autenticação para visualizar */
+  list: [...authenticated],
 
-  /** GET /acessibilidade-urbana/:id - Público pode visualizar */
-  view: [validateUUID('id')],
+  /** GET /acessibilidade-urbana/:id - Requer autenticação para visualizar */
+  view: [...authenticated, validateUUID('id')],
 
   /** POST /acessibilidade-urbana - Apenas admins podem criar */
   create: [
     ...adminOnly,
-    validateRequiredBody(['nome', 'telefone', 'email', 'categoria', 'endereco'])
+    validateRequiredBody([...requiredFields.acessibilidadeUrbana.create])
   ],
 
   /** PUT /acessibilidade-urbana/:id - Apenas admins podem editar */
-  update: [...adminOnly, validateUUID('id'), validateRequiredBody([])],
+  update: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.acessibilidadeUrbana.update])
+  ],
 
   /** DELETE /acessibilidade-urbana/:id - Apenas admins podem deletar */
   delete: [...adminOnly, validateUUID('id')],
 
-  /** GET /acessibilidade-urbana/categoria/:categoria - Público pode visualizar por categoria */
-  findByCategoria: [],
+  /** GET /acessibilidade-urbana/categoria/:categoria - Requer autenticação para visualizar por categoria */
+  findByCategoria: [...authenticated],
 
   /** GET /acessibilidade-urbana/email/:email - Apenas admins podem buscar por email */
   findByEmail: [...adminOnly]

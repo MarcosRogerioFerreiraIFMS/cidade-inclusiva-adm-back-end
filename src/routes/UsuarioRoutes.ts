@@ -22,7 +22,7 @@ const UsuarioRoutes = Router()
 UsuarioRoutes.post(
   '/',
   registerRateLimit,
-  ...usuarioOperations.register,
+  ...usuarioOperations.create,
   UsuarioDependencies.controller.create
 )
 
@@ -33,7 +33,7 @@ UsuarioRoutes.post(
 UsuarioRoutes.get(
   '/',
   adminOperationsRateLimit,
-  ...usuarioOperations.listAll,
+  ...usuarioOperations.list,
   UsuarioDependencies.controller.findAll
 )
 
@@ -44,7 +44,7 @@ UsuarioRoutes.get(
 UsuarioRoutes.get(
   '/:id',
   readOperationsRateLimit,
-  ...usuarioOperations.viewProfile,
+  ...usuarioOperations.view,
   UsuarioDependencies.controller.findById
 )
 
@@ -66,7 +66,7 @@ UsuarioRoutes.get(
 UsuarioRoutes.put(
   '/:id',
   modificationRateLimit,
-  ...usuarioOperations.updateProfile,
+  ...usuarioOperations.update,
   UsuarioDependencies.controller.update
 )
 
@@ -77,7 +77,7 @@ UsuarioRoutes.put(
 UsuarioRoutes.delete(
   '/:id',
   modificationRateLimit,
-  ...usuarioOperations.deleteProfile,
+  ...usuarioOperations.delete,
   UsuarioDependencies.controller.delete
 )
 

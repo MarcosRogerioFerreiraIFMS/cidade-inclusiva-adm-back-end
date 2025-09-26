@@ -487,11 +487,11 @@ async function main() {
     const adminPassword = await hashPassword('Adm1n!@#$')
     const admin = await prisma.usuario.create({
       data: {
-        nome: 'Administrador do Sistema',
+        nome: 'Admin Cidade Inclusiva',
         telefone: '(11) 99999-9999',
         foto: {
           create: {
-            url: 'https://i.pravatar.cc/400?img=admin'
+            url: 'https://i.pravatar.cc/400?u=admin20'
           }
         },
         email: 'admin@cidadeinclusiva.com.br',

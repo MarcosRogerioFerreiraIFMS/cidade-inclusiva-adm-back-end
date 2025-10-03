@@ -36,7 +36,8 @@ export const authMiddleware = async (
       return
     }
 
-    const token = authHeader.substring(7)
+    // Extrai o token do cabeçalho de autorização
+    const token = authHeader.substring(7) // Remove "Bearer " do início
 
     if (!token) {
       res.status(HttpStatusCode.UNAUTHORIZED).json({
@@ -48,7 +49,7 @@ export const authMiddleware = async (
 
     const decoded = JWTUtils.verifyToken(token)
 
-    // Verifica se o usuário ainda existe no banco de dados
+    // Verifica se o usuário ainda existe no banco de dados e obtém dados atualizados
     const user = await UsuarioDependencies.dao.findById(decoded.userId)
 
     if (!user) {
@@ -60,7 +61,8 @@ export const authMiddleware = async (
       return
     }
 
-    req.user = decoded
+    // Define req.user com os dados atualizados do banco em vez dos dados do token
+    req.user = user
 
     next()
   } catch (error) {
@@ -130,12 +132,12 @@ export const optionalAuthMiddleware = async (
       try {
         const decoded = JWTUtils.verifyToken(token)
 
-        // Verifica se o usuário ainda existe no banco de dados
+        // Verifica se o usuário ainda existe no banco de dados e obtém dados atualizados
         const user = await UsuarioDependencies.dao.findById(decoded.userId)
 
-        // Se o usuário não existe, não autentica mas continua a requisição
+        // Se o usuário existe, define req.user com os dados atualizados do banco
         if (user) {
-          req.user = decoded
+          req.user = user
         }
       } catch {
         // Token inválido ou expirado, mas não é obrigatório

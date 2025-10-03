@@ -13,7 +13,7 @@ import {
   toComentarioResponseDTO,
   toComentariosResponseDTO
 } from '@/mappers/output'
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 import { HttpError, throwIfNotFound } from '@/utils'
 
 /**
@@ -38,14 +38,14 @@ export class ComentarioService implements IComentarioService {
    * Cria um novo comentário no sistema:
    * - Valida a existência do usuário e da entidade (profissional) relacionada
    * @param {unknown} data - Dados do comentário a ser criado
-   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando o comentário
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está criando o comentário
    * - O usuário autenticado é obrigatório para criar um comentário
    * @returns {Promise<ComentarioResponseDTO>} Dados do comentário criado
    * @throws {HttpError} Erro 404 se usuário ou entidade não forem encontrados
    */
   async create(
     data: unknown,
-    user: JWTPayload | undefined
+    user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO> {
     if (!user) {
       throw new HttpError(
@@ -56,15 +56,13 @@ export class ComentarioService implements IComentarioService {
 
     const comentarioData = toCreateComentarioDTO({
       ...(typeof data === 'object' && data !== null ? data : {}),
-      usuarioId: user.userId
+      usuarioId: user.id
     })
 
-    const [usuario, profissional] = await Promise.all([
-      this.usuarioRepository.findById(comentarioData.usuarioId),
-      this.profissionalRepository.findById(comentarioData.entidadeId)
-    ])
-
-    throwIfNotFound(usuario, 'Usuário não encontrado.')
+    // Como já temos os dados completos do usuário, só precisamos buscar o profissional
+    const profissional = await this.profissionalRepository.findById(
+      comentarioData.entidadeId
+    )
 
     const comentarioDataRelational: ComentarioCreateRelationalDTO = {
       ...comentarioData,

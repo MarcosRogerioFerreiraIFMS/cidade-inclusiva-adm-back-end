@@ -11,7 +11,7 @@ import {
   toMobilidadeResponseDTO,
   toMobilidadesResponseDTO
 } from '@/mappers/output'
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 import { HttpError, throwIfNotFound } from '@/utils'
 
 /**
@@ -33,13 +33,13 @@ export class MobilidadeService implements IMobilidadeService {
    * Cria uma nova mobilidade no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
    * @param {unknown} data - Dados da mobilidade a ser criada
-   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando a mobilidade
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está criando a mobilidade
    * - O usuário autenticado é obrigatório para criar uma mobilidade
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade criada
    */
   async create(
     data: unknown,
-    user: JWTPayload | undefined
+    user: UsuarioCompletions | undefined
   ): Promise<MobilidadeResponseDTO> {
     if (!user) {
       throw new HttpError(
@@ -51,7 +51,7 @@ export class MobilidadeService implements IMobilidadeService {
     return toMobilidadeResponseDTO(
       await this.mobilidadeRepository.create(
         toCreateMobilidadeDTO(data),
-        user.userId
+        user.id
       )
     )
   }

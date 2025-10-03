@@ -1,5 +1,5 @@
 import type { LoginResponseDTO, UsuarioResponseDTO } from '@/dtos/response'
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * Interface do serviço de autenticação
@@ -15,8 +15,8 @@ export interface IAuthService {
 
   /**
    * Valida um token JWT e retorna os dados do usuário autenticado
-   * @param {JWTPayload | undefined} user - Payload do token JWT
-   * @returns {Promise<{ userId: string; email: string }>} Dados do usuário autenticado
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado
+   * @returns {Promise<UsuarioResponseDTO>} Dados do usuário autenticado
    */
-  me(user: JWTPayload | undefined): Promise<UsuarioResponseDTO>
+  me(user: UsuarioCompletions | undefined): UsuarioResponseDTO
 }

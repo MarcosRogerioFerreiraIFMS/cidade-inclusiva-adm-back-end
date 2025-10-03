@@ -1,5 +1,5 @@
 import type { MobilidadeResponseDTO } from '@/dtos/response'
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * Interface que define o contrato de serviços para mobilidade
@@ -10,13 +10,13 @@ export interface IMobilidadeService {
   /**
    * Cria uma nova mobilidade no sistema
    * @param {unknown} data - Dados da mobilidade a ser criada
-   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando a mobilidade
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está criando a mobilidade
    * - O usuário autenticado é obrigatório para criar uma mobilidade
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade criada
    */
   create(
     data: unknown,
-    user: JWTPayload | undefined
+    user: UsuarioCompletions | undefined
   ): Promise<MobilidadeResponseDTO>
 
   /**

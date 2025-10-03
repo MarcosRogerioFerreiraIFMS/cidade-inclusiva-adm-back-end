@@ -4,7 +4,8 @@ import type { IUsuarioAccess } from '@/interfaces/access'
 import type { IAuthService } from '@/interfaces/services'
 import { toCreateLoginDTO } from '@/mappers/input'
 import { toUsuarioResponseDTO } from '@/mappers/output'
-import { HttpError, JWTUtils, throwIfNotFound, type JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
+import { HttpError, JWTUtils } from '@/utils'
 import { compareSync } from 'bcryptjs'
 
 /**
@@ -51,20 +52,19 @@ export class AuthService implements IAuthService {
 
   /**
    * Valida um token JWT e retorna os dados do usuário autenticado
-   * @param {JWTPayload | undefined} user - Payload do token JWT
-   * @returns {Promise<{ userId: string; email: string }>} Dados do usuário
-   * @throws {HttpError} Quando o token é inválido ou o usuário não existe
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado
+   * @returns {Promise<UsuarioResponseDTO>} Dados do usuário
+   * @throws {HttpError} Quando o usuário não é fornecido
    */
-  async me(user: JWTPayload | undefined): Promise<UsuarioResponseDTO> {
+  me(user: UsuarioCompletions | undefined): UsuarioResponseDTO {
     if (!user) {
-      throw new HttpError('Token inválido', HttpStatusCode.UNAUTHORIZED)
+      throw new HttpError(
+        'Usuário não autenticado',
+        HttpStatusCode.UNAUTHORIZED
+      )
     }
 
-    const usuario = throwIfNotFound(
-      await this.usuarioRepository.findById(user.userId),
-      'Usuário não encontrado'
-    )
-
-    return toUsuarioResponseDTO(usuario)
+    // Os dados do usuário já estão completos, não é necessário buscar novamente
+    return toUsuarioResponseDTO(user)
   }
 }

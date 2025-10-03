@@ -1,4 +1,4 @@
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 import type { NextFunction, Request, Response } from 'express'
 
 /**
@@ -6,8 +6,8 @@ import type { NextFunction, Request, Response } from 'express'
  * Utilizada em middlewares de autenticação e controllers que requerem usuário logado
  */
 export interface AuthenticatedRequest extends Request {
-  /** Dados do usuário autenticado extraídos do token JWT */
-  user?: JWTPayload
+  /** Dados completos do usuário autenticado obtidos do banco de dados */
+  user?: UsuarioCompletions
 }
 
 /**

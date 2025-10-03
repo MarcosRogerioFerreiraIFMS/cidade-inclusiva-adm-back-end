@@ -25,7 +25,7 @@ export const requireSelfLikeAction = (
   }
 
   const { usuarioId } = req.params
-  const loggedUserId = req.user.userId
+  const loggedUserId = req.user.id
 
   // Admin pode fazer like em nome de qualquer usuário (para fins administrativos)
   if (req.user.tipo === TipoUsuario.ADMIN) {
@@ -69,7 +69,7 @@ export const requireSelfOrAdmin = (
   }
 
   const { usuarioId } = req.params
-  const loggedUserId = req.user.userId
+  const loggedUserId = req.user.id
 
   // Admin pode ver dados de qualquer usuário
   if (req.user.tipo === TipoUsuario.ADMIN) {

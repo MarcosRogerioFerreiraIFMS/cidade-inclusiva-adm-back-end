@@ -1,5 +1,5 @@
 import type { ComentarioResponseDTO } from '@/dtos/response'
-import type { JWTPayload } from '@/utils'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * Interface para serviço de comentários
@@ -9,13 +9,13 @@ export interface IComentarioService {
   /**
    * Cria um novo comentário
    * @param {unknown} data - Dados do comentário a ser criado
-   * @param {JWTPayload | undefined} user - Usuário autenticado que está criando o comentário
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está criando o comentário
    * - O usuário autenticado é obrigatório para criar um comentário
    * @returns {Promise<ComentarioResponseDTO>} Comentário criado
    */
   create(
     data: unknown,
-    user: JWTPayload | undefined
+    user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO>
 
   /**

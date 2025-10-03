@@ -74,7 +74,7 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
     }
 
     const { id: recursoId } = req.params
-    const userId = req.user.userId
+    const userId = req.user.id
 
     try {
       // Verificar propriedade baseado no tipo de recurso

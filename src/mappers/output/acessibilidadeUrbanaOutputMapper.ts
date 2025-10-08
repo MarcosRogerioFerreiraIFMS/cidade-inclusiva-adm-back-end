@@ -3,7 +3,6 @@ import type {
   AcessibilidadeUrbanaResponseDTO
 } from '@/dtos/response'
 import type { AcessibilidadeUrbanaCompletions } from '@/types'
-import { capitalizeWords } from '@/utils'
 import { toEnderecoResponseDTO } from './enderecoOutputMapper'
 import { toFotosResponseDTO, toLogoResponseDTO } from './fotoOutputMappers'
 
@@ -14,14 +13,13 @@ import { toFotosResponseDTO, toLogoResponseDTO } from './fotoOutputMappers'
  * @returns {AcessibilidadeUrbanaRecursoResponseDTO} DTO formatado para resposta da API
  */
 export function toAcessibilidadeUrbanaRecursoResponseDTO(
-  recurso: unknown
+  recurso: AcessibilidadeUrbanaCompletions['recursos'][number]
 ): AcessibilidadeUrbanaRecursoResponseDTO {
-  const r = recurso as Record<string, unknown>
   return {
-    id: r.id as string,
-    simbolo: capitalizeWords((r.simbolo as string).replace(/_/g, ' ')),
-    descricao: (r.descricao as string) ?? undefined,
-    criadoEm: r.criadoEm as Date
+    id: recurso.id,
+    simbolo: recurso.simbolo,
+    descricao: recurso.descricao ?? undefined,
+    criadoEm: recurso.criadoEm
   }
 }
 
@@ -39,7 +37,7 @@ export function toAcessibilidadeUrbanaResponseDTO(
     nome: acessibilidadeUrbana.nome,
     telefone: acessibilidadeUrbana.telefone,
     email: acessibilidadeUrbana.email,
-    categoria: capitalizeWords(acessibilidadeUrbana.categoria),
+    categoria: acessibilidadeUrbana.categoria,
     fotos: toFotosResponseDTO(acessibilidadeUrbana.fotos),
     recursos: acessibilidadeUrbana.recursos.map((recurso) =>
       toAcessibilidadeUrbanaRecursoResponseDTO(recurso)

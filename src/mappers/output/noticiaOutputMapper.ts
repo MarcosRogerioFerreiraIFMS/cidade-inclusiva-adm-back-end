@@ -1,6 +1,5 @@
 import type { NoticiaResponseDTO } from '@/dtos/response'
 import type { NoticiaCompletions } from '@/types'
-import { capitalizeWords } from '@/utils'
 import { toFotoResponseDTO } from './fotoOutputMappers'
 
 /**
@@ -17,7 +16,7 @@ export function toNoticiaResponseDTO(
     titulo: noticia.titulo,
     conteudo: noticia.conteudo,
     dataPublicacao: noticia.dataPublicacao,
-    categoria: capitalizeWords(noticia.categoria),
+    categoria: noticia.categoria,
     criadoEm: noticia.criadoEm,
     foto: toFotoResponseDTO(noticia.foto),
     url: noticia.url ?? undefined

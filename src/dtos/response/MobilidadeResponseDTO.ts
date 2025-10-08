@@ -1,3 +1,5 @@
+import type { StatusMobilidade } from '@/enums'
+
 /**
  * - DTO (Data Transfer Object) para resposta de mobilidade
  * - Define a estrutura de dados retornada pelas operações de mobilidade
@@ -9,7 +11,7 @@ export interface MobilidadeResponseDTO {
   longitude: number
   descricao: string
   dataRegistro: Date
-  status: string
+  status: StatusMobilidade
   usuarioId?: string
   criadoEm: Date
   atualizadoEm: Date

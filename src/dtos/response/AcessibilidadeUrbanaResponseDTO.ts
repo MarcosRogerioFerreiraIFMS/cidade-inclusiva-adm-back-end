@@ -1,3 +1,7 @@
+import type {
+  CategoriaAcessibilidadeUrbana,
+  SimboloAcessibilidade
+} from '@/enums'
 import type { EnderecoResponseDTO } from './EnderecoResponseDTO'
 import type { FotoResponseDTO } from './FotoResponsesDTO'
 
@@ -9,7 +13,7 @@ export interface AcessibilidadeUrbanaRecursoResponseDTO {
   /** ID único do recurso */
   id: string
   /** Símbolo de acessibilidade */
-  simbolo: string
+  simbolo: SimboloAcessibilidade
   /** Descrição do recurso (opcional) */
   descricao?: string
   /** Data e hora de criação do registro */
@@ -30,7 +34,7 @@ export interface AcessibilidadeUrbanaResponseDTO {
   /** E-mail de contato */
   email: string
   /** Categoria do estabelecimento */
-  categoria: string
+  categoria: CategoriaAcessibilidadeUrbana
   /** Logo do estabelecimento (opcional) */
   logo?: FotoResponseDTO
   /** Fotos do estabelecimento */

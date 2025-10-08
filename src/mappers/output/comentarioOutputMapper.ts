@@ -16,7 +16,7 @@ export function toComentarioResponseDTO(
     conteudo: comentario.conteudo,
     visivel: comentario.visivel,
     usuarioId: comentario.usuarioId,
-    profissionalId: comentario.profissionalId!,
+    profissionalId: comentario.profissionalId ?? undefined,
     criadoEm: comentario.criadoEm,
     atualizadoEm: comentario.atualizadoEm,
     likes: comentario.likesUsuarios.map((like) => toLikeResponseDTO(like))

@@ -1,6 +1,5 @@
 import type { ProfissionalResponseDTO } from '@/dtos/response'
 import type { ProfissionalCompletions } from '@/types'
-import { capitalizeWords } from '@/utils'
 import { toComentarioResponseDTO } from './comentarioOutputMapper'
 import { toFotoResponseDTO } from './fotoOutputMappers'
 
@@ -19,7 +18,7 @@ export function toProfissionalResponseDTO(
     foto: toFotoResponseDTO(profissional.foto),
     telefone: profissional.telefone,
     email: profissional.email,
-    especialidade: capitalizeWords(profissional.especialidade),
+    especialidade: profissional.especialidade,
     criadoEm: profissional.criadoEm,
     comentarios: profissional.comentarios.map((comentario) =>
       toComentarioResponseDTO(comentario)

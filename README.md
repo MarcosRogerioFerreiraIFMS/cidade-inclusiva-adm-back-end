@@ -372,31 +372,43 @@ Este é o método mais simples e recomendado para iniciantes:
    cd cidade-inclusiva-adm-back-end
    ```
 
-3. **Instale o pnpm (se não tiver):**
+3. **Mude para a branch de desenvolvimento:**
+
+   ```bash
+   git checkout development
+   ```
+
+4. **Instale o pnpm (se não tiver):**
 
    ```bash
    npm install -g pnpm
    ```
 
-4. **Instale as dependências e configure o projeto:**
+5. **Copie o arquivo de configuração de ambiente:**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+6. **Instale as dependências e configure o projeto:**
 
    ```bash
    pnpm install
    ```
 
-5. **Configure o banco de dados:**
+7. **Configure o banco de dados:**
 
    ```bash
    pnpm migrate
    ```
 
-6. **Popule o banco com dados iniciais (opcional):**
+8. **Popule o banco com dados iniciais (opcional):**
 
    ```bash
    pnpm seed
    ```
 
-7. **Inicie o servidor de desenvolvimento:**
+9. **Inicie o servidor de desenvolvimento:**
 
    ```bash
    pnpm dev

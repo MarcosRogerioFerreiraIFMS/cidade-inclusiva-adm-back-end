@@ -1,6 +1,5 @@
 import type { MobilidadeResponseDTO } from '@/dtos/response'
 import type { MobilidadeCompletions } from '@/types'
-import { capitalizeWords } from '@/utils'
 
 /**
  * - Converte entidade Mobilidade completa para DTO de resposta
@@ -17,7 +16,7 @@ export function toMobilidadeResponseDTO(
     longitude: mobilidade.longitude,
     descricao: mobilidade.descricao,
     dataRegistro: mobilidade.dataRegistro,
-    status: capitalizeWords(mobilidade.status.replace('_', ' ')),
+    status: mobilidade.status,
     usuarioId: mobilidade.usuarioId ?? undefined,
     criadoEm: mobilidade.criadoEm,
     atualizadoEm: mobilidade.atualizadoEm,

@@ -100,6 +100,14 @@ export async function generateDataFotoUsuarioUpdate(
     throw new Error('Usuário não encontrado')
   }
 
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (usuario.foto) {
+      return { delete: { id: usuario.foto.id } }
+    }
+    return undefined
+  }
+
   // Se não houver foto associada, cria uma nova
   if (!usuario.foto) {
     return { create: { url: novaUrl } }
@@ -138,6 +146,14 @@ export async function generateDataFotoProfissionalUpdate(
 
   if (!profissional) {
     throw new Error('Profissional não encontrado')
+  }
+
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (profissional.foto) {
+      return { delete: { id: profissional.foto.id } }
+    }
+    return undefined
   }
 
   // Se não houver foto associada, cria uma nova
@@ -180,6 +196,14 @@ export async function generateDataFotoNoticiaUpdate(
     throw new Error('Notícia não encontrada')
   }
 
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (noticia.foto) {
+      return { delete: { id: noticia.foto.id } }
+    }
+    return undefined
+  }
+
   // Se não houver foto associada, cria uma nova
   if (!noticia.foto) {
     return { create: { url: novaUrl } }
@@ -218,6 +242,14 @@ export async function generateDataFotoMotoristaUpdate(
 
   if (!motorista) {
     throw new Error('Motorista não encontrado')
+  }
+
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (motorista.foto) {
+      return { delete: { id: motorista.foto.id } }
+    }
+    return undefined
   }
 
   // Se não houver foto associada, cria uma nova
@@ -394,6 +426,14 @@ export async function generateDataLogoManutencaoUpdate(
     throw new Error('Manutenção não encontrada')
   }
 
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (manutencao.logo) {
+      return { delete: { id: manutencao.logo.id } }
+    }
+    return undefined
+  }
+
   // Se não houver logo associado, cria um novo
   if (!manutencao.logo) {
     return { create: { url: novaUrl } }
@@ -518,6 +558,14 @@ export async function generateDataLogoAcessibilidadeUrbanaUpdate(
 
   if (!acessibilidadeUrbana) {
     throw new Error('Acessibilidade urbana não encontrada')
+  }
+
+  // se a url for uma string vazia, remove a foto associada
+  if (novaUrl === '') {
+    if (acessibilidadeUrbana.logo) {
+      return { delete: { id: acessibilidadeUrbana.logo.id } }
+    }
+    return undefined
   }
 
   // Se não houver logo associado, cria um novo

@@ -2,6 +2,8 @@ import type { AcessibilidadeUrbanaCreateDTO } from '@/dtos/create'
 import type { AcessibilidadeUrbanaUpdateDTO } from '@/dtos/update'
 import type { Prisma } from '@prisma/client'
 import {
+  generateDataFotoAcessibilidadeUrbanaCreate,
+  generateDataFotoAcessibilidadeUrbanaUpdate,
   generateDataLogoAcessibilidadeUrbanaCreate,
   generateDataLogoAcessibilidadeUrbanaUpdate
 } from './generateDataFoto'
@@ -42,12 +44,7 @@ export function generateDataAcessibilidadeUrbanaCreate({
         }
       : undefined,
     logo: generateDataLogoAcessibilidadeUrbanaCreate(logo),
-    fotos:
-      fotos && fotos.length > 0
-        ? {
-            create: fotos.map((foto) => ({ url: foto }))
-          }
-        : undefined,
+    fotos: generateDataFotoAcessibilidadeUrbanaCreate(fotos || []),
     recursos:
       recursos && recursos.length > 0
         ? {
@@ -107,9 +104,12 @@ export async function generateDataAcessibilidadeUrbanaUpdate(
   }
 
   if (fotos !== undefined) {
-    dataToUpdate.fotos = {
-      deleteMany: {},
-      create: fotos.map((foto) => ({ url: foto }))
+    const fotosUpdate = await generateDataFotoAcessibilidadeUrbanaUpdate(
+      fotos,
+      acessibilidadeUrbanaId
+    )
+    if (fotosUpdate) {
+      dataToUpdate.fotos = fotosUpdate
     }
   }
 

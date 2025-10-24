@@ -68,21 +68,40 @@ export const sanitizeString = (str: string): string => {
 }
 
 /**
- * Sanitiza conteúdo de texto preservando formatação básica e quebras de linha
- * @param {string} str - Conteúdo a ser sanitizado
- * @returns {string} Conteúdo sanitizado mantendo estrutura básica
+ * Sanitiza e organiza conteúdo de texto de forma robusta,
+ * preservando estrutura, legibilidade e formatação básica.
  */
-export const sanitizeContent = (str: string): string => {
-  if (!str || typeof str !== 'string') return ''
+export const sanitizeContent = (input: string): string => {
+  if (!input || typeof input !== 'string') return ''
 
-  return str
-    .trim()
-    .split('\n')
+  let str = input
+    // Remove tags HTML
+    .replace(/<[^>]*>/g, '')
+    // Remove entidades HTML como &nbsp; ou &#x2028;
+    .replace(/&[a-zA-Z#0-9]+;/g, ' ')
+    // Remove caracteres de controle invisíveis (exceto \n e \t)
+    .replace(/[\\x00-\\x1F\\x7F-\\x9F]/g, '')
+    // Normaliza aspas e travessões
+    .replace(/[“”«»]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[–—]/g, '-')
+    // Remove caracteres não textuais
+    .replace(/[^\w\s.,!?;:()"'@%&*\-+/áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ\n\t]/g, '')
+
+  // Divide o texto em linhas, normalizando espaços
+  const lines = str
+    .split(/\r?\n+/)
     .map((line) => line.trim().replace(/\s+/g, ' '))
     .filter((line) => line.length > 0)
-    .join('\n')
-    .replace(/[^\w\s\-.,!?()\náàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ\n]/gi, '')
-    .trim()
+
+  // Junta com no máximo uma quebra entre blocos
+  str = lines.join('\n')
+
+  // Remove múltiplas quebras de linha consecutivas
+  str = str.replace(/\n{3,}/g, '\n\n')
+
+  // Trim final
+  return str.trim()
 }
 
 /**

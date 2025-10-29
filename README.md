@@ -31,6 +31,7 @@ O sistema tem como objetivo principal facilitar a inclusão social e a mobilidad
 | 📱 Protótipo Mobile no Vercel           | [Cidade Inclusiva - Mobile](https://fundect-pictec3-mobile-cidade-inclusiva.vercel.app/login)                          |
 | 🛠️ Modelagem UML do Projeto             | [Cidade Inclusiva - UML](https://app.diagrams.net/#G1c72Gns79DE7laBVADoPoukr65F1AaNS-)                                 |
 | 📂 Repositório Mobile no GitHub         | [Cidade Inclusiva - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva)              |
+| 🖥️ Repositório Frontend no GitHub       | [Cidade Inclusiva - Frontend](https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-front-end)             |
 
 ## ⚡ Scripts Disponíveis
 
@@ -356,88 +357,265 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ## 🚀 Como Rodar o Projeto
 
-### ⚡ Método Rápido: Configuração Automática
+### ⚠️ IMPORTANTE: Frontend e Integração
 
-Este é o método mais simples e recomendado para iniciantes:
+Este é o **backend (API)** do projeto. Para usar o sistema completo, você também precisará rodar o **frontend (painel administrativo)**.
 
-1. **Clone o repositório:**
+- **🖥️ Repositório Frontend:** [Cidade Inclusiva - Frontend](https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-front-end)
+- **🔗 URL Padrão do Backend:** `http://localhost:5555`
+- **🔗 URL Padrão do Frontend:** `http://localhost:3000`
 
-   ```bash
-   git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
-   ```
+### 📋 Passo a Passo Completo
 
-2. **Acesse o diretório do projeto:**
+#### 1️⃣ **Clone o repositório**
 
-   ```bash
-   cd cidade-inclusiva-adm-back-end
-   ```
+```bash
+git clone https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end.git
+cd cidade-inclusiva-adm-back-end
+```
 
-3. **Mude para a branch de desenvolvimento:**
+#### 2️⃣ **Mude para a branch de desenvolvimento**
 
-   ```bash
-   git checkout development
-   ```
+```bash
+git checkout development
+```
 
-4. **Instale o pnpm (se não tiver):**
+#### 3️⃣ **Instale o pnpm (se não tiver)**
 
-   ```bash
-   npm install -g pnpm
-   ```
+```bash
+npm install -g pnpm
+```
 
-5. **Copie o arquivo de configuração de ambiente:**
+#### 4️⃣ **Configure as variáveis de ambiente**
 
-   ```bash
-   cp .env.example .env
-   ```
+> **⚠️ ATENÇÃO**: Esta etapa é **OBRIGATÓRIA** para o funcionamento do projeto!
 
-6. **Instale as dependências e configure o projeto:**
+Copie o arquivo de exemplo e configure suas variáveis:
 
-   ```bash
-   pnpm install
-   ```
+```bash
+cp .env.example .env
+```
 
-7. **Configure o banco de dados:**
+**📝 Edite o arquivo `.env` e configure as variáveis obrigatórias:**
 
-   ```bash
-   pnpm migrate
-   ```
+```bash
+# ===== BANCO DE DADOS (OBRIGATÓRIO) =====
+DATABASE_URL="file:./dev.db"  # SQLite para desenvolvimento
+# Para produção, use PostgreSQL:
+# DATABASE_URL="postgresql://usuario:senha@localhost:5432/cidade_inclusiva"
 
-8. **Popule o banco com dados iniciais (opcional):**
+# ===== JWT (OBRIGATÓRIO) =====
+# Gere uma chave segura com: pnpm generate-jwt-secret
+JWT_SECRET="sua-chave-secreta-muito-longa-e-segura-aqui-minimo-32-caracteres"
+JWT_EXPIRES_IN="7d"
 
-   ```bash
-   pnpm seed
-   ```
+# ===== SERVIDOR =====
+NODE_ENV="development"  # development, test ou production
+PORT=5555
 
-9. **Inicie o servidor de desenvolvimento:**
+# ===== CORS =====
+ALLOWED_ORIGINS="http://localhost:3000"  # URL do frontend
+```
 
-   ```bash
-   pnpm dev
-   ```
+#### 5️⃣ **Gere uma chave JWT segura**
 
-**Resultado:** Servidor disponível em `http://localhost:5555` 🎉
+```bash
+pnpm generate-jwt-secret
+```
+
+Copie a chave gerada e cole no arquivo `.env` na variável `JWT_SECRET`.
+
+#### 6️⃣ **Instale as dependências**
+
+```bash
+pnpm install
+```
+
+#### 7️⃣ **Configure o banco de dados**
+
+```bash
+# Execute as migrações
+pnpm migrate
+
+# (Opcional) Popule com dados de exemplo
+pnpm seed
+```
+
+> **💡 Dica:** O comando `pnpm seed` cria dados realistas para teste, incluindo usuários, notícias, profissionais e muito mais!
+
+#### 8️⃣ **Inicie o servidor de desenvolvimento**
+
+```bash
+pnpm dev
+```
+
+#### 9️⃣ **Verifique se está funcionando**
+
+Abra seu navegador ou use curl/Postman para acessar:
+
+```bash
+http://localhost:5555
+```
+
+**Resultado:** Servidor API disponível em `http://localhost:5555` 🎉
+
+### ✅ Verificação da Configuração
+
+Para garantir que tudo está funcionando:
+
+1. ✅ **Arquivo `.env` criado** - Verifique se o arquivo existe na raiz do projeto
+2. ✅ **Variáveis obrigatórias configuradas** - `DATABASE_URL` e `JWT_SECRET` preenchidos
+3. ✅ **JWT_SECRET válido** - Mínimo 32 caracteres (use `pnpm generate-jwt-secret`)
+4. ✅ **Dependências instaladas** - Execute `pnpm install` sem erros
+5. ✅ **Migrações aplicadas** - Execute `pnpm migrate` com sucesso
+6. ✅ **Servidor rodando** - API acessível em `http://localhost:5555`
+7. ✅ **Validação de ambiente** - Execute `pnpm validate-env` para verificar
+
+### 🐛 Problemas Comuns
+
+| ❌ **Problema**                       | ✅ **Solução**                                                                   |
+| ------------------------------------- | -------------------------------------------------------------------------------- |
+| Erro `JWT_SECRET is required`         | Configure a variável no `.env` ou gere uma nova com `pnpm generate-jwt-secret`   |
+| Erro `DATABASE_URL is required`       | Adicione `DATABASE_URL="file:./dev.db"` no arquivo `.env`                        |
+| Erro de migração do Prisma            | Execute `pnpm migrate` novamente ou `pnpm push` para aplicar mudanças            |
+| Porta 5555 já em uso                  | Altere a porta no `.env`: `PORT=5556` ou mate o processo que está usando a porta |
+| Erro ao instalar dependências         | Limpe o cache: `pnpm store prune` e execute `pnpm install` novamente             |
+| Erro de CORS no frontend              | Adicione a URL do frontend em `ALLOWED_ORIGINS` no `.env`                        |
+| Erro "Node version is not compatible" | Instale Node.js ≥20.0.0: [nodejs.org](https://nodejs.org)                        |
+| Seed falha em produção                | O seed é bloqueado em produção por segurança. Use apenas em desenvolvimento      |
 
 ### 🔧 Comandos Úteis para Desenvolvimento
 
 ```bash
-# Visualizar dados do banco
+# Visualizar e editar dados do banco em interface web
 pnpm studio
 
 # Verificar status das migrações
 pnpm status
 
-# Aplicar mudanças de schema sem migração
+# Aplicar mudanças de schema sem criar migração
 pnpm push
 
 # Sincronizar schema com banco existente
 pnpm pull
+
+# Validar todas as variáveis de ambiente
+pnpm validate-env
+
+# Validar apenas configurações JWT
+pnpm validate-jwt
+
+# Limpar arquivos de build e temporários
+pnpm clean
+
+# Verificar código com ESLint
+pnpm lint
+
+# Compilar para produção
+pnpm build
+
+# Executar versão de produção
+pnpm start
 ```
+
+### 🔄 Workflow Completo de Desenvolvimento
+
+Para começar a desenvolver no projeto:
+
+1. **Configure o ambiente** (passos 1-7 acima)
+2. **Inicie o servidor:** `pnpm dev`
+3. **Abra o Prisma Studio** (em outro terminal): `pnpm studio`
+4. **Faça suas alterações** no código
+5. **Se alterou o schema do Prisma:**
+   - Execute: `pnpm migrate` (cria nova migração)
+   - Ou: `pnpm push` (aplica direto sem migração)
+6. **Verifique seu código:** `pnpm lint`
+7. **Teste a API** com Postman, Insomnia ou curl
+
+### 🚀 Deploy e Produção
+
+Antes de fazer deploy:
+
+```bash
+# 1. Valide o ambiente
+pnpm validate-env
+
+# 2. Execute o linting
+pnpm lint
+
+# 3. Compile o projeto
+pnpm build
+
+# 4. Configure .env de produção com:
+#    - NODE_ENV=production
+#    - DATABASE_URL do PostgreSQL
+#    - JWT_SECRET seguro e diferente do dev
+#    - ALLOWED_ORIGINS com domínio real
+
+# 5. Execute as migrações em produção
+pnpm migrate
+
+# 6. Inicie o servidor
+pnpm start
+```
+
+> **⚠️ NUNCA execute `pnpm seed` em produção!** O script é bloqueado automaticamente por segurança.
 
 ## 📋 Requisitos do Sistema
 
-- **Node.js:** ≥20.0.0
-- **Gerenciador de pacotes:** pnpm (recomendado) ou npm
-- **Sistema operacional:** Windows, macOS ou Linux
-- **Banco de dados:** SQLite (desenvolvimento) ou PostgreSQL (produção)
+### 💻 Requisitos Mínimos
+
+- **Node.js:** ≥20.0.0 (LTS recomendado)
+- **Gerenciador de pacotes:** pnpm ≥8.0.0 (recomendado) ou npm ≥9.0.0
+- **Sistema operacional:** Windows 10+, macOS 12+, ou Linux (Ubuntu 20.04+)
+- **Memória RAM:** Mínimo 4GB (8GB recomendado)
+- **Espaço em disco:** Mínimo 500MB livres
+
+### 🗄️ Banco de Dados
+
+**Desenvolvimento:**
+
+- SQLite 3 (incluído, sem instalação necessária)
+
+**Produção:**
+
+- PostgreSQL ≥14.0 (recomendado)
+- MySQL ≥8.0 (suportado)
+- Outros bancos compatíveis com Prisma
+
+### 🛠️ Ferramentas Recomendadas
+
+- **Editor de código:** VS Code, WebStorm ou similar
+- **Cliente de API:** Postman, Insomnia ou Thunder Client
+- **Git:** Para controle de versão
+- **Terminal:** Git Bash (Windows), Terminal nativo (macOS/Linux)
+
+### 🌐 Integrações Necessárias
+
+- **Frontend:** [Cidade Inclusiva - Painel Administrativo](https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-front-end)
+- **BrasilAPI:** Para dados de CEP e localização (API pública, sem chave necessária)
+
+## 📚 Recursos Adicionais
+
+### 📖 Documentação Técnica
+
+- **[Prisma Docs](https://www.prisma.io/docs)** - Documentação oficial do Prisma ORM
+- **[Express.js Guide](https://expressjs.com/pt-br/guide/routing.html)** - Guia oficial do Express
+- **[Zod Documentation](https://zod.dev/)** - Validação de schemas TypeScript
+- **[JWT.io](https://jwt.io/)** - Ferramenta para debug de tokens JWT
+
+### 🎓 Guias e Tutoriais
+
+- **Estrutura do Projeto:** Veja a seção [📂 Estrutura do Projeto](#-estrutura-do-projeto)
+- **Variáveis de Ambiente:** Veja a seção [🔍 Validação de Variáveis de Ambiente](#-validação-de-variáveis-de-ambiente)
+- **Scripts Disponíveis:** Veja a seção [⚡ Scripts Disponíveis](#-scripts-disponíveis)
+
+### 🔗 Links Úteis
+
+- **Repositório Backend:** [GitHub - Backend](https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-back-end)
+- **Repositório Frontend:** [GitHub - Frontend](https://github.com/MarcosRogerioFerreiraIFMS/cidade-inclusiva-adm-front-end)
+- **Repositório Mobile:** [GitHub - Mobile](https://github.com/marcosrogerio-jrf/fundect-pictec3-mobile-cidade-inclusiva)
+- **Protótipo:** [Vercel - Mobile](https://fundect-pictec3-mobile-cidade-inclusiva.vercel.app/login)
 
 ## 🎯 Funcionalidades Principais
 
@@ -491,6 +669,7 @@ pnpm pull
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)
 
 > **Cidade Inclusiva** - Construindo uma cidade mais acessível para todos! 🌆♿
 

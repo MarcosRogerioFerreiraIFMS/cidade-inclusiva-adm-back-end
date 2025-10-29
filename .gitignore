@@ -5,14 +5,17 @@ node_modules/
 dist/
 
 # Environment variables
-.env
+.env*
+!.env.example
 
 # Prisma
 *.db
 *.db-journal
 
-# npm
+# package manager lock files
+yarn.lock
 package-lock.json
+bun.lock
 
 # temp
 temp/

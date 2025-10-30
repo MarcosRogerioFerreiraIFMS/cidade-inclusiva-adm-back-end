@@ -1,3 +1,4 @@
+import { TipoEntidadeComentario } from '@/enums'
 import type { IComentarioService } from '@/interfaces/services'
 import type { AuthenticatedRequest, ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
@@ -9,7 +10,7 @@ export class ComentarioController {
   constructor(private comentarioService: IComentarioService) {}
 
   /**
-   * Cria um novo comentário
+   * Cria um novo comentário para uma entidade específica
    * @type {ControllerRequest}
    */
   create: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
@@ -25,10 +26,14 @@ export class ComentarioController {
    * Busca um comentário específico pelo ID
    * @type {ControllerRequest}
    */
-  findById: ControllerRequest = async (req, res, next) => {
+  findById: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
     try {
       const { id } = req.params
-      const comentario = await this.comentarioService.findById(id)
+      const comentario = await this.comentarioService.findById(id, req.user)
       HandleSuccess.found(res, comentario)
     } catch (error: unknown) {
       next(error)
@@ -39,10 +44,14 @@ export class ComentarioController {
    * Atualiza um comentário existente
    * @type {ControllerRequest}
    */
-  update: ControllerRequest = async (req, res, next) => {
+  update: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
       const { id } = req.params
-      const comentario = await this.comentarioService.update(id, req.body)
+      const comentario = await this.comentarioService.update(
+        id,
+        req.body,
+        req.user
+      )
       HandleSuccess.updated(
         res,
         comentario,
@@ -68,40 +77,20 @@ export class ComentarioController {
   }
 
   /**
-   * Lista todos os comentários do sistema
+   * Busca comentários de um profissional
    * @type {ControllerRequest}
    */
-  findAll: ControllerRequest = async (_req, res, next) => {
+  findByProfissional: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
     try {
-      const comentarios = await this.comentarioService.findAll()
-      HandleSuccess.list(res, comentarios)
-    } catch (error: unknown) {
-      next(error)
-    }
-  }
-
-  /**
-   * Lista todos os comentários visíveis
-   * @type {ControllerRequest}
-   */
-  findVisible: ControllerRequest = async (_req, res, next) => {
-    try {
-      const comentarios = await this.comentarioService.findVisible()
-      HandleSuccess.list(res, comentarios)
-    } catch (error: unknown) {
-      next(error)
-    }
-  }
-
-  /**
-   * Lista comentários por profissional
-   * @type {ControllerRequest}
-   */
-  findByProfissional: ControllerRequest = async (req, res, next) => {
-    try {
-      const { profissionalId } = req.params
-      const comentarios = await this.comentarioService.findByProfissional(
-        profissionalId
+      const { id } = req.params
+      const comentarios = await this.comentarioService.findByEntidade(
+        TipoEntidadeComentario.PROFISSIONAL,
+        id,
+        req.user
       )
       HandleSuccess.list(res, comentarios)
     } catch (error: unknown) {
@@ -110,14 +99,21 @@ export class ComentarioController {
   }
 
   /**
-   * Lista comentários visíveis por profissional
+   * Busca comentários de um motorista
    * @type {ControllerRequest}
    */
-  findVisibleByProfissional: ControllerRequest = async (req, res, next) => {
+  findByMotorista: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
     try {
-      const { profissionalId } = req.params
-      const comentarios =
-        await this.comentarioService.findVisibleByProfissional(profissionalId)
+      const { id } = req.params
+      const comentarios = await this.comentarioService.findByEntidade(
+        TipoEntidadeComentario.MOTORISTA,
+        id,
+        req.user
+      )
       HandleSuccess.list(res, comentarios)
     } catch (error: unknown) {
       next(error)
@@ -125,13 +121,43 @@ export class ComentarioController {
   }
 
   /**
-   * Lista comentários por usuário
+   * Busca comentários de uma manutenção
    * @type {ControllerRequest}
    */
-  findByUsuario: ControllerRequest = async (req, res, next) => {
+  findByManutencao: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
     try {
-      const { usuarioId } = req.params
-      const comentarios = await this.comentarioService.findByUsuario(usuarioId)
+      const { id } = req.params
+      const comentarios = await this.comentarioService.findByEntidade(
+        TipoEntidadeComentario.MANUTENCAO,
+        id,
+        req.user
+      )
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  /**
+   * Busca comentários de uma acessibilidade urbana
+   * @type {ControllerRequest}
+   */
+  findByAcessibilidadeUrbana: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const { id } = req.params
+      const comentarios = await this.comentarioService.findByEntidade(
+        TipoEntidadeComentario.ACESSIBILIDADE_URBANA,
+        id,
+        req.user
+      )
       HandleSuccess.list(res, comentarios)
     } catch (error: unknown) {
       next(error)

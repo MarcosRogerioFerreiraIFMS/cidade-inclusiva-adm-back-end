@@ -1,5 +1,4 @@
 import type { EspecialidadeProfissional } from '@/enums'
-import type { ComentarioResponseDTO } from './ComentarioResponseDTO'
 import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
@@ -22,6 +21,4 @@ export interface ProfissionalResponseDTO {
   especialidade: EspecialidadeProfissional
   /** Data e hora de criação do registro */
   criadoEm: Date
-  /** Lista de comentários associados ao profissional */
-  comentarios: ComentarioResponseDTO[]
 }

@@ -63,51 +63,6 @@ export class ComentarioRepository implements IComentarioAccess {
   }
 
   /**
-   * Lista todos os comentários do sistema
-   * @returns {Promise<ComentarioCompletions[]>} Lista de todos os comentários
-   */
-  async findAll(): Promise<ComentarioCompletions[]> {
-    return await this.dao.findAll()
-  }
-
-  async findVisible(): Promise<ComentarioCompletions[]> {
-    return await this.dao.findVisible()
-  }
-
-  /**
-   * Lista todos os comentários de um profissional específico
-   * Inclui comentários visíveis e ocultos
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do profissional
-   */
-  async findByProfissional(
-    profissionalId: string
-  ): Promise<ComentarioCompletions[]> {
-    return await this.dao.findByProfissional(profissionalId)
-  }
-
-  /**
-   * Lista apenas os comentários visíveis de um profissional específico
-   * Filtra comentários marcados como visíveis para exibição pública
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários visíveis do profissional
-   */
-  async findVisibleByProfissional(
-    profissionalId: string
-  ): Promise<ComentarioCompletions[]> {
-    return await this.dao.findVisibleByProfissional(profissionalId)
-  }
-
-  /**
-   * Lista todos os comentários de um usuário específico
-   * @param {string} usuarioId - ID do usuário
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do usuário
-   */
-  async findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]> {
-    return await this.dao.findByUsuario(usuarioId)
-  }
-
-  /**
    * Verifica se um usuário é o proprietário de um comentário
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário
@@ -116,5 +71,60 @@ export class ComentarioRepository implements IComentarioAccess {
    */
   async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
     return await this.dao.isCommentOwner(commentId, userId)
+  }
+
+  /**
+   * Busca todos os comentários de um profissional
+   * @param {string} profissionalId - ID do profissional
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByProfissionalId(
+    profissionalId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByProfissionalId(profissionalId, includeInvisible)
+  }
+
+  /**
+   * Busca todos os comentários de um motorista
+   * @param {string} motoristaId - ID do motorista
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByMotoristaId(
+    motoristaId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByMotoristaId(motoristaId, includeInvisible)
+  }
+
+  /**
+   * Busca todos os comentários de uma manutenção
+   * @param {string} manutencaoId - ID da manutenção
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByManutencaoId(
+    manutencaoId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByManutencaoId(manutencaoId, includeInvisible)
+  }
+
+  /**
+   * Busca todos os comentários de uma acessibilidade urbana
+   * @param {string} acessibilidadeUrbanaId - ID da acessibilidade urbana
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByAcessibilidadeUrbanaId(
+    acessibilidadeUrbanaId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByAcessibilidadeUrbanaId(
+      acessibilidadeUrbanaId,
+      includeInvisible
+    )
   }
 }

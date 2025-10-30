@@ -11,20 +11,44 @@ import type { Prisma } from '@prisma/client'
 export const generateDataComentarioCreate = ({
   conteudo,
   usuarioId,
-  profissionalId
+  profissionalId,
+  motoristaId,
+  manutencaoId,
+  acessibilidadeUrbanaId
 }: ComentarioCreateRelationalDTO): Prisma.ComentarioCreateInput => {
   return {
     conteudo,
-    visivel: true, // Comentários são visíveis por padrão
-    usuario: {
+    visivel: true,
+    autor: {
       connect: {
         id: usuarioId
       }
     },
-    ...(profissionalId !== undefined && {
+    ...(profissionalId && {
       profissional: {
         connect: {
           id: profissionalId
+        }
+      }
+    }),
+    ...(motoristaId && {
+      motorista: {
+        connect: {
+          id: motoristaId
+        }
+      }
+    }),
+    ...(manutencaoId && {
+      manutencao: {
+        connect: {
+          id: manutencaoId
+        }
+      }
+    }),
+    ...(acessibilidadeUrbanaId && {
+      acessibilidadeUrbana: {
+        connect: {
+          id: acessibilidadeUrbanaId
         }
       }
     })

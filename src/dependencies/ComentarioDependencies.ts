@@ -2,15 +2,19 @@ import { ComentarioController } from '@/controllers/ComentarioController'
 import { ComentarioDAO } from '@/daos/ComentarioDAO'
 import { ComentarioRepository } from '@/repositories/ComentarioRepository'
 import { ComentarioService } from '@/services/ComentarioService'
+import { AcessibilidadeUrbanaDependencies } from './AcessibilidadeUrbanaDependencies'
+import { ManutencaoDependencies } from './ManutencaoDependencies'
+import { MotoristaDependencies } from './MotoristaDependencies'
 import { ProfissionalDependencies } from './ProfissionalDependencies'
-import { UsuarioDependencies } from './UsuarioDependencies'
 
 const comentarioDAO = new ComentarioDAO()
 const comentarioRepository = new ComentarioRepository(comentarioDAO)
 const comentarioService = new ComentarioService(
   comentarioRepository,
-  UsuarioDependencies.repository,
-  ProfissionalDependencies.repository
+  ProfissionalDependencies.repository,
+  MotoristaDependencies.repository,
+  ManutencaoDependencies.repository,
+  AcessibilidadeUrbanaDependencies.repository
 )
 const comentarioController = new ComentarioController(comentarioService)
 

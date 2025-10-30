@@ -1,10 +1,13 @@
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { ManutencaoDependencies } from '@/dependencies/ManutencaoDependencies'
 import {
+  authenticated,
   emailSearchRateLimit,
   manutencaoOperations,
   modificationRateLimit,
   readOperationsRateLimit
 } from '@/middlewares'
+import { validateUUID } from '@/middlewares/validationMiddleware'
 import { Router } from 'express'
 
 /**
@@ -88,6 +91,18 @@ ManutencaoRoutes.delete(
   modificationRateLimit,
   ...manutencaoOperations.delete,
   ManutencaoDependencies.controller.delete
+)
+
+/**
+ * GET /manutencoes/:id/comentarios - Lista todos os comentários de uma manutenção
+ * Requer autenticação - admins veem todos, usuários veem apenas visíveis
+ */
+ManutencaoRoutes.get(
+  '/:id/comentarios',
+  readOperationsRateLimit,
+  ...authenticated,
+  validateUUID('id'),
+  ComentarioDependencies.controller.findByManutencao
 )
 
 export { ManutencaoRoutes }

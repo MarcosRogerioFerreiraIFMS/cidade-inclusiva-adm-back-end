@@ -29,17 +29,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -56,17 +46,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -85,17 +65,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -111,17 +81,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -145,17 +105,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -182,17 +132,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }
@@ -213,17 +153,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         endereco: true,
         fotos: true,
         logo: true,
-        recursos: true,
-        comentarios: {
-          include: {
-            usuario: {
-              include: {
-                foto: true
-              }
-            },
-            likesUsuarios: true
-          }
-        }
+        recursos: true
       }
     })
   }

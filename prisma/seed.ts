@@ -1091,8 +1091,17 @@ async function main() {
 
       return {
         conteudo: faker.helpers.arrayElement(comentariosTemplate),
-        usuarioId,
-        profissionalId,
+        visivel: true,
+        autor: {
+          connect: {
+            id: usuarioId
+          }
+        },
+        profissional: {
+          connect: {
+            id: profissionalId
+          }
+        },
         criadoEm: dataComentario,
         atualizadoEm: dataComentario
       }
@@ -2104,8 +2113,9 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosMotorista),
-            usuarioId: usuarioAleatorio.id,
-            motoristaId: motorista.id,
+            autor: { connect: { id: usuarioAleatorio.id } },
+            motorista: { connect: { id: motorista.id } },
+            visivel: true,
             criadoEm: dataComentario,
             atualizadoEm: dataComentario
           }
@@ -2138,8 +2148,9 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosManutencao),
-            usuarioId: usuarioAleatorio.id,
-            manutencaoId: manutencao.id,
+            autor: { connect: { id: usuarioAleatorio.id } },
+            manutencao: { connect: { id: manutencao.id } },
+            visivel: true,
             criadoEm: dataComentario,
             atualizadoEm: dataComentario
           }
@@ -2172,8 +2183,9 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosAcessibilidade),
-            usuarioId: usuarioAleatorio.id,
-            acessibilidadeUrbanaId: acessibilidade.id,
+            autor: { connect: { id: usuarioAleatorio.id } },
+            acessibilidadeUrbana: { connect: { id: acessibilidade.id } },
+            visivel: true,
             criadoEm: dataComentario,
             atualizadoEm: dataComentario
           }

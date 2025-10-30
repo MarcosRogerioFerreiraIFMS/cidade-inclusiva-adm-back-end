@@ -12,15 +12,5 @@ export type AcessibilidadeUrbanaCompletions =
       fotos: true
       logo: true
       recursos: true
-      comentarios: {
-        include: {
-          usuario: {
-            include: {
-              foto: true
-            }
-          }
-          likesUsuarios: true
-        }
-      }
     }
   }>

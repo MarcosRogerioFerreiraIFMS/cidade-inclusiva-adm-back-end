@@ -37,45 +37,54 @@ export interface IComentarioAccess {
   delete(id: string): Promise<void>
 
   /**
-   * Lista todos os comentários
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
-   */
-  findAll(): Promise<ComentarioCompletions[]>
-
-  /**
-   * Lista todos os comentários visíveis
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários visíveis
-   */
-  findVisible(): Promise<ComentarioCompletions[]>
-
-  /**
-   * Busca comentários de um profissional específico
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Comentários do profissional
-   */
-  findByProfissional(profissionalId: string): Promise<ComentarioCompletions[]>
-
-  /**
-   * Busca comentários visíveis de um profissional
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Comentários visíveis do profissional
-   */
-  findVisibleByProfissional(
-    profissionalId: string
-  ): Promise<ComentarioCompletions[]>
-
-  /**
-   * Busca comentários de um usuário específico
-   * @param {string} usuarioId - ID do usuário
-   * @returns {Promise<ComentarioCompletions[]>} Comentários do usuário
-   */
-  findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]>
-
-  /**
    * Verifica se um usuário é dono de um comentário específico
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário
    * @returns {Promise<boolean>} True se o usuário é dono do comentário
    */
   isCommentOwner(commentId: string, userId: string): Promise<boolean>
+
+  /**
+   * Busca todos os comentários de um profissional
+   * @param {string} profissionalId - ID do profissional
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  findByProfissionalId(
+    profissionalId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]>
+
+  /**
+   * Busca todos os comentários de um motorista
+   * @param {string} motoristaId - ID do motorista
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  findByMotoristaId(
+    motoristaId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]>
+
+  /**
+   * Busca todos os comentários de uma manutenção
+   * @param {string} manutencaoId - ID da manutenção
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  findByManutencaoId(
+    manutencaoId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]>
+
+  /**
+   * Busca todos os comentários de uma acessibilidade urbana
+   * @param {string} acessibilidadeUrbanaId - ID da acessibilidade urbana
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  findByAcessibilidadeUrbanaId(
+    acessibilidadeUrbanaId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]>
 }

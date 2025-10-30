@@ -1,10 +1,13 @@
 import { AcessibilidadeUrbanaDependencies } from '@/dependencies/AcessibilidadeUrbanaDependencies'
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import {
   acessibilidadeUrbanaOperations,
+  authenticated,
   contentCreationRateLimit,
   modificationRateLimit,
   readOperationsRateLimit
 } from '@/middlewares'
+import { validateUUID } from '@/middlewares/validationMiddleware'
 import { Router } from 'express'
 
 /**
@@ -89,6 +92,18 @@ AcessibilidadeUrbanaRoutes.get(
   readOperationsRateLimit,
   ...acessibilidadeUrbanaOperations.findByEmail,
   AcessibilidadeUrbanaDependencies.controller.findByEmail
+)
+
+/**
+ * GET /acessibilidade-urbana/:id/comentarios - Lista todos os comentários de uma acessibilidade urbana
+ * Requer autenticação - admins veem todos, usuários veem apenas visíveis
+ */
+AcessibilidadeUrbanaRoutes.get(
+  '/:id/comentarios',
+  readOperationsRateLimit,
+  ...authenticated,
+  validateUUID('id'),
+  ComentarioDependencies.controller.findByAcessibilidadeUrbana
 )
 
 export { AcessibilidadeUrbanaRoutes }

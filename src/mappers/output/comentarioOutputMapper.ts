@@ -1,26 +1,40 @@
 import type { ComentarioResponseDTO } from '@/dtos/response'
 import type { ComentarioCompletions } from '@/types'
-import { toLikeResponseDTO } from './likeOutputMapper'
 
 /**
  * - Converte entidade Comentario completa para DTO de resposta
- * - Inclui todos os likes associados ao comentário
+ * - Inclui dados do autor e estatísticas de likes
  * @param {ComentarioCompletions} comentario - Entidade comentario completa do banco de dados
  * @returns {ComentarioResponseDTO} DTO formatado para resposta da API
  */
 export function toComentarioResponseDTO(
   comentario: ComentarioCompletions
 ): ComentarioResponseDTO {
-  return {
+  const response: ComentarioResponseDTO = {
     id: comentario.id,
     conteudo: comentario.conteudo,
     visivel: comentario.visivel,
-    usuarioId: comentario.usuarioId,
-    profissionalId: comentario.profissionalId ?? undefined,
+    autor: {
+      id: comentario.autor.id,
+      nome: comentario.autor.nome,
+      email: comentario.autor.email,
+      ...(comentario.autor.foto?.url && { fotoUrl: comentario.autor.foto.url })
+    },
     criadoEm: comentario.criadoEm,
     atualizadoEm: comentario.atualizadoEm,
-    likes: comentario.likesUsuarios.map((like) => toLikeResponseDTO(like))
+    totalLikes: comentario.likesUsuarios.length,
+    usuariosQueCurtiram: comentario.likesUsuarios.map((like) => like.usuarioId)
   }
+
+  // Adiciona apenas o campo de entidade que não é null
+  if (comentario.profissionalId)
+    response.profissionalId = comentario.profissionalId
+  if (comentario.motoristaId) response.motoristaId = comentario.motoristaId
+  if (comentario.manutencaoId) response.manutencaoId = comentario.manutencaoId
+  if (comentario.acessibilidadeUrbanaId)
+    response.acessibilidadeUrbanaId = comentario.acessibilidadeUrbanaId
+
+  return response
 }
 
 /**

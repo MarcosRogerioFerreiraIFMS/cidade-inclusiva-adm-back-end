@@ -1,3 +1,4 @@
+import { TipoEntidadeComentario } from '@/enums'
 import { sanitizeContent } from '@/utils'
 import { z } from 'zod'
 
@@ -31,15 +32,16 @@ export const createComentarioSchema = z.object({
       message: 'O conteúdo deve conter pelo menos um caractere não nulo.'
     }),
 
-  usuarioId: z
+  usuarioId: z.string().uuid(),
+
+  tipoEntidade: z
     .string({
-      required_error: 'O ID do usuário é obrigatório.',
-      invalid_type_error: 'O ID do usuário deve ser uma string.'
+      required_error: 'O tipo de entidade é obrigatório.',
+      invalid_type_error: 'O tipo de entidade deve ser uma string.'
     })
-    .trim()
-    .uuid(
-      'O ID do usuário deve ser um UUID válido (formato: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx).'
-    ),
+    .min(1, 'O tipo de entidade não pode estar vazio.')
+    .transform((val) => val.trim().toUpperCase())
+    .pipe(z.nativeEnum(TipoEntidadeComentario)),
 
   entidadeId: z
     .string({

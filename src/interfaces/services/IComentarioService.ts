@@ -1,4 +1,5 @@
 import type { ComentarioResponseDTO } from '@/dtos/response'
+import type { TipoEntidadeComentario } from '@/enums'
 import type { UsuarioCompletions } from '@/types'
 
 /**
@@ -21,17 +22,26 @@ export interface IComentarioService {
   /**
    * Busca comentário por ID
    * @param {string} id - ID do comentário
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado (para verificar visibilidade)
    * @returns {Promise<ComentarioResponseDTO>} Comentário encontrado
    */
-  findById(id: string): Promise<ComentarioResponseDTO>
+  findById(
+    id: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO>
 
   /**
    * Atualiza um comentário existente
    * @param {string} id - ID do comentário
    * @param {unknown} data - Dados para atualização
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado (para verificar permissões)
    * @returns {Promise<ComentarioResponseDTO>} Comentário atualizado
    */
-  update(id: string, data: unknown): Promise<ComentarioResponseDTO>
+  update(
+    id: string,
+    data: unknown,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO>
 
   /**
    * Remove um comentário
@@ -41,37 +51,15 @@ export interface IComentarioService {
   delete(id: string): Promise<void>
 
   /**
-   * Lista todos os comentários
+   * Busca comentários de uma entidade específica
+   * @param {TipoEntidadeComentario} tipoEntidade - Tipo da entidade
+   * @param {string} entidadeId - ID da entidade
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado (para filtrar visibilidade)
    * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários
    */
-  findAll(): Promise<ComentarioResponseDTO[]>
-
-  /**
-   * Lista todos os comentários visíveis
-   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários visíveis
-   */
-  findVisible(): Promise<ComentarioResponseDTO[]>
-
-  /**
-   * Busca comentários de um profissional específico
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioResponseDTO[]>} Comentários do profissional
-   */
-  findByProfissional(profissionalId: string): Promise<ComentarioResponseDTO[]>
-
-  /**
-   * Busca comentários visíveis de um profissional
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioResponseDTO[]>} Comentários visíveis do profissional
-   */
-  findVisibleByProfissional(
-    profissionalId: string
+  findByEntidade(
+    tipoEntidade: TipoEntidadeComentario,
+    entidadeId: string,
+    user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO[]>
-
-  /**
-   * Busca comentários de um usuário específico
-   * @param {string} usuarioId - ID do usuário
-   * @returns {Promise<ComentarioResponseDTO[]>} Comentários do usuário
-   */
-  findByUsuario(usuarioId: string): Promise<ComentarioResponseDTO[]>
 }

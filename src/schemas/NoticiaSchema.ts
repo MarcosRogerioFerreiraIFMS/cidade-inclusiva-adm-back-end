@@ -75,16 +75,7 @@ export const createNoticiaSchema = z.object({
     })
     .min(1, 'A categoria não pode estar vazia.')
     .transform((val) => val.trim().toUpperCase())
-    .refine(
-      (val) =>
-        Object.values(CategoriaNoticia).includes(val as CategoriaNoticia),
-      {
-        message: `Categoria inválida. Valores aceitos: ${Object.values(
-          CategoriaNoticia
-        ).join(', ')}`
-      }
-    )
-    .transform((val) => val as CategoriaNoticia),
+    .pipe(z.nativeEnum(CategoriaNoticia)),
 
   dataPublicacao: z
     .union([

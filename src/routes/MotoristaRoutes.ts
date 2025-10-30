@@ -1,5 +1,7 @@
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { MotoristaDependencies } from '@/dependencies/MotoristaDependencies'
 import {
+  authenticated,
   contentCreationRateLimit,
   modificationRateLimit,
   motoristaOperations,
@@ -74,6 +76,18 @@ MotoristaRoutes.delete(
   ...motoristaOperations.delete,
   validateUUID('id'),
   MotoristaDependencies.controller.delete
+)
+
+/**
+ * GET /motoristas/:id/comentarios - Lista todos os comentários de um motorista
+ * Requer autenticação - admins veem todos, usuários veem apenas visíveis
+ */
+MotoristaRoutes.get(
+  '/:id/comentarios',
+  readOperationsRateLimit,
+  ...authenticated,
+  validateUUID('id'),
+  ComentarioDependencies.controller.findByMotorista
 )
 
 export { MotoristaRoutes }

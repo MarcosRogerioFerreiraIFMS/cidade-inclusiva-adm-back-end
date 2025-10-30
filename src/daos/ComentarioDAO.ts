@@ -25,7 +25,7 @@ export class ComentarioDAO implements IComentarioAccess {
     const dataToCreate = generateDataComentarioCreate(data)
     return await db.comentario.create({
       data: dataToCreate,
-      include: { likesUsuarios: true }
+      include: { autor: { include: { foto: true } }, likesUsuarios: true }
     })
   }
 
@@ -38,7 +38,7 @@ export class ComentarioDAO implements IComentarioAccess {
   async findById(id: string): Promise<ComentarioCompletions | null> {
     return await db.comentario.findUnique({
       where: { id },
-      include: { likesUsuarios: true }
+      include: { autor: { include: { foto: true } }, likesUsuarios: true }
     })
   }
 
@@ -55,7 +55,7 @@ export class ComentarioDAO implements IComentarioAccess {
     const dataToUpdate = generateDataComentarioUpdate(data)
     return await db.comentario.update({
       where: { id },
-      include: { likesUsuarios: true },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true },
       data: dataToUpdate
     })
   }
@@ -72,75 +72,6 @@ export class ComentarioDAO implements IComentarioAccess {
   }
 
   /**
-   * Lista todos os comentários do banco de dados
-   * Ordena por data de criação decrescente e inclui likes
-   * @returns {Promise<ComentarioCompletions[]>} Lista de todos os comentários com likes
-   */
-  async findAll(): Promise<ComentarioCompletions[]> {
-    return await db.comentario.findMany({
-      orderBy: { criadoEm: 'desc' },
-      include: { likesUsuarios: true }
-    })
-  }
-
-  async findVisible(): Promise<ComentarioCompletions[]> {
-    return await db.comentario.findMany({
-      where: { visivel: true },
-      orderBy: { criadoEm: 'desc' },
-      include: { likesUsuarios: true }
-    })
-  }
-
-  /**
-   * Lista todos os comentários de um profissional específico
-   * Inclui comentários visíveis e ocultos, ordenados por data
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do profissional
-   */
-  async findByProfissional(
-    profissionalId: string
-  ): Promise<ComentarioCompletions[]> {
-    return await db.comentario.findMany({
-      where: { profissionalId },
-      orderBy: { criadoEm: 'desc' },
-      include: { likesUsuarios: true }
-    })
-  }
-
-  /**
-   * Lista apenas os comentários visíveis de um profissional específico
-   * Filtra comentários marcados como visíveis para exibição pública
-   * @param {string} profissionalId - ID do profissional
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários visíveis do profissional
-   */
-  async findVisibleByProfissional(
-    profissionalId: string
-  ): Promise<ComentarioCompletions[]> {
-    return await db.comentario.findMany({
-      where: {
-        profissionalId,
-        visivel: true
-      },
-      orderBy: { criadoEm: 'desc' },
-      include: { likesUsuarios: true }
-    })
-  }
-
-  /**
-   * Lista todos os comentários de um usuário específico
-   * Ordena por data de criação decrescente e inclui likes
-   * @param {string} usuarioId - ID do usuário
-   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários do usuário
-   */
-  async findByUsuario(usuarioId: string): Promise<ComentarioCompletions[]> {
-    return await db.comentario.findMany({
-      where: { usuarioId },
-      orderBy: { criadoEm: 'desc' },
-      include: { likesUsuarios: true }
-    })
-  }
-
-  /**
    * Verifica se um usuário é o proprietário de um comentário
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário
@@ -150,8 +81,88 @@ export class ComentarioDAO implements IComentarioAccess {
   async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
     const comment = await db.comentario.findUnique({
       where: { id: commentId },
-      select: { usuarioId: true }
+      select: { autorId: true }
     })
-    return comment?.usuarioId === userId
+    return comment?.autorId === userId
+  }
+
+  /**
+   * Busca todos os comentários de um profissional
+   * @param {string} profissionalId - ID do profissional
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByProfissionalId(
+    profissionalId: string,
+    includeInvisible: boolean = false
+  ): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: {
+        profissionalId,
+        ...(includeInvisible ? {} : { visivel: true })
+      },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      orderBy: { criadoEm: 'desc' }
+    })
+  }
+
+  /**
+   * Busca todos os comentários de um motorista
+   * @param {string} motoristaId - ID do motorista
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByMotoristaId(
+    motoristaId: string,
+    includeInvisible: boolean = false
+  ): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: {
+        motoristaId,
+        ...(includeInvisible ? {} : { visivel: true })
+      },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      orderBy: { criadoEm: 'desc' }
+    })
+  }
+
+  /**
+   * Busca todos os comentários de uma manutenção
+   * @param {string} manutencaoId - ID da manutenção
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByManutencaoId(
+    manutencaoId: string,
+    includeInvisible: boolean = false
+  ): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: {
+        manutencaoId,
+        ...(includeInvisible ? {} : { visivel: true })
+      },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      orderBy: { criadoEm: 'desc' }
+    })
+  }
+
+  /**
+   * Busca todos os comentários de uma acessibilidade urbana
+   * @param {string} acessibilidadeUrbanaId - ID da acessibilidade urbana
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByAcessibilidadeUrbanaId(
+    acessibilidadeUrbanaId: string,
+    includeInvisible: boolean = false
+  ): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: {
+        acessibilidadeUrbanaId,
+        ...(includeInvisible ? {} : { visivel: true })
+      },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      orderBy: { criadoEm: 'desc' }
+    })
   }
 }

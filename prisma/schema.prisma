@@ -76,10 +76,10 @@ model Comentario {
   id           String   @id @default(uuid())
   conteudo     String
   visivel      Boolean  @default(true)
-  usuarioId    String
+  autorId      String
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
-  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  autor        Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
 
   profissionalId String?
   profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
@@ -95,7 +95,7 @@ model Comentario {
 
   likesUsuarios Like[]
 
-  @@index([usuarioId])
+  @@index([autorId])
   @@index([profissionalId])
 }
 

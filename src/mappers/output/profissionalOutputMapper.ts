@@ -1,6 +1,5 @@
 import type { ProfissionalResponseDTO } from '@/dtos/response'
 import type { ProfissionalCompletions } from '@/types'
-import { toComentarioResponseDTO } from './comentarioOutputMapper'
 import { toFotoResponseDTO } from './fotoOutputMappers'
 
 /**
@@ -19,10 +18,7 @@ export function toProfissionalResponseDTO(
     telefone: profissional.telefone,
     email: profissional.email,
     especialidade: profissional.especialidade,
-    criadoEm: profissional.criadoEm,
-    comentarios: profissional.comentarios.map((comentario) =>
-      toComentarioResponseDTO(comentario)
-    )
+    criadoEm: profissional.criadoEm
   }
 }
 

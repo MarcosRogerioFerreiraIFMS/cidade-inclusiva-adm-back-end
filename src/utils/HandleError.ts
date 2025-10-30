@@ -378,13 +378,19 @@ export class HandleError {
 
   /**
    * Obtém valores válidos para campos enum baseado no nome do campo
-   * @param {string} fieldName - Nome do campo enum
+   * @param {string | number} fieldName - Nome do campo enum
    * @returns {string} String com valores válidos separados por vírgula
    */
-  private static getEnumValues(fieldName: string): string {
-    if (fieldName === 'categoria') {
-      return 'DIREITOS, BENEFICIOS, OPORTUNIDADES, TECNOLOGIA, TRABALHO, SAUDE, EDUCACAO, CULTURA, EVENTOS, ESPORTE, ACESSIBILIDADE, OUTROS'
+  private static getEnumValues(fieldName: string | number): string {
+    const fieldNameStr = String(fieldName)
+
+    switch (fieldNameStr) {
+      case 'categoria':
+        return 'DIREITOS, BENEFICIOS, OPORTUNIDADES, TECNOLOGIA, TRABALHO, SAUDE, EDUCACAO, CULTURA, EVENTOS, ESPORTE, ACESSIBILIDADE, OUTROS'
+      case 'tipoEntidade':
+        return 'PROFISSIONAL, MOTORISTA, MANUTENCAO, ACESSIBILIDADE_URBANA'
+      default:
+        return 'valores válidos'
     }
-    return 'valores válidos'
   }
 }

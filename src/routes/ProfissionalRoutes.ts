@@ -1,10 +1,13 @@
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { ProfissionalDependencies } from '@/dependencies/ProfissionalDependencies'
 import {
+  authenticated,
   contentCreationRateLimit,
   modificationRateLimit,
   profissionalOperations,
   readOperationsRateLimit
 } from '@/middlewares'
+import { validateUUID } from '@/middlewares/validationMiddleware'
 import { Router } from 'express'
 
 /**
@@ -67,6 +70,18 @@ ProfissionalRoutes.delete(
   modificationRateLimit,
   ...profissionalOperations.delete,
   ProfissionalDependencies.controller.delete
+)
+
+/**
+ * GET /profissionais/:id/comentarios - Lista todos os comentários de um profissional
+ * Requer autenticação - admins veem todos, usuários veem apenas visíveis
+ */
+ProfissionalRoutes.get(
+  '/:id/comentarios',
+  readOperationsRateLimit,
+  ...authenticated,
+  validateUUID('id'),
+  ComentarioDependencies.controller.findByProfissional
 )
 
 export { ProfissionalRoutes }

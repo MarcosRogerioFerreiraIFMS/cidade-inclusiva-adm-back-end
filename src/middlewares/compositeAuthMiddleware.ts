@@ -146,18 +146,12 @@ export const profissionalOperations = {
  * - Incluem validações específicas para sistema de comentários e moderação
  */
 export const comentarioOperations = {
-  /** GET /comentarios - Apenas admins podem visualizar */
-  list: [...adminOnly],
-
   /** GET /comentarios/:id - Apenas o autor ou admin podem visualizar */
   view: [
     ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id')
   ],
-
-  /** GET /comentarios/visiveis - Público pode visualizar comentários visíveis */
-  findVisible: [],
 
   /** POST /comentarios - Apenas usuários autenticados podem criar */
   create: [
@@ -178,16 +172,7 @@ export const comentarioOperations = {
     ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id')
-  ],
-
-  /** GET /comentarios/profissional/:profissionalId - Apenas admins podem visualizar */
-  findByProfessional: [...adminOnly, validateUUID('profissionalId')],
-
-  /** GET /comentarios/profissional/:profissionalId/visiveis - Requer autenticação para visualizar comentários visíveis */
-  findVisibleByProfessional: [...authenticated, validateUUID('profissionalId')],
-
-  /** GET /comentarios/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver seus comentários */
-  findByUser: [...authenticated, requireSelfOrAdmin, validateUUID('usuarioId')]
+  ]
 }
 
 /**

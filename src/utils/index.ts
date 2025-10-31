@@ -6,6 +6,9 @@ export * from './passwordUtils'
 // String utilities
 export * from './stringUtils'
 
+// Date utilities
+export * from './dateUtils'
+
 // Validation utilities
 export * from './domainValidators'
 export * from './entityValidator'

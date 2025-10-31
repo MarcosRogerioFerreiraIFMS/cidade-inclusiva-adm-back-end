@@ -1,5 +1,10 @@
 import { StatusMobilidade } from '@/enums'
-import { sanitizeString } from '@/utils'
+import {
+  DATE_ERROR_MESSAGES,
+  isNotFutureDate,
+  isValidDateString,
+  sanitizeString
+} from '@/utils'
 import { z } from 'zod'
 
 /** Comprimento mínimo permitido para descrição de mobilidade */
@@ -75,22 +80,19 @@ export const createMobilidadeSchema = z.object({
       z
         .string()
         .transform((val) => val.trim())
-        .refine(
-          (val) => {
-            try {
-              const date = new Date(val)
-              return !isNaN(date.getTime())
-            } catch {
-              return false
-            }
-          },
-          {
-            message: 'A data de registro deve estar no formato ISO 8601.'
-          }
-        ),
-      z.date({
-        invalid_type_error: 'A data de registro deve ser uma data válida.'
-      })
+        .refine((val) => isValidDateString(val), {
+          message: DATE_ERROR_MESSAGES.INVALID_FORMAT
+        })
+        .refine((val) => isNotFutureDate(val), {
+          message: DATE_ERROR_MESSAGES.FUTURE_DATE_NOT_ALLOWED
+        }),
+      z
+        .date({
+          invalid_type_error: DATE_ERROR_MESSAGES.INVALID_DATE
+        })
+        .refine((date) => isNotFutureDate(date), {
+          message: DATE_ERROR_MESSAGES.FUTURE_DATE_NOT_ALLOWED
+        })
     ])
     .optional()
 })

@@ -113,12 +113,14 @@ export async function generateDataFotoUsuarioUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova, atualiza
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza usando upsert
   if (usuario.foto.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: usuario.foto.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se a foto for igual, não faz nada
@@ -161,12 +163,14 @@ export async function generateDataFotoProfissionalUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova, atualiza
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza usando upsert
   if (profissional.foto.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: profissional.foto.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se a foto for igual, não faz nada
@@ -209,12 +213,14 @@ export async function generateDataFotoNoticiaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova, atualiza
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza usando upsert
   if (noticia.foto.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: noticia.foto.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se a foto for igual, não faz nada
@@ -257,12 +263,14 @@ export async function generateDataFotoMotoristaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver uma foto associada e ela for diferente da nova, atualiza
+  // Se já houver uma foto associada e ela for diferente da nova, atualiza usando upsert
   if (motorista.foto.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: motorista.foto.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se a foto for igual, não faz nada
@@ -293,32 +301,24 @@ export async function generateDataFotosVeiculoUpdate(
     throw new Error('Veículo não encontrado')
   }
 
-  // Remove apenas as fotos que não estão nas URLs passadas
   const existingUrls = veiculo.fotos.map((foto) => foto.url)
   const urlsToRemove = existingUrls.filter(
     (urlExisting) => !novasUrls.includes(urlExisting)
   )
-
-  if (urlsToRemove.length > 0) {
-    await db.foto.deleteMany({
-      where: {
-        veiculoId,
-        url: {
-          in: urlsToRemove
-        }
-      }
-    })
-  }
-
-  // Adiciona apenas as novas fotos (que não existem)
   const newUrls = novasUrls.filter((url) => !existingUrls.includes(url))
-  if (newUrls.length > 0) {
-    return {
-      create: newUrls.map((url) => ({ url }))
-    }
-  }
 
-  return undefined
+  // Usa operação aninhada do Prisma para executar tudo atomicamente
+  return {
+    deleteMany:
+      urlsToRemove.length > 0
+        ? {
+            url: {
+              in: urlsToRemove
+            }
+          }
+        : undefined,
+    create: newUrls.length > 0 ? newUrls.map((url) => ({ url })) : undefined
+  }
 }
 
 /**
@@ -354,6 +354,7 @@ export function generateDataLogoManutencaoCreate(
 /**
  * Gera dados para atualização de múltiplas fotos de manutenção
  * Remove fotos que não estão na nova lista e adiciona fotos novas
+ * Usa operações aninhadas do Prisma para garantir atomicidade
  * @param novasUrls - Array com as novas URLs das fotos
  * @param manutencaoId - ID da manutenção
  * @returns Dados formatados para atualização de múltiplas fotos no Prisma
@@ -375,32 +376,23 @@ export async function generateDataFotoManutencaoUpdate(
     throw new Error('Manutenção não encontrada')
   }
 
-  // Remove apenas as fotos que não estão nas URLs passadas
   const existingUrls = manutencao.fotos.map((foto) => foto.url)
   const urlsToRemove = existingUrls.filter(
     (urlExisting) => !novasUrls.includes(urlExisting)
   )
-
-  if (urlsToRemove.length > 0) {
-    await db.foto.deleteMany({
-      where: {
-        manutencaoId,
-        url: {
-          in: urlsToRemove
-        }
-      }
-    })
-  }
-
-  // Adiciona apenas as novas fotos (que não existem)
   const newUrls = novasUrls.filter((url) => !existingUrls.includes(url))
-  if (newUrls.length > 0) {
-    return {
-      create: newUrls.map((url) => ({ url }))
-    }
-  }
 
-  return undefined
+  return {
+    deleteMany:
+      urlsToRemove.length > 0
+        ? {
+            url: {
+              in: urlsToRemove
+            }
+          }
+        : undefined,
+    create: newUrls.length > 0 ? newUrls.map((url) => ({ url })) : undefined
+  }
 }
 
 /**
@@ -439,12 +431,14 @@ export async function generateDataLogoManutencaoUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver um logo associado e ele for diferente do novo, atualiza
+  // Se já houver um logo associado e ele for diferente do novo, atualiza usando upsert
   if (manutencao.logo.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: manutencao.logo.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se o logo for igual, não faz nada
@@ -507,32 +501,23 @@ export async function generateDataFotoAcessibilidadeUrbanaUpdate(
     throw new Error('Acessibilidade urbana não encontrada')
   }
 
-  // Remove apenas as fotos que não estão nas URLs passadas
   const existingUrls = acessibilidadeUrbana.fotos.map((foto) => foto.url)
   const urlsToRemove = existingUrls.filter(
     (urlExisting) => !novasUrls.includes(urlExisting)
   )
-
-  if (urlsToRemove.length > 0) {
-    await db.foto.deleteMany({
-      where: {
-        acessibilidadeUrbanaId,
-        url: {
-          in: urlsToRemove
-        }
-      }
-    })
-  }
-
-  // Adiciona apenas as novas fotos (que não existem)
   const newUrls = novasUrls.filter((url) => !existingUrls.includes(url))
-  if (newUrls.length > 0) {
-    return {
-      create: newUrls.map((url) => ({ url }))
-    }
-  }
 
-  return undefined
+  return {
+    deleteMany:
+      urlsToRemove.length > 0
+        ? {
+            url: {
+              in: urlsToRemove
+            }
+          }
+        : undefined,
+    create: newUrls.length > 0 ? newUrls.map((url) => ({ url })) : undefined
+  }
 }
 
 /**
@@ -573,12 +558,14 @@ export async function generateDataLogoAcessibilidadeUrbanaUpdate(
     return { create: { url: novaUrl } }
   }
 
-  // Se já houver um logo associado e ele for diferente do novo, atualiza
+  // Se já houver um logo associado e ele for diferente do novo, atualiza usando upsert
   if (acessibilidadeUrbana.logo.url !== novaUrl) {
-    await db.foto.update({
-      where: { id: acessibilidadeUrbana.logo.id },
-      data: { url: novaUrl }
-    })
+    return {
+      upsert: {
+        create: { url: novaUrl },
+        update: { url: novaUrl }
+      }
+    }
   }
 
   // Se o logo for igual, não faz nada

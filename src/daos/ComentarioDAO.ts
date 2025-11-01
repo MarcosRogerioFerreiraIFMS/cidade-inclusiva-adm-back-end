@@ -36,8 +36,8 @@ export class ComentarioDAO implements IComentarioAccess {
    * @returns {Promise<ComentarioCompletions | null>} Comentário encontrado ou null
    */
   async findById(id: string): Promise<ComentarioCompletions | null> {
-    return await db.comentario.findUnique({
-      where: { id },
+    return await db.comentario.findFirst({
+      where: { id, deletadoEm: null },
       include: { autor: { include: { foto: true } }, likesUsuarios: true }
     })
   }
@@ -52,6 +52,14 @@ export class ComentarioDAO implements IComentarioAccess {
     id: string,
     data: ComentarioUpdateDTO
   ): Promise<ComentarioCompletions> {
+    const comentarioExistente = await db.comentario.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!comentarioExistente) {
+      throw new Error('Comentário não encontrado ou já deletado.')
+    }
+
     const dataToUpdate = generateDataComentarioUpdate(data)
     return await db.comentario.update({
       where: { id },
@@ -61,13 +69,27 @@ export class ComentarioDAO implements IComentarioAccess {
   }
 
   /**
-   * Remove um comentário do banco de dados
+   * Remove um comentário do banco de dados (soft delete)
    * @param {string} id - ID único do comentário a ser removido
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.comentario.delete({
-      where: { id }
+    await db.comentario.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura um comentário soft-deleted
+   * @param {string} id - ID único do comentário a ser restaurado
+   * @returns {Promise<ComentarioCompletions>} Comentário restaurado
+   */
+  async restore(id: string): Promise<ComentarioCompletions> {
+    return await db.comentario.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: { autor: { include: { foto: true } }, likesUsuarios: true }
     })
   }
 
@@ -79,8 +101,8 @@ export class ComentarioDAO implements IComentarioAccess {
    * @returns {Promise<boolean>} true se o usuário é o proprietário, false caso contrário
    */
   async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
-    const comment = await db.comentario.findUnique({
-      where: { id: commentId },
+    const comment = await db.comentario.findFirst({
+      where: { id: commentId, deletadoEm: null },
       select: { autorId: true }
     })
     return comment?.autorId === userId
@@ -99,6 +121,7 @@ export class ComentarioDAO implements IComentarioAccess {
     return await db.comentario.findMany({
       where: {
         profissionalId,
+        deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
       include: { autor: { include: { foto: true } }, likesUsuarios: true },
@@ -119,6 +142,7 @@ export class ComentarioDAO implements IComentarioAccess {
     return await db.comentario.findMany({
       where: {
         motoristaId,
+        deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
       include: { autor: { include: { foto: true } }, likesUsuarios: true },
@@ -139,6 +163,7 @@ export class ComentarioDAO implements IComentarioAccess {
     return await db.comentario.findMany({
       where: {
         manutencaoId,
+        deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
       include: { autor: { include: { foto: true } }, likesUsuarios: true },
@@ -159,6 +184,7 @@ export class ComentarioDAO implements IComentarioAccess {
     return await db.comentario.findMany({
       where: {
         acessibilidadeUrbanaId,
+        deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
       include: { autor: { include: { foto: true } }, likesUsuarios: true },

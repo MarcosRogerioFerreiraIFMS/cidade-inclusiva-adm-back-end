@@ -636,6 +636,7 @@ pnpm start
 - ✅ **Seed inteligente** com proteções de segurança contra produção
 - ✅ **Prisma Studio** para visualização e edição de dados
 - ✅ **SQLite** para desenvolvimento e **PostgreSQL** para produção
+- ✅ **Soft Delete** para desativar registros sem removê-los fisicamente do banco de dados, garantindo rastreabilidade, histórico completo e recuperação controlada de informações.
 
 ### 🔐 Segurança e Autenticação
 

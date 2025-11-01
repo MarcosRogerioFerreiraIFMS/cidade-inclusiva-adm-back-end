@@ -40,8 +40,8 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
    * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
    */
   async findById(id: string): Promise<AcessibilidadeUrbanaCompletions | null> {
-    return await db.acessibilidadeUrbana.findUnique({
-      where: { id },
+    return await db.acessibilidadeUrbana.findFirst({
+      where: { id, deletadoEm: null },
       include: {
         endereco: true,
         fotos: true,
@@ -59,8 +59,8 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
   async findByEmail(
     email: string
   ): Promise<AcessibilidadeUrbanaCompletions | null> {
-    return await db.acessibilidadeUrbana.findUnique({
-      where: { email },
+    return await db.acessibilidadeUrbana.findFirst({
+      where: { email, deletadoEm: null },
       include: {
         endereco: true,
         fotos: true,
@@ -73,9 +73,10 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
   async findByTelefone(
     telefone: string
   ): Promise<AcessibilidadeUrbanaCompletions | null> {
-    return await db.acessibilidadeUrbana.findUnique({
+    return await db.acessibilidadeUrbana.findFirst({
       where: {
-        telefone
+        telefone,
+        deletadoEm: null
       },
       include: {
         endereco: true,
@@ -96,6 +97,14 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
     id: string,
     data: AcessibilidadeUrbanaUpdateDTO
   ): Promise<AcessibilidadeUrbanaCompletions> {
+    const acessibilidadeExistente = await db.acessibilidadeUrbana.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!acessibilidadeExistente) {
+      throw new Error('Acessibilidade urbana não encontrada ou já deletada.')
+    }
+
     const dataToUpdate = await generateDataAcessibilidadeUrbanaUpdate(data, id)
 
     return await db.acessibilidadeUrbana.update({
@@ -111,13 +120,32 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
   }
 
   /**
-   * Remove uma acessibilidade urbana do banco de dados
+   * Remove uma acessibilidade urbana do banco de dados (soft delete)
    * @param {string} id - ID único da acessibilidade urbana a ser removida
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.acessibilidadeUrbana.delete({
-      where: { id }
+    await db.acessibilidadeUrbana.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID único da acessibilidade urbana a ser restaurada
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada
+   */
+  async restore(id: string): Promise<AcessibilidadeUrbanaCompletions> {
+    return await db.acessibilidadeUrbana.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        recursos: true
+      }
     })
   }
 
@@ -127,6 +155,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
    */
   async findAll(): Promise<AcessibilidadeUrbanaCompletions[]> {
     return await db.acessibilidadeUrbana.findMany({
+      where: { deletadoEm: null },
       orderBy: { criadoEm: 'desc' },
       include: {
         endereco: true,
@@ -147,7 +176,8 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
   ): Promise<AcessibilidadeUrbanaCompletions[]> {
     return await db.acessibilidadeUrbana.findMany({
       where: {
-        categoria
+        categoria,
+        deletadoEm: null
       },
       include: {
         endereco: true,

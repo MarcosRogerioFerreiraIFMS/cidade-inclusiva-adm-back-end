@@ -79,6 +79,15 @@ export class ManutencaoRepository implements IManutencaoAccess {
   }
 
   /**
+   * Restaura uma manutenção soft-deleted
+   * @param {string} id - ID único da manutenção a ser restaurada
+   * @returns {Promise<ManutencaoCompletions>} Manutenção restaurada
+   */
+  async restore(id: string): Promise<ManutencaoCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todas as manutenções do sistema
    * @returns {Promise<ManutencaoCompletions[]>} Lista de todas as manutenções
    */

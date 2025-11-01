@@ -59,6 +59,15 @@ export class AcessibilidadeUrbanaRepository
   }
 
   /**
+   * Restaura uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID único da acessibilidade urbana a ser restaurada
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada
+   */
+  async restore(id: string): Promise<AcessibilidadeUrbanaCompletions> {
+    return await this.acessibilidadeUrbanaDAO.restore(id)
+  }
+
+  /**
    * Lista todas as acessibilidades urbanas
    * @returns {Promise<AcessibilidadeUrbanaCompletions[]>} Lista de acessibilidades urbanas
    */

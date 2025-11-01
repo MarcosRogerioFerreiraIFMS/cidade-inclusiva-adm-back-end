@@ -19,10 +19,7 @@ export class UsuarioDAO implements IUsuarioAccess {
     const dataToCreate = await generateDataUsuarioCreate(data)
     return await db.usuario.create({
       data: dataToCreate,
-      include: {
-        endereco: true,
-        foto: true
-      }
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -33,11 +30,8 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async findById(id: string): Promise<UsuarioCompletions | null> {
     return await db.usuario.findUnique({
-      where: { id },
-      include: {
-        endereco: true,
-        foto: true
-      }
+      where: { id, deletadoEm: null },
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -48,11 +42,8 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async findByEmail(email: string): Promise<UsuarioCompletions | null> {
     return await db.usuario.findUnique({
-      where: { email },
-      include: {
-        endereco: true,
-        foto: true
-      }
+      where: { email, deletadoEm: null },
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -63,11 +54,8 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async findByTelefone(telefone: string): Promise<UsuarioCompletions | null> {
     return await db.usuario.findUnique({
-      where: { telefone },
-      include: {
-        endereco: true,
-        foto: true
-      }
+      where: { telefone, deletadoEm: null },
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -81,15 +69,23 @@ export class UsuarioDAO implements IUsuarioAccess {
     id: string,
     data: UsuarioUpdateDTO
   ): Promise<UsuarioCompletions> {
+    // Verifica se o usuário existe e não foi soft-deletado
+    const usuarioExistente = await db.usuario.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!usuarioExistente) {
+      throw new Error('Usuário não encontrado ou já deletado.')
+    }
+
+    // Gera os dados atualizados
     const dataToUpdate = await generateDataUsuarioUpdate(data, id)
 
+    // Atualiza normalmente
     return await db.usuario.update({
       where: { id },
       data: dataToUpdate,
-      include: {
-        endereco: true,
-        foto: true
-      }
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -99,8 +95,22 @@ export class UsuarioDAO implements IUsuarioAccess {
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.usuario.delete({
-      where: { id }
+    await db.usuario.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura um usuário soft-deleted
+   * @param {string} id - ID único do usuário a ser restaurado
+   * @returns {Promise<UsuarioCompletions>} Usuário restaurado
+   */
+  async restore(id: string): Promise<UsuarioCompletions> {
+    return await db.usuario.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: { endereco: true, foto: true }
     })
   }
 
@@ -110,11 +120,9 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async findAll(): Promise<UsuarioCompletions[]> {
     return await db.usuario.findMany({
+      where: { deletadoEm: null },
       orderBy: { criadoEm: 'desc' },
-      include: {
-        endereco: true,
-        foto: true
-      }
+      include: { endereco: true, foto: true }
     })
   }
 }

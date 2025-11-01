@@ -61,6 +61,15 @@ export class NoticiaRepository implements INoticiaAccess {
   }
 
   /**
+   * Restaura uma notícia soft-deleted
+   * @param {string} id - ID único da notícia a ser restaurada
+   * @returns {Promise<NoticiaCompletions>} Notícia restaurada
+   */
+  async restore(id: string): Promise<NoticiaCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todas as notícias do sistema
    * @returns {Promise<NoticiaCompletions[]>} Lista de todas as notícias
    */

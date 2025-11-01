@@ -55,4 +55,11 @@ export interface IMotoristaAccess {
    * @returns Promise vazia
    */
   delete(id: string): Promise<void>
+
+  /**
+   * Restaura um motorista soft-deleted
+   * @param id - ID único do motorista a ser restaurado
+   * @returns Promise com o motorista restaurado
+   */
+  restore(id: string): Promise<MotoristaCompletions>
 }

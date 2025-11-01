@@ -81,6 +81,15 @@ export class VeiculoRepository implements IVeiculoAccess {
   }
 
   /**
+   * Restaura um veículo soft-deleted
+   * @param {string} id - ID único do veículo a ser restaurado
+   * @returns {Promise<VeiculoCompletions>} Veículo restaurado
+   */
+  async restore(id: string): Promise<VeiculoCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todos os veículos do sistema
    * @returns {Promise<VeiculoCompletions[]>} Lista de todos os veículos
    */

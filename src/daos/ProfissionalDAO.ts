@@ -37,8 +37,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
    * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
    */
   async findById(id: string): Promise<ProfissionalCompletions | null> {
-    return await db.profissional.findUnique({
-      where: { id },
+    return await db.profissional.findFirst({
+      where: { id, deletadoEm: null },
       include: {
         foto: true
       }
@@ -51,8 +51,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
    * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
    */
   async findByEmail(email: string): Promise<ProfissionalCompletions | null> {
-    return await db.profissional.findUnique({
-      where: { email },
+    return await db.profissional.findFirst({
+      where: { email, deletadoEm: null },
       include: {
         foto: true
       }
@@ -67,8 +67,8 @@ export class ProfissionalDAO implements IProfissionalAccess {
   async findByTelefone(
     telefone: string
   ): Promise<ProfissionalCompletions | null> {
-    return await db.profissional.findUnique({
-      where: { telefone },
+    return await db.profissional.findFirst({
+      where: { telefone, deletadoEm: null },
       include: {
         foto: true
       }
@@ -85,6 +85,14 @@ export class ProfissionalDAO implements IProfissionalAccess {
     id: string,
     data: ProfissionalUpdateDTO
   ): Promise<ProfissionalCompletions> {
+    const profissionalExistente = await db.profissional.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!profissionalExistente) {
+      throw new Error('Profissional não encontrado ou já deletado.')
+    }
+
     const dataToUpdate = await generateDataProfissionalUpdate(data, id)
 
     const profissional = await db.profissional.update({
@@ -99,12 +107,30 @@ export class ProfissionalDAO implements IProfissionalAccess {
   }
 
   /**
-   * Remove um profissional do banco de dados
+   * Remove um profissional do banco de dados (soft delete)
    * @param {string} id - ID único do profissional a ser removido
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.profissional.delete({ where: { id } })
+    await db.profissional.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura um profissional soft-deleted
+   * @param {string} id - ID único do profissional a ser restaurado
+   * @returns {Promise<ProfissionalCompletions>} Profissional restaurado
+   */
+  async restore(id: string): Promise<ProfissionalCompletions> {
+    return await db.profissional.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: {
+        foto: true
+      }
+    })
   }
 
   /**
@@ -113,6 +139,7 @@ export class ProfissionalDAO implements IProfissionalAccess {
    */
   async findAll(): Promise<ProfissionalCompletions[]> {
     return await db.profissional.findMany({
+      where: { deletadoEm: null },
       include: {
         foto: true
       },

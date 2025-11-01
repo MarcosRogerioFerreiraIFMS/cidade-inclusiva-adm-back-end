@@ -42,6 +42,13 @@ export interface IMobilidadeAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura uma mobilidade soft-deleted
+   * @param {string} id - ID único da mobilidade a ser restaurada
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade restaurada
+   */
+  restore(id: string): Promise<MobilidadeCompletions>
+
+  /**
    * Lista todas as mobilidades do sistema
    * @returns {Promise<MobilidadeCompletions[]>} Lista de todas as mobilidades
    */

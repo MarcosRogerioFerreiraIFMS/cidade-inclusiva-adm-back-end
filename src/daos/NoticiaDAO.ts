@@ -33,8 +33,8 @@ export class NoticiaDAO implements INoticiaAccess {
    * @returns {Promise<NoticiaCompletions | null>} Notícia encontrada ou null
    */
   async findById(id: string): Promise<NoticiaCompletions | null> {
-    return await db.noticia.findUnique({
-      where: { id },
+    return await db.noticia.findFirst({
+      where: { id, deletadoEm: null },
       include: { foto: true }
     })
   }
@@ -49,6 +49,14 @@ export class NoticiaDAO implements INoticiaAccess {
     id: string,
     data: NoticiaUpdateDTO
   ): Promise<NoticiaCompletions> {
+    const noticiaExistente = await db.noticia.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!noticiaExistente) {
+      throw new Error('Notícia não encontrada ou já deletada.')
+    }
+
     const dataToUpdate = await generateDataNoticiaUpdate(data, id)
 
     const noticia = await db.noticia.update({
@@ -61,12 +69,28 @@ export class NoticiaDAO implements INoticiaAccess {
   }
 
   /**
-   * Remove uma notícia do banco de dados
+   * Remove uma notícia do banco de dados (soft delete)
    * @param {string} id - ID único da notícia a ser removida
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.noticia.delete({ where: { id } })
+    await db.noticia.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura uma notícia soft-deleted
+   * @param {string} id - ID único da notícia a ser restaurada
+   * @returns {Promise<NoticiaCompletions>} Notícia restaurada
+   */
+  async restore(id: string): Promise<NoticiaCompletions> {
+    return await db.noticia.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: { foto: true }
+    })
   }
 
   /**
@@ -76,6 +100,7 @@ export class NoticiaDAO implements INoticiaAccess {
    */
   async findAll(): Promise<NoticiaCompletions[]> {
     return await db.noticia.findMany({
+      where: { deletadoEm: null },
       orderBy: {
         dataPublicacao: 'desc'
       },

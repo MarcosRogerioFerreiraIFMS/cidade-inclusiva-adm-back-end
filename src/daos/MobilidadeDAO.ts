@@ -43,8 +43,8 @@ export class MobilidadeDAO implements IMobilidadeAccess {
    * @returns {Promise<MobilidadeCompletions | null>} Mobilidade encontrada ou null
    */
   async findById(id: string): Promise<MobilidadeCompletions | null> {
-    return await db.mobilidade.findUnique({
-      where: { id },
+    return await db.mobilidade.findFirst({
+      where: { id, deletadoEm: null },
       include: {
         usuario: true
       }
@@ -61,6 +61,14 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     id: string,
     data: MobilidadeUpdateDTO
   ): Promise<MobilidadeCompletions> {
+    const mobilidadeExistente = await db.mobilidade.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!mobilidadeExistente) {
+      throw new Error('Mobilidade não encontrada ou já deletada.')
+    }
+
     const dataToUpdate = generateDataMobilidadeUpdate(data)
 
     const mobilidade = await db.mobilidade.update({
@@ -75,12 +83,30 @@ export class MobilidadeDAO implements IMobilidadeAccess {
   }
 
   /**
-   * Remove uma mobilidade do banco de dados
+   * Remove uma mobilidade do banco de dados (soft delete)
    * @param {string} id - ID único da mobilidade a ser removida
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.mobilidade.delete({ where: { id } })
+    await db.mobilidade.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura uma mobilidade soft-deleted
+   * @param {string} id - ID único da mobilidade a ser restaurada
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade restaurada
+   */
+  async restore(id: string): Promise<MobilidadeCompletions> {
+    return await db.mobilidade.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: {
+        usuario: true
+      }
+    })
   }
 
   /**
@@ -90,6 +116,7 @@ export class MobilidadeDAO implements IMobilidadeAccess {
    */
   async findAll(): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
+      where: { deletadoEm: null },
       include: {
         usuario: true
       },
@@ -106,7 +133,7 @@ export class MobilidadeDAO implements IMobilidadeAccess {
    */
   async findByUsuario(usuarioId: string): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
-      where: { usuarioId },
+      where: { usuarioId, deletadoEm: null },
       include: {
         usuario: true
       },
@@ -125,7 +152,7 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     status: StatusMobilidade
   ): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
-      where: { status },
+      where: { status, deletadoEm: null },
       include: {
         usuario: true
       },

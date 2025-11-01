@@ -51,6 +51,13 @@ export interface IManutencaoAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura uma manutenção soft-deleted
+   * @param {string} id - ID único da manutenção a ser restaurada
+   * @returns {Promise<ManutencaoCompletions>} Manutenção restaurada
+   */
+  restore(id: string): Promise<ManutencaoCompletions>
+
+  /**
    * Lista todas as manutenções do banco de dados
    * @returns {Promise<ManutencaoCompletions[]>} Lista de manutenções com todas as relações
    */

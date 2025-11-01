@@ -41,8 +41,8 @@ export class MotoristaDAO implements IMotoristaAccess {
    * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
    */
   async findById(id: string): Promise<MotoristaCompletions | null> {
-    return await db.motorista.findUnique({
-      where: { id },
+    return await db.motorista.findFirst({
+      where: { id, deletadoEm: null },
       include: {
         foto: true,
         veiculo: {
@@ -58,8 +58,8 @@ export class MotoristaDAO implements IMotoristaAccess {
    * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
    */
   async findByTelefone(telefone: string): Promise<MotoristaCompletions | null> {
-    return await db.motorista.findUnique({
-      where: { telefone },
+    return await db.motorista.findFirst({
+      where: { telefone, deletadoEm: null },
       include: {
         foto: true,
         veiculo: {
@@ -75,8 +75,8 @@ export class MotoristaDAO implements IMotoristaAccess {
    * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
    */
   async findByEmail(email: string): Promise<MotoristaCompletions | null> {
-    return await db.motorista.findUnique({
-      where: { email },
+    return await db.motorista.findFirst({
+      where: { email, deletadoEm: null },
       include: {
         foto: true,
         veiculo: {
@@ -96,6 +96,14 @@ export class MotoristaDAO implements IMotoristaAccess {
     id: string,
     data: MotoristaUpdateDTO
   ): Promise<MotoristaCompletions> {
+    const motoristaExistente = await db.motorista.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!motoristaExistente) {
+      throw new Error('Motorista não encontrado ou já deletado.')
+    }
+
     const dataToUpdate = await generateDataMotoristaUpdate(data, id)
 
     const motorista = await db.motorista.update({
@@ -113,12 +121,33 @@ export class MotoristaDAO implements IMotoristaAccess {
   }
 
   /**
-   * Remove um motorista do banco de dados
+   * Remove um motorista do banco de dados (soft delete)
    * @param {string} id - ID único do motorista a ser removido
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.motorista.delete({ where: { id } })
+    await db.motorista.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura um motorista soft-deleted
+   * @param {string} id - ID único do motorista a ser restaurado
+   * @returns {Promise<MotoristaCompletions>} Motorista restaurado
+   */
+  async restore(id: string): Promise<MotoristaCompletions> {
+    return await db.motorista.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: {
+        foto: true,
+        veiculo: {
+          include: { fotos: true }
+        }
+      }
+    })
   }
 
   /**
@@ -128,6 +157,7 @@ export class MotoristaDAO implements IMotoristaAccess {
    */
   async findAll(): Promise<MotoristaCompletions[]> {
     return await db.motorista.findMany({
+      where: { deletadoEm: null },
       orderBy: {
         criadoEm: 'desc'
       },

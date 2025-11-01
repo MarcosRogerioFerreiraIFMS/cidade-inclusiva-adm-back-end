@@ -51,6 +51,13 @@ export interface IUsuarioAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura um usuário soft-deleted
+   * @param {string} id - ID único do usuário a ser restaurado
+   * @returns {Promise<UsuarioCompletions>} Usuário restaurado
+   */
+  restore(id: string): Promise<UsuarioCompletions>
+
+  /**
    * Lista todos os usuários do banco de dados
    * @returns {Promise<UsuarioCompletions[]>} Lista de usuários com todas as relações
    */

@@ -79,6 +79,15 @@ export class MotoristaRepository implements IMotoristaAccess {
   }
 
   /**
+   * Restaura um motorista soft-deleted
+   * @param {string} id - ID único do motorista a ser restaurado
+   * @returns {Promise<MotoristaCompletions>} Motorista restaurado
+   */
+  async restore(id: string): Promise<MotoristaCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todos os motoristas do sistema
    * @returns {Promise<MotoristaCompletions[]>} Lista de todos os motoristas
    */

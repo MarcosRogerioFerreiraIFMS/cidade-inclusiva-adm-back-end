@@ -37,6 +37,13 @@ export interface IComentarioAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura um comentário soft-deleted
+   * @param {string} id - ID do comentário a ser restaurado
+   * @returns {Promise<ComentarioCompletions>} Comentário restaurado
+   */
+  restore(id: string): Promise<ComentarioCompletions>
+
+  /**
    * Verifica se um usuário é dono de um comentário específico
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário

@@ -55,4 +55,11 @@ export interface IVeiculoAccess {
    * @returns Promise vazia
    */
   delete(id: string): Promise<void>
+
+  /**
+   * Restaura um veículo soft-deleted
+   * @param id - ID único do veículo a ser restaurado
+   * @returns Promise com o veículo restaurado
+   */
+  restore(id: string): Promise<VeiculoCompletions>
 }

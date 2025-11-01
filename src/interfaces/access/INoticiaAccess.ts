@@ -37,6 +37,13 @@ export interface INoticiaAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura uma notícia soft-deleted
+   * @param {string} id - ID da notícia a ser restaurada
+   * @returns {Promise<NoticiaCompletions>} Notícia restaurada
+   */
+  restore(id: string): Promise<NoticiaCompletions>
+
+  /**
    * Lista todas as notícias
    * @returns {Promise<NoticiaCompletions[]>} Lista de notícias
    */

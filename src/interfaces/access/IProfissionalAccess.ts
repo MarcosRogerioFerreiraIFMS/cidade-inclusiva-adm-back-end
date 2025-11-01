@@ -54,6 +54,13 @@ export interface IProfissionalAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura um profissional soft-deleted
+   * @param {string} id - ID do profissional a ser restaurado
+   * @returns {Promise<ProfissionalCompletions>} Profissional restaurado
+   */
+  restore(id: string): Promise<ProfissionalCompletions>
+
+  /**
    * Lista todos os profissionais
    * @returns {Promise<ProfissionalCompletions[]>} Lista de profissionais
    */

@@ -81,6 +81,15 @@ export class ProfissionalRepository implements IProfissionalAccess {
   }
 
   /**
+   * Restaura um profissional soft-deleted
+   * @param {string} id - ID único do profissional a ser restaurado
+   * @returns {Promise<ProfissionalCompletions>} Profissional restaurado
+   */
+  async restore(id: string): Promise<ProfissionalCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todos os profissionais do sistema
    * @returns {Promise<ProfissionalCompletions[]>} Lista de todos os profissionais
    */

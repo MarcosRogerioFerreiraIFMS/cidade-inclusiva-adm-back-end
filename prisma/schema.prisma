@@ -16,6 +16,7 @@ model Noticia {
   url            String?
   criadoEm       DateTime         @default(now())
   atualizadoEm   DateTime         @updatedAt
+  deletadoEm     DateTime?
   foto           Foto?
 }
 
@@ -27,6 +28,7 @@ model Profissional {
   especialidade EspecialidadeProfissional
   criadoEm      DateTime                  @default(now())
   atualizadoEm  DateTime                  @updatedAt
+  deletadoEm    DateTime?
   fotoId        String?
   comentarios   Comentario[]
   foto          Foto?
@@ -41,6 +43,7 @@ model Usuario {
   tipo             TipoUsuario  @default(USUARIO)
   criadoEm         DateTime     @default(now())
   atualizadoEm     DateTime     @updatedAt
+  deletadoEm       DateTime?
   fotoId           String?
   comentarios      Comentario[]
   endereco         Endereco?
@@ -73,13 +76,14 @@ model Endereco {
 }
 
 model Comentario {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   conteudo     String
-  visivel      Boolean  @default(true)
+  visivel      Boolean   @default(true)
   autorId      String
-  criadoEm     DateTime @default(now())
-  atualizadoEm DateTime @updatedAt
-  autor        Usuario  @relation(fields: [autorId], references: [id], onDelete: Cascade)
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+  deletadoEm   DateTime?
+  autor        Usuario   @relation(fields: [autorId], references: [id], onDelete: Cascade)
 
   profissionalId String?
   profissional   Profissional? @relation(fields: [profissionalId], references: [id], onDelete: SetNull)
@@ -121,6 +125,7 @@ model Mobilidade {
   usuarioId    String?
   criadoEm     DateTime         @default(now())
   atualizadoEm DateTime         @updatedAt
+  deletadoEm   DateTime?
   usuario      Usuario?         @relation(fields: [usuarioId], references: [id])
 }
 
@@ -131,6 +136,7 @@ model Motorista {
   email        String       @unique
   criadoEm     DateTime     @default(now())
   atualizadoEm DateTime     @updatedAt
+  deletadoEm   DateTime?
   foto         Foto?
   veiculo      Veiculo?
   comentarios  Comentario[]
@@ -145,6 +151,7 @@ model Veiculo {
   motoristaId  String    @unique
   criadoEm     DateTime  @default(now())
   atualizadoEm DateTime  @updatedAt
+  deletadoEm   DateTime?
   fotos        Foto[]
   motorista    Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
 }
@@ -193,6 +200,7 @@ model Manutencao {
   logo           Foto?                     @relation("LogoManutencao")
   criadoEm       DateTime                  @default(now())
   atualizadoEm   DateTime                  @updatedAt
+  deletadoEm     DateTime?
   especialidades EspecialidadeManutencao[]
   comentarios    Comentario[]
 }
@@ -220,6 +228,7 @@ model AcessibilidadeUrbana {
   endereco     Endereco?
   criadoEm     DateTime                      @default(now())
   atualizadoEm DateTime                      @updatedAt
+  deletadoEm   DateTime?
   recursos     AcessibilidadeUrbanaRecurso[]
   comentarios  Comentario[]
 }

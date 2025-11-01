@@ -37,8 +37,8 @@ export class ManutencaoDAO implements IManutencaoAccess {
    * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
    */
   async findById(id: string): Promise<ManutencaoCompletions | null> {
-    return await db.manutencao.findUnique({
-      where: { id },
+    return await db.manutencao.findFirst({
+      where: { id, deletadoEm: null },
       include: {
         endereco: true,
         fotos: true,
@@ -54,8 +54,8 @@ export class ManutencaoDAO implements IManutencaoAccess {
    * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
    */
   async findByEmail(email: string): Promise<ManutencaoCompletions | null> {
-    return await db.manutencao.findUnique({
-      where: { email },
+    return await db.manutencao.findFirst({
+      where: { email, deletadoEm: null },
       include: {
         endereco: true,
         fotos: true,
@@ -74,7 +74,7 @@ export class ManutencaoDAO implements IManutencaoAccess {
     telefone: string
   ): Promise<ManutencaoCompletions | null> {
     return await db.manutencao.findFirst({
-      where: { telefone },
+      where: { telefone, deletadoEm: null },
       include: {
         endereco: true,
         fotos: true,
@@ -94,6 +94,14 @@ export class ManutencaoDAO implements IManutencaoAccess {
     id: string,
     data: ManutencaoUpdateDTO
   ): Promise<ManutencaoCompletions> {
+    const manutencaoExistente = await db.manutencao.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!manutencaoExistente) {
+      throw new Error('Manutenção não encontrada ou já deletada.')
+    }
+
     const dataToUpdate = await generateDataManutencaoUpdate(data, id)
 
     return await db.manutencao.update({
@@ -109,13 +117,32 @@ export class ManutencaoDAO implements IManutencaoAccess {
   }
 
   /**
-   * Remove uma manutenção do banco de dados
+   * Remove uma manutenção do banco de dados (soft delete)
    * @param {string} id - ID único da manutenção a ser removida
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.manutencao.delete({
-      where: { id }
+    await db.manutencao.update({
+      where: { id },
+      data: { deletadoEm: new Date() }
+    })
+  }
+
+  /**
+   * Restaura uma manutenção soft-deleted
+   * @param {string} id - ID único da manutenção a ser restaurada
+   * @returns {Promise<ManutencaoCompletions>} Manutenção restaurada
+   */
+  async restore(id: string): Promise<ManutencaoCompletions> {
+    return await db.manutencao.update({
+      where: { id },
+      data: { deletadoEm: null },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        especialidades: true
+      }
     })
   }
 
@@ -125,6 +152,7 @@ export class ManutencaoDAO implements IManutencaoAccess {
    */
   async findAll(): Promise<ManutencaoCompletions[]> {
     return await db.manutencao.findMany({
+      where: { deletadoEm: null },
       orderBy: { criadoEm: 'desc' },
       include: {
         endereco: true,
@@ -145,6 +173,7 @@ export class ManutencaoDAO implements IManutencaoAccess {
   ): Promise<ManutencaoCompletions[]> {
     return await db.manutencao.findMany({
       where: {
+        deletadoEm: null,
         especialidades: {
           some: {
             nome: {

@@ -42,6 +42,13 @@ export interface IAcessibilidadeUrbanaAccess {
   delete(id: string): Promise<void>
 
   /**
+   * Restaura uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID único da acessibilidade urbana a ser restaurada
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada
+   */
+  restore(id: string): Promise<AcessibilidadeUrbanaCompletions>
+
+  /**
    * Lista todas as acessibilidades urbanas
    * @returns {Promise<AcessibilidadeUrbanaCompletions[]>} Lista de acessibilidades urbanas
    */

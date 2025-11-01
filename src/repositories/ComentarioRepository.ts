@@ -63,6 +63,15 @@ export class ComentarioRepository implements IComentarioAccess {
   }
 
   /**
+   * Restaura um comentário soft-deleted
+   * @param {string} id - ID único do comentário a ser restaurado
+   * @returns {Promise<ComentarioCompletions>} Comentário restaurado
+   */
+  async restore(id: string): Promise<ComentarioCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Verifica se um usuário é o proprietário de um comentário
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário

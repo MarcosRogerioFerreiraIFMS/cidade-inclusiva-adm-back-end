@@ -77,6 +77,15 @@ export class UsuarioRepository implements IUsuarioAccess {
   }
 
   /**
+   * Restaura um usuário soft-deleted
+   * @param {string} id - ID único do usuário a ser restaurado
+   * @returns {Promise<UsuarioCompletions>} Usuário restaurado
+   */
+  async restore(id: string): Promise<UsuarioCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todos os usuários do sistema
    * @returns {Promise<UsuarioCompletions[]>} Lista de todos os usuários
    */

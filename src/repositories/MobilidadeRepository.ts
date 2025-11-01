@@ -65,6 +65,15 @@ export class MobilidadeRepository implements IMobilidadeAccess {
   }
 
   /**
+   * Restaura uma mobilidade soft-deleted
+   * @param {string} id - ID único da mobilidade a ser restaurada
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade restaurada
+   */
+  async restore(id: string): Promise<MobilidadeCompletions> {
+    return await this.dao.restore(id)
+  }
+
+  /**
    * Lista todas as mobilidades do sistema
    * @returns {Promise<MobilidadeCompletions[]>} Lista de todas as mobilidades
    */

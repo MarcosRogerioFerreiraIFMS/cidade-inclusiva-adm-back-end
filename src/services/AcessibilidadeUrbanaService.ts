@@ -32,34 +32,57 @@ export class AcessibilidadeUrbanaService
   /**
    * Cria uma nova acessibilidade urbana no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
+   * - Se existir uma acessibilidade urbana soft-deleted com mesmo email ou telefone, reativa e atualiza
    * @param {unknown} data - Dados da acessibilidade urbana a ser criada
    * @returns {Promise<AcessibilidadeUrbanaResponseDTO>} Dados da acessibilidade urbana criada
    */
   async create(data: unknown): Promise<AcessibilidadeUrbanaResponseDTO> {
     const acessibilidadeUrbanaData = await toCreateAcessibilidadeUrbanaDTO(data)
 
-    const [acessibilidadeUrbanaWithEmail, acessibilidadeUrbanaWithTelefone] =
-      await Promise.all([
-        this.acessibilidadeUrbanaRepository.findByEmail(
-          acessibilidadeUrbanaData.email
-        ),
-        this.acessibilidadeUrbanaRepository.findByTelefone(
-          acessibilidadeUrbanaData.telefone
-        )
-      ])
+    // Verificar em paralelo acessibilidades urbanas ativas e deletadas com mesmo email ou telefone
+    const [
+      acessibilidadeUrbanaWithEmail,
+      acessibilidadeUrbanaWithTelefone,
+      deletedByEmail,
+      deletedByTelefone
+    ] = await Promise.all([
+      this.acessibilidadeUrbanaRepository.findByEmail(
+        acessibilidadeUrbanaData.email
+      ),
+      this.acessibilidadeUrbanaRepository.findByTelefone(
+        acessibilidadeUrbanaData.telefone
+      ),
+      this.acessibilidadeUrbanaRepository.findByEmailIncludingDeleted(
+        acessibilidadeUrbanaData.email
+      ),
+      this.acessibilidadeUrbanaRepository.findByTelefoneIncludingDeleted(
+        acessibilidadeUrbanaData.telefone
+      )
+    ])
 
-    // Verificar se já existe uma acessibilidade urbana com o mesmo email
+    // Se existe ativa, lançar erro
     throwIfAlreadyExists(
       acessibilidadeUrbanaWithEmail,
       'Já existe uma acessibilidade urbana cadastrada com este e-mail.'
     )
 
-    // Verificar se já existe uma acessibilidade urbana com o mesmo telefone
     throwIfAlreadyExists(
       acessibilidadeUrbanaWithTelefone,
       'Já existe uma acessibilidade urbana cadastrada com este telefone.'
     )
 
+    // Se existe deletada, reativar e atualizar
+    const deletedAcessibilidade = deletedByEmail || deletedByTelefone
+    if (deletedAcessibilidade) {
+      return toAcessibilidadeUrbanaResponseDTO(
+        await this.acessibilidadeUrbanaRepository.restoreAndUpdate(
+          deletedAcessibilidade.id,
+          acessibilidadeUrbanaData
+        )
+      )
+    }
+
+    // Caso contrário, criar nova
     const acessibilidadeUrbana =
       await this.acessibilidadeUrbanaRepository.create(acessibilidadeUrbanaData)
     return toAcessibilidadeUrbanaResponseDTO(acessibilidadeUrbana)
@@ -106,7 +129,9 @@ export class AcessibilidadeUrbanaService
       updateData.email !== existingAcessibilidadeUrbana.email
     ) {
       const acessibilidadeUrbanaWithEmail =
-        await this.acessibilidadeUrbanaRepository.findByEmail(updateData.email)
+        await this.acessibilidadeUrbanaRepository.findByEmailIncludingDeleted(
+          updateData.email
+        )
       if (
         acessibilidadeUrbanaWithEmail &&
         acessibilidadeUrbanaWithEmail.id !== id
@@ -114,6 +139,26 @@ export class AcessibilidadeUrbanaService
         throwIfAlreadyExists(
           acessibilidadeUrbanaWithEmail,
           'Já existe uma acessibilidade urbana cadastrada com este e-mail.'
+        )
+      }
+    }
+
+    // Se o telefone estiver sendo atualizado, verificar se não conflita com outro registro
+    if (
+      updateData.telefone &&
+      updateData.telefone !== existingAcessibilidadeUrbana.telefone
+    ) {
+      const acessibilidadeUrbanaWithTelefone =
+        await this.acessibilidadeUrbanaRepository.findByTelefoneIncludingDeleted(
+          updateData.telefone
+        )
+      if (
+        acessibilidadeUrbanaWithTelefone &&
+        acessibilidadeUrbanaWithTelefone.id !== id
+      ) {
+        throwIfAlreadyExists(
+          acessibilidadeUrbanaWithTelefone,
+          'Já existe uma acessibilidade urbana cadastrada com este telefone.'
         )
       }
     }

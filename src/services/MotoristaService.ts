@@ -24,17 +24,29 @@ export class MotoristaService implements IMotoristaService {
    * Cria um novo motorista no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
    * - Verifica se já existe motorista com mesmo telefone ou email
+   * - Se existir um motorista soft-deleted com mesmo telefone ou email, reativa e atualiza
    * @param {unknown} data - Dados do motorista a ser criado
    * @returns {Promise<MotoristaResponseDTO>} Dados do motorista criado
    */
   async create(data: unknown): Promise<MotoristaResponseDTO> {
     const motoristaData = await toCreateMotoristaDTO(data)
 
-    // Verificar se já existe motorista com o mesmo telefone e email em paralelo
-    const [existingByTelefone, existingByEmail] = await Promise.all([
+    // Verificar em paralelo motoristas ativos e deletados com mesmo telefone ou email
+    const [
+      existingByTelefone,
+      existingByEmail,
+      deletedByTelefone,
+      deletedByEmail
+    ] = await Promise.all([
       this.motoristaRepository.findByTelefone(motoristaData.telefone),
-      this.motoristaRepository.findByEmail(motoristaData.email)
+      this.motoristaRepository.findByEmail(motoristaData.email),
+      this.motoristaRepository.findByTelefoneIncludingDeleted(
+        motoristaData.telefone
+      ),
+      this.motoristaRepository.findByEmailIncludingDeleted(motoristaData.email)
     ])
+
+    // Se existe ativo, lançar erro
     throwIfAlreadyExists(
       existingByTelefone,
       'Já existe um motorista cadastrado com este telefone.'
@@ -44,6 +56,18 @@ export class MotoristaService implements IMotoristaService {
       'Já existe um motorista cadastrado com este email.'
     )
 
+    // Se existe deletado, reativar e atualizar
+    const deletedMotorista = deletedByTelefone || deletedByEmail
+    if (deletedMotorista) {
+      return toMotoristaResponseDTO(
+        await this.motoristaRepository.restoreAndUpdate(
+          deletedMotorista.id,
+          motoristaData
+        )
+      )
+    }
+
+    // Caso contrário, criar novo
     return toMotoristaResponseDTO(
       await this.motoristaRepository.create(motoristaData)
     )
@@ -83,9 +107,10 @@ export class MotoristaService implements IMotoristaService {
 
     // Se o telefone está sendo atualizado, verificar se já existe
     if (updateData.telefone) {
-      const existingByTelefone = await this.motoristaRepository.findByTelefone(
-        updateData.telefone
-      )
+      const existingByTelefone =
+        await this.motoristaRepository.findByTelefoneIncludingDeleted(
+          updateData.telefone
+        )
       if (existingByTelefone && existingByTelefone.id !== id) {
         throwIfAlreadyExists(
           existingByTelefone,
@@ -96,9 +121,10 @@ export class MotoristaService implements IMotoristaService {
 
     // Se o email está sendo atualizado, verificar se já existe
     if (updateData.email) {
-      const existingByEmail = await this.motoristaRepository.findByEmail(
-        updateData.email
-      )
+      const existingByEmail =
+        await this.motoristaRepository.findByEmailIncludingDeleted(
+          updateData.email
+        )
       if (existingByEmail && existingByEmail.id !== id) {
         throwIfAlreadyExists(
           existingByEmail,

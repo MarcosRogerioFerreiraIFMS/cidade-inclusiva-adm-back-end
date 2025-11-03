@@ -1,7 +1,11 @@
 import { db } from '@/database/prisma'
-import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { AdminCreateDTO, UsuarioCreateDTO } from '@/dtos/create'
 import type { UsuarioUpdateDTO } from '@/dtos/update'
-import { generateDataUsuarioCreate, generateDataUsuarioUpdate } from '@/helpers'
+import {
+  generateDataAdminCreate,
+  generateDataUsuarioCreate,
+  generateDataUsuarioUpdate
+} from '@/helpers'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { UsuarioCompletions } from '@/types'
 
@@ -17,6 +21,19 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async create(data: UsuarioCreateDTO): Promise<UsuarioCompletions> {
     const dataToCreate = await generateDataUsuarioCreate(data)
+    return await db.usuario.create({
+      data: dataToCreate,
+      include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
+   * Cria um novo administrador no banco de dados
+   * @param {AdminCreateDTO} data - Dados do administrador a ser criado
+   * @returns {Promise<UsuarioCompletions>} Administrador criado com todas as relações
+   */
+  async createAdmin(data: AdminCreateDTO): Promise<UsuarioCompletions> {
+    const dataToCreate = await generateDataAdminCreate(data)
     return await db.usuario.create({
       data: dataToCreate,
       include: { endereco: true, foto: true }
@@ -48,6 +65,20 @@ export class UsuarioDAO implements IUsuarioAccess {
   }
 
   /**
+   * Busca um usuário por email incluindo deletados
+   * @param {string} email - Email único do usuário
+   * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<UsuarioCompletions | null> {
+    return await db.usuario.findUnique({
+      where: { email },
+      include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
    * Busca um usuário por telefone no banco de dados
    * @param {string} telefone - Telefone único do usuário
    * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
@@ -55,6 +86,20 @@ export class UsuarioDAO implements IUsuarioAccess {
   async findByTelefone(telefone: string): Promise<UsuarioCompletions | null> {
     return await db.usuario.findUnique({
       where: { telefone, deletadoEm: null },
+      include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
+   * Busca um usuário por telefone incluindo deletados
+   * @param {string} telefone - Telefone único do usuário
+   * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<UsuarioCompletions | null> {
+    return await db.usuario.findUnique({
+      where: { telefone },
       include: { endereco: true, foto: true }
     })
   }
@@ -110,6 +155,62 @@ export class UsuarioDAO implements IUsuarioAccess {
     return await db.usuario.update({
       where: { id },
       data: { deletadoEm: null },
+      include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
+   * Restaura e atualiza um usuário soft-deleted com novos dados
+   * @param {string} id - ID único do usuário a ser restaurado
+   * @param {UsuarioCreateDTO} data - Novos dados do usuário
+   * @returns {Promise<UsuarioCompletions>} Usuário restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    data: UsuarioCreateDTO
+  ): Promise<UsuarioCompletions> {
+    // Primeiro, deletar o endereço antigo se existir
+    await db.endereco.deleteMany({
+      where: { usuarioId: id }
+    })
+
+    // Agora criar o novo usuário com os novos dados
+    const dataToUpdate = await generateDataUsuarioCreate(data)
+
+    return await db.usuario.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
+      include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
+   * Restaura e atualiza um administrador soft-deleted com novos dados
+   * @param {string} id - ID único do administrador a ser restaurado
+   * @param {AdminCreateDTO} data - Novos dados do administrador
+   * @returns {Promise<UsuarioCompletions>} Administrador restaurado e atualizado
+   */
+  async restoreAndUpdateAdmin(
+    id: string,
+    data: AdminCreateDTO
+  ): Promise<UsuarioCompletions> {
+    // Primeiro, deletar o endereço antigo se existir
+    await db.endereco.deleteMany({
+      where: { usuarioId: id }
+    })
+
+    // Agora criar o novo administrador com os novos dados
+    const dataToUpdate = await generateDataAdminCreate(data)
+
+    return await db.usuario.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
       include: { endereco: true, foto: true }
     })
   }

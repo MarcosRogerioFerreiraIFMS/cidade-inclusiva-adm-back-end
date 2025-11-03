@@ -95,4 +95,18 @@ export class UsuarioController {
       next(error)
     }
   }
+
+  /**
+   * Cria um novo administrador no sistema
+   * @type {ControllerRequest}
+   */
+  createAdmin: ControllerRequest = async (req, res, next) => {
+    try {
+      const admin = await this.usuarioService.createAdmin(req.body)
+
+      HandleSuccess.created(res, admin, 'Administrador criado com sucesso')
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
 }

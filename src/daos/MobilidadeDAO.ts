@@ -30,7 +30,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     const mobilidade = await db.mobilidade.create({
       data: dataToCreate,
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       }
     })
 
@@ -46,7 +49,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     return await db.mobilidade.findFirst({
       where: { id, deletadoEm: null },
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       }
     })
   }
@@ -75,7 +81,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
       where: { id },
       data: dataToUpdate,
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       }
     })
 
@@ -104,7 +113,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
       where: { id },
       data: { deletadoEm: null },
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       }
     })
   }
@@ -118,7 +130,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     return await db.mobilidade.findMany({
       where: { deletadoEm: null },
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       },
       orderBy: {
         dataRegistro: 'desc'
@@ -135,7 +150,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     return await db.mobilidade.findMany({
       where: { usuarioId, deletadoEm: null },
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       },
       orderBy: {
         dataRegistro: 'desc'
@@ -154,7 +172,10 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     return await db.mobilidade.findMany({
       where: { status, deletadoEm: null },
       include: {
-        usuario: true
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
       },
       orderBy: {
         dataRegistro: 'desc'

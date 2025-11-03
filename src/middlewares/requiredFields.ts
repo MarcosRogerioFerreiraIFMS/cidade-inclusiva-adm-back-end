@@ -9,6 +9,9 @@ export const requiredFields = {
     create: ['nome', 'telefone', 'email', 'senha', 'endereco'],
     update: []
   },
+  admin: {
+    create: ['nome', 'telefone', 'email', 'senha']
+  },
   noticia: {
     create: ['titulo', 'conteudo', 'categoria'],
     update: []

@@ -1,5 +1,6 @@
 import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { LikeDependencies } from '@/dependencies/LikeDependencies'
+import { UsuarioDependencies } from '@/dependencies/UsuarioDependencies'
 import { HttpStatusCode, TipoRecurso, TipoUsuario } from '@/enums'
 import type { AuthenticatedRequest } from '@/types'
 import type { NextFunction, Response } from 'express'
@@ -49,7 +50,7 @@ export const requireAdmin = requireRole([TipoUsuario.ADMIN])
 
 /**
  * - Middleware que valida se o usuário pode acessar/modificar o recurso
- * - Administradores podem acessar qualquer recurso
+ * - Administradores podem acessar qualquer recurso, EXCETO modificar outros admins
  * - Usuários comuns só podem acessar/modificar seus próprios recursos
  * @param {TipoRecurso} tipoRecurso - Tipo do recurso sendo acessado
  */
@@ -67,14 +68,50 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
       return
     }
 
-    // Admins podem tudo
-    if (req.user.tipo === TipoUsuario.ADMIN) {
+    const { id: recursoId } = req.params
+    const userId = req.user.id
+
+    // Para recursos de usuário, verificar se é o próprio usuário
+    if (tipoRecurso === TipoRecurso.USUARIO && recursoId === userId) {
       next()
       return
     }
 
-    const { id: recursoId } = req.params
-    const userId = req.user.id
+    // Se for admin, verificar regras especiais
+    if (req.user.tipo === TipoUsuario.ADMIN) {
+      // Para operações em usuários, verificar se o alvo não é outro admin
+      if (tipoRecurso === TipoRecurso.USUARIO) {
+        try {
+          // Buscar o usuário alvo para verificar se é admin
+          const targetUser = await verifyUserIsAdmin(recursoId)
+
+          if (targetUser) {
+            res.status(HttpStatusCode.FORBIDDEN).json({
+              success: false,
+              error:
+                'Administradores não podem modificar o perfil de outros administradores.',
+              code: 'ADMIN_CANNOT_MODIFY_ADMIN'
+            })
+            return
+          }
+
+          // Se não é admin, permite
+          next()
+          return
+        } catch (error) {
+          console.error('Erro ao verificar tipo de usuário:', error)
+          res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: 'Erro interno ao verificar permissões'
+          })
+          return
+        }
+      }
+
+      // Para outros recursos, admin pode tudo
+      next()
+      return
+    }
 
     try {
       // Verificar propriedade baseado no tipo de recurso
@@ -139,4 +176,14 @@ async function verifyOwnership(
     default:
       return false
   }
+}
+
+/**
+ * Verifica se um usuário é administrador
+ * @param {string} userId - ID do usuário a ser verificado
+ * @returns {Promise<boolean>} True se o usuário for admin, false caso contrário
+ */
+async function verifyUserIsAdmin(userId: string): Promise<boolean> {
+  const user = await UsuarioDependencies.dao.findById(userId)
+  return user?.tipo === TipoUsuario.ADMIN
 }

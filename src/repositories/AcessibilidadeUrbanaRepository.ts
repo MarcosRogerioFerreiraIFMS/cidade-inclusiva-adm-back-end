@@ -50,6 +50,22 @@ export class AcessibilidadeUrbanaRepository
   }
 
   /**
+   * Restaura e atualiza uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID da acessibilidade urbana a ser restaurada e atualizada
+   * @param {AcessibilidadeUrbanaCreateDTO} acessibilidadeData - Dados da acessibilidade para atualização
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada e atualizada
+   */
+  async restoreAndUpdate(
+    id: string,
+    acessibilidadeData: AcessibilidadeUrbanaCreateDTO
+  ): Promise<AcessibilidadeUrbanaCompletions> {
+    return await this.acessibilidadeUrbanaDAO.restoreAndUpdate(
+      id,
+      acessibilidadeData
+    )
+  }
+
+  /**
    * Remove uma acessibilidade urbana
    * @param {string} id - ID único da acessibilidade urbana
    * @returns {Promise<void>}
@@ -86,10 +102,34 @@ export class AcessibilidadeUrbanaRepository
     return await this.acessibilidadeUrbanaDAO.findByEmail(email)
   }
 
+  /**
+   * Busca acessibilidade urbana por email incluindo deletados
+   * @param {string} email - Email da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null> {
+    return await this.acessibilidadeUrbanaDAO.findByEmailIncludingDeleted(email)
+  }
+
   async findByTelefone(
     telefone: string
   ): Promise<AcessibilidadeUrbanaCompletions | null> {
     return await this.acessibilidadeUrbanaDAO.findByTelefone(telefone)
+  }
+
+  /**
+   * Busca acessibilidade urbana por telefone incluindo deletados
+   * @param {string} telefone - Telefone da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null> {
+    return await this.acessibilidadeUrbanaDAO.findByTelefoneIncludingDeleted(
+      telefone
+    )
   }
 
   /**

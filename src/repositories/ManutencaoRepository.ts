@@ -46,6 +46,17 @@ export class ManutencaoRepository implements IManutencaoAccess {
   }
 
   /**
+   * Busca uma manutenção por email incluindo deletados
+   * @param {string} email - Email da manutenção
+   * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<ManutencaoCompletions | null> {
+    return await this.dao.findByEmailIncludingDeleted(email)
+  }
+
+  /**
    * Busca uma manutenção por telefone
    * @param {string} telefone - Telefone da manutenção
    * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
@@ -54,6 +65,17 @@ export class ManutencaoRepository implements IManutencaoAccess {
     telefone: string
   ): Promise<ManutencaoCompletions | null> {
     return await this.dao.findByTelefone(telefone)
+  }
+
+  /**
+   * Busca uma manutenção por telefone incluindo deletados
+   * @param {string} telefone - Telefone da manutenção
+   * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<ManutencaoCompletions | null> {
+    return await this.dao.findByTelefoneIncludingDeleted(telefone)
   }
 
   /**
@@ -67,6 +89,19 @@ export class ManutencaoRepository implements IManutencaoAccess {
     data: ManutencaoUpdateDTO
   ): Promise<ManutencaoCompletions> {
     return await this.dao.update(id, data)
+  }
+
+  /**
+   * Restaura e atualiza uma manutenção soft-deleted
+   * @param {string} id - ID da manutenção a ser restaurada e atualizada
+   * @param {ManutencaoCreateDTO} manutencaoData - Dados da manutenção para atualização
+   * @returns {Promise<ManutencaoCompletions>} Manutenção restaurada e atualizada
+   */
+  async restoreAndUpdate(
+    id: string,
+    manutencaoData: ManutencaoCreateDTO
+  ): Promise<ManutencaoCompletions> {
+    return await this.dao.restoreAndUpdate(id, manutencaoData)
   }
 
   /**

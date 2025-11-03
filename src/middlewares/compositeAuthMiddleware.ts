@@ -63,7 +63,7 @@ export const usuarioOperations = {
     validateUUID('id')
   ],
 
-  /** PUT /usuarios/:id - Usuário pode editar a si mesmo, admin pode editar qualquer um */
+  /** PUT /usuarios/:id - Usuário pode editar a si mesmo, admin pode editar qualquer um (exceto outros admins) */
   update: [
     ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.USUARIO),
@@ -71,7 +71,7 @@ export const usuarioOperations = {
     validateRequiredBody([...requiredFields.usuario.update])
   ],
 
-  /** DELETE /usuarios/:id - Usuário pode deletar a si mesmo, admin pode deletar qualquer um */
+  /** DELETE /usuarios/:id - Usuário pode deletar a si mesmo, admin pode deletar qualquer um (exceto outros admins) */
   delete: [
     ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.USUARIO),
@@ -80,6 +80,12 @@ export const usuarioOperations = {
 
   /** POST /usuarios - Registro público (não requer autenticação) */
   create: [validateRequiredBody([...requiredFields.usuario.create])],
+
+  /** POST /usuarios/admin - Apenas admins podem criar outros admins */
+  createAdmin: [
+    ...adminOnly,
+    validateRequiredBody([...requiredFields.admin.create])
+  ],
 
   /** GET /usuarios/email/:email - Apenas admins podem buscar por email */
   findByEmail: [...adminOnly]

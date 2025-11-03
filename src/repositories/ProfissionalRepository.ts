@@ -48,6 +48,17 @@ export class ProfissionalRepository implements IProfissionalAccess {
   }
 
   /**
+   * Busca um profissional por email incluindo deletados
+   * @param {string} email - Email do profissional
+   * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<ProfissionalCompletions | null> {
+    return await this.dao.findByEmailIncludingDeleted(email)
+  }
+
+  /**
    * Busca um profissional por telefone
    * @param {string} telefone - Telefone do profissional
    * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
@@ -56,6 +67,17 @@ export class ProfissionalRepository implements IProfissionalAccess {
     telefone: string
   ): Promise<ProfissionalCompletions | null> {
     return await this.dao.findByTelefone(telefone)
+  }
+
+  /**
+   * Busca um profissional por telefone incluindo deletados
+   * @param {string} telefone - Telefone do profissional
+   * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<ProfissionalCompletions | null> {
+    return await this.dao.findByTelefoneIncludingDeleted(telefone)
   }
 
   /**
@@ -87,6 +109,19 @@ export class ProfissionalRepository implements IProfissionalAccess {
    */
   async restore(id: string): Promise<ProfissionalCompletions> {
     return await this.dao.restore(id)
+  }
+
+  /**
+   * Restaura e atualiza um profissional soft-deleted com novos dados
+   * @param {string} id - ID único do profissional a ser restaurado
+   * @param {ProfissionalCreateDTO} data - Novos dados do profissional
+   * @returns {Promise<ProfissionalCompletions>} Profissional restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    data: ProfissionalCreateDTO
+  ): Promise<ProfissionalCompletions> {
+    return await this.dao.restoreAndUpdate(id, data)
   }
 
   /**

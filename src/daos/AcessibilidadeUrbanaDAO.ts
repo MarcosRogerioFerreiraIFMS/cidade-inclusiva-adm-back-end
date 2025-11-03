@@ -70,6 +70,25 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
     })
   }
 
+  /**
+   * Busca uma acessibilidade urbana por email incluindo deletados
+   * @param {string} email - Email único da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null> {
+    return await db.acessibilidadeUrbana.findFirst({
+      where: { email },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        recursos: true
+      }
+    })
+  }
+
   async findByTelefone(
     telefone: string
   ): Promise<AcessibilidadeUrbanaCompletions | null> {
@@ -78,6 +97,25 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
         telefone,
         deletadoEm: null
       },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        recursos: true
+      }
+    })
+  }
+
+  /**
+   * Busca uma acessibilidade urbana por telefone incluindo deletados
+   * @param {string} telefone - Telefone único da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null> {
+    return await db.acessibilidadeUrbana.findFirst({
+      where: { telefone },
       include: {
         endereco: true,
         fotos: true,
@@ -140,6 +178,79 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
     return await db.acessibilidadeUrbana.update({
       where: { id },
       data: { deletadoEm: null },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        recursos: true
+      }
+    })
+  }
+
+  /**
+   * Restaura e atualiza uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID da acessibilidade urbana a ser restaurada e atualizada
+   * @param {AcessibilidadeUrbanaCreateDTO} acessibilidadeData - Dados da acessibilidade para atualização
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada e atualizada
+   */
+  async restoreAndUpdate(
+    id: string,
+    acessibilidadeData: AcessibilidadeUrbanaCreateDTO
+  ): Promise<AcessibilidadeUrbanaCompletions> {
+    // Buscar acessibilidade existente para verificar se tem endereco/fotos/logo/recursos
+    const acessibilidadeExistente = await db.acessibilidadeUrbana.findUnique({
+      where: { id },
+      include: {
+        endereco: true,
+        fotos: true,
+        logo: true,
+        recursos: true
+      }
+    })
+
+    if (!acessibilidadeExistente) {
+      throw new Error('Acessibilidade urbana não encontrada.')
+    }
+
+    // Deletar dados relacionados antigos se existirem
+    if (acessibilidadeExistente.endereco) {
+      await db.endereco.delete({
+        where: { id: acessibilidadeExistente.endereco.id }
+      })
+    }
+    if (
+      acessibilidadeExistente.fotos &&
+      acessibilidadeExistente.fotos.length > 0
+    ) {
+      await db.foto.deleteMany({
+        where: {
+          id: { in: acessibilidadeExistente.fotos.map((foto) => foto.id) }
+        }
+      })
+    }
+    if (acessibilidadeExistente.logo) {
+      await db.foto.delete({ where: { id: acessibilidadeExistente.logo.id } })
+    }
+    if (
+      acessibilidadeExistente.recursos &&
+      acessibilidadeExistente.recursos.length > 0
+    ) {
+      await db.acessibilidadeUrbanaRecurso.deleteMany({
+        where: {
+          id: { in: acessibilidadeExistente.recursos.map((rec) => rec.id) }
+        }
+      })
+    }
+
+    const dataToUpdate =
+      generateDataAcessibilidadeUrbanaCreate(acessibilidadeData)
+
+    return await db.acessibilidadeUrbana.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
       include: {
         endereco: true,
         fotos: true,

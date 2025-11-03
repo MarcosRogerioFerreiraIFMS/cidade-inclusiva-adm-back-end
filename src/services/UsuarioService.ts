@@ -1,7 +1,11 @@
 import type { UsuarioResponseDTO } from '@/dtos/response'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { IUsuarioService } from '@/interfaces/services'
-import { toCreateUsuarioDTO, toUpdateUsuarioDTO } from '@/mappers/input'
+import {
+  toCreateAdminDTO,
+  toCreateUsuarioDTO,
+  toUpdateUsuarioDTO
+} from '@/mappers/input'
 import { toUsuarioResponseDTO, toUsuariosResponseDTO } from '@/mappers/output'
 import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
@@ -18,19 +22,30 @@ export class UsuarioService implements IUsuarioService {
   /**
    * Cria um novo usuário no sistema:
    * - Valida unicidade de email e telefone antes da criação
+   * - Se usuário existir e estiver deletado, reativa e atualiza com novos dados
    * @param {unknown} data - Dados não tipados do usuário vindos da requisição
    * @returns {Promise<UsuarioResponseDTO>} Usuário criado formatado para resposta
-   * @throws {HttpError} Quando email ou telefone já existem
+   * @throws {HttpError} Quando email ou telefone já existem em usuário ativo
    */
   async create(data: unknown): Promise<UsuarioResponseDTO> {
     const usuarioData = await toCreateUsuarioDTO(data)
 
-    // Verificar se já existe usuário com o mesmo email ou telefone em paralelo
-    const [usuarioWithEmail, usuarioWithTelefone] = await Promise.all([
+    // Verificar se já existe usuário com o mesmo email ou telefone (incluindo deletados)
+    const [
+      usuarioWithEmail,
+      usuarioWithTelefone,
+      usuarioWithEmailDeleted,
+      usuarioWithTelefoneDeleted
+    ] = await Promise.all([
       this.usuarioRepository.findByEmail(usuarioData.email),
-      this.usuarioRepository.findByTelefone(usuarioData.telefone)
+      this.usuarioRepository.findByTelefone(usuarioData.telefone),
+      this.usuarioRepository.findByEmailIncludingDeleted(usuarioData.email),
+      this.usuarioRepository.findByTelefoneIncludingDeleted(
+        usuarioData.telefone
+      )
     ])
 
+    // Se existir usuário ativo com email ou telefone, lança erro
     throwIfAlreadyExists(
       usuarioWithEmail,
       'Já existe um usuário cadastrado com este email.'
@@ -41,6 +56,25 @@ export class UsuarioService implements IUsuarioService {
       'Já existe um usuário cadastrado com este telefone.'
     )
 
+    // Se existir usuário deletado com o email, reativar e atualizar
+    if (usuarioWithEmailDeleted && usuarioWithEmailDeleted.deletadoEm) {
+      const usuario = await this.usuarioRepository.restoreAndUpdate(
+        usuarioWithEmailDeleted.id,
+        usuarioData
+      )
+      return toUsuarioResponseDTO(usuario)
+    }
+
+    // Se existir usuário deletado com o telefone, reativar e atualizar
+    if (usuarioWithTelefoneDeleted && usuarioWithTelefoneDeleted.deletadoEm) {
+      const usuario = await this.usuarioRepository.restoreAndUpdate(
+        usuarioWithTelefoneDeleted.id,
+        usuarioData
+      )
+      return toUsuarioResponseDTO(usuario)
+    }
+
+    // Criar novo usuário
     const usuario = await this.usuarioRepository.create(usuarioData)
 
     return toUsuarioResponseDTO(usuario)
@@ -93,9 +127,10 @@ export class UsuarioService implements IUsuarioService {
     const updateData = await toUpdateUsuarioDTO(data)
 
     if (updateData.email && updateData.email !== existingUsuario.email) {
-      const usuarioWithEmail = await this.usuarioRepository.findByEmail(
-        updateData.email
-      )
+      const usuarioWithEmail =
+        await this.usuarioRepository.findByEmailIncludingDeleted(
+          updateData.email
+        )
 
       if (usuarioWithEmail && usuarioWithEmail.id !== id) {
         throwIfAlreadyExists(
@@ -110,7 +145,9 @@ export class UsuarioService implements IUsuarioService {
       updateData.telefone !== existingUsuario.telefone
     ) {
       throwIfAlreadyExists(
-        await this.usuarioRepository.findByTelefone(updateData.telefone),
+        await this.usuarioRepository.findByTelefoneIncludingDeleted(
+          updateData.telefone
+        ),
         'Já existe um usuário cadastrado com este telefone.'
       )
     }
@@ -147,5 +184,65 @@ export class UsuarioService implements IUsuarioService {
     }
 
     return toUsuariosResponseDTO(usuarios)
+  }
+
+  /**
+   * Cria um novo administrador no sistema:
+   * - Valida unicidade de email e telefone antes da criação
+   * - Define automaticamente o tipo como ADMIN
+   * - Se administrador existir e estiver deletado, reativa e atualiza com novos dados
+   * @param {unknown} data - Dados não tipados do administrador vindos da requisição
+   * @returns {Promise<UsuarioResponseDTO>} Administrador criado formatado para resposta
+   * @throws {HttpError} Quando email ou telefone já existem em usuário ativo
+   */
+  async createAdmin(data: unknown): Promise<UsuarioResponseDTO> {
+    const adminData = await toCreateAdminDTO(data)
+
+    // Verificar se já existe usuário com o mesmo email ou telefone (incluindo deletados)
+    const [
+      usuarioWithEmail,
+      usuarioWithTelefone,
+      usuarioWithEmailDeleted,
+      usuarioWithTelefoneDeleted
+    ] = await Promise.all([
+      this.usuarioRepository.findByEmail(adminData.email),
+      this.usuarioRepository.findByTelefone(adminData.telefone),
+      this.usuarioRepository.findByEmailIncludingDeleted(adminData.email),
+      this.usuarioRepository.findByTelefoneIncludingDeleted(adminData.telefone)
+    ])
+
+    // Se existir usuário ativo com email ou telefone, lança erro
+    throwIfAlreadyExists(
+      usuarioWithEmail,
+      'Já existe um usuário cadastrado com este email.'
+    )
+
+    throwIfAlreadyExists(
+      usuarioWithTelefone,
+      'Já existe um usuário cadastrado com este telefone.'
+    )
+
+    // Se existir administrador deletado com o email, reativar e atualizar
+    if (usuarioWithEmailDeleted && usuarioWithEmailDeleted.deletadoEm) {
+      const usuario = await this.usuarioRepository.restoreAndUpdateAdmin(
+        usuarioWithEmailDeleted.id,
+        adminData
+      )
+      return toUsuarioResponseDTO(usuario)
+    }
+
+    // Se existir administrador deletado com o telefone, reativar e atualizar
+    if (usuarioWithTelefoneDeleted && usuarioWithTelefoneDeleted.deletadoEm) {
+      const usuario = await this.usuarioRepository.restoreAndUpdateAdmin(
+        usuarioWithTelefoneDeleted.id,
+        adminData
+      )
+      return toUsuarioResponseDTO(usuario)
+    }
+
+    // Criar novo administrador
+    const usuario = await this.usuarioRepository.createAdmin(adminData)
+
+    return toUsuarioResponseDTO(usuario)
   }
 }

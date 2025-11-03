@@ -27,6 +27,7 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -46,6 +47,7 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -63,6 +65,27 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
+          include: { fotos: true }
+        }
+      }
+    })
+  }
+
+  /**
+   * Busca um motorista por telefone incluindo deletados
+   * @param {string} telefone - Telefone do motorista
+   * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<MotoristaCompletions | null> {
+    return await db.motorista.findFirst({
+      where: { telefone },
+      include: {
+        foto: true,
+        veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -80,6 +103,27 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
+          include: { fotos: true }
+        }
+      }
+    })
+  }
+
+  /**
+   * Busca um motorista por email incluindo deletados
+   * @param {string} email - Email do motorista
+   * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<MotoristaCompletions | null> {
+    return await db.motorista.findFirst({
+      where: { email },
+      include: {
+        foto: true,
+        veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -112,6 +156,7 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -144,6 +189,52 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
+          include: { fotos: true }
+        }
+      }
+    })
+  }
+
+  /**
+   * Restaura e atualiza um motorista soft-deleted com novos dados
+   * @param {string} id - ID único do motorista a ser restaurado
+   * @param {MotoristaCreateDTO} data - Novos dados do motorista
+   * @returns {Promise<MotoristaCompletions>} Motorista restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    data: MotoristaCreateDTO
+  ): Promise<MotoristaCompletions> {
+    // Buscar motorista existente para verificar se tem foto
+    const motoristaExistente = await db.motorista.findUnique({
+      where: { id },
+      include: { foto: true }
+    })
+
+    if (!motoristaExistente) {
+      throw new Error('Motorista não encontrado.')
+    }
+
+    // Deletar foto antiga se existir
+    if (motoristaExistente.foto) {
+      await db.foto.delete({
+        where: { id: motoristaExistente.foto.id }
+      })
+    }
+
+    const dataToUpdate = generateDataMotoristaCreate(data)
+
+    return await db.motorista.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
+      include: {
+        foto: true,
+        veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -164,6 +255,7 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
+          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }

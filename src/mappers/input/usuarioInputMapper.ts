@@ -1,6 +1,10 @@
-import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { AdminCreateDTO, UsuarioCreateDTO } from '@/dtos/create'
 import type { UsuarioUpdateDTO } from '@/dtos/update'
-import { createUsuarioSchema, updateUsuarioSchema } from '@/schemas'
+import {
+  createAdminSchema,
+  createUsuarioSchema,
+  updateUsuarioSchema
+} from '@/schemas'
 
 /**
  * - Converte dados não tipados para DTO de criação de usuário
@@ -24,4 +28,15 @@ export async function toUpdateUsuarioDTO(
   data: unknown
 ): Promise<UsuarioUpdateDTO> {
   return await updateUsuarioSchema.parseAsync(data)
+}
+
+/**
+ * - Converte dados não tipados para DTO de criação de administrador
+ * - Aplica validação usando Zod schema e retorna dados tipados e validados
+ * @param {unknown} data - Dados de entrada não tipados (geralmente req.body)
+ * @returns {Promise<AdminCreateDTO>} DTO validado para criação de administrador
+ * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
+ */
+export function toCreateAdminDTO(data: unknown): Promise<AdminCreateDTO> {
+  return createAdminSchema.parseAsync(data)
 }

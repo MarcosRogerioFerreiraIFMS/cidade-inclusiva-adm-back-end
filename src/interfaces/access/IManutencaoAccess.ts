@@ -29,11 +29,29 @@ export interface IManutencaoAccess {
   findByEmail(email: string): Promise<ManutencaoCompletions | null>
 
   /**
+   * Busca uma manutenção por email incluindo deletados
+   * @param {string} email - Email único da manutenção
+   * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
+   */
+  findByEmailIncludingDeleted(
+    email: string
+  ): Promise<ManutencaoCompletions | null>
+
+  /**
    * Busca uma manutenção por telefone
    * @param {string} telefone - Telefone único da manutenção
    * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
    */
   findByTelefone(telefone: string): Promise<ManutencaoCompletions | null>
+
+  /**
+   * Busca uma manutenção por telefone incluindo deletados
+   * @param {string} telefone - Telefone único da manutenção
+   * @returns {Promise<ManutencaoCompletions | null>} Manutenção encontrada ou null
+   */
+  findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<ManutencaoCompletions | null>
 
   /**
    * Atualiza os dados de uma manutenção no banco de dados
@@ -42,6 +60,17 @@ export interface IManutencaoAccess {
    * @returns {Promise<ManutencaoCompletions>} Manutenção atualizada com todas as relações
    */
   update(id: string, data: ManutencaoUpdateDTO): Promise<ManutencaoCompletions>
+
+  /**
+   * Restaura e atualiza uma manutenção soft-deleted
+   * @param {string} id - ID da manutenção a ser restaurada e atualizada
+   * @param {ManutencaoCreateDTO} manutencaoData - Dados da manutenção para atualização
+   * @returns {Promise<ManutencaoCompletions>} Manutenção restaurada e atualizada
+   */
+  restoreAndUpdate(
+    id: string,
+    manutencaoData: ManutencaoCreateDTO
+  ): Promise<ManutencaoCompletions>
 
   /**
    * Remove uma manutenção do banco de dados

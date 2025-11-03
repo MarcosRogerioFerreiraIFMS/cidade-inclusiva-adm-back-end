@@ -60,6 +60,22 @@ export class ProfissionalDAO implements IProfissionalAccess {
   }
 
   /**
+   * Busca um profissional por email incluindo deletados
+   * @param {string} email - Email único do profissional
+   * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<ProfissionalCompletions | null> {
+    return await db.profissional.findFirst({
+      where: { email },
+      include: {
+        foto: true
+      }
+    })
+  }
+
+  /**
    * Busca um profissional por telefone no banco de dados
    * @param {string} telefone - Telefone único do profissional
    * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
@@ -69,6 +85,22 @@ export class ProfissionalDAO implements IProfissionalAccess {
   ): Promise<ProfissionalCompletions | null> {
     return await db.profissional.findFirst({
       where: { telefone, deletadoEm: null },
+      include: {
+        foto: true
+      }
+    })
+  }
+
+  /**
+   * Busca um profissional por telefone incluindo deletados
+   * @param {string} telefone - Telefone único do profissional
+   * @returns {Promise<ProfissionalCompletions | null>} Profissional encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<ProfissionalCompletions | null> {
+    return await db.profissional.findFirst({
+      where: { telefone },
       include: {
         foto: true
       }
@@ -127,6 +159,30 @@ export class ProfissionalDAO implements IProfissionalAccess {
     return await db.profissional.update({
       where: { id },
       data: { deletadoEm: null },
+      include: {
+        foto: true
+      }
+    })
+  }
+
+  /**
+   * Restaura e atualiza um profissional soft-deleted com novos dados
+   * @param {string} id - ID único do profissional a ser restaurado
+   * @param {ProfissionalCreateDTO} data - Novos dados do profissional
+   * @returns {Promise<ProfissionalCompletions>} Profissional restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    data: ProfissionalCreateDTO
+  ): Promise<ProfissionalCompletions> {
+    const dataToUpdate = generateDataProfissionalCreate(data)
+
+    return await db.profissional.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
       include: {
         foto: true
       }

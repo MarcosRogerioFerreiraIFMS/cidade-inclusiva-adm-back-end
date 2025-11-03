@@ -25,6 +25,7 @@ export class ManutencaoService implements IManutencaoService {
   /**
    * Cria uma nova manutenção no sistema:
    * - Valida unicidade de email e telefone antes da criação
+   * - Se existir uma manutenção soft-deleted com mesmo email ou telefone, reativa e atualiza
    * @param {unknown} data - Dados não tipados da manutenção vindos da requisição
    * @returns {Promise<ManutencaoResponseDTO>} Manutenção criada formatada para resposta
    * @throws {HttpError} Quando email ou telefone já existem
@@ -32,23 +33,46 @@ export class ManutencaoService implements IManutencaoService {
   async create(data: unknown): Promise<ManutencaoResponseDTO> {
     const manutencaoData = await toCreateManutencaoDTO(data)
 
-    const [manutencaoWithEmail, manutencaoWithTelefone] = await Promise.all([
+    // Verificar em paralelo manutenções ativas e deletadas com mesmo email ou telefone
+    const [
+      manutencaoWithEmail,
+      manutencaoWithTelefone,
+      deletedByEmail,
+      deletedByTelefone
+    ] = await Promise.all([
       this.manutencaoRepository.findByEmail(manutencaoData.email),
-      this.manutencaoRepository.findByTelefone(manutencaoData.telefone)
+      this.manutencaoRepository.findByTelefone(manutencaoData.telefone),
+      this.manutencaoRepository.findByEmailIncludingDeleted(
+        manutencaoData.email
+      ),
+      this.manutencaoRepository.findByTelefoneIncludingDeleted(
+        manutencaoData.telefone
+      )
     ])
 
-    // Verificar se já existe uma manutenção com o mesmo email
+    // Se existe ativa, lançar erro
     throwIfAlreadyExists(
       manutencaoWithEmail,
       'Já existe uma empresa de manutenção cadastrada com este email.'
     )
 
-    // Verificar se já existe uma manutenção com o mesmo telefone
     throwIfAlreadyExists(
       manutencaoWithTelefone,
       'Já existe uma empresa de manutenção cadastrada com este telefone.'
     )
 
+    // Se existe deletada, reativar e atualizar
+    const deletedManutencao = deletedByEmail || deletedByTelefone
+    if (deletedManutencao) {
+      return toManutencaoResponseDTO(
+        await this.manutencaoRepository.restoreAndUpdate(
+          deletedManutencao.id,
+          manutencaoData
+        )
+      )
+    }
+
+    // Caso contrário, criar nova
     const manutencao = await this.manutencaoRepository.create(manutencaoData)
 
     return toManutencaoResponseDTO(manutencao)
@@ -101,9 +125,10 @@ export class ManutencaoService implements IManutencaoService {
     const updateData = await toUpdateManutencaoDTO(data)
 
     if (updateData.email && updateData.email !== existingManutencao.email) {
-      const manutencaoWithEmail = await this.manutencaoRepository.findByEmail(
-        updateData.email
-      )
+      const manutencaoWithEmail =
+        await this.manutencaoRepository.findByEmailIncludingDeleted(
+          updateData.email
+        )
 
       if (manutencaoWithEmail && manutencaoWithEmail.id !== id) {
         throwIfAlreadyExists(
@@ -118,7 +143,9 @@ export class ManutencaoService implements IManutencaoService {
       updateData.telefone !== existingManutencao.telefone
     ) {
       const manutencaoWithTelefone =
-        await this.manutencaoRepository.findByTelefone(updateData.telefone)
+        await this.manutencaoRepository.findByTelefoneIncludingDeleted(
+          updateData.telefone
+        )
 
       if (manutencaoWithTelefone && manutencaoWithTelefone.id !== id) {
         throwIfAlreadyExists(

@@ -67,6 +67,25 @@ export class VeiculoDAO implements IVeiculoAccess {
   }
 
   /**
+   * Busca um veículo por placa incluindo deletados
+   * @param {string} placa - Placa do veículo
+   * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
+   */
+  async findByPlacaIncludingDeleted(
+    placa: string
+  ): Promise<VeiculoCompletions | null> {
+    return await db.veiculo.findFirst({
+      where: { placa },
+      include: {
+        motorista: {
+          include: { foto: true }
+        },
+        fotos: true
+      }
+    })
+  }
+
+  /**
    * Busca um veículo por ID do motorista no banco de dados
    * @param {string} motoristaId - ID do motorista
    * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
@@ -140,6 +159,52 @@ export class VeiculoDAO implements IVeiculoAccess {
     return await db.veiculo.update({
       where: { id },
       data: { deletadoEm: null },
+      include: {
+        motorista: {
+          include: { foto: true }
+        },
+        fotos: true
+      }
+    })
+  }
+
+  /**
+   * Restaura e atualiza um veículo soft-deleted
+   * @param {string} id - ID do veículo a ser restaurado e atualizado
+   * @param {VeiculoCreateDTO} veiculoData - Dados do veículo para atualização
+   * @returns {Promise<VeiculoCompletions>} Veículo restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    veiculoData: VeiculoCreateDTO
+  ): Promise<VeiculoCompletions> {
+    // Buscar veículo existente para verificar se tem fotos
+    const veiculoExistente = await db.veiculo.findUnique({
+      where: { id },
+      include: { fotos: true }
+    })
+
+    if (!veiculoExistente) {
+      throw new Error('Veículo não encontrado.')
+    }
+
+    // Deletar fotos antigas se existirem
+    if (veiculoExistente.fotos && veiculoExistente.fotos.length > 0) {
+      await db.foto.deleteMany({
+        where: {
+          id: { in: veiculoExistente.fotos.map((foto) => foto.id) }
+        }
+      })
+    }
+
+    const dataToUpdate = generateDataVeiculoCreate(veiculoData)
+
+    return await db.veiculo.update({
+      where: { id },
+      data: {
+        ...dataToUpdate,
+        deletadoEm: null
+      },
       include: {
         motorista: {
           include: { foto: true }

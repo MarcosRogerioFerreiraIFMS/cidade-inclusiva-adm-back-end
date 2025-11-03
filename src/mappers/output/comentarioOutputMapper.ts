@@ -4,22 +4,34 @@ import type { ComentarioCompletions } from '@/types'
 /**
  * - Converte entidade Comentario completa para DTO de resposta
  * - Inclui dados do autor e estatísticas de likes
+ * - Filtra autor se estiver soft-deleted (deletadoEm != null)
+ * - Likes já são filtrados no DAO (apenas usuários ativos)
  * @param {ComentarioCompletions} comentario - Entidade comentario completa do banco de dados
  * @returns {ComentarioResponseDTO} DTO formatado para resposta da API
  */
 export function toComentarioResponseDTO(
   comentario: ComentarioCompletions
 ): ComentarioResponseDTO {
+  // Filtro de segurança: não retornar dados de autor soft-deleted
+  const autorAtivo =
+    comentario.autor.deletadoEm === null ? comentario.autor : null
+
   const response: ComentarioResponseDTO = {
     id: comentario.id,
     conteudo: comentario.conteudo,
     visivel: comentario.visivel,
-    autor: {
-      id: comentario.autor.id,
-      nome: comentario.autor.nome,
-      email: comentario.autor.email,
-      ...(comentario.autor.foto?.url && { fotoUrl: comentario.autor.foto.url })
-    },
+    autor: autorAtivo
+      ? {
+          id: autorAtivo.id,
+          nome: autorAtivo.nome,
+          email: autorAtivo.email,
+          ...(autorAtivo.foto?.url && { fotoUrl: autorAtivo.foto.url })
+        }
+      : {
+          id: '',
+          nome: 'Usuário não disponível',
+          email: ''
+        },
     criadoEm: comentario.criadoEm,
     atualizadoEm: comentario.atualizadoEm,
     totalLikes: comentario.likesUsuarios.length,

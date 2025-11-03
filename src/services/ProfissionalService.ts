@@ -26,20 +26,32 @@ export class ProfissionalService implements IProfissionalService {
   /**
    * Cria um novo profissional no sistema:
    * - Valida unicidade de email e telefone antes da criação
+   * - Se profissional existir e estiver deletado, reativa e atualiza com novos dados
    * @param {unknown} data - Dados do profissional a ser criado
    * @returns {Promise<ProfissionalResponseDTO>} Dados do profissional criado
-   * @throws {HttpError} Erro 409 se email ou telefone já existirem
+   * @throws {HttpError} Erro 409 se email ou telefone já existirem em profissional ativo
    */
   async create(data: unknown): Promise<ProfissionalResponseDTO> {
     const profissionalData = await toCreateProfissionalDTO(data)
 
-    const [profissionalWithEmail, profissionalWithTelefone] = await Promise.all(
-      [
-        this.profissionalRepository.findByEmail(profissionalData.email),
-        this.profissionalRepository.findByTelefone(profissionalData.telefone)
-      ]
-    )
+    // Verificar se já existe profissional com o mesmo email ou telefone (incluindo deletados)
+    const [
+      profissionalWithEmail,
+      profissionalWithTelefone,
+      profissionalWithEmailDeleted,
+      profissionalWithTelefoneDeleted
+    ] = await Promise.all([
+      this.profissionalRepository.findByEmail(profissionalData.email),
+      this.profissionalRepository.findByTelefone(profissionalData.telefone),
+      this.profissionalRepository.findByEmailIncludingDeleted(
+        profissionalData.email
+      ),
+      this.profissionalRepository.findByTelefoneIncludingDeleted(
+        profissionalData.telefone
+      )
+    ])
 
+    // Se existir profissional ativo com email ou telefone, lança erro
     throwIfAlreadyExists(
       profissionalWithEmail,
       'Já existe um profissional cadastrado com este email.'
@@ -50,6 +62,31 @@ export class ProfissionalService implements IProfissionalService {
       'Já existe um profissional cadastrado com este telefone.'
     )
 
+    // Se existir profissional deletado com o email, reativar e atualizar
+    if (
+      profissionalWithEmailDeleted &&
+      profissionalWithEmailDeleted.deletadoEm
+    ) {
+      const profissional = await this.profissionalRepository.restoreAndUpdate(
+        profissionalWithEmailDeleted.id,
+        profissionalData
+      )
+      return toProfissionalResponseDTO(profissional)
+    }
+
+    // Se existir profissional deletado com o telefone, reativar e atualizar
+    if (
+      profissionalWithTelefoneDeleted &&
+      profissionalWithTelefoneDeleted.deletadoEm
+    ) {
+      const profissional = await this.profissionalRepository.restoreAndUpdate(
+        profissionalWithTelefoneDeleted.id,
+        profissionalData
+      )
+      return toProfissionalResponseDTO(profissional)
+    }
+
+    // Criar novo profissional
     const profissional = await this.profissionalRepository.create(
       profissionalData
     )
@@ -92,7 +129,9 @@ export class ProfissionalService implements IProfissionalService {
     // Validar email se está sendo alterado
     if (updateData.email && updateData.email !== existingProfissional.email) {
       const profissionalWithEmail =
-        await this.profissionalRepository.findByEmail(updateData.email)
+        await this.profissionalRepository.findByEmailIncludingDeleted(
+          updateData.email
+        )
 
       if (profissionalWithEmail && profissionalWithEmail.id !== id) {
         throwIfAlreadyExists(
@@ -108,7 +147,9 @@ export class ProfissionalService implements IProfissionalService {
       updateData.telefone !== existingProfissional.telefone
     ) {
       throwIfAlreadyExists(
-        await this.profissionalRepository.findByTelefone(updateData.telefone),
+        await this.profissionalRepository.findByTelefoneIncludingDeleted(
+          updateData.telefone
+        ),
         'Já existe um profissional cadastrado com este telefone.'
       )
     }

@@ -24,6 +24,7 @@ export class VeiculoService implements IVeiculoService {
    * Cria um novo veículo no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
    * - Verifica se já existe veículo com mesma placa
+   * - Se existir um veículo soft-deleted com mesma placa, reativa e atualiza
    * - Verifica se o motorista já possui um veículo (relação 1:1)
    * @param {unknown} data - Dados do veículo a ser criado
    * @returns {Promise<VeiculoResponseDTO>} Dados do veículo criado
@@ -32,18 +33,13 @@ export class VeiculoService implements IVeiculoService {
     const veiculoData = await toCreateVeiculoDTO(data)
 
     // Executa todas as verificações em paralelo
-    const [existingByPlaca, motorista, existingByMotorista] = await Promise.all(
-      [
+    const [existingByPlaca, motorista, existingByMotorista, deletedByPlaca] =
+      await Promise.all([
         this.veiculoRepository.findByPlaca(veiculoData.placa),
         this.motoristaRepository.findById(veiculoData.motoristaId),
-        this.veiculoRepository.findByMotoristaId(veiculoData.motoristaId)
-      ]
-    )
-
-    throwIfAlreadyExists(
-      existingByPlaca,
-      'Já existe um veículo cadastrado com esta placa.'
-    )
+        this.veiculoRepository.findByMotoristaId(veiculoData.motoristaId),
+        this.veiculoRepository.findByPlacaIncludingDeleted(veiculoData.placa)
+      ])
 
     throwIfNotFound(motorista, 'Motorista não encontrado.')
 
@@ -52,6 +48,23 @@ export class VeiculoService implements IVeiculoService {
       'Este motorista já possui um veículo cadastrado.'
     )
 
+    // Se existe ativo, lançar erro
+    throwIfAlreadyExists(
+      existingByPlaca,
+      'Já existe um veículo cadastrado com esta placa.'
+    )
+
+    // Se existe deletado, reativar e atualizar
+    if (deletedByPlaca) {
+      return toVeiculoResponseDTO(
+        await this.veiculoRepository.restoreAndUpdate(
+          deletedByPlaca.id,
+          veiculoData
+        )
+      )
+    }
+
+    // Caso contrário, criar novo
     return toVeiculoResponseDTO(
       await this.veiculoRepository.create(veiculoData)
     )
@@ -91,9 +104,10 @@ export class VeiculoService implements IVeiculoService {
 
     // Se a placa está sendo atualizada, verificar se já existe
     if (updateData.placa) {
-      const existingByPlaca = await this.veiculoRepository.findByPlaca(
-        updateData.placa
-      )
+      const existingByPlaca =
+        await this.veiculoRepository.findByPlacaIncludingDeleted(
+          updateData.placa
+        )
       if (existingByPlaca && existingByPlaca.id !== id) {
         throwIfAlreadyExists(
           existingByPlaca,

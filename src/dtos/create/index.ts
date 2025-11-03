@@ -1,4 +1,5 @@
 export * from './AcessibilidadeUrbanaCreateDTO'
+export * from './AdminCreateDTO'
 export * from './ComentarioCreateDTO'
 export * from './LikeCreateDTO'
 export * from './LoginCreateDTO'

@@ -46,4 +46,11 @@ export interface IUsuarioService {
    * @returns {Promise<UsuarioResponseDTO[]>} Lista de usuários
    */
   findAll(): Promise<UsuarioResponseDTO[]>
+
+  /**
+   * Cria um novo administrador no sistema
+   * @param {unknown} data - Dados não tipados do administrador
+   * @returns {Promise<UsuarioResponseDTO>} Administrador criado formatado para resposta
+   */
+  createAdmin(data: unknown): Promise<UsuarioResponseDTO>
 }

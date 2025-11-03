@@ -29,6 +29,13 @@ export interface IVeiculoAccess {
   findByPlaca(placa: string): Promise<VeiculoCompletions | null>
 
   /**
+   * Busca um veículo por placa incluindo deletados
+   * @param placa - Placa do veículo
+   * @returns Promise com o veículo encontrado ou null se não existir
+   */
+  findByPlacaIncludingDeleted(placa: string): Promise<VeiculoCompletions | null>
+
+  /**
    * Busca um veículo por ID do motorista
    * @param motoristaId - ID do motorista
    * @returns Promise com o veículo encontrado ou null se não existir
@@ -48,6 +55,17 @@ export interface IVeiculoAccess {
    * @returns Promise com o veículo atualizado
    */
   update(id: string, data: VeiculoUpdateDTO): Promise<VeiculoCompletions>
+
+  /**
+   * Restaura e atualiza um veículo soft-deleted
+   * @param id - ID do veículo a ser restaurado e atualizado
+   * @param veiculoData - Dados do veículo para atualização
+   * @returns Promise com o veículo restaurado e atualizado
+   */
+  restoreAndUpdate(
+    id: string,
+    veiculoData: VeiculoCreateDTO
+  ): Promise<VeiculoCompletions>
 
   /**
    * Remove um veículo do sistema

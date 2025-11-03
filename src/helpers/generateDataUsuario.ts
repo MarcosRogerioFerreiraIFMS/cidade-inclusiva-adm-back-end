@@ -29,18 +29,30 @@ export async function generateDataUsuarioCreate({
     foto: generateDataFotoUsuarioCreate(foto),
     email,
     senha: hashedPassword,
-    endereco: {
-      create: {
-        logradouro: endereco.logradouro,
-        numero: endereco.numero,
-        complemento: endereco.complemento ?? null,
-        cidade: endereco.cidade,
-        bairro: endereco.bairro,
-        cep: endereco.cep,
-        estado: endereco.estado,
-        pais: endereco.pais ?? 'Brasil'
-      }
-    }
+    endereco: endereco
+      ? {
+          create: {
+            logradouro: endereco.logradouro,
+            numero: endereco.numero,
+            complemento: endereco.complemento ?? null,
+            cidade: endereco.cidade,
+            bairro: endereco.bairro,
+            cep: endereco.cep,
+            estado: endereco.estado,
+            pais: endereco.pais ?? 'Brasil'
+          }
+        }
+      : {
+          create: {
+            logradouro: 'N/A',
+            numero: 'N/A',
+            cidade: 'N/A',
+            bairro: 'N/A',
+            cep: '00000000',
+            estado: 'N/A',
+            pais: 'Brasil'
+          }
+        }
   }
 }
 

@@ -94,3 +94,17 @@ export const createUsuarioSchema = z.object({
 export const updateUsuarioSchema = createUsuarioSchema.partial().extend({
   endereco: createUsuarioSchema.shape.endereco.partial().optional()
 })
+
+/**
+ * - Schema de validação Zod para criação de administrador
+ * - Inclui todos os campos do usuário (foto e endereço são opcionais)
+ * - Usado apenas por outros administradores
+ */
+export const createAdminSchema = z.object({
+  nome: createUsuarioSchema.shape.nome,
+  telefone: createUsuarioSchema.shape.telefone,
+  email: createUsuarioSchema.shape.email,
+  senha: createUsuarioSchema.shape.senha,
+  foto: createUsuarioSchema.shape.foto,
+  endereco: createUsuarioSchema.shape.endereco.optional()
+})

@@ -27,6 +27,17 @@ UsuarioRoutes.post(
 )
 
 /**
+ * POST /usuarios/admin
+ * Endpoint para criação de novos administradores (requer admin)
+ */
+UsuarioRoutes.post(
+  '/admin',
+  adminOperationsRateLimit,
+  ...usuarioOperations.createAdmin,
+  UsuarioDependencies.controller.createAdmin
+)
+
+/**
  * GET /usuarios
  * Endpoint para listagem de todos os usuários (requer admin)
  */

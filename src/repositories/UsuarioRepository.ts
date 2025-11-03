@@ -1,4 +1,4 @@
-import type { UsuarioCreateDTO } from '@/dtos/create'
+import type { AdminCreateDTO, UsuarioCreateDTO } from '@/dtos/create'
 import type { UsuarioUpdateDTO } from '@/dtos/update'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { UsuarioCompletions } from '@/types'
@@ -28,6 +28,15 @@ export class UsuarioRepository implements IUsuarioAccess {
   }
 
   /**
+   * Cria um novo administrador
+   * @param {AdminCreateDTO} data - Dados do administrador a ser criado
+   * @returns {Promise<UsuarioCompletions>} Administrador criado com todas as relações
+   */
+  async createAdmin(data: AdminCreateDTO): Promise<UsuarioCompletions> {
+    return await this.dao.createAdmin(data)
+  }
+
+  /**
    * Busca um usuário por ID
    * @param {string} id - ID único do usuário
    * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
@@ -46,12 +55,34 @@ export class UsuarioRepository implements IUsuarioAccess {
   }
 
   /**
+   * Busca um usuário por email incluindo deletados
+   * @param {string} email - Email do usuário
+   * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<UsuarioCompletions | null> {
+    return await this.dao.findByEmailIncludingDeleted(email)
+  }
+
+  /**
    * Busca um usuário por telefone
    * @param {string} telefone - Telefone do usuário
    * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
    */
   async findByTelefone(telefone: string): Promise<UsuarioCompletions | null> {
     return await this.dao.findByTelefone(telefone)
+  }
+
+  /**
+   * Busca um usuário por telefone incluindo deletados
+   * @param {string} telefone - Telefone do usuário
+   * @returns {Promise<UsuarioCompletions | null>} Usuário encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<UsuarioCompletions | null> {
+    return await this.dao.findByTelefoneIncludingDeleted(telefone)
   }
 
   /**
@@ -83,6 +114,32 @@ export class UsuarioRepository implements IUsuarioAccess {
    */
   async restore(id: string): Promise<UsuarioCompletions> {
     return await this.dao.restore(id)
+  }
+
+  /**
+   * Restaura e atualiza um usuário soft-deleted com novos dados
+   * @param {string} id - ID único do usuário a ser restaurado
+   * @param {UsuarioCreateDTO} data - Novos dados do usuário
+   * @returns {Promise<UsuarioCompletions>} Usuário restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    data: UsuarioCreateDTO
+  ): Promise<UsuarioCompletions> {
+    return await this.dao.restoreAndUpdate(id, data)
+  }
+
+  /**
+   * Restaura e atualiza um administrador soft-deleted com novos dados
+   * @param {string} id - ID único do administrador a ser restaurado
+   * @param {AdminCreateDTO} data - Novos dados do administrador
+   * @returns {Promise<UsuarioCompletions>} Administrador restaurado e atualizado
+   */
+  async restoreAndUpdateAdmin(
+    id: string,
+    data: AdminCreateDTO
+  ): Promise<UsuarioCompletions> {
+    return await this.dao.restoreAndUpdateAdmin(id, data)
   }
 
   /**

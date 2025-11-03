@@ -6,25 +6,38 @@ import { toFotoResponseDTO, toFotosResponseDTO } from './fotoOutputMappers'
 /**
  * - Converte entidade Veiculo completa para DTO de resposta
  * - Formata campos opcionais e aplica transformações de apresentação
+ * - Filtra motorista se estiver soft-deleted (deletadoEm != null)
  * @param {VeiculoCompletions} veiculo - Entidade veiculo completa do banco de dados
  * @returns {VeiculoResponseDTO} DTO formatado para resposta da API
  */
 export function toVeiculoResponseDTO(
   veiculo: VeiculoCompletions
 ): VeiculoResponseDTO {
+  // Filtro de segurança: não retornar dados de motorista soft-deleted
+  const motoristaAtivo =
+    veiculo.motorista.deletadoEm === null ? veiculo.motorista : null
+
   return {
     id: veiculo.id,
     placa: formatPlaca(veiculo.placa),
     marca: veiculo.marca,
     modelo: veiculo.modelo,
     cor: veiculo.cor,
-    motorista: {
-      id: veiculo.motorista.id,
-      nome: veiculo.motorista.nome,
-      telefone: formatPhoneNumber(veiculo.motorista.telefone),
-      email: veiculo.motorista.email,
-      foto: toFotoResponseDTO(veiculo.motorista.foto)
-    },
+    motorista: motoristaAtivo
+      ? {
+          id: motoristaAtivo.id,
+          nome: motoristaAtivo.nome,
+          telefone: formatPhoneNumber(motoristaAtivo.telefone),
+          email: motoristaAtivo.email,
+          foto: toFotoResponseDTO(motoristaAtivo.foto)
+        }
+      : {
+          id: '',
+          nome: 'Motorista não disponível',
+          telefone: '',
+          email: '',
+          foto: undefined
+        },
     fotos: toFotosResponseDTO(veiculo.fotos),
     criadoEm: veiculo.criadoEm,
     atualizadoEm: veiculo.atualizadoEm

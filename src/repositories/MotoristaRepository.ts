@@ -48,12 +48,34 @@ export class MotoristaRepository implements IMotoristaAccess {
   }
 
   /**
+   * Busca um motorista por telefone incluindo deletados
+   * @param {string} telefone - Telefone do motorista
+   * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
+   */
+  async findByTelefoneIncludingDeleted(
+    telefone: string
+  ): Promise<MotoristaCompletions | null> {
+    return await this.dao.findByTelefoneIncludingDeleted(telefone)
+  }
+
+  /**
    * Busca um motorista por email
    * @param {string} email - Email do motorista
    * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
    */
   async findByEmail(email: string): Promise<MotoristaCompletions | null> {
     return await this.dao.findByEmail(email)
+  }
+
+  /**
+   * Busca um motorista por email incluindo deletados
+   * @param {string} email - Email do motorista
+   * @returns {Promise<MotoristaCompletions | null>} Motorista encontrado ou null
+   */
+  async findByEmailIncludingDeleted(
+    email: string
+  ): Promise<MotoristaCompletions | null> {
+    return await this.dao.findByEmailIncludingDeleted(email)
   }
 
   /**
@@ -67,6 +89,19 @@ export class MotoristaRepository implements IMotoristaAccess {
     data: MotoristaUpdateDTO
   ): Promise<MotoristaCompletions> {
     return await this.dao.update(id, data)
+  }
+
+  /**
+   * Restaura e atualiza um motorista soft-deleted
+   * @param {string} id - ID do motorista a ser restaurado e atualizado
+   * @param {MotoristaCreateDTO} motoristaData - Dados do motorista para atualização
+   * @returns {Promise<MotoristaCompletions>} Motorista restaurado e atualizado
+   */
+  async restoreAndUpdate(
+    id: string,
+    motoristaData: MotoristaCreateDTO
+  ): Promise<MotoristaCompletions> {
+    return await this.dao.restoreAndUpdate(id, motoristaData)
   }
 
   /**

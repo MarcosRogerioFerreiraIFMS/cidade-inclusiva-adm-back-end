@@ -25,7 +25,13 @@ export class ComentarioDAO implements IComentarioAccess {
     const dataToCreate = generateDataComentarioCreate(data)
     return await db.comentario.create({
       data: dataToCreate,
-      include: { autor: { include: { foto: true } }, likesUsuarios: true }
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      }
     })
   }
 
@@ -38,7 +44,13 @@ export class ComentarioDAO implements IComentarioAccess {
   async findById(id: string): Promise<ComentarioCompletions | null> {
     return await db.comentario.findFirst({
       where: { id, deletadoEm: null },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true }
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      }
     })
   }
 
@@ -63,7 +75,13 @@ export class ComentarioDAO implements IComentarioAccess {
     const dataToUpdate = generateDataComentarioUpdate(data)
     return await db.comentario.update({
       where: { id },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
       data: dataToUpdate
     })
   }
@@ -89,7 +107,13 @@ export class ComentarioDAO implements IComentarioAccess {
     return await db.comentario.update({
       where: { id },
       data: { deletadoEm: null },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true }
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      }
     })
   }
 
@@ -124,7 +148,13 @@ export class ComentarioDAO implements IComentarioAccess {
         deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
       orderBy: { criadoEm: 'desc' }
     })
   }
@@ -145,7 +175,13 @@ export class ComentarioDAO implements IComentarioAccess {
         deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
       orderBy: { criadoEm: 'desc' }
     })
   }
@@ -166,7 +202,13 @@ export class ComentarioDAO implements IComentarioAccess {
         deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
       orderBy: { criadoEm: 'desc' }
     })
   }
@@ -187,7 +229,13 @@ export class ComentarioDAO implements IComentarioAccess {
         deletadoEm: null,
         ...(includeInvisible ? {} : { visivel: true })
       },
-      include: { autor: { include: { foto: true } }, likesUsuarios: true },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
       orderBy: { criadoEm: 'desc' }
     })
   }

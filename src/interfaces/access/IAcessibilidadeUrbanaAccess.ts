@@ -35,6 +35,17 @@ export interface IAcessibilidadeUrbanaAccess {
   ): Promise<AcessibilidadeUrbanaCompletions>
 
   /**
+   * Restaura e atualiza uma acessibilidade urbana soft-deleted
+   * @param {string} id - ID da acessibilidade urbana a ser restaurada e atualizada
+   * @param {AcessibilidadeUrbanaCreateDTO} acessibilidadeData - Dados da acessibilidade para atualização
+   * @returns {Promise<AcessibilidadeUrbanaCompletions>} Acessibilidade urbana restaurada e atualizada
+   */
+  restoreAndUpdate(
+    id: string,
+    acessibilidadeData: AcessibilidadeUrbanaCreateDTO
+  ): Promise<AcessibilidadeUrbanaCompletions>
+
+  /**
    * Remove uma acessibilidade urbana
    * @param {string} id - ID único da acessibilidade urbana
    * @returns {Promise<void>}
@@ -62,11 +73,29 @@ export interface IAcessibilidadeUrbanaAccess {
   findByEmail(email: string): Promise<AcessibilidadeUrbanaCompletions | null>
 
   /**
+   * Busca acessibilidade urbana por email incluindo deletados
+   * @param {string} email - Email da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  findByEmailIncludingDeleted(
+    email: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null>
+
+  /**
    * Busca acessibilidade urbana por telefone
    * @param {string} telefone - Telefone da acessibilidade urbana
    * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
    */
   findByTelefone(
+    telefone: string
+  ): Promise<AcessibilidadeUrbanaCompletions | null>
+
+  /**
+   * Busca acessibilidade urbana por telefone incluindo deletados
+   * @param {string} telefone - Telefone da acessibilidade urbana
+   * @returns {Promise<AcessibilidadeUrbanaCompletions | null>} Acessibilidade urbana encontrada ou null
+   */
+  findByTelefoneIncludingDeleted(
     telefone: string
   ): Promise<AcessibilidadeUrbanaCompletions | null>
 

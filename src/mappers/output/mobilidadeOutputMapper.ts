@@ -4,12 +4,19 @@ import type { MobilidadeCompletions } from '@/types'
 /**
  * - Converte entidade Mobilidade completa para DTO de resposta
  * - Formata campos opcionais e aplica transformações de apresentação
+ * - Filtra usuario se estiver soft-deleted (deletadoEm != null)
  * @param {MobilidadeCompletions} mobilidade - Entidade mobilidade completa do banco de dados
  * @returns {MobilidadeResponseDTO} DTO formatado para resposta da API
  */
 export function toMobilidadeResponseDTO(
   mobilidade: MobilidadeCompletions
 ): MobilidadeResponseDTO {
+  // Filtro de segurança: não retornar dados de usuário soft-deleted
+  const usuarioAtivo =
+    mobilidade.usuario && mobilidade.usuario.deletadoEm === null
+      ? mobilidade.usuario
+      : null
+
   return {
     id: mobilidade.id,
     latitude: mobilidade.latitude,
@@ -20,11 +27,11 @@ export function toMobilidadeResponseDTO(
     usuarioId: mobilidade.usuarioId ?? undefined,
     criadoEm: mobilidade.criadoEm,
     atualizadoEm: mobilidade.atualizadoEm,
-    usuario: mobilidade.usuario
+    usuario: usuarioAtivo
       ? {
-          id: mobilidade.usuario.id,
-          nome: mobilidade.usuario.nome,
-          email: mobilidade.usuario.email
+          id: usuarioAtivo.id,
+          nome: usuarioAtivo.nome,
+          email: usuarioAtivo.email
         }
       : undefined
   }

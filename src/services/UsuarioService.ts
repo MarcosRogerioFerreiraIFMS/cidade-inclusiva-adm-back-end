@@ -1,4 +1,5 @@
 import type { UsuarioResponseDTO } from '@/dtos/response'
+import { HttpStatusCode, TipoUsuario } from '@/enums'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { IUsuarioService } from '@/interfaces/services'
 import {
@@ -7,7 +8,7 @@ import {
   toUpdateUsuarioDTO
 } from '@/mappers/input'
 import { toUsuarioResponseDTO, toUsuariosResponseDTO } from '@/mappers/output'
-import { throwIfAlreadyExists, throwIfNotFound } from '@/utils'
+import { HttpError, throwIfAlreadyExists, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio de usuários:
@@ -162,12 +163,24 @@ export class UsuarioService implements IUsuarioService {
    * @param {string} id - ID único do usuário a ser removido
    * @returns {Promise<void>}
    * @throws {HttpError} Quando o usuário não é encontrado
+   * @throws {HttpError} Quando é o último administrador do sistema
    */
   async delete(id: string): Promise<void> {
-    throwIfNotFound(
+    const usuario = throwIfNotFound(
       await this.usuarioRepository.findById(id),
       'Usuário não encontrado'
     )
+
+    if (usuario.tipo === TipoUsuario.ADMIN) {
+      const activeAdminsCount = await this.usuarioRepository.countActiveAdmins()
+
+      if (activeAdminsCount <= 1) {
+        throw new HttpError(
+          'Não é possível excluir o último administrador do sistema.',
+          HttpStatusCode.BAD_REQUEST
+        )
+      }
+    }
 
     await this.usuarioRepository.delete(id)
   }

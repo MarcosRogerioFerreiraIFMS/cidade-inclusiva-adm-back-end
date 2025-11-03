@@ -1,6 +1,7 @@
 import { db } from '@/database/prisma'
 import type { AdminCreateDTO, UsuarioCreateDTO } from '@/dtos/create'
 import type { UsuarioUpdateDTO } from '@/dtos/update'
+import { TipoUsuario } from '@/enums'
 import {
   generateDataAdminCreate,
   generateDataUsuarioCreate,
@@ -224,6 +225,16 @@ export class UsuarioDAO implements IUsuarioAccess {
       where: { deletadoEm: null },
       orderBy: { criadoEm: 'desc' },
       include: { endereco: true, foto: true }
+    })
+  }
+
+  /**
+   * Conta quantos administradores ativos existem no sistema
+   * @returns {Promise<number>} Número de administradores ativos
+   */
+  async countActiveAdmins(): Promise<number> {
+    return await db.usuario.count({
+      where: { tipo: TipoUsuario.ADMIN, deletadoEm: null }
     })
   }
 }

@@ -149,4 +149,12 @@ export class UsuarioRepository implements IUsuarioAccess {
   async findAll(): Promise<UsuarioCompletions[]> {
     return await this.dao.findAll()
   }
+
+  /**
+   * Conta quantos administradores ativos existem no sistema
+   * @returns {Promise<number>} Número de administradores ativos
+   */
+  async countActiveAdmins(): Promise<number> {
+    return await this.dao.countActiveAdmins()
+  }
 }

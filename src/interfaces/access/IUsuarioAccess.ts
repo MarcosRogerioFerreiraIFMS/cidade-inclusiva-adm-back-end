@@ -107,4 +107,10 @@ export interface IUsuarioAccess {
    * @returns {Promise<UsuarioCompletions[]>} Lista de usuários com todas as relações
    */
   findAll(): Promise<UsuarioCompletions[]>
+
+  /**
+   * Conta quantos administradores ativos existem no sistema
+   * @returns {Promise<number>} Número de administradores ativos
+   */
+  countActiveAdmins(): Promise<number>
 }

@@ -2,7 +2,6 @@ import {
   sanitizeString,
   sanitizeTelefone,
   validateBrazilianCellPhone,
-  validatePersonName,
   validateStrongPassword
 } from '@/utils'
 import { z } from 'zod'
@@ -26,19 +25,7 @@ export const createUsuarioSchema = z.object({
       required_error: 'O nome é obrigatório.',
       invalid_type_error: 'O nome deve ser uma string.'
     })
-    .transform(sanitizeString)
-    .refine(
-      (val) => {
-        const validation = validatePersonName(val)
-        return validation.isValid
-      },
-      (val) => {
-        const validation = validatePersonName(val)
-        return {
-          message: `Erro no nome: ${validation.errors.join(', ')}.`
-        }
-      }
-    ),
+    .transform(sanitizeString),
 
   telefone: z
     .string({

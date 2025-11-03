@@ -257,52 +257,6 @@ export const validateStrongPassword = (
 }
 
 /**
- * Valida formato e estrutura de nome de pessoa
- * @param {string} name - Nome a ser validado
- * @returns {Object} Objeto com isValid (boolean) e errors (string[])
- */
-export const validatePersonName = (
-  name: string
-): {
-  isValid: boolean
-  errors: string[]
-} => {
-  const errors: string[] = []
-  const trimmedName = name.trim()
-
-  if (trimmedName.length < 2) {
-    errors.push('Deve ter pelo menos 2 caracteres')
-  }
-
-  if (trimmedName.length > 100) {
-    errors.push('Deve ter no máximo 100 caracteres')
-  }
-
-  if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(trimmedName)) {
-    errors.push('Deve conter apenas letras e espaços')
-  }
-
-  const words = trimmedName.split(/\s+/).filter((word) => word.length > 0)
-  if (words.length < 2) {
-    errors.push('Deve conter pelo menos nome e sobrenome')
-  }
-
-  const connectors = ['de', 'da', 'do', 'dos', 'das', 'e']
-  const invalidWords = words.filter(
-    (word) => word.length < 2 && !connectors.includes(word.toLowerCase())
-  )
-
-  if (invalidWords.length > 0) {
-    errors.push('Cada parte do nome deve ter pelo menos 2 caracteres')
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors
-  }
-}
-
-/**
  * Valida se o domínio de um email é confiável
  * @param {string} email - Email a ser validado
  * @returns {boolean} True se o domínio for confiável, false caso contrário

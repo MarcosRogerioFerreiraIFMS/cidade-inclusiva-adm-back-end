@@ -10,6 +10,7 @@ import type { Prisma } from '@prisma/client'
  */
 export const generateDataComentarioCreate = ({
   conteudo,
+  nota,
   usuarioId,
   profissionalId,
   motoristaId,
@@ -18,6 +19,7 @@ export const generateDataComentarioCreate = ({
 }: ComentarioCreateRelationalDTO): Prisma.ComentarioCreateInput => {
   return {
     conteudo,
+    nota,
     visivel: true,
     autor: {
       connect: {
@@ -64,12 +66,17 @@ export const generateDataComentarioCreate = ({
  */
 export const generateDataComentarioUpdate = ({
   conteudo,
+  nota,
   visivel
 }: ComentarioUpdateDTO): Prisma.ComentarioUpdateInput => {
   const dataToUpdate: Prisma.ComentarioUpdateInput = {}
 
   if (conteudo !== undefined) {
     dataToUpdate.conteudo = conteudo
+  }
+
+  if (nota !== undefined) {
+    dataToUpdate.nota = nota
   }
 
   if (visivel !== undefined) {

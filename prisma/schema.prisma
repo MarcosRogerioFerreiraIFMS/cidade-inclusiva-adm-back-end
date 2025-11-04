@@ -78,6 +78,7 @@ model Endereco {
 model Comentario {
   id           String    @id @default(uuid())
   conteudo     String
+  nota         Int
   visivel      Boolean   @default(true)
   autorId      String
   criadoEm     DateTime  @default(now())

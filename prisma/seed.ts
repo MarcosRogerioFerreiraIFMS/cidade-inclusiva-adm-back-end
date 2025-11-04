@@ -1091,6 +1091,7 @@ async function main() {
 
       return {
         conteudo: faker.helpers.arrayElement(comentariosTemplate),
+        nota: faker.number.int({ min: 1, max: 5 }),
         visivel: true,
         autor: {
           connect: {
@@ -2113,6 +2114,7 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosMotorista),
+            nota: faker.number.int({ min: 1, max: 5 }),
             autor: { connect: { id: usuarioAleatorio.id } },
             motorista: { connect: { id: motorista.id } },
             visivel: true,
@@ -2148,6 +2150,7 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosManutencao),
+            nota: faker.number.int({ min: 1, max: 5 }),
             autor: { connect: { id: usuarioAleatorio.id } },
             manutencao: { connect: { id: manutencao.id } },
             visivel: true,
@@ -2183,6 +2186,7 @@ async function main() {
         const comentario = await prisma.comentario.create({
           data: {
             conteudo: faker.helpers.arrayElement(comentariosAcessibilidade),
+            nota: faker.number.int({ min: 1, max: 5 }),
             autor: { connect: { id: usuarioAleatorio.id } },
             acessibilidadeUrbana: { connect: { id: acessibilidade.id } },
             visivel: true,

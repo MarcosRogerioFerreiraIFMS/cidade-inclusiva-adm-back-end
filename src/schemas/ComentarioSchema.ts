@@ -32,6 +32,15 @@ export const createComentarioSchema = z.object({
       message: 'O conteúdo deve conter pelo menos um caractere não nulo.'
     }),
 
+  nota: z
+    .number({
+      required_error: 'A nota é obrigatória.',
+      invalid_type_error: 'A nota deve ser um número.'
+    })
+    .int('A nota deve ser um número inteiro.')
+    .min(1, 'A nota deve ser no mínimo 1.')
+    .max(5, 'A nota deve ser no máximo 5.'),
+
   usuarioId: z.string().uuid(),
 
   tipoEntidade: z
@@ -56,15 +65,17 @@ export const createComentarioSchema = z.object({
 
 /**
  * - Schema de validação Zod para atualização de comentário
- * - Permite atualização apenas dos campos conteúdo e visibilidade
+ * - Permite atualização apenas dos campos conteúdo, nota e visibilidade
  * - Todos os campos são opcionais para atualizações parciais
  */
 export const updateComentarioSchema = createComentarioSchema
   .pick({
-    conteudo: true
+    conteudo: true,
+    nota: true
   })
   .extend({
     conteudo: createComentarioSchema.shape.conteudo.optional(),
+    nota: createComentarioSchema.shape.nota.optional(),
     visivel: z
       .boolean({
         invalid_type_error:

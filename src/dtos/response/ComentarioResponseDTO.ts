@@ -8,6 +8,8 @@ export interface ComentarioResponseDTO {
   id: string
   /** Conteúdo do comentário */
   conteudo: string
+  /** Nota de avaliação (1 a 5 estrelas) */
+  nota: number
   /** Indica se o comentário está visível publicamente */
   visivel: boolean
   /** Dados do autor do comentário */

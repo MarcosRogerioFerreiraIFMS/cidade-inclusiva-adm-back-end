@@ -19,6 +19,7 @@ export function toComentarioResponseDTO(
   const response: ComentarioResponseDTO = {
     id: comentario.id,
     conteudo: comentario.conteudo,
+    nota: comentario.nota,
     visivel: comentario.visivel,
     autor: autorAtivo
       ? {

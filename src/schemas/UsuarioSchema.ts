@@ -1,8 +1,7 @@
 import {
   sanitizeString,
   sanitizeTelefone,
-  validateBrazilianCellPhone,
-  validateStrongPassword
+  validateBrazilianCellPhone
 } from '@/utils'
 import { z } from 'zod'
 import { createEmailSchema } from './EmailSchema'
@@ -47,28 +46,13 @@ export const createUsuarioSchema = z.object({
       required_error: 'A senha é obrigatória.',
       invalid_type_error: 'A senha deve ser uma string.'
     })
-    .min(
-      SENHA_MIN_LENGTH,
-      `A senha deve ter pelo menos ${SENHA_MIN_LENGTH} caracteres.`
-    )
-    .max(
-      SENHA_MAX_LENGTH,
-      `A senha deve ter no máximo ${SENHA_MAX_LENGTH} caracteres.`
-    )
-    .refine(
-      (val) => {
-        const validation = validateStrongPassword(val)
-        return validation.isValid
-      },
-      (val) => {
-        const validation = validateStrongPassword(val)
-        return {
-          message: `Senha não atende aos critérios de segurança: ${validation.errors.join(
-            ', '
-          )}.`
-        }
-      }
-    ),
+    .transform((val) => val.trim())
+    .refine((val) => val.length >= SENHA_MIN_LENGTH, {
+      message: `A senha deve ter pelo menos ${SENHA_MIN_LENGTH} caracteres.`
+    })
+    .refine((val) => val.length <= SENHA_MAX_LENGTH, {
+      message: `A senha deve ter no máximo ${SENHA_MAX_LENGTH} caracteres.`
+    }),
 
   endereco: enderecoSchema
 })

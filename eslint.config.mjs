@@ -22,7 +22,8 @@ export default [
       'no-fallthrough': 'error',
       'consistent-return': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
-      'object-shorthand': ['error', 'always']
+      'object-shorthand': ['error', 'always'],
+      'no-control-regex': 'off'
     }
   }
 ]

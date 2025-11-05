@@ -96,7 +96,6 @@ export const sanitizeContent = (input: string): string => {
     .replace(/&[a-zA-Z#0-9]+;/g, ' ')
 
     // Remove caracteres de controle invisíveis (exceto \n e \t)
-    // eslint-disable-next-line no-control-regex
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, '')
 
     // Remove caracteres bidirecionais Unicode maliciosos

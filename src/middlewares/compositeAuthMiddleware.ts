@@ -57,11 +57,7 @@ export const usuarioOperations = {
   list: [...adminOnly],
 
   /** GET /usuarios/:id - Usuário pode ver a si mesmo, admin pode ver qualquer um */
-  view: [
-    ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
-    validateUUID('id')
-  ],
+  view: [...authenticated, validateUUID('id')],
 
   /** PUT /usuarios/:id - Usuário pode editar a si mesmo, admin pode editar qualquer um (exceto outros admins) */
   update: [

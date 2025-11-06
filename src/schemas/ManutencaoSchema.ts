@@ -1,12 +1,13 @@
-import {
-  sanitizeString,
-  sanitizeTelefone,
-  validateBrazilianCellPhone
-} from '@/utils'
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
-import { createEmailSchema } from './EmailSchema'
-import { enderecoSchema } from './EnderecoSchema'
-import { fotosArraySchema, logoSchema } from './FotoSchemas'
+import {
+  emailSchema,
+  enderecoSchema,
+  fotosArraySchema,
+  logoSchema,
+  nomeSchema,
+  telefoneSchema
+} from './CommonSchemas'
 
 /**
  * Schema reutilizável para validação de especialidade
@@ -34,25 +35,11 @@ const especialidadeSchema = z
  * - Inclui validações específicas para dados brasileiros (CEP, telefone, estados)
  */
 export const createManutencaoSchema = z.object({
-  nome: z
-    .string({
-      required_error: 'O nome da empresa é obrigatório.',
-      invalid_type_error: 'O nome deve ser uma string.'
-    })
-    .transform(sanitizeString),
+  nome: nomeSchema,
 
-  telefone: z
-    .string({
-      required_error: 'O telefone é obrigatório.',
-      invalid_type_error: 'O telefone deve ser uma string.'
-    })
-    .transform((val) => sanitizeTelefone(val.trim()))
-    .refine((val) => validateBrazilianCellPhone(val), {
-      message:
-        'O telefone deve ser um celular brasileiro válido (11 dígitos com DDD válido e iniciado por 9).'
-    }),
+  telefone: telefoneSchema,
 
-  email: createEmailSchema,
+  email: emailSchema,
 
   fotos: fotosArraySchema,
 

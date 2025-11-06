@@ -1,19 +1,15 @@
 import { CategoriaAcessibilidadeUrbana, SimboloAcessibilidade } from '@/enums'
-import {
-  isValidEmail,
-  normalizeEmail,
-  sanitizeContent,
-  sanitizeString,
-  sanitizeTelefone
-} from '@/utils'
+import { sanitizeContent } from '@/utils'
 import { z } from 'zod'
-import { enderecoSchema } from './EnderecoSchema'
-import { fotosArraySchema, logoSchema } from './FotoSchemas'
+import {
+  emailSchema,
+  enderecoSchema,
+  fotosArraySchema,
+  logoSchema,
+  nomeSchema,
+  telefoneSchema
+} from './CommonSchemas'
 
-/** Comprimento mínimo permitido para nome de estabelecimento */
-const NOME_MIN_LENGTH = 2
-/** Comprimento máximo permitido para nome de estabelecimento */
-const NOME_MAX_LENGTH = 100
 /** Comprimento mínimo permitido para descrição de recurso */
 const DESCRICAO_MIN_LENGTH = 3
 /** Comprimento máximo permitido para descrição de recurso */
@@ -74,45 +70,11 @@ export const acessibilidadeUrbanaRecursoSchema = z.object({
  * - Inclui validações para e-mail, telefone, categoria e recursos
  */
 export const createAcessibilidadeUrbanaSchema = z.object({
-  nome: z
-    .string({
-      required_error: 'O nome é obrigatório.',
-      invalid_type_error: 'O nome deve ser uma string.'
-    })
-    .transform(sanitizeString)
-    .refine((val) => val.length >= NOME_MIN_LENGTH, {
-      message: `O nome deve ter pelo menos ${NOME_MIN_LENGTH} caracteres.`
-    })
-    .refine((val) => val.length <= NOME_MAX_LENGTH, {
-      message: `O nome deve ter no máximo ${NOME_MAX_LENGTH} caracteres.`
-    }),
+  nome: nomeSchema,
 
-  telefone: z
-    .string({
-      required_error: 'O telefone é obrigatório.',
-      invalid_type_error: 'O telefone deve ser uma string.'
-    })
-    .transform((val) => sanitizeTelefone(val.trim()))
-    .refine((val) => val.length >= 10, {
-      message: 'O telefone deve ter pelo menos 10 dígitos.'
-    })
-    .refine((val) => val.length <= 11, {
-      message: 'O telefone deve ter no máximo 11 dígitos.'
-    })
-    .refine((val) => /^\d+$/.test(val), {
-      message: 'O telefone deve conter apenas números.'
-    }),
+  telefone: telefoneSchema,
 
-  email: z
-    .string({
-      required_error: 'O e-mail é obrigatório.',
-      invalid_type_error: 'O e-mail deve ser uma string.'
-    })
-    .min(1, 'O e-mail não pode estar vazio.')
-    .transform((val) => normalizeEmail(val.trim()))
-    .refine(isValidEmail, {
-      message: 'Formato de e-mail inválido.'
-    }),
+  email: emailSchema,
 
   categoria: z
     .string({

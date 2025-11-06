@@ -281,6 +281,39 @@ export class ComentarioService implements IComentarioService {
   }
 
   /**
+   * Alterna a visibilidade de um comentário (apenas admin):
+   * - Valida se o comentário existe
+   * - Valida se o usuário é admin
+   * - Inverte o estado atual de visibilidade
+   * @param {string} id - ID único do comentário
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado
+   * @returns {Promise<ComentarioResponseDTO>} Dados do comentário com visibilidade atualizada
+   * @throws {HttpError} Erro 401 se não autenticado, 403 se não for admin, 404 se não encontrado
+   */
+  async toggleVisibility(
+    id: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
+    const comentarioAtual = throwIfNotFound(
+      await this.comentarioRepository.findById(id),
+      'Comentário não encontrado.'
+    )
+
+    const comentario = await this.comentarioRepository.update(id, {
+      visivel: !comentarioAtual.visivel
+    })
+
+    return toComentarioResponseDTO(comentario)
+  }
+
+  /**
    * Constrói dados relacionais baseado no tipo de entidade
    * @param {ComentarioCreateDTO} comentarioData - Dados do comentário validados
    * @returns {ComentarioCreateRelationalDTO} Dados com relacionamentos configurados

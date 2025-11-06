@@ -1,4 +1,4 @@
-import { createEmailSchema } from '@/schemas'
+import { emailSchema } from '@/schemas'
 
 /**
  * - Converte dados não tipados para email validado
@@ -8,5 +8,5 @@ import { createEmailSchema } from '@/schemas'
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
 export function toCreateEmailDTO(data: unknown): string {
-  return createEmailSchema.parse(data)
+  return emailSchema.parse(data)
 }

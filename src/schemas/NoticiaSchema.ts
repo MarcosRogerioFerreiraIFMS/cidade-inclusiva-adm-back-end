@@ -10,7 +10,7 @@ import {
   verifyUrl
 } from '@/utils'
 import { z } from 'zod'
-import { fotoOpcionalSchema } from './FotoSchemas'
+import { fotoSchema } from './CommonSchemas'
 
 /** Comprimento mínimo permitido para títulos de notícias */
 const TITULO_MIN_LENGTH = 3
@@ -69,7 +69,7 @@ export const createNoticiaSchema = z.object({
     )
     .transform(transformUrl),
 
-  foto: fotoOpcionalSchema,
+  foto: fotoSchema,
 
   categoria: z
     .string({

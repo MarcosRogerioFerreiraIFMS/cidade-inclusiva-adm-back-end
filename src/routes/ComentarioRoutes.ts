@@ -58,4 +58,15 @@ ComentarioRoutes.delete(
   ComentarioDependencies.controller.delete
 )
 
+/**
+ * PATCH /comentarios/:id/visibilidade - Alterna a visibilidade do comentário
+ * Requer autenticação e apenas administradores podem executar
+ */
+ComentarioRoutes.patch(
+  '/:id/visibilidade',
+  modificationRateLimit,
+  ...comentarioOperations.toggleVisibility,
+  ComentarioDependencies.controller.toggleVisibility
+)
+
 export { ComentarioRoutes }

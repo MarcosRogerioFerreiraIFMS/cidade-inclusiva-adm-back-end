@@ -62,4 +62,15 @@ export interface IComentarioService {
     entidadeId: string,
     user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO[]>
+
+  /**
+   * Alterna a visibilidade de um comentário (apenas admin)
+   * @param {string} id - ID do comentário
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado (deve ser admin)
+   * @returns {Promise<ComentarioResponseDTO>} Comentário com visibilidade atualizada
+   */
+  toggleVisibility(
+    id: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO>
 }

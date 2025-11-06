@@ -163,4 +163,29 @@ export class ComentarioController {
       next(error)
     }
   }
+
+  /**
+   * Alterna a visibilidade de um comentário (toggle)
+   * @type {ControllerRequest}
+   */
+  toggleVisibility: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const { id } = req.params
+      const comentario = await this.comentarioService.toggleVisibility(
+        id,
+        req.user
+      )
+      HandleSuccess.updated(
+        res,
+        comentario,
+        'Visibilidade do comentário alterada com sucesso'
+      )
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
 }

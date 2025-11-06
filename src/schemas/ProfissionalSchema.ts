@@ -1,15 +1,11 @@
 import { EspecialidadeProfissional } from '@/enums'
-import { sanitizeString, sanitizeTelefone } from '@/utils'
 import { z } from 'zod'
-import { createEmailSchema } from './EmailSchema'
-import { fotoOpcionalSchema } from './FotoSchemas'
-
-/** Comprimento mínimo permitido para nomes de profissionais */
-const NOME_MIN_LENGTH = 2
-/** Comprimento máximo permitido para nomes de profissionais */
-const NOME_MAX_LENGTH = 100
-/** Regex para validação de formato de telefone brasileiro */
-const TELEFONE_REGEX = /^(?:\d{11}|\d{13})$/
+import {
+  emailSchema,
+  fotoSchema,
+  nomeSchema,
+  telefoneSchema
+} from './CommonSchemas'
 
 /**
  * - Schema de validação Zod para criação de profissional
@@ -17,123 +13,13 @@ const TELEFONE_REGEX = /^(?:\d{11}|\d{13})$/
  * - Inclui validações específicas para telefone, email e especialidades
  */
 export const createProfissionalSchema = z.object({
-  nome: z
-    .string({
-      required_error: 'O nome é obrigatório.',
-      invalid_type_error: 'O nome deve ser uma string.'
-    })
-    .transform(sanitizeString)
-    .refine((val) => val.length >= NOME_MIN_LENGTH, {
-      message: `O nome deve ter pelo menos ${NOME_MIN_LENGTH} caracteres.`
-    })
-    .refine((val) => val.length <= NOME_MAX_LENGTH, {
-      message: `O nome deve ter no máximo ${NOME_MAX_LENGTH} caracteres.`
-    })
-    .refine((val) => /^[a-zA-ZÀ-ÿ\s]+$/.test(val), {
-      message: 'O nome deve conter apenas letras e espaços.'
-    })
-    .refine((val) => val.trim().split(' ').length >= 2, {
-      message: 'O nome deve conter pelo menos nome e sobrenome.'
-    }),
+  nome: nomeSchema,
 
-  foto: fotoOpcionalSchema,
+  foto: fotoSchema,
 
-  telefone: z
-    .string({
-      required_error: 'O telefone é obrigatório.',
-      invalid_type_error: 'O telefone deve ser uma string.'
-    })
-    .transform((val) => sanitizeTelefone(val.trim()))
-    .refine((val) => val && TELEFONE_REGEX.test(val), {
-      message:
-        'O telefone deve ter 11 dígitos (ex: 11999999999) ou 13 dígitos com código do país (ex: +5511999999999).'
-    })
-    .refine(
-      (val) => {
-        if (val.length === 11) {
-          const ddd = val.substring(0, 2)
-          const numero = val.substring(2)
-          return (
-            [
-              '11',
-              '12',
-              '13',
-              '14',
-              '15',
-              '16',
-              '17',
-              '18',
-              '19',
-              '21',
-              '22',
-              '24',
-              '27',
-              '28',
-              '31',
-              '32',
-              '33',
-              '34',
-              '35',
-              '37',
-              '38',
-              '41',
-              '42',
-              '43',
-              '44',
-              '45',
-              '46',
-              '47',
-              '48',
-              '49',
-              '51',
-              '53',
-              '54',
-              '55',
-              '61',
-              '62',
-              '63',
-              '64',
-              '65',
-              '66',
-              '67',
-              '68',
-              '69',
-              '71',
-              '73',
-              '74',
-              '75',
-              '77',
-              '79',
-              '81',
-              '82',
-              '83',
-              '84',
-              '85',
-              '86',
-              '87',
-              '88',
-              '89',
-              '91',
-              '92',
-              '93',
-              '94',
-              '95',
-              '96',
-              '97',
-              '98',
-              '99'
-            ].includes(ddd) && /^9\d{8}$/.test(numero)
-          )
-        }
-        return true
-      },
-      {
-        message:
-          'O telefone deve ter um DDD válido e começar com 9 para celulares.'
-      }
-    ),
+  telefone: telefoneSchema,
 
-  email: createEmailSchema,
+  email: emailSchema,
 
   especialidade: z
     .string({

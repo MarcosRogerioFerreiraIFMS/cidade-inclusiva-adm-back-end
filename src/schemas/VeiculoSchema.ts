@@ -1,6 +1,6 @@
 import { sanitizeString } from '@/utils'
 import { z } from 'zod'
-import { fotosArraySchema } from './FotoSchemas'
+import { fotosArraySchema } from './CommonSchemas'
 
 /** Comprimento mínimo permitido para marcas de veículos */
 const MARCA_MIN_LENGTH = 2

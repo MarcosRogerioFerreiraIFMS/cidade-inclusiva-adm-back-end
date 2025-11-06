@@ -1,10 +1,67 @@
 import {
+  isImageUrl,
+  normalizeUrl,
   sanitizeString,
+  sanitizeTelefone,
+  transformUrl,
+  validateBrazilianCellPhone,
   validateBrazilianCEP,
-  validateBrazilianStates
+  validateBrazilianStates,
+  verifyUrl
 } from '@/utils'
 import api from 'brasilapi-js'
 import { z } from 'zod'
+
+export const NOME_MIN_LENGTH = 2
+export const NOME_MAX_LENGTH = 120
+export const TITULO_MIN_LENGTH = 3
+export const TITULO_MAX_LENGTH = 100
+export const CONTEUDO_MIN_LENGTH = 10
+export const CONTEUDO_MAX_LENGTH = 5000
+export const TELEFONE_REGEX = /^\(\d{2}\) 9\d{4}-\d{4}$/
+export const CEP_REGEX = /^\d{5}-\d{3}$/
+export const SENHA_MIN_LENGTH = 8
+export const SENHA_MAX_LENGTH = 128
+export const EMAIL_MAX_LENGTH = 254
+
+export const nomeSchema = z
+  .string({
+    required_error: 'O nome é obrigatório',
+    invalid_type_error: 'O nome deve ser um texto'
+  })
+  .transform(sanitizeString)
+  .refine(
+    (val) => val.length >= NOME_MIN_LENGTH,
+    `O nome deve ter no mínimo ${NOME_MIN_LENGTH} caracteres`
+  )
+  .refine(
+    (val) => val.length <= NOME_MAX_LENGTH,
+    `O nome deve ter no máximo ${NOME_MAX_LENGTH} caracteres`
+  )
+  .refine((val) => /^[a-zA-ZÀ-ÿ\s]+$/.test(val), {
+    message: 'O nome deve conter apenas letras e espaços.'
+  })
+
+export const telefoneSchema = z
+  .string({
+    required_error: 'O telefone é obrigatório.',
+    invalid_type_error: 'O telefone deve ser uma string.'
+  })
+  .transform((val) => sanitizeTelefone(val.trim()))
+  .refine((val) => validateBrazilianCellPhone(val), {
+    message:
+      'O telefone deve ser um celular brasileiro válido (11 dígitos com DDD válido e iniciado por 9).'
+  })
+
+export const emailSchema = z
+  .string()
+  .email('Email inválido')
+  .transform((val) => val.toLowerCase().trim())
+  .refine((val) => val.length <= EMAIL_MAX_LENGTH, {
+    message: `O email deve ter no máximo ${EMAIL_MAX_LENGTH} caracteres.`
+  })
+
+export const loginEmailSchema = emailSchema
 
 export const enderecoSchema = z.object(
   {
@@ -139,3 +196,51 @@ export const enderecoSchema = z.object(
     invalid_type_error: 'O endereço deve ser um objeto.'
   }
 )
+
+const baseFotoSchema = z
+  .string({ invalid_type_error: 'A URL da foto deve ser uma string.' })
+  .trim()
+  .transform((val) => (val ? normalizeUrl(val) : val))
+  .refine(
+    async (val) => {
+      if (!val) return true
+      if (!verifyUrl(val)) return false
+      return await isImageUrl(val, process.env.NODE_ENV === 'test')
+    },
+    {
+      message:
+        'A URL da foto deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/imagem.jpg)'
+    }
+  )
+  .transform(transformUrl)
+
+export const fotoSchema = baseFotoSchema.optional()
+
+export const fotosArraySchema = z
+  .array(baseFotoSchema, {
+    invalid_type_error: 'O campo fotos deve ser uma lista de URLs.'
+  })
+  .optional()
+  .default([])
+  .transform((fotos) => {
+    // Remove duplicadas
+    const unique = Array.from(new Set(fotos))
+    return unique
+  })
+
+export const logoSchema = z
+  .string({ invalid_type_error: 'A URL do logo deve ser uma string.' })
+  .optional()
+  .transform((val) => (val ? normalizeUrl(val.trim()) : val))
+  .refine(
+    async (val) => {
+      if (!val) return true
+      if (!verifyUrl(val)) return false
+      return await isImageUrl(val, process.env.NODE_ENV === 'test')
+    },
+    {
+      message:
+        'A URL do logo deve ser válida e apontar para uma imagem. Use um formato válido (ex: https://exemplo.com/logo.jpg)'
+    }
+  )
+  .transform(transformUrl)

@@ -200,7 +200,7 @@ export class ProfissionalDAO implements IProfissionalAccess {
         foto: true
       },
       orderBy: {
-        nome: 'asc'
+        criadoEm: 'desc'
       }
     })
   }

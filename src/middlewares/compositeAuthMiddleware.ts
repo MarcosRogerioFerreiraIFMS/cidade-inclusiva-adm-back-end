@@ -174,7 +174,10 @@ export const comentarioOperations = {
     ...authenticated,
     requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
     validateUUID('id')
-  ]
+  ],
+
+  /** PATCH /comentarios/:id/visibilidade - Apenas admins podem alterar visibilidade */
+  toggleVisibility: [...adminOnly, validateUUID('id')]
 }
 
 /**

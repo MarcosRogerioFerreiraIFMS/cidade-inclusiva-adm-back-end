@@ -9,7 +9,7 @@ const baseRateLimitOptions = {
 /** Opções de tempo e quantidade para cada tipo de operação */
 const RATE_LIMIT_OPTIONS = {
   login: { windowMs: 15 * 60 * 1000, max: 10 }, // 15 minutos, 10 tentativas
-  register: { windowMs: 60 * 60 * 1000, max: 5 }, // 1 hora, 5 registros
+  register: { windowMs: 30 * 60 * 1000, max: 5 }, // 30 minutos, 5 registros
   userDataRequest: { windowMs: 5 * 60 * 1000, max: 20 }, // 5 minutos, 20 validações
   adminOperations: { windowMs: 10 * 60 * 1000, max: 100 }, // 10 minutos, 100 operações
   contentCreation: { windowMs: 10 * 60 * 1000, max: 20 }, // 10 minutos, 20 criações

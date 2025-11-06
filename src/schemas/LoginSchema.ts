@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { loginEmailSchema } from './EmailSchema'
+import { loginEmailSchema } from './CommonSchemas'
 
 /**
  * - Schema de validação para dados de login

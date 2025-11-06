@@ -51,7 +51,7 @@ export function capitalizeWords(text: string): string {
 }
 
 /**
- * Sanitiza uma string removendo caracteres especiais e normalizando espaços
+ * Sanitiza uma string removendo caracteres especiais, normalizando espaços
  * @param {string} str - String a ser sanitizada
  * @returns {string} String sanitizada e normalizada
  */
@@ -59,8 +59,12 @@ export const sanitizeString = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
 
   return str
-    .trim()
-    .replace(/\s+/g, ' ')
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/javascript\s*:/gi, '')
+    .replace(/vbscript\s*:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+    .replace(/&[a-zA-Z#0-9]+;/g, ' ')
     .replace(/[\r\n\t]/g, ' ')
     .replace(/[^\w\s\-.,!?()áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ]/gi, '')
     .replace(/\s+/g, ' ')

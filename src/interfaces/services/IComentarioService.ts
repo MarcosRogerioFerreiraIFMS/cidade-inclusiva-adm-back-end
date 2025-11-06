@@ -73,4 +73,15 @@ export interface IComentarioService {
     id: string,
     user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO>
+
+  /**
+   * Busca todos os comentários feitos por um usuário específico
+   * @param {string} usuarioId - ID do usuário
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado (para filtrar visibilidade)
+   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários do usuário
+   */
+  findByUsuario(
+    usuarioId: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO[]>
 }

@@ -188,4 +188,25 @@ export class ComentarioController {
       next(error)
     }
   }
+
+  /**
+   * Busca comentários feitos por um usuário
+   * @type {ControllerRequest}
+   */
+  findByUsuario: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const { id } = req.params
+      const comentarios = await this.comentarioService.findByUsuario(
+        id,
+        req.user
+      )
+      HandleSuccess.list(res, comentarios)
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
 }

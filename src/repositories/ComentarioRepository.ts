@@ -136,4 +136,17 @@ export class ComentarioRepository implements IComentarioAccess {
       includeInvisible
     )
   }
+
+  /**
+   * Busca todos os comentários feitos por um usuário
+   * @param {string} usuarioId - ID do usuário
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByUsuarioId(
+    usuarioId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]> {
+    return await this.dao.findByUsuarioId(usuarioId, includeInvisible)
+  }
 }

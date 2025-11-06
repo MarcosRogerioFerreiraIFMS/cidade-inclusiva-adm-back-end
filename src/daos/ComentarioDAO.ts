@@ -239,4 +239,31 @@ export class ComentarioDAO implements IComentarioAccess {
       orderBy: { criadoEm: 'desc' }
     })
   }
+
+  /**
+   * Busca todos os comentários feitos por um usuário
+   * @param {string} usuarioId - ID do usuário
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  async findByUsuarioId(
+    usuarioId: string,
+    includeInvisible: boolean = false
+  ): Promise<ComentarioCompletions[]> {
+    return await db.comentario.findMany({
+      where: {
+        autorId: usuarioId,
+        deletadoEm: null,
+        ...(includeInvisible ? {} : { visivel: true })
+      },
+      include: {
+        autor: { include: { foto: true } },
+        likesUsuarios: {
+          where: { usuario: { deletadoEm: null } },
+          include: { usuario: true }
+        }
+      },
+      orderBy: { criadoEm: 'desc' }
+    })
+  }
 }

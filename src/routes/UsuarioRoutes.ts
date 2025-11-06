@@ -1,11 +1,14 @@
+import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { UsuarioDependencies } from '@/dependencies/UsuarioDependencies'
 import {
   adminOperationsRateLimit,
+  authenticated,
   emailSearchRateLimit,
   modificationRateLimit,
   readOperationsRateLimit,
   registerRateLimit,
-  usuarioOperations
+  usuarioOperations,
+  validateUUID
 } from '@/middlewares'
 import { Router } from 'express'
 
@@ -90,6 +93,19 @@ UsuarioRoutes.delete(
   modificationRateLimit,
   ...usuarioOperations.delete,
   UsuarioDependencies.controller.delete
+)
+
+/**
+ * GET /usuarios/:id/comentarios
+ * Endpoint para listar todos os comentários feitos por um usuário
+ * Requer autenticação - admins veem todos, usuários veem apenas visíveis
+ */
+UsuarioRoutes.get(
+  '/:id/comentarios',
+  readOperationsRateLimit,
+  ...authenticated,
+  validateUUID('id'),
+  ComentarioDependencies.controller.findByUsuario
 )
 
 export { UsuarioRoutes }

@@ -6,6 +6,7 @@ import { AcessibilidadeUrbanaDependencies } from './AcessibilidadeUrbanaDependen
 import { ManutencaoDependencies } from './ManutencaoDependencies'
 import { MotoristaDependencies } from './MotoristaDependencies'
 import { ProfissionalDependencies } from './ProfissionalDependencies'
+import { UsuarioDependencies } from './UsuarioDependencies'
 
 const comentarioDAO = new ComentarioDAO()
 const comentarioRepository = new ComentarioRepository(comentarioDAO)
@@ -14,7 +15,8 @@ const comentarioService = new ComentarioService(
   ProfissionalDependencies.repository,
   MotoristaDependencies.repository,
   ManutencaoDependencies.repository,
-  AcessibilidadeUrbanaDependencies.repository
+  AcessibilidadeUrbanaDependencies.repository,
+  UsuarioDependencies.repository
 )
 const comentarioController = new ComentarioController(comentarioService)
 

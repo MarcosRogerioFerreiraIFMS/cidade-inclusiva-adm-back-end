@@ -4,7 +4,8 @@ import type {
   IComentarioAccess,
   IManutencaoAccess,
   IMotoristaAccess,
-  IProfissionalAccess
+  IProfissionalAccess,
+  IUsuarioAccess
 } from '@/interfaces/access'
 
 import type {
@@ -32,13 +33,15 @@ export class ComentarioService implements IComentarioService {
    * @param {IMotoristaAccess} motoristaRepository - Repositório para validação de motoristas
    * @param {IManutencaoAccess} manutencaoRepository - Repositório para validação de manutenções
    * @param {IAcessibilidadeUrbanaAccess} acessibilidadeUrbanaRepository - Repositório para validação de acessibilidade urbana
+   * @param {IUsuarioAccess} usuarioRepository - Repositório para validação de usuários
    */
   constructor(
     private comentarioRepository: IComentarioAccess,
     private profissionalRepository: IProfissionalAccess,
     private motoristaRepository: IMotoristaAccess,
     private manutencaoRepository: IManutencaoAccess,
-    private acessibilidadeUrbanaRepository: IAcessibilidadeUrbanaAccess
+    private acessibilidadeUrbanaRepository: IAcessibilidadeUrbanaAccess,
+    private usuarioRepository: IUsuarioAccess
   ) {}
 
   /**
@@ -311,6 +314,34 @@ export class ComentarioService implements IComentarioService {
     })
 
     return toComentarioResponseDTO(comentario)
+  }
+
+  /**
+   * Busca todos os comentários feitos por um usuário específico:
+   * - Aplica filtro de visibilidade (usuários comuns só veem comentários visíveis)
+   * - Admins podem ver todos os comentários
+   * @param {string} usuarioId - ID do usuário
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado
+   * @returns {Promise<ComentarioResponseDTO[]>} Lista de comentários do usuário
+   */
+  async findByUsuario(
+    usuarioId: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<ComentarioResponseDTO[]> {
+    const isAdmin = user?.tipo === TipoUsuario.ADMIN
+    const includeInvisible = isAdmin
+
+    throwIfNotFound(
+      await this.usuarioRepository.findById(usuarioId),
+      'Usuário não encontrado.'
+    )
+
+    const comentarios = await this.comentarioRepository.findByUsuarioId(
+      usuarioId,
+      includeInvisible
+    )
+
+    return comentarios.map(toComentarioResponseDTO)
   }
 
   /**

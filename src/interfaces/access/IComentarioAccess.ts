@@ -94,4 +94,15 @@ export interface IComentarioAccess {
     acessibilidadeUrbanaId: string,
     includeInvisible?: boolean
   ): Promise<ComentarioCompletions[]>
+
+  /**
+   * Busca todos os comentários feitos por um usuário
+   * @param {string} usuarioId - ID do usuário
+   * @param {boolean} includeInvisible - Se true, inclui comentários invisíveis (apenas admin)
+   * @returns {Promise<ComentarioCompletions[]>} Lista de comentários
+   */
+  findByUsuarioId(
+    usuarioId: string,
+    includeInvisible?: boolean
+  ): Promise<ComentarioCompletions[]>
 }

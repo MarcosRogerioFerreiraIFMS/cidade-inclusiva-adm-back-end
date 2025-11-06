@@ -38,9 +38,6 @@ export const nomeSchema = z
     (val) => val.length <= NOME_MAX_LENGTH,
     `O nome deve ter no máximo ${NOME_MAX_LENGTH} caracteres`
   )
-  .refine((val) => /^[a-zA-ZÀ-ÿ\s]+$/.test(val), {
-    message: 'O nome deve conter apenas letras e espaços.'
-  })
 
 export const telefoneSchema = z
   .string({

@@ -1,4 +1,5 @@
 import type { LikeResponseDTO } from '@/dtos/response'
+import type { UsuarioCompletions } from '@/types'
 
 /**
  * Interface para serviço de likes
@@ -14,13 +15,13 @@ export interface ILikeService {
 
   /**
    * Alterna o estado de like (curtir/descurtir)
-   * @param {string} usuarioId - ID do usuário
    * @param {string} comentarioId - ID do comentário
+   * @param {UsuarioCompletions} user - Usuário autenticado
    * @returns {Promise<{liked: boolean; totalLikes: number}>} Estado do like e total
    */
   toggle(
-    usuarioId: string,
-    comentarioId: string
+    comentarioId: string,
+    user: UsuarioCompletions
   ): Promise<{ liked: boolean; totalLikes: number }>
 
   /**

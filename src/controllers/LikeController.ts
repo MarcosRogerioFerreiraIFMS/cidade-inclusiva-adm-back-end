@@ -1,5 +1,5 @@
 import type { ILikeService } from '@/interfaces/services'
-import type { ControllerRequest } from '@/types'
+import type { AuthenticatedRequest, ControllerRequest } from '@/types'
 import { HandleSuccess } from '@/utils'
 
 /**
@@ -12,10 +12,10 @@ export class LikeController {
    * Alterna o estado de like de um usuário em um comentário (toggle like/unlike)
    * @type {ControllerRequest}
    */
-  toggle: ControllerRequest = async (req, res, next) => {
+  toggle: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
-      const { usuarioId, comentarioId } = req.params
-      const result = await this.likeService.toggle(usuarioId, comentarioId)
+      const { comentarioId } = req.params
+      const result = await this.likeService.toggle(comentarioId, req.user!)
 
       const message = result.liked
         ? 'Like adicionado com sucesso'

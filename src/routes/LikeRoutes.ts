@@ -15,12 +15,12 @@ import { Router } from 'express'
 const LikeRoutes = Router()
 
 /**
- * PATCH /likes/toggle/:usuarioId/:comentarioId - Alterna like em comentário
+ * PATCH /likes/toggle/:comentarioId - Alterna like em comentário
  * Cria like se não existir, remove se já existir
  * Requer autenticação do usuário
  */
 LikeRoutes.patch(
-  '/toggle/:usuarioId/:comentarioId',
+  '/toggle/:comentarioId',
   contentCreationRateLimit,
   ...likeOperations.toggle,
   LikeDependencies.controller.toggle

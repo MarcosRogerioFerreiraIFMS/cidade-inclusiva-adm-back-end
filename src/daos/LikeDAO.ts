@@ -88,12 +88,18 @@ export class LikeDAO implements ILikeAccess {
 
   /**
    * Lista todos os likes de um comentário específico
+   * Exclui likes de usuários que foram deletados (soft delete)
    * @param {string} comentarioId - ID do comentário
-   * @returns {Promise<LikeCompletions[]>} Lista de likes do comentário
+   * @returns {Promise<LikeCompletions[]>} Lista de likes do comentário (apenas de usuários ativos)
    */
   async findByComentario(comentarioId: string): Promise<LikeCompletions[]> {
     return await db.like.findMany({
-      where: { comentarioId }
+      where: {
+        comentarioId,
+        usuario: {
+          deletadoEm: null
+        }
+      }
     })
   }
 
@@ -111,12 +117,18 @@ export class LikeDAO implements ILikeAccess {
   /**
    * Conta o número total de likes de um comentário
    * Utilizado para estatísticas e contadores
+   * Exclui likes de usuários que foram deletados (soft delete)
    * @param {string} comentarioId - ID do comentário
-   * @returns {Promise<number>} Número total de likes no comentário
+   * @returns {Promise<number>} Número total de likes no comentário (apenas de usuários ativos)
    */
   async countByComentario(comentarioId: string): Promise<number> {
     return await db.like.count({
-      where: { comentarioId }
+      where: {
+        comentarioId,
+        usuario: {
+          deletadoEm: null
+        }
+      }
     })
   }
 

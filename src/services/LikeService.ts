@@ -6,6 +6,7 @@ import type {
 } from '@/interfaces/access'
 import type { ILikeService } from '@/interfaces/services'
 import { toLikeResponseDTO, toLikesResponseDTO } from '@/mappers/output'
+import type { UsuarioCompletions } from '@/types'
 import { throwIfNotFound } from '@/utils'
 
 /**
@@ -45,47 +46,47 @@ export class LikeService implements ILikeService {
   /**
    * Alterna o estado de like de um usuário em um comentário (toggle like/unlike):
    * - Se o like existe, remove (unlike). Se não existe, adiciona (like)
-   * - Valida a existência do usuário e comentário antes da operação
-   * @param {string} usuarioId - ID do usuário que está dando like/unlike
+   * - Valida a existência do comentário antes da operação
+   * - Usa o usuário autenticado para registrar o like
+   * - Operação atômica: cria/deleta e conta em sequência garantida
    * @param {string} comentarioId - ID do comentário que está recebendo like/unlike
+   * @param {UsuarioCompletions} user - Usuário autenticado
    * @returns {Promise<{liked: boolean, totalLikes: number}>} Estado do like e total de likes no comentário
-   * @throws {HttpError} Erro 404 se usuário ou comentário não forem encontrados
+   * @throws {HttpError} Erro 404 se comentário não for encontrado
    */
   async toggle(
-    usuarioId: string,
-    comentarioId: string
+    comentarioId: string,
+    user: UsuarioCompletions
   ): Promise<{ liked: boolean; totalLikes: number }> {
-    const [usuario, comentario] = await Promise.all([
-      this.usuarioRepository.findById(usuarioId),
-      this.comentarioRepository.findById(comentarioId)
-    ])
-
-    throwIfNotFound(usuario, 'Usuário não encontrado.')
+    const comentario = await this.comentarioRepository.findById(comentarioId)
     throwIfNotFound(comentario, 'Comentário não encontrado.')
+
+    const usuarioId = user.id
 
     const existingLike = await this.likeRepository.findByUsuarioAndComentario(
       usuarioId,
       comentarioId
     )
 
+    let liked: boolean
+
     if (existingLike) {
-      // Unlike: remove o like existente
+      // Unlike: remove o like existente e conta após remoção
       await this.likeRepository.deleteByUsuarioAndComentario(
         usuarioId,
         comentarioId
       )
-      const totalLikes = await this.likeRepository.countByComentario(
-        comentarioId
-      )
-      return { liked: false, totalLikes }
+      liked = false
     } else {
       // Like: cria um novo like
       await this.likeRepository.create({ usuarioId, comentarioId })
-      const totalLikes = await this.likeRepository.countByComentario(
-        comentarioId
-      )
-      return { liked: true, totalLikes }
+      liked = true
     }
+
+    // Conta os likes após a operação para garantir consistência
+    const totalLikes = await this.likeRepository.countByComentario(comentarioId)
+
+    return { liked, totalLikes }
   }
 
   /**

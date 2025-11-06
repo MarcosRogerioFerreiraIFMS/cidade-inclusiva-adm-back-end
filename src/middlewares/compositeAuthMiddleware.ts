@@ -6,10 +6,7 @@ import {
   requireRole
 } from './authorizationMiddleware'
 import { requiredFields } from './requiredFields'
-import {
-  requireSelfLikeAction,
-  requireSelfOrAdmin
-} from './selfActionMiddleware'
+import { requireSelfOrAdmin } from './selfActionMiddleware'
 import { validateRequiredBody, validateUUID } from './validationMiddleware'
 
 /**
@@ -188,13 +185,8 @@ export const likeOperations = {
   /** GET /likes/:id - Requer autenticação para visualizar */
   view: [...authenticated, validateUUID('id')],
 
-  /** PATCH /likes/toggle/:usuarioId/:comentarioId - Apenas usuários autenticados, e apenas para si mesmos */
-  toggle: [
-    ...authenticated,
-    requireSelfLikeAction, // Verifica se o usuário pode dar like por si mesmo
-    validateUUID('usuarioId'),
-    validateUUID('comentarioId')
-  ],
+  /** PATCH /likes/toggle/:comentarioId - Apenas usuários autenticados */
+  toggle: [...authenticated, validateUUID('comentarioId')],
 
   /** DELETE /likes/:id - Apenas o autor ou admin podem deletar */
   delete: [

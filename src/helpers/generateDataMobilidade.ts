@@ -34,6 +34,7 @@ export function generateDataMobilidadeCreate(
  * Gera dados formatados para atualização de mobilidade no Prisma
  * Converte DTO de atualização em input do Prisma
  * Apenas campos definidos são incluídos na atualização
+ * O usuarioId não pode ser alterado após a criação
  * @param {MobilidadeUpdateDTO} data - Dados de atualização vindos do DTO
  * @returns {Prisma.MobilidadeUpdateInput} Dados formatados para o Prisma
  */
@@ -42,7 +43,6 @@ export function generateDataMobilidadeUpdate({
   longitude,
   descricao,
   status,
-  usuarioId,
   dataRegistro
 }: MobilidadeUpdateDTO): Prisma.MobilidadeUpdateInput {
   const dataToUpdate: Prisma.MobilidadeUpdateInput = {}
@@ -58,17 +58,6 @@ export function generateDataMobilidadeUpdate({
   }
   if (status !== undefined) {
     dataToUpdate.status = status
-  }
-  if (usuarioId !== undefined) {
-    if (usuarioId === null) {
-      dataToUpdate.usuario = {
-        disconnect: true
-      }
-    } else {
-      dataToUpdate.usuario = {
-        connect: { id: usuarioId }
-      }
-    }
   }
   if (dataRegistro !== undefined) {
     const date = new Date(dataRegistro)

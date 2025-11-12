@@ -1,4 +1,4 @@
-import type { LikeCreateDTO } from '@/dtos/create'
+import type { LikeCreateWithUserDTO } from '@/dtos/create'
 import type { ILikeAccess } from '@/interfaces/access'
 import type { LikeCompletions } from '@/types'
 
@@ -21,10 +21,10 @@ export class LikeRepository implements ILikeAccess {
 
   /**
    * Cria um novo like
-   * @param {LikeCreateDTO} data - Dados do like a ser criado
+   * @param {LikeCreateWithUserDTO} data - Dados do like a ser criado (com usuarioId injetado)
    * @returns {Promise<LikeCompletions>} Like criado com todas as relações
    */
-  async create(data: LikeCreateDTO): Promise<LikeCompletions> {
+  async create(data: LikeCreateWithUserDTO): Promise<LikeCompletions> {
     return await this.dao.create(data)
   }
 
@@ -107,9 +107,9 @@ export class LikeRepository implements ILikeAccess {
    * - Utilizado para validações de autorização
    * @param {string} likeId - ID do like
    * @param {string} userId - ID do usuário
-   * @returns {Promise<boolean>} true se o usuário é o proprietário, false caso contrário
+   * @returns {Promise<boolean | null>} true se o usuário é o proprietário, false se não for, null se não existir
    */
-  async isLikeOwner(likeId: string, userId: string): Promise<boolean> {
+  async isLikeOwner(likeId: string, userId: string): Promise<boolean | null> {
     return await this.dao.isLikeOwner(likeId, userId)
   }
 }

@@ -30,7 +30,7 @@ AcessibilidadeUrbanaRoutes.post(
 
 /**
  * GET /acessibilidade-urbana - Lista todas as acessibilidades urbanas
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 AcessibilidadeUrbanaRoutes.get(
   '/',
@@ -41,7 +41,7 @@ AcessibilidadeUrbanaRoutes.get(
 
 /**
  * GET /acessibilidade-urbana/:id - Busca acessibilidade urbana por ID
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 AcessibilidadeUrbanaRoutes.get(
   '/:id',
@@ -74,7 +74,7 @@ AcessibilidadeUrbanaRoutes.delete(
 
 /**
  * GET /acessibilidade-urbana/categoria/:categoria - Busca por categoria
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 AcessibilidadeUrbanaRoutes.get(
   '/categoria/:categoria',

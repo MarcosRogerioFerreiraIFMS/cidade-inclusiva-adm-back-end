@@ -2,7 +2,9 @@ import { TipoRecurso, TipoUsuario } from '@/enums'
 import { authMiddleware, optionalAuthMiddleware } from './authMiddleware'
 import {
   requireAdmin,
+  requireOwnershipOnly,
   requireOwnershipOrAdmin,
+  requireOwnershipOrAdminForView,
   requireRole
 } from './authorizationMiddleware'
 import { requiredFields } from './requiredFields'
@@ -53,22 +55,26 @@ export const usuarioOperations = {
   /** GET /usuarios - Apenas admins podem listar todos os usuários */
   list: [...adminOnly],
 
-  /** GET /usuarios/:id - Usuário pode ver a si mesmo, admin pode ver qualquer um */
-  view: [...adminOnly, validateUUID('id')],
+  /** GET /usuarios/:id - Usuário pode ver a si mesmo, admin pode ver qualquer um (inclusive outros admins) */
+  view: [
+    ...authenticated,
+    validateUUID('id'),
+    requireOwnershipOrAdminForView(TipoRecurso.USUARIO)
+  ],
 
   /** PUT /usuarios/:id - Usuário pode editar a si mesmo, admin pode editar qualquer um (exceto outros admins) */
   update: [
     ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
     validateUUID('id'),
-    validateRequiredBody([...requiredFields.usuario.update])
+    validateRequiredBody([...requiredFields.usuario.update]),
+    requireOwnershipOrAdmin(TipoRecurso.USUARIO)
   ],
 
   /** DELETE /usuarios/:id - Usuário pode deletar a si mesmo, admin pode deletar qualquer um (exceto outros admins) */
   delete: [
     ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.USUARIO),
-    validateUUID('id')
+    validateUUID('id'),
+    requireOwnershipOrAdmin(TipoRecurso.USUARIO)
   ],
 
   /** POST /usuarios - Registro público (não requer autenticação) */
@@ -217,6 +223,7 @@ export const authOperations = {
 /**
  * - Middlewares para operações de MOBILIDADE
  * - Incluem validações específicas para gerenciamento de dados de mobilidade urbana
+ * - Apenas usuários normais (não admins) podem criar, editar e deletar suas mobilidades
  */
 export const mobilidadeOperations = {
   /** GET /mobilidades - Requer autenticação para visualizar */
@@ -225,25 +232,25 @@ export const mobilidadeOperations = {
   /** GET /mobilidades/:id - Requer autenticação para visualizar */
   view: [...authenticated, validateUUID('id')],
 
-  /** POST /mobilidades - Usuários autenticados podem criar */
+  /** POST /mobilidades - Apenas usuários normais podem criar */
   create: [
-    ...authenticated,
+    ...userOnly,
     validateRequiredBody([...requiredFields.mobilidade.create])
   ],
 
-  /** PUT /mobilidades/:id - Proprietário ou admin podem editar */
+  /** PUT /mobilidades/:id - Apenas o proprietário (usuário normal) pode editar */
   update: [
-    ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
+    ...userOnly,
     validateUUID('id'),
-    validateRequiredBody([...requiredFields.mobilidade.update])
+    validateRequiredBody([...requiredFields.mobilidade.update]),
+    requireOwnershipOnly(TipoRecurso.MOBILIDADE)
   ],
 
-  /** DELETE /mobilidades/:id - Proprietário ou admin podem deletar */
+  /** DELETE /mobilidades/:id - Apenas o proprietário (usuário normal) pode deletar */
   delete: [
-    ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.MOBILIDADE),
-    validateUUID('id')
+    ...userOnly,
+    validateUUID('id'),
+    requireOwnershipOnly(TipoRecurso.MOBILIDADE)
   ],
 
   /** GET /mobilidades/usuario/:usuarioId - Apenas o próprio usuário ou admin podem ver suas mobilidades */

@@ -12,12 +12,12 @@ export interface MobilidadeResponseDTO {
   descricao: string
   dataRegistro: Date
   status: StatusMobilidade
-  usuarioId?: string
   criadoEm: Date
   atualizadoEm: Date
   usuario?: {
     id: string
     nome: string
     email: string
+    fotoUrl?: string | null
   }
 }

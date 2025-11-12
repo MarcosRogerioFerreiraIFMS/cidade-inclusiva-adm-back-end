@@ -15,7 +15,7 @@ export class LikeController {
   toggle: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
       const { comentarioId } = req.params
-      const result = await this.likeService.toggle(comentarioId, req.user!)
+      const result = await this.likeService.toggle(comentarioId, req.user)
 
       const message = result.liked
         ? 'Like adicionado com sucesso'

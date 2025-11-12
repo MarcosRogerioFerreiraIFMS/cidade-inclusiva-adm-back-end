@@ -99,8 +99,8 @@ export const enderecoSchema = z.object(
     complemento: z
       .string({ invalid_type_error: 'O complemento deve ser uma string.' })
       .transform((val) => (val ? sanitizeString(val) : val))
-      .refine((val) => !val || val.length <= 50, {
-        message: 'O complemento deve ter no máximo 50 caracteres.'
+      .refine((val) => !val || val.length <= 200, {
+        message: 'O complemento deve ter no máximo 200 caracteres.'
       })
       .optional(),
 
@@ -113,8 +113,8 @@ export const enderecoSchema = z.object(
       .refine((val) => val.length >= 2, {
         message: 'A cidade deve ter pelo menos 2 caracteres.'
       })
-      .refine((val) => val.length <= 50, {
-        message: 'A cidade deve ter no máximo 50 caracteres.'
+      .refine((val) => val.length <= 100, {
+        message: 'A cidade deve ter no máximo 100 caracteres.'
       })
       .refine((val) => /^[a-zA-ZÀ-ÿ\s-]+$/.test(val), {
         message: 'A cidade deve conter apenas letras, espaços e hífens.'
@@ -129,8 +129,8 @@ export const enderecoSchema = z.object(
       .refine((val) => val.length >= 2, {
         message: 'O bairro deve ter pelo menos 2 caracteres.'
       })
-      .refine((val) => val.length <= 50, {
-        message: 'O bairro deve ter no máximo 50 caracteres.'
+      .refine((val) => val.length <= 100, {
+        message: 'O bairro deve ter no máximo 100 caracteres.'
       })
       .refine((val) => /^[a-zA-ZÀ-ÿ0-9\s\-.,]+$/.test(val), {
         message:

@@ -23,7 +23,8 @@ export default [
       'consistent-return': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       'object-shorthand': ['error', 'always'],
-      'no-control-regex': 'off'
+      'no-control-regex': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'error'
     }
   }
 ]

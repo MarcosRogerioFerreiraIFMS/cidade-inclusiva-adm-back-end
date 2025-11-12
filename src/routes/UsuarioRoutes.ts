@@ -54,6 +54,7 @@ UsuarioRoutes.get(
 /**
  * GET /usuarios/:id
  * Endpoint para buscar usuário específico por ID
+ * Usuário pode ver a si mesmo, admin pode ver qualquer um (inclusive outros admins)
  */
 UsuarioRoutes.get(
   '/:id',

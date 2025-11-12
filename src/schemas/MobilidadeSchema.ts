@@ -68,13 +68,6 @@ export const createMobilidadeSchema = z.object({
       val ? (val as StatusMobilidade) : StatusMobilidade.PENDENTE
     ),
 
-  usuarioId: z
-    .string({
-      invalid_type_error: 'O ID do usuário deve ser uma string.'
-    })
-    .uuid('O ID do usuário deve ser um UUID válido.')
-    .optional(),
-
   dataRegistro: z
     .union([
       z

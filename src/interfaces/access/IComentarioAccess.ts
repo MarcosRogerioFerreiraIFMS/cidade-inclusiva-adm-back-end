@@ -47,9 +47,9 @@ export interface IComentarioAccess {
    * Verifica se um usuário é dono de um comentário específico
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário
-   * @returns {Promise<boolean>} True se o usuário é dono do comentário
+   * @returns {Promise<boolean | null>} True se o usuário é dono, false se não for, null se não existir
    */
-  isCommentOwner(commentId: string, userId: string): Promise<boolean>
+  isCommentOwner(commentId: string, userId: string): Promise<boolean | null>
 
   /**
    * Busca todos os comentários de um profissional

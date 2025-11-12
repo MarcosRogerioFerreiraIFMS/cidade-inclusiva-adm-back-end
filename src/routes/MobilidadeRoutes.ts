@@ -27,7 +27,7 @@ MobilidadeRoutes.post(
 
 /**
  * GET /mobilidades - Lista todas as mobilidades
- * Público, sem necessidade de autenticação
+ * Requer autenticação para visualizar
  */
 MobilidadeRoutes.get(
   '/',
@@ -49,7 +49,7 @@ MobilidadeRoutes.get(
 
 /**
  * GET /mobilidades/status/:status - Busca mobilidades por status
- * Público, sem necessidade de autenticação
+ * Requer autenticação para visualizar
  */
 MobilidadeRoutes.get(
   '/status/:status',
@@ -60,7 +60,7 @@ MobilidadeRoutes.get(
 
 /**
  * GET /mobilidades/:id - Busca mobilidade por ID
- * Público, sem necessidade de autenticação
+ * Requer autenticação para visualizar
  */
 MobilidadeRoutes.get(
   '/:id',
@@ -71,7 +71,7 @@ MobilidadeRoutes.get(
 
 /**
  * PUT /mobilidades/:id - Atualiza mobilidade existente
- * Requer autenticação e verifica se é o proprietário ou admin
+ * Requer autenticação e verifica se é o proprietário (usuário normal apenas)
  */
 MobilidadeRoutes.put(
   '/:id',
@@ -82,7 +82,7 @@ MobilidadeRoutes.put(
 
 /**
  * DELETE /mobilidades/:id - Remove mobilidade existente
- * Requer autenticação e verifica se é o proprietário ou admin
+ * Requer autenticação e verifica se é o proprietário (usuário normal apenas)
  */
 MobilidadeRoutes.delete(
   '/:id',

@@ -11,8 +11,11 @@ export type ComentarioCreateDTO = z.infer<typeof createComentarioSchema>
 /**
  * DTO estendido para criação de comentário com relacionamento opcional
  * Inclui campos adicionais necessários para associar comentário às diferentes entidades
+ * e o ID do usuário que está criando o comentário (injetado pelo service)
  */
 export interface ComentarioCreateRelationalDTO extends ComentarioCreateDTO {
+  /** ID do usuário que está criando o comentário (injetado do usuário autenticado) */
+  usuarioId: string
   /** ID opcional do profissional ao qual o comentário será associado */
   profissionalId?: string
   /** ID opcional do motorista ao qual o comentário será associado */

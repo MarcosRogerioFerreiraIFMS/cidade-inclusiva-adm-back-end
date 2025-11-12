@@ -182,4 +182,23 @@ export class MobilidadeDAO implements IMobilidadeAccess {
       }
     })
   }
+
+  /**
+   * Verifica se um usuário é o proprietário de uma mobilidade
+   * Utilizado para validações de autorização
+   * @param {string} mobilidadeId - ID da mobilidade
+   * @param {string} userId - ID do usuário
+   * @returns {Promise<boolean | null>} true se o usuário é o proprietário, false se não for, null se não existir
+   */
+  async isMobilidadeOwner(
+    mobilidadeId: string,
+    userId: string
+  ): Promise<boolean | null> {
+    const mobilidade = await db.mobilidade.findFirst({
+      where: { id: mobilidadeId, deletadoEm: null },
+      select: { usuarioId: true }
+    })
+    if (!mobilidade) return null
+    return mobilidade.usuarioId === userId
+  }
 }

@@ -50,7 +50,7 @@ LikeRoutes.delete(
 
 /**
  * GET /likes/comentario/:comentarioId - Lista likes de um comentário
- * Público, sem necessidade de autenticação
+ * Requer autenticação para visualização
  */
 LikeRoutes.get(
   '/comentario/:comentarioId',

@@ -1,4 +1,5 @@
 import type { LikeResponseDTO } from '@/dtos/response'
+import { HttpStatusCode } from '@/enums'
 import type {
   IComentarioAccess,
   ILikeAccess,
@@ -7,7 +8,7 @@ import type {
 import type { ILikeService } from '@/interfaces/services'
 import { toLikeResponseDTO, toLikesResponseDTO } from '@/mappers/output'
 import type { UsuarioCompletions } from '@/types'
-import { throwIfNotFound } from '@/utils'
+import { HttpError, throwIfNotFound } from '@/utils'
 
 /**
  * Serviço responsável pela lógica de negócio relacionada a likes:
@@ -50,16 +51,23 @@ export class LikeService implements ILikeService {
    * - Usa o usuário autenticado para registrar o like
    * - Operação atômica: cria/deleta e conta em sequência garantida
    * @param {string} comentarioId - ID do comentário que está recebendo like/unlike
-   * @param {UsuarioCompletions} user - Usuário autenticado
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado
    * @returns {Promise<{liked: boolean, totalLikes: number}>} Estado do like e total de likes no comentário
    * @throws {HttpError} Erro 404 se comentário não for encontrado
    */
   async toggle(
     comentarioId: string,
-    user: UsuarioCompletions
+    user: UsuarioCompletions | undefined
   ): Promise<{ liked: boolean; totalLikes: number }> {
     const comentario = await this.comentarioRepository.findById(comentarioId)
     throwIfNotFound(comentario, 'Comentário não encontrado.')
+
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
 
     const usuarioId = user.id
 
@@ -78,7 +86,7 @@ export class LikeService implements ILikeService {
       )
       liked = false
     } else {
-      // Like: cria um novo like
+      // Like: cria um novo like com usuarioId injetado
       await this.likeRepository.create({ usuarioId, comentarioId })
       liked = true
     }

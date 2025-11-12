@@ -122,14 +122,18 @@ export class ComentarioDAO implements IComentarioAccess {
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário
-   * @returns {Promise<boolean>} true se o usuário é o proprietário, false caso contrário
+   * @returns {Promise<boolean | null>} true se o usuário é o proprietário, false se não for, null se não existir
    */
-  async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
+  async isCommentOwner(
+    commentId: string,
+    userId: string
+  ): Promise<boolean | null> {
     const comment = await db.comentario.findFirst({
       where: { id: commentId, deletadoEm: null },
       select: { autorId: true }
     })
-    return comment?.autorId === userId
+    if (!comment) return null
+    return comment.autorId === userId
   }
 
   /**

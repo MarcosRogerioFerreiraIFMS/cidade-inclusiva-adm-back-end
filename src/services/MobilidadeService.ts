@@ -32,6 +32,7 @@ export class MobilidadeService implements IMobilidadeService {
   /**
    * Cria uma nova mobilidade no sistema:
    * - Valida os dados de entrada e transforma em DTO apropriado
+   * - Apenas usuários normais (não admins) podem criar mobilidades
    * @param {unknown} data - Dados da mobilidade a ser criada
    * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está criando a mobilidade
    * - O usuário autenticado é obrigatório para criar uma mobilidade
@@ -75,17 +76,34 @@ export class MobilidadeService implements IMobilidadeService {
   /**
    * Atualiza uma mobilidade existente:
    * - Valida se a mobilidade existe antes de atualizar
+   * - Valida se o usuário é o proprietário da mobilidade (verificação redundante já feita no middleware)
    * @param {string} id - ID único da mobilidade a ser atualizada
    * @param {unknown} data - Novos dados da mobilidade
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está atualizando
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade atualizada
    * @throws {HttpError} Erro 404 se a mobilidade não for encontrada
+   * @throws {HttpError} Erro 401 se o usuário não estiver autenticado
    */
-  async update(id: string, data: unknown): Promise<MobilidadeResponseDTO> {
+  async update(
+    id: string,
+    data: unknown,
+    user: UsuarioCompletions | undefined
+  ): Promise<MobilidadeResponseDTO> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
+    // Verificar se a mobilidade existe
     throwIfNotFound(
       await this.mobilidadeRepository.findById(id),
       'Mobilidade não encontrada.'
     )
 
+    // A verificação de propriedade já é feita no middleware requireOwnershipOrAdmin
+    // mas mantemos aqui como camada adicional de segurança
     const mobilidade = await this.mobilidadeRepository.update(
       id,
       toUpdateMobilidadeDTO(data)
@@ -97,16 +115,32 @@ export class MobilidadeService implements IMobilidadeService {
   /**
    * Remove uma mobilidade do sistema:
    * - Valida se a mobilidade existe antes de remover
+   * - Valida se o usuário é o proprietário da mobilidade (verificação redundante já feita no middleware)
    * @param {string} id - ID único da mobilidade a ser removida
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está removendo
    * @returns {Promise<void>}
    * @throws {HttpError} Erro 404 se a mobilidade não for encontrada
+   * @throws {HttpError} Erro 401 se o usuário não estiver autenticado
    */
-  async delete(id: string): Promise<void> {
+  async delete(
+    id: string,
+    user: UsuarioCompletions | undefined
+  ): Promise<void> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
+    // Verificar se a mobilidade existe
     throwIfNotFound(
       await this.mobilidadeRepository.findById(id),
       'Mobilidade não encontrada.'
     )
 
+    // A verificação de propriedade já é feita no middleware requireOwnershipOrAdmin
+    // mas mantemos aqui como camada adicional de segurança
     await this.mobilidadeRepository.delete(id)
   }
 

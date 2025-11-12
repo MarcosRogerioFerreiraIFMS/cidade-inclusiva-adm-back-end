@@ -1,5 +1,6 @@
 import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { LikeDependencies } from '@/dependencies/LikeDependencies'
+import { MobilidadeDependencies } from '@/dependencies/MobilidadeDependencies'
 import { UsuarioDependencies } from '@/dependencies/UsuarioDependencies'
 import { HttpStatusCode, TipoRecurso, TipoUsuario } from '@/enums'
 import type { AuthenticatedRequest } from '@/types'
@@ -49,9 +50,68 @@ export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
 export const requireAdmin = requireRole([TipoUsuario.ADMIN])
 
 /**
- * - Middleware que valida se o usuário pode acessar/modificar o recurso
- * - Administradores podem acessar qualquer recurso, EXCETO modificar outros admins
- * - Usuários comuns só podem acessar/modificar seus próprios recursos
+ * - Middleware que valida se o usuário pode visualizar o recurso
+ * - Administradores podem visualizar qualquer recurso (incluindo outros admins)
+ * - Usuários comuns só podem visualizar seus próprios recursos
+ * @param {TipoRecurso} tipoRecurso - Tipo do recurso sendo acessado
+ */
+export const requireOwnershipOrAdminForView = (tipoRecurso: TipoRecurso) => {
+  return async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    if (!req.user) {
+      res.status(HttpStatusCode.UNAUTHORIZED).json({
+        success: false,
+        error: 'Usuário não autenticado'
+      })
+      return
+    }
+
+    const { id: recursoId } = req.params
+    const userId = req.user.id
+
+    // Para recursos de usuário, verificar se é o próprio usuário
+    if (tipoRecurso === TipoRecurso.USUARIO && recursoId === userId) {
+      next()
+      return
+    }
+
+    // Se for admin, pode visualizar qualquer recurso (incluindo outros admins)
+    if (req.user.tipo === TipoUsuario.ADMIN) {
+      next()
+      return
+    }
+
+    try {
+      // Verificar propriedade baseado no tipo de recurso
+      const isOwner = await verifyOwnership(tipoRecurso, recursoId, userId)
+
+      if (!isOwner) {
+        res.status(HttpStatusCode.FORBIDDEN).json({
+          success: false,
+          error: 'Você só pode visualizar seus próprios recursos.',
+          code: 'RESOURCE_OWNERSHIP_REQUIRED'
+        })
+        return
+      }
+
+      next()
+    } catch (error) {
+      console.error('Erro ao verificar propriedade:', error)
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: 'Erro interno ao verificar permissões'
+      })
+    }
+  }
+}
+
+/**
+ * - Middleware que valida se o usuário pode modificar o recurso
+ * - Administradores podem modificar qualquer recurso, EXCETO outros admins
+ * - Usuários comuns só podem modificar seus próprios recursos
  * @param {TipoRecurso} tipoRecurso - Tipo do recurso sendo acessado
  */
 export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
@@ -161,7 +221,7 @@ async function verifyOwnership(
         recursoId,
         userId
       )
-      return comentario
+      return comentario ?? false
     }
 
     case TipoRecurso.LIKE: {
@@ -170,7 +230,17 @@ async function verifyOwnership(
         recursoId,
         userId
       )
-      return like
+      return like ?? false
+    }
+
+    case TipoRecurso.MOBILIDADE: {
+      // Para mobilidades, verificar se o usuário é o proprietário
+      const mobilidade =
+        await MobilidadeDependencies.repository.isMobilidadeOwner(
+          recursoId,
+          userId
+        )
+      return mobilidade ?? false
     }
 
     default:
@@ -186,4 +256,51 @@ async function verifyOwnership(
 async function verifyUserIsAdmin(userId: string): Promise<boolean> {
   const user = await UsuarioDependencies.dao.findById(userId)
   return user?.tipo === TipoUsuario.ADMIN
+}
+
+/**
+ * - Middleware que valida se o usuário é proprietário do recurso
+ * - NÃO permite acesso de administradores (diferente de requireOwnershipOrAdmin)
+ * - Usado quando queremos garantir que apenas o dono do recurso pode acessá-lo
+ * @param {TipoRecurso} tipoRecurso - Tipo do recurso sendo acessado
+ */
+export const requireOwnershipOnly = (tipoRecurso: TipoRecurso) => {
+  return async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    if (!req.user) {
+      res.status(HttpStatusCode.UNAUTHORIZED).json({
+        success: false,
+        error: 'Usuário não autenticado'
+      })
+      return
+    }
+
+    const { id: recursoId } = req.params
+    const userId = req.user.id
+
+    try {
+      // Verificar propriedade baseado no tipo de recurso
+      const isOwner = await verifyOwnership(tipoRecurso, recursoId, userId)
+
+      if (!isOwner) {
+        res.status(HttpStatusCode.FORBIDDEN).json({
+          success: false,
+          error: 'Você só pode acessar/modificar seus próprios recursos.',
+          code: 'RESOURCE_OWNERSHIP_REQUIRED'
+        })
+        return
+      }
+
+      next()
+    } catch (error) {
+      console.error('Erro ao verificar propriedade:', error)
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        error: 'Erro interno ao verificar permissões'
+      })
+    }
+  }
 }

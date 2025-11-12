@@ -30,16 +30,22 @@ export interface IMobilidadeService {
    * Atualiza os dados de uma mobilidade existente
    * @param {string} id - ID único da mobilidade a ser atualizada
    * @param {unknown} data - Novos dados da mobilidade
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está atualizando
    * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade atualizada
    */
-  update(id: string, data: unknown): Promise<MobilidadeResponseDTO>
+  update(
+    id: string,
+    data: unknown,
+    user: UsuarioCompletions | undefined
+  ): Promise<MobilidadeResponseDTO>
 
   /**
    * Remove uma mobilidade do sistema
    * @param {string} id - ID único da mobilidade a ser removida
+   * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está removendo
    * @returns {Promise<void>}
    */
-  delete(id: string): Promise<void>
+  delete(id: string, user: UsuarioCompletions | undefined): Promise<void>
 
   /**
    * Recupera todas as mobilidades do sistema

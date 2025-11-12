@@ -27,7 +27,7 @@ NoticiaRoutes.post(
 
 /**
  * GET /noticias - Lista todas as notícias
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 NoticiaRoutes.get(
   '/',
@@ -38,7 +38,7 @@ NoticiaRoutes.get(
 
 /**
  * GET /noticias/:id - Busca notícia por ID
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 NoticiaRoutes.get(
   '/:id',

@@ -25,5 +25,5 @@ export const ROUTES = {
   /** Rotas para operações de manutenções */
   MANUTENCAO: '/manutencoes',
   /** Rotas para operações de acessibilidade urbana */
-  ACESSIBILIDADE_URBANA: '/acessibilidade-urbana'
+  ACESSIBILIDADE_URBANA: '/acessibilidades-urbanas'
 } as const

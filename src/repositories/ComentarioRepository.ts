@@ -76,9 +76,12 @@ export class ComentarioRepository implements IComentarioAccess {
    * Utilizado para validações de autorização
    * @param {string} commentId - ID do comentário
    * @param {string} userId - ID do usuário
-   * @returns {Promise<boolean>} true se o usuário é o proprietário, false caso contrário
+   * @returns {Promise<boolean | null>} true se o usuário é o proprietário, false se não for, null se não existir
    */
-  async isCommentOwner(commentId: string, userId: string): Promise<boolean> {
+  async isCommentOwner(
+    commentId: string,
+    userId: string
+  ): Promise<boolean | null> {
     return await this.dao.isCommentOwner(commentId, userId)
   }
 

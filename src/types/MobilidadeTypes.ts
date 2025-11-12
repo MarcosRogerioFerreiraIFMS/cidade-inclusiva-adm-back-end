@@ -5,5 +5,9 @@ import type { Prisma } from '@prisma/client'
  * Representa uma mobilidade com todos os seus campos e relacionamentos
  */
 export type MobilidadeCompletions = Prisma.MobilidadeGetPayload<{
-  include: { usuario: true }
+  include: {
+    usuario: {
+      include: { foto: true }
+    }
+  }
 }>

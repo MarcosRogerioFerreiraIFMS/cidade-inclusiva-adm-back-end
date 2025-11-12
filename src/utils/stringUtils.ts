@@ -51,24 +51,67 @@ export function capitalizeWords(text: string): string {
 }
 
 /**
- * Sanitiza uma string removendo caracteres especiais, normalizando espaços
+ * Sanitiza uma string removendo caracteres especiais, tags HTML e normalizando espaços.
  * @param {string} str - String a ser sanitizada
  * @returns {string} String sanitizada e normalizada
  */
 export const sanitizeString = (str: string): string => {
   if (!str || typeof str !== 'string') return ''
 
-  return str
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/<[^>]*>/g, '')
-    .replace(/javascript\s*:/gi, '')
-    .replace(/vbscript\s*:/gi, '')
-    .replace(/on\w+\s*=/gi, '')
-    .replace(/&[a-zA-Z#0-9]+;/g, ' ')
-    .replace(/[\r\n\t]/g, ' ')
-    .replace(/[^\w\s\-.,!?()áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ]/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+  return (
+    str
+      // Remove tags HTML e script completamente (case insensitive)
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
+      .replace(/<embed[^>]*>/gi, '')
+      .replace(/<[^>]*>/g, '')
+
+      // Remove URLs perigosas (javascript:, data:, vbscript:)
+      .replace(/javascript\s*:/gi, '')
+      .replace(/vbscript\s*:/gi, '')
+      .replace(/data\s*:\s*text\/html/gi, '')
+      .replace(/data\s*:\s*application/gi, '')
+
+      // Remove event handlers (onclick, onerror, etc.)
+      .replace(/on\w+\s*=/gi, '')
+
+      // Remove entidades HTML como &nbsp; ou &#x2028;
+      .replace(/&[a-zA-Z#0-9]+;/g, ' ')
+
+      // Remove caracteres de controle invisíveis (exceto \n e \t)
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, '')
+
+      // Remove caracteres bidirecionais Unicode maliciosos
+      .replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '')
+
+      // Remove zero-width characters suspeitos
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+
+      // Normaliza aspas e travessões
+      .replace(/[""«»]/g, '"')
+      .replace(/['']/g, "'")
+      .replace(/[–—]/g, '-')
+
+      // Remove caracteres de controle invisíveis (exceto espaço)
+      .replace(/[\r\n\t]/g, ' ')
+
+      // Remove caracteres não textuais (mantém pontuação comum, acentos PT-BR e emojis)
+      .replace(
+        /[^\w\s\-.,!?()áàãâéêíóôõúçÁÀÃÂÉÊÍÓÔÕÚÇ\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu,
+        ''
+      )
+
+      // Limita o tamanho máximo do conteúdo para evitar abusos
+      .slice(0, 5000)
+
+      // Normaliza múltiplos espaços
+      .replace(/\s+/g, ' ')
+
+      // Trim final
+      .trim()
+  )
 }
 
 /**

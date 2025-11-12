@@ -41,8 +41,6 @@ export const createComentarioSchema = z.object({
     .min(1, 'A nota deve ser no mínimo 1.')
     .max(5, 'A nota deve ser no máximo 5.'),
 
-  usuarioId: z.string().uuid(),
-
   tipoEntidade: z
     .string({
       required_error: 'O tipo de entidade é obrigatório.',

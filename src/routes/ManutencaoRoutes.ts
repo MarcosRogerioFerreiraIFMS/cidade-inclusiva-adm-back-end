@@ -29,7 +29,7 @@ ManutencaoRoutes.post(
 
 /**
  * GET /manutencoes
- * Endpoint para listagem de todas as empresas de manutenção (público)
+ * Endpoint para listagem de todas as empresas de manutenção (requer autenticação)
  */
 ManutencaoRoutes.get(
   '/',
@@ -40,7 +40,7 @@ ManutencaoRoutes.get(
 
 /**
  * GET /manutencoes/:id
- * Endpoint para buscar empresa de manutenção específica por ID (público)
+ * Endpoint para buscar empresa de manutenção específica por ID (requer autenticação)
  */
 ManutencaoRoutes.get(
   '/:id',
@@ -62,7 +62,7 @@ ManutencaoRoutes.get(
 
 /**
  * GET /manutencoes/especialidade/:especialidade
- * Endpoint para buscar empresas de manutenção por especialidade (público)
+ * Endpoint para buscar empresas de manutenção por especialidade (requer autenticação)
  */
 ManutencaoRoutes.get(
   '/especialidade/:especialidade',

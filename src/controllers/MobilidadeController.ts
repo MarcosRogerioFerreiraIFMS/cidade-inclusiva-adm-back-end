@@ -37,12 +37,16 @@ export class MobilidadeController {
 
   /**
    * Atualiza os dados de uma mobilidade existente
-   * @type {ControllerRequest}
+   * @type {ControllerRequest<AuthenticatedRequest>}
    */
-  update: ControllerRequest = async (req, res, next) => {
+  update: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
       const { id } = req.params
-      const mobilidade = await this.mobilidadeService.update(id, req.body)
+      const mobilidade = await this.mobilidadeService.update(
+        id,
+        req.body,
+        req.user
+      )
       HandleSuccess.updated(
         res,
         mobilidade,
@@ -55,12 +59,12 @@ export class MobilidadeController {
 
   /**
    * Remove uma mobilidade do sistema
-   * @type {ControllerRequest}
+   * @type {ControllerRequest<AuthenticatedRequest>}
    */
-  delete: ControllerRequest = async (req, res, next) => {
+  delete: ControllerRequest<AuthenticatedRequest> = async (req, res, next) => {
     try {
       const { id } = req.params
-      await this.mobilidadeService.delete(id)
+      await this.mobilidadeService.delete(id, req.user)
       HandleSuccess.deleted(res)
     } catch (error: unknown) {
       next(error)

@@ -67,4 +67,16 @@ export interface IMobilidadeAccess {
    * @returns {Promise<MobilidadeCompletions[]>} Lista de mobilidades com o status especificado
    */
   findByStatus(status: string): Promise<MobilidadeCompletions[]>
+
+  /**
+   * Verifica se um usuário é o proprietário de uma mobilidade
+   * Utilizado para validações de autorização
+   * @param {string} mobilidadeId - ID da mobilidade
+   * @param {string} userId - ID do usuário
+   * @returns {Promise<boolean | null>} true se o usuário é o proprietário, false se não for, null se não existir
+   */
+  isMobilidadeOwner(
+    mobilidadeId: string,
+    userId: string
+  ): Promise<boolean | null>
 }

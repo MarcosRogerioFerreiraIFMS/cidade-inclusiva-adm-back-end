@@ -24,14 +24,14 @@ export function toMobilidadeResponseDTO(
     descricao: mobilidade.descricao,
     dataRegistro: mobilidade.dataRegistro,
     status: mobilidade.status,
-    usuarioId: mobilidade.usuarioId ?? undefined,
     criadoEm: mobilidade.criadoEm,
     atualizadoEm: mobilidade.atualizadoEm,
     usuario: usuarioAtivo
       ? {
           id: usuarioAtivo.id,
           nome: usuarioAtivo.nome,
-          email: usuarioAtivo.email
+          email: usuarioAtivo.email,
+          ...(usuarioAtivo.foto?.url && { fotoUrl: usuarioAtivo.foto.url })
         }
       : undefined
   }

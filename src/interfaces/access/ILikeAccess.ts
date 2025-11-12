@@ -1,4 +1,4 @@
-import type { LikeCreateDTO } from '@/dtos/create'
+import type { LikeCreateWithUserDTO } from '@/dtos/create'
 import type { LikeCompletions } from '@/types'
 
 /**
@@ -8,10 +8,10 @@ import type { LikeCompletions } from '@/types'
 export interface ILikeAccess {
   /**
    * Cria um novo like no banco de dados
-   * @param {LikeCreateDTO} data - Dados do like
+   * @param {LikeCreateWithUserDTO} data - Dados do like com usuarioId injetado
    * @returns {Promise<LikeCompletions>} Like criado
    */
-  create(data: LikeCreateDTO): Promise<LikeCompletions>
+  create(data: LikeCreateWithUserDTO): Promise<LikeCompletions>
 
   /**
    * Busca like por ID
@@ -74,7 +74,7 @@ export interface ILikeAccess {
    * Verifica se um usuário é dono de um like específico
    * @param {string} likeId - ID do like
    * @param {string} userId - ID do usuário
-   * @returns {Promise<boolean>} True se o usuário é dono do like
+   * @returns {Promise<boolean | null>} True se o usuário é dono, false se não for, null se não existir
    */
-  isLikeOwner(likeId: string, userId: string): Promise<boolean>
+  isLikeOwner(likeId: string, userId: string): Promise<boolean | null>
 }

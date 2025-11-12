@@ -16,12 +16,12 @@ export interface ILikeService {
   /**
    * Alterna o estado de like (curtir/descurtir)
    * @param {string} comentarioId - ID do comentário
-   * @param {UsuarioCompletions} user - Usuário autenticado
+   * @param {UsuarioCompletions | undefined} user - Usuário autenticado
    * @returns {Promise<{liked: boolean; totalLikes: number}>} Estado do like e total
    */
   toggle(
     comentarioId: string,
-    user: UsuarioCompletions
+    user: UsuarioCompletions | undefined
   ): Promise<{ liked: boolean; totalLikes: number }>
 
   /**

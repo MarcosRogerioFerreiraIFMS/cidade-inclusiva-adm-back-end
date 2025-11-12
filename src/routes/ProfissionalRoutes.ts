@@ -30,7 +30,7 @@ ProfissionalRoutes.post(
 
 /**
  * GET /profissionais - Lista todos os profissionais
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 ProfissionalRoutes.get(
   '/',
@@ -41,7 +41,7 @@ ProfissionalRoutes.get(
 
 /**
  * GET /profissionais/:id - Busca profissional por ID
- * Público, sem necessidade de autenticação
+ * Requer autenticação (usuários normais têm acesso apenas leitura)
  */
 ProfissionalRoutes.get(
   '/:id',

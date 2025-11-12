@@ -64,10 +64,14 @@ export class ComentarioService implements IComentarioService {
       )
     }
 
-    const comentarioData = toCreateComentarioDTO({
-      ...(typeof data === 'object' && data !== null ? data : {}),
+    // Valida os dados do body (sem usuarioId)
+    const comentarioDataValidado = toCreateComentarioDTO(data)
+
+    // Injeta o usuarioId do usuário autenticado nos dados validados
+    const comentarioData = {
+      ...comentarioDataValidado,
       usuarioId: user.id
-    })
+    }
 
     await this.validateEntityExists(
       comentarioData.tipoEntidade,
@@ -346,11 +350,11 @@ export class ComentarioService implements IComentarioService {
 
   /**
    * Constrói dados relacionais baseado no tipo de entidade
-   * @param {ComentarioCreateDTO} comentarioData - Dados do comentário validados
+   * @param {ComentarioCreateDTO & { usuarioId: string }} comentarioData - Dados do comentário validados com usuarioId injetado
    * @returns {ComentarioCreateRelationalDTO} Dados com relacionamentos configurados
    */
   private buildRelationalData(
-    comentarioData: ComentarioCreateDTO
+    comentarioData: ComentarioCreateDTO & { usuarioId: string }
   ): ComentarioCreateRelationalDTO {
     const relationalData: ComentarioCreateRelationalDTO = {
       ...comentarioData

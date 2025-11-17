@@ -97,18 +97,4 @@ export class MobilidadeController {
       next(error)
     }
   }
-
-  /**
-   * Busca mobilidades por status
-   * @type {ControllerRequest}
-   */
-  findByStatus: ControllerRequest = async (req, res, next) => {
-    try {
-      const { status } = req.params
-      const mobilidades = await this.mobilidadeService.findByStatus(status)
-      HandleSuccess.list(res, mobilidades)
-    } catch (error: unknown) {
-      next(error)
-    }
-  }
 }

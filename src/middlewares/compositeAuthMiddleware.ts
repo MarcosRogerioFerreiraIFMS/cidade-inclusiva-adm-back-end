@@ -158,24 +158,24 @@ export const comentarioOperations = {
     validateUUID('id')
   ],
 
-  /** POST /comentarios - Apenas usuários autenticados podem criar */
+  /** POST /comentarios - Apenas usuários comuns (não admins) podem criar */
   create: [
-    ...authenticated,
+    ...userOnly,
     validateRequiredBody([...requiredFields.comentario.create])
   ],
 
-  /** PUT /comentarios/:id - Apenas o autor ou admin podem editar */
+  /** PUT /comentarios/:id - Apenas o autor pode editar */
   update: [
-    ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
+    ...userOnly,
+    requireOwnershipOnly(TipoRecurso.COMENTARIO),
     validateUUID('id'),
     validateRequiredBody([...requiredFields.comentario.update])
   ],
 
-  /** DELETE /comentarios/:id - Apenas o autor ou admin podem deletar */
+  /** DELETE /comentarios/:id - Apenas o autor pode deletar */
   delete: [
-    ...authenticated,
-    requireOwnershipOrAdmin(TipoRecurso.COMENTARIO),
+    ...userOnly,
+    requireOwnershipOnly(TipoRecurso.COMENTARIO),
     validateUUID('id')
   ],
 
@@ -226,11 +226,15 @@ export const authOperations = {
  * - Apenas usuários normais (não admins) podem criar, editar e deletar suas mobilidades
  */
 export const mobilidadeOperations = {
-  /** GET /mobilidades - Requer autenticação para visualizar */
-  list: [...authenticated],
+  /** GET /mobilidades - Apenas admins podem listar */
+  list: [...adminOnly],
 
-  /** GET /mobilidades/:id - Requer autenticação para visualizar */
-  view: [...authenticated, validateUUID('id')],
+  /** GET /mobilidades/:id - Admin pode visualizar, ou o proprietário (usuário normal) */
+  view: [
+    ...authenticated,
+    validateUUID('id'),
+    requireOwnershipOrAdminForView(TipoRecurso.MOBILIDADE)
+  ],
 
   /** POST /mobilidades - Apenas usuários normais podem criar */
   create: [

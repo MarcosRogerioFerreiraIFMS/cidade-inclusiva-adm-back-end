@@ -48,17 +48,6 @@ MobilidadeRoutes.get(
 )
 
 /**
- * GET /mobilidades/status/:status - Busca mobilidades por status
- * Requer autenticação para visualizar
- */
-MobilidadeRoutes.get(
-  '/status/:status',
-  readOperationsRateLimit,
-  ...mobilidadeOperations.findByStatus,
-  MobilidadeDependencies.controller.findByStatus
-)
-
-/**
  * GET /mobilidades/:id - Busca mobilidade por ID
  * Requer autenticação para visualizar
  */

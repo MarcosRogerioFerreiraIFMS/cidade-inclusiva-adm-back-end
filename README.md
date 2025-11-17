@@ -291,42 +291,43 @@ Cada entidade (Comentário, Notícia, Profissional) segue o padrão de arquitetu
 
 ### 📦 Dependências de Produção
 
-| 📚 **Biblioteca**     | 📖 **Versão** | 📖 **Descrição**                                                             | 🔗 **Link**                                                             |
-| --------------------- | ------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `@prisma/client`      | `^6.15.0`     | Cliente Prisma para acesso ao banco de dados                                 | [Prisma Client](https://www.prisma.io/client)                           |
-| `@types/jsonwebtoken` | `^9.0.10`     | Definições de tipos TypeScript para jsonwebtoken                             | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
-| `axios`               | `^1.11.0`     | Cliente HTTP baseado em promises para requisições                            | [Axios](https://axios-http.com/)                                        |
-| `bcryptjs`            | `^3.0.2`      | Biblioteca para hash de senhas com bcrypt                                    | [bcryptjs](https://www.npmjs.com/package/bcryptjs)                      |
-| `brasilapi-js`        | `^1.0.4`      | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/)                               |
-| `chalk`               | `^5.6.0`      | Biblioteca para estilizar texto no terminal com cores e formatação           | [Chalk](https://www.npmjs.com/package/chalk)                            |
-| `compression`         | `^1.8.1`      | Middleware de compressão para Express                                        | [Compression](https://www.npmjs.com/package/compression)                |
-| `cors`                | `^2.8.5`      | Middleware para habilitar CORS (Cross-Origin Resource Sharing)               | [CORS](https://www.npmjs.com/package/cors)                              |
-| `express`             | `^5.1.0`      | Framework web rápido e minimalista para Node.js                              | [Express](https://expressjs.com/)                                       |
-| `express-rate-limit`  | `^8.0.1`      | Middleware de limitação de taxa para Express                                 | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit)  |
-| `helmet`              | `^8.1.0`      | Middleware de segurança para Express                                         | [Helmet](https://helmetjs.github.io/)                                   |
-| `jsonwebtoken`        | `^9.0.2`      | Implementação de JSON Web Tokens para autenticação                           | [JsonWebToken](https://www.npmjs.com/package/jsonwebtoken)              |
-| `zod`                 | `^3.25.76`    | Biblioteca de validação de schema TypeScript-first                           | [Zod](https://zod.dev/)                                                 |
+| 📚 **Biblioteca**    | 📖 **Versão** | 📖 **Descrição**                                                             | 🔗 **Link**                                                            |
+| -------------------- | ------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `@prisma/client`     | `^6.15.0`     | Cliente Prisma para acesso ao banco de dados                                 | [Prisma Client](https://www.prisma.io/client)                          |
+| `axios`              | `^1.11.0`     | Cliente HTTP baseado em promises para requisições                            | [Axios](https://axios-http.com/)                                       |
+| `bcryptjs`           | `^3.0.2`      | Biblioteca para hash de senhas com bcrypt                                    | [bcryptjs](https://www.npmjs.com/package/bcryptjs)                     |
+| `brasilapi-js`       | `^1.0.4`      | Cliente JavaScript para a BrasilAPI - API gratuita com informações do Brasil | [BrasilAPI JS](https://brasilapi.com.br/)                              |
+| `chalk`              | `^5.6.0`      | Biblioteca para estilizar texto no terminal com cores e formatação           | [Chalk](https://www.npmjs.com/package/chalk)                           |
+| `compression`        | `^1.8.1`      | Middleware de compressão para Express                                        | [Compression](https://www.npmjs.com/package/compression)               |
+| `cors`               | `^2.8.5`      | Middleware para habilitar CORS (Cross-Origin Resource Sharing)               | [CORS](https://www.npmjs.com/package/cors)                             |
+| `express`            | `^5.1.0`      | Framework web rápido e minimalista para Node.js                              | [Express](https://expressjs.com/)                                      |
+| `express-rate-limit` | `^8.0.1`      | Middleware de limitação de taxa para Express                                 | [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) |
+| `helmet`             | `^8.1.0`      | Middleware de segurança para Express                                         | [Helmet](https://helmetjs.github.io/)                                  |
+| `jsonwebtoken`       | `^9.0.2`      | Implementação de JSON Web Tokens para autenticação                           | [JsonWebToken](https://www.npmjs.com/package/jsonwebtoken)             |
+| `zod`                | `^3.25.76`    | Biblioteca de validação de schema TypeScript-first                           | [Zod](https://zod.dev/)                                                |
 
 ### 🛠️ Dependências de Desenvolvimento
 
-| 📚 **Biblioteca**    | 📖 **Versão** | 📖 **Descrição**                                             | 🔗 **Link**                                                           |
-| -------------------- | ------------- | ------------------------------------------------------------ | --------------------------------------------------------------------- |
-| `@eslint/js`         | `^9.34.0`     | Configurações JavaScript oficiais do ESLint                  | [ESLint JS](https://eslint.org/)                                      |
-| `@faker-js/faker`    | `^10.0.0`     | Biblioteca para geração de dados falsos realistas            | [Faker.js](https://fakerjs.dev/)                                      |
-| `@types/compression` | `^1.8.1`      | Definições de tipos TypeScript para compression              | [Types Compression](https://www.npmjs.com/package/@types/compression) |
-| `@types/cors`        | `^2.8.19`     | Definições de tipos TypeScript para cors                     | [Types CORS](https://www.npmjs.com/package/@types/cors)               |
-| `@types/express`     | `^5.0.3`      | Definições de tipos TypeScript para express                  | [Types Express](https://www.npmjs.com/package/@types/express)         |
-| `@types/node`        | `^22.18.0`    | Definições de tipos TypeScript para Node.js                  | [Types Node](https://www.npmjs.com/package/@types/node)               |
-| `@types/semver`      | `^7.7.0`      | Definições de tipos TypeScript para semver                   | [Types Semver](https://www.npmjs.com/package/@types/semver)           |
-| `dotenv`             | `^16.6.1`     | Carrega variáveis de ambiente de um arquivo .env             | [Dotenv](https://www.npmjs.com/package/dotenv)                        |
-| `eslint`             | `^9.34.0`     | Ferramenta de linting para identificar problemas no código   | [ESLint](https://eslint.org/)                                         |
-| `globals`            | `^16.3.0`     | Variáveis globais para ESLint em diferentes ambientes        | [Globals](https://www.npmjs.com/package/globals)                      |
-| `prisma`             | `^6.15.0`     | Kit de ferramentas de banco de dados                         | [Prisma](https://www.prisma.io/)                                      |
-| `rimraf`             | `^6.0.1`      | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf)                        |
-| `semver`             | `^7.7.2`      | Utilitário para trabalhar com versionamento semântico        | [Semver](https://www.npmjs.com/package/semver)                        |
-| `tsx`                | `^4.20.5`     | Executor TypeScript/JSX de alta performance                  | [TSX](https://www.npmjs.com/package/tsx)                              |
-| `typescript`         | `^5.9.2`      | Linguagem de programação que adiciona tipagem ao JavaScript  | [TypeScript](https://www.typescriptlang.org/)                         |
-| `typescript-eslint`  | `^8.41.0`     | Integração entre TypeScript e ESLint                         | [TypeScript ESLint](https://typescript-eslint.io/)                    |
+| 📚 **Biblioteca**     | 📖 **Versão** | 📖 **Descrição**                                             | 🔗 **Link**                                                             |
+| --------------------- | ------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| `@eslint/js`          | `^9.34.0`     | Configurações JavaScript oficiais do ESLint                  | [ESLint JS](https://eslint.org/)                                        |
+| `@faker-js/faker`     | `^10.0.0`     | Biblioteca para geração de dados falsos realistas            | [Faker.js](https://fakerjs.dev/)                                        |
+| `@types/compression`  | `^1.8.1`      | Definições de tipos TypeScript para compression              | [Types Compression](https://www.npmjs.com/package/@types/compression)   |
+| `@types/cors`         | `^2.8.19`     | Definições de tipos TypeScript para cors                     | [Types CORS](https://www.npmjs.com/package/@types/cors)                 |
+| `@types/express`      | `^5.0.3`      | Definições de tipos TypeScript para express                  | [Types Express](https://www.npmjs.com/package/@types/express)           |
+| `@types/jsonwebtoken` | `^9.0.10`     | Definições de tipos TypeScript para jsonwebtoken             | [Types JsonWebToken](https://www.npmjs.com/package/@types/jsonwebtoken) |
+| `@types/node`         | `^22.18.0`    | Definições de tipos TypeScript para Node.js                  | [Types Node](https://www.npmjs.com/package/@types/node)                 |
+| `@types/semver`       | `^7.7.0`      | Definições de tipos TypeScript para semver                   | [Types Semver](https://www.npmjs.com/package/@types/semver)             |
+| `dotenv`              | `^16.6.1`     | Carrega variáveis de ambiente de um arquivo .env             | [Dotenv](https://www.npmjs.com/package/dotenv)                          |
+| `eslint`              | `^9.34.0`     | Ferramenta de linting para identificar problemas no código   | [ESLint](https://eslint.org/)                                           |
+| `globals`             | `^16.3.0`     | Variáveis globais para ESLint em diferentes ambientes        | [Globals](https://www.npmjs.com/package/globals)                        |
+| `prisma`              | `^6.15.0`     | Kit de ferramentas de banco de dados                         | [Prisma](https://www.prisma.io/)                                        |
+| `rimraf`              | `^6.0.1`      | Utilitário para remoção de arquivos e pastas multiplataforma | [Rimraf](https://www.npmjs.com/package/rimraf)                          |
+| `semver`              | `^7.7.2`      | Utilitário para trabalhar com versionamento semântico        | [Semver](https://www.npmjs.com/package/semver)                          |
+| `tsc-alias`           | `^1.8.16`     | Resolve aliases do TypeScript após a compilação              | [TSC Alias](https://www.npmjs.com/package/tsc-alias)                    |
+| `tsx`                 | `^4.20.5`     | Executor TypeScript/JSX de alta performance                  | [TSX](https://www.npmjs.com/package/tsx)                                |
+| `typescript`          | `^5.9.2`      | Linguagem de programação que adiciona tipagem ao JavaScript  | [TypeScript](https://www.typescriptlang.org/)                           |
+| `typescript-eslint`   | `^8.41.0`     | Integração entre TypeScript e ESLint                         | [TypeScript ESLint](https://typescript-eslint.io/)                      |
 
 ## ⚠️ Aviso Importante sobre Dependências
 

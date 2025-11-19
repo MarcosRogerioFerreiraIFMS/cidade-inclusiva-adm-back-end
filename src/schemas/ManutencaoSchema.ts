@@ -1,4 +1,4 @@
-import { sanitizeString } from '@/utils'
+import { ManutencaoEspecialidadeTipo } from '@/enums'
 import { z } from 'zod'
 import {
   emailSchema,
@@ -9,25 +9,10 @@ import {
   telefoneSchema
 } from './CommonSchemas'
 
-/**
- * Schema reutilizável para validação de especialidade
- */
-const especialidadeSchema = z
-  .string({
-    required_error: 'O nome da especialidade é obrigatório.',
-    invalid_type_error: 'O nome da especialidade deve ser uma string.'
-  })
-  .transform(sanitizeString)
-  .refine((val) => val.length >= 2, {
-    message: 'A especialidade deve ter pelo menos 2 caracteres.'
-  })
-  .refine((val) => val.length <= 100, {
-    message: 'A especialidade deve ter no máximo 100 caracteres.'
-  })
-  .refine((val) => /^[a-zA-ZÀ-ÿ0-9\s\-.,/]+$/.test(val), {
-    message:
-      'A especialidade deve conter apenas letras, números, espaços, hífens, pontos, vírgulas e barras.'
-  })
+/** Número mínimo de especialidades permitidas */
+const MIN_ESPECIALIDADES = 1
+/** Número máximo de especialidades permitidas */
+const MAX_ESPECIALIDADES = 20
 
 /**
  * - Schema de validação Zod para criação de manutenção
@@ -46,17 +31,33 @@ export const createManutencaoSchema = z.object({
   logo: logoSchema,
 
   especialidades: z
-    .array(especialidadeSchema, {
-      invalid_type_error: 'O campo especialidades deve ser um array de strings.'
+    .array(
+      z
+        .string({
+          required_error: 'A especialidade é obrigatória.',
+          invalid_type_error: 'A especialidade deve ser uma string.'
+        })
+        .transform((val) => val.trim().toUpperCase())
+        .pipe(
+          z.nativeEnum(ManutencaoEspecialidadeTipo, {
+            invalid_type_error: 'O campo especialidade deve ser um tipo válido.'
+          })
+        ),
+      {
+        invalid_type_error:
+          'O campo especialidades deve ser um array de tipos válidos.'
+      }
+    )
+    .min(MIN_ESPECIALIDADES, {
+      message: `Pelo menos ${MIN_ESPECIALIDADES} especialidade deve ser informada.`
     })
-    .min(1, { message: 'Pelo menos uma especialidade deve ser informada.' })
-    .max(20, { message: 'Máximo de 20 especialidades permitidas.' })
+    .max(MAX_ESPECIALIDADES, {
+      message: `Máximo de ${MAX_ESPECIALIDADES} especialidades permitidas.`
+    })
     .refine(
       (especialidades) => {
-        const uniqueNames = new Set(
-          especialidades.map((esp) => esp.toLowerCase())
-        )
-        return uniqueNames.size === especialidades.length
+        const uniqueTypes = new Set(especialidades)
+        return uniqueTypes.size === especialidades.length
       },
       {
         message: 'Não é possível ter especialidades duplicadas.'
@@ -74,18 +75,34 @@ export const createManutencaoSchema = z.object({
 export const updateManutencaoSchema = createManutencaoSchema.partial().extend({
   endereco: createManutencaoSchema.shape.endereco.partial().optional(),
   especialidades: z
-    .array(especialidadeSchema, {
-      invalid_type_error: 'O campo especialidades deve ser um array de strings.'
+    .array(
+      z
+        .string({
+          required_error: 'A especialidade é obrigatória.',
+          invalid_type_error: 'A especialidade deve ser uma string.'
+        })
+        .transform((val) => val.trim().toUpperCase())
+        .pipe(
+          z.nativeEnum(ManutencaoEspecialidadeTipo, {
+            invalid_type_error: 'O campo especialidade deve ser um tipo válido.'
+          })
+        ),
+      {
+        invalid_type_error:
+          'O campo especialidades deve ser um array de tipos válidos.'
+      }
+    )
+    .min(MIN_ESPECIALIDADES, {
+      message: `Pelo menos ${MIN_ESPECIALIDADES} especialidade deve ser informada.`
     })
-    .min(1, { message: 'Pelo menos uma especialidade deve ser informada.' })
-    .max(20, { message: 'Máximo de 20 especialidades permitidas.' })
+    .max(MAX_ESPECIALIDADES, {
+      message: `Máximo de ${MAX_ESPECIALIDADES} especialidades permitidas.`
+    })
     .refine(
       (especialidades) => {
         if (!especialidades || especialidades.length === 0) return true
-        const uniqueNames = new Set(
-          especialidades.map((esp) => esp.toLowerCase())
-        )
-        return uniqueNames.size === especialidades.length
+        const uniqueTypes = new Set(especialidades)
+        return uniqueTypes.size === especialidades.length
       },
       {
         message: 'Não é possível ter especialidades duplicadas.'

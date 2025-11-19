@@ -23,6 +23,7 @@ export const CEP_REGEX = /^\d{5}-\d{3}$/
 export const SENHA_MIN_LENGTH = 8
 export const SENHA_MAX_LENGTH = 128
 export const EMAIL_MAX_LENGTH = 254
+export const MAX_FOTOS = 20
 
 export const nomeSchema = z
   .string({
@@ -223,6 +224,9 @@ export const fotosArraySchema = z
     // Remove duplicadas
     const unique = Array.from(new Set(fotos))
     return unique
+  })
+  .refine((fotos) => fotos.length <= MAX_FOTOS, {
+    message: `Máximo de ${MAX_FOTOS} fotos permitidas.`
   })
 
 export const logoSchema = z

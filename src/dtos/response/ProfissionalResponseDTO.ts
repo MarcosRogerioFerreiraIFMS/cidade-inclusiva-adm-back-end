@@ -1,4 +1,4 @@
-import type { EspecialidadeProfissional } from '@/enums'
+import type { ProfissionalEspecialidade } from '@/enums'
 import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
@@ -18,7 +18,7 @@ export interface ProfissionalResponseDTO {
   /** Endereço de email do profissional */
   email: string
   /** Área de especialidade do profissional */
-  especialidade: EspecialidadeProfissional
+  especialidade: ProfissionalEspecialidade
   /** Data e hora de criação do registro */
   criadoEm: Date
 }

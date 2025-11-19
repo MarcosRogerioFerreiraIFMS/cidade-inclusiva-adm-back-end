@@ -26,12 +26,13 @@
  */
 
 import {
-  CategoriaAcessibilidadeUrbana,
-  CategoriaNoticia,
-  EspecialidadeProfissional,
-  SimboloAcessibilidade,
-  StatusMobilidade,
-  TipoUsuario
+  AcessibilidadeSimbolo,
+  AcessibilidadeUrbanaCategoria,
+  ManutencaoEspecialidadeTipo,
+  MobilidadeStatus,
+  NoticiaCategoria,
+  ProfissionalEspecialidade,
+  UsuarioTipo
 } from '@/enums'
 import { hashPassword } from '@/utils'
 import { fakerPT_BR as faker } from '@faker-js/faker'
@@ -215,7 +216,7 @@ async function main() {
     await prisma.motorista.deleteMany()
 
     console.log(chalk.gray('   • Removendo especialidades de manutenção...'))
-    await prisma.especialidadeManutencao.deleteMany()
+    await prisma.manutencaoEspecialidade.deleteMany()
 
     console.log(chalk.gray('   • Removendo manutenções...'))
     await prisma.manutencao.deleteMany()
@@ -478,7 +479,7 @@ async function main() {
         foto: faker.image.avatar(),
         email,
         senha: faker.internet.password({ length: 8 }),
-        tipo: TipoUsuario.USUARIO, // Usuários comuns por padrão
+        tipo: UsuarioTipo.USUARIO, // Usuários comuns por padrão
         endereco
       }
     }
@@ -496,7 +497,7 @@ async function main() {
         },
         email: 'admin@cidadeinclusiva.com.br',
         senha: adminPassword,
-        tipo: TipoUsuario.ADMIN,
+        tipo: UsuarioTipo.ADMIN,
         endereco: {
           create: {
             logradouro: 'Avenida Paulista - de 612 a 1510 - lado par',
@@ -587,7 +588,7 @@ async function main() {
 
     // Função para gerar mobilidade com dados realistas
     const generateMobilidade = (usuario?: { id: string }) => {
-      const status = faker.helpers.arrayElement(Object.values(StatusMobilidade))
+      const status = faker.helpers.arrayElement(Object.values(MobilidadeStatus))
 
       // Descrições realistas baseadas em problemas comuns de mobilidade urbana
       const descricoesTemplate = [
@@ -647,7 +648,7 @@ async function main() {
         usuarioId: usuario?.id || null,
         criadoEm: dataRegistro,
         atualizadoEm:
-          status !== StatusMobilidade.PENDENTE
+          status !== MobilidadeStatus.PENDENTE
             ? faker.date.between({ from: dataRegistro, to: new Date() })
             : dataRegistro
       }
@@ -716,7 +717,7 @@ async function main() {
       const firstName = faker.person.firstName(sexo)
       const lastName = faker.person.lastName()
       const especialidade = faker.helpers.arrayElement(
-        Object.values(EspecialidadeProfissional)
+        Object.values(ProfissionalEspecialidade)
       )
 
       // Gerar email único
@@ -827,11 +828,11 @@ async function main() {
     // Função para gerar notícia com dados realistas
     const generateNoticia = () => {
       const categoria = faker.helpers.arrayElement(
-        Object.values(CategoriaNoticia)
+        Object.values(NoticiaCategoria)
       )
 
       // Gerar títulos e conteúdos baseados na categoria
-      const getTituloEConteudo = (cat: CategoriaNoticia) => {
+      const getTituloEConteudo = (cat: NoticiaCategoria) => {
         const templates = {
           DIREITOS: {
             titulos: [
@@ -1266,34 +1267,16 @@ async function main() {
 
       existingEmails.add(email)
 
-      // Especialidades possíveis para manutenção automotiva
-      const especialidadesPossiveis = [
-        'Freios',
-        'Suspensão',
-        'Motor',
-        'Transmissão',
-        'Sistema Elétrico',
-        'Ar Condicionado',
-        'Pneus e Rodas',
-        'Escapamento',
-        'Injeção Eletrônica',
-        'Radiador',
-        'Bateria',
-        'Alinhamento e Balanceamento',
-        'Troca de Óleo',
-        'Revisão Geral',
-        'Funilaria',
-        'Pintura',
-        'Vidros',
-        'Sistema de Direção',
-        'Embreagem',
-        'Acessibilidade Veicular'
-      ]
+      // Tipos de especialidades disponíveis do enum
+      const tiposEspecialidades = Object.values(ManutencaoEspecialidadeTipo)
 
-      // Cada empresa terá entre 3-8 especialidades
-      const numEspecialidades = faker.number.int({ min: 3, max: 8 })
+      // Cada empresa terá entre 2-5 especialidades
+      const numEspecialidades = faker.number.int({
+        min: 2,
+        max: Math.min(5, tiposEspecialidades.length)
+      })
       const especialidades = faker.helpers.arrayElements(
-        especialidadesPossiveis,
+        tiposEspecialidades,
         numEspecialidades
       )
 
@@ -1366,8 +1349,8 @@ async function main() {
             create: manutencaoData.fotos.map((url) => ({ url }))
           },
           especialidades: {
-            create: manutencaoData.especialidades.map((nome) => ({
-              nome,
+            create: manutencaoData.especialidades.map((tipo) => ({
+              tipo,
               criadoEm: manutencaoData.criadoEm,
               atualizadoEm: manutencaoData.atualizadoEm
             }))
@@ -1409,7 +1392,7 @@ async function main() {
       })
 
     // Contar total de fotos e especialidades
-    const totalEspecialidades = await prisma.especialidadeManutencao.count()
+    const totalEspecialidades = await prisma.manutencaoEspecialidade.count()
     const totalFotosManutencao = await prisma.foto.count({
       where: {
         OR: [
@@ -1662,188 +1645,188 @@ async function main() {
     // Função para gerar lugar de acessibilidade urbana com dados realistas
     const generateAcessibilidadeUrbana = (existingEmails: Set<string>) => {
       const categoria = faker.helpers.arrayElement(
-        Object.values(CategoriaAcessibilidadeUrbana)
+        Object.values(AcessibilidadeUrbanaCategoria)
       )
 
       // Nomes baseados na categoria
-      const getNomeEmpresa = (cat: CategoriaAcessibilidadeUrbana) => {
+      const getNomeEmpresa = (cat: AcessibilidadeUrbanaCategoria) => {
         const nomes = {
-          [CategoriaAcessibilidadeUrbana.RESTAURANTE]: [
+          [AcessibilidadeUrbanaCategoria.RESTAURANTE]: [
             'Sabor & Arte',
             'Cantinho Gourmet',
             'Mesa Real',
             'Paladar Fino',
             'Tempero & Sabor'
           ],
-          [CategoriaAcessibilidadeUrbana.LANCHONETE]: [
+          [AcessibilidadeUrbanaCategoria.LANCHONETE]: [
             'Quick Bite',
             'Lanche Express',
             'Sabor Rápido',
             'Big Burger',
             'Sanduicheria Central'
           ],
-          [CategoriaAcessibilidadeUrbana.BAR]: [
+          [AcessibilidadeUrbanaCategoria.BAR]: [
             'Bar do João',
             'Boteco Tradicional',
             'Cervejaria Premium',
             'Bar Central',
             'Chopp & Cia'
           ],
-          [CategoriaAcessibilidadeUrbana.CAFETERIA]: [
+          [AcessibilidadeUrbanaCategoria.CAFETERIA]: [
             'Café com Arte',
             'Coffee House',
             'Grão Especial',
             'Café Central',
             'Aromas'
           ],
-          [CategoriaAcessibilidadeUrbana.HOTEL]: [
+          [AcessibilidadeUrbanaCategoria.HOTEL]: [
             'Hotel Conforto',
             'Pousada Aconchego',
             'Grand Hotel',
             'Hotel Central',
             'Suítes Premium'
           ],
-          [CategoriaAcessibilidadeUrbana.SALAO_DE_BELEZA]: [
+          [AcessibilidadeUrbanaCategoria.SALAO_DE_BELEZA]: [
             'Beleza Total',
             'Studio Hair',
             'Salão Charme',
             'Beauty Center',
             'Cabelos & Cia'
           ],
-          [CategoriaAcessibilidadeUrbana.ACADEMIA]: [
+          [AcessibilidadeUrbanaCategoria.ACADEMIA]: [
             'Fitness Total',
             'Academia Forma',
             'Strong Gym',
             'Body Center',
             'Movimento Fit'
           ],
-          [CategoriaAcessibilidadeUrbana.PARQUE]: [
+          [AcessibilidadeUrbanaCategoria.PARQUE]: [
             'Parque das Flores',
             'Parque Verde',
             'Parque Central',
             'Bosque Municipal',
             'Parque da Paz'
           ],
-          [CategoriaAcessibilidadeUrbana.MUSEU]: [
+          [AcessibilidadeUrbanaCategoria.MUSEU]: [
             'Museu da História',
             'Museu de Arte',
             'Museu Cultural',
             'Centro Cultural',
             'Museu Memorial'
           ],
-          [CategoriaAcessibilidadeUrbana.CINEMA]: [
+          [AcessibilidadeUrbanaCategoria.CINEMA]: [
             'Cine Center',
             'Multiplex',
             'Cinema Arte',
             'Cine Popular',
             'Movies Plaza'
           ],
-          [CategoriaAcessibilidadeUrbana.TEATRO]: [
+          [AcessibilidadeUrbanaCategoria.TEATRO]: [
             'Teatro Municipal',
             'Teatro Cultura',
             'Casa de Espetáculos',
             'Teatro Real',
             'Arena Cultural'
           ],
-          [CategoriaAcessibilidadeUrbana.AQUARIO]: [
+          [AcessibilidadeUrbanaCategoria.AQUARIO]: [
             'Aquário Azul',
             'Mundo Marinho',
             'Aquário Central',
             'Oceano Vivo',
             'Vida Aquática'
           ],
-          [CategoriaAcessibilidadeUrbana.ZOOLOGICO]: [
+          [AcessibilidadeUrbanaCategoria.ZOOLOGICO]: [
             'Zoo Safari',
             'Zoológico Municipal',
             'Parque dos Animais',
             'Zoo Vida',
             'Reino Animal'
           ],
-          [CategoriaAcessibilidadeUrbana.BIBLIOTECA]: [
+          [AcessibilidadeUrbanaCategoria.BIBLIOTECA]: [
             'Biblioteca Central',
             'Casa do Saber',
             'Biblioteca Municipal',
             'Centro de Leitura',
             'Espaço Livros'
           ],
-          [CategoriaAcessibilidadeUrbana.SHOPPING]: [
+          [AcessibilidadeUrbanaCategoria.SHOPPING]: [
             'Shopping Center',
             'Plaza Mall',
             'Center Norte',
             'Boulevard Shopping',
             'Mega Center'
           ],
-          [CategoriaAcessibilidadeUrbana.SUPERMERCADO]: [
+          [AcessibilidadeUrbanaCategoria.SUPERMERCADO]: [
             'Supermercado Central',
             'Mercado Bom Preço',
             'Super Família',
             'Market Place',
             'Hiper Centro'
           ],
-          [CategoriaAcessibilidadeUrbana.HOSPITAL]: [
+          [AcessibilidadeUrbanaCategoria.HOSPITAL]: [
             'Hospital São Lucas',
             'Centro Médico',
             'Hospital da Saúde',
             'Clínica Vida',
             'Hospital Central'
           ],
-          [CategoriaAcessibilidadeUrbana.POSTO_DE_SAUDE]: [
+          [AcessibilidadeUrbanaCategoria.POSTO_DE_SAUDE]: [
             'UBS Central',
             'Posto de Saúde',
             'Centro de Saúde',
             'Unidade Básica',
             'Posto Família'
           ],
-          [CategoriaAcessibilidadeUrbana.FARMACIA]: [
+          [AcessibilidadeUrbanaCategoria.FARMACIA]: [
             'Farmácia Saúde',
             'Drogaria Central',
             'Farmácia Popular',
             'Medicamentos & Cia',
             'Pharma Plus'
           ],
-          [CategoriaAcessibilidadeUrbana.ESCOLA]: [
+          [AcessibilidadeUrbanaCategoria.ESCOLA]: [
             'Escola Municipal',
             'Colégio Futuro',
             'Centro Educacional',
             'Escola Progresso',
             'Instituto Saber'
           ],
-          [CategoriaAcessibilidadeUrbana.UNIVERSIDADE]: [
+          [AcessibilidadeUrbanaCategoria.UNIVERSIDADE]: [
             'Universidade Central',
             'Centro Universitário',
             'Faculdade Futuro',
             'Instituto Superior',
             'Universidade do Saber'
           ],
-          [CategoriaAcessibilidadeUrbana.AEROPORTO]: [
+          [AcessibilidadeUrbanaCategoria.AEROPORTO]: [
             'Aeroporto Internacional',
             'Terminal Aéreo',
             'Aeroporto Regional',
             'Base Aérea',
             'Airport Center'
           ],
-          [CategoriaAcessibilidadeUrbana.PONTO_DE_ONIBUS]: [
+          [AcessibilidadeUrbanaCategoria.PONTO_DE_ONIBUS]: [
             'Terminal Central',
             'Ponto Principal',
             'Estação Rodoviária',
             'Terminal Norte',
             'Parada Central'
           ],
-          [CategoriaAcessibilidadeUrbana.RODOVIARIA]: [
+          [AcessibilidadeUrbanaCategoria.RODOVIARIA]: [
             'Rodoviária Central',
             'Terminal Rodoviário',
             'Estação de Ônibus',
             'Central de Transportes',
             'Terminal Sul'
           ],
-          [CategoriaAcessibilidadeUrbana.ESTACIONAMENTO]: [
+          [AcessibilidadeUrbanaCategoria.ESTACIONAMENTO]: [
             'Estacionamento Central',
             'Park Center',
             'Auto Park',
             'Zona Azul',
             'Parking Plaza'
           ],
-          [CategoriaAcessibilidadeUrbana.OUTROS]: [
+          [AcessibilidadeUrbanaCategoria.OUTROS]: [
             'Centro Comercial',
             'Espaço Cultural',
             'Complexo Multi',
@@ -1853,7 +1836,7 @@ async function main() {
         }
 
         return faker.helpers.arrayElement(
-          nomes[cat] || nomes[CategoriaAcessibilidadeUrbana.OUTROS]
+          nomes[cat] || nomes[AcessibilidadeUrbanaCategoria.OUTROS]
         )
       }
 
@@ -1883,7 +1866,7 @@ async function main() {
       const endereco = getRandomRealAddress()
 
       // Símbolos de acessibilidade possíveis
-      const simbolosPossiveis = Object.values(SimboloAcessibilidade)
+      const simbolosPossiveis = Object.values(AcessibilidadeSimbolo)
 
       // Cada local terá entre 3-8 recursos de acessibilidade
       const numRecursos = faker.number.int({ min: 3, max: 8 })
@@ -1895,33 +1878,33 @@ async function main() {
       const recursos = simbolos.map((simbolo) => {
         // Descrições específicas para cada tipo de símbolo
         const descricoes = {
-          [SimboloAcessibilidade.CADEIRA_DE_RODAS]:
+          [AcessibilidadeSimbolo.CADEIRA_DE_RODAS]:
             'Acesso facilitado para cadeirantes com rampas e espaços amplos',
-          [SimboloAcessibilidade.BRAILLE]:
+          [AcessibilidadeSimbolo.BRAILLE]:
             'Sinalização em braille disponível em elevadores e pontos principais',
-          [SimboloAcessibilidade.LIBRAS]:
+          [AcessibilidadeSimbolo.LIBRAS]:
             'Atendimento em Língua Brasileira de Sinais disponível',
-          [SimboloAcessibilidade.AUDIO_DESCRICAO]:
+          [AcessibilidadeSimbolo.AUDIO_DESCRICAO]:
             'Audiodescrição disponível para pessoas com deficiência visual',
-          [SimboloAcessibilidade.CLOSED_CAPTION]:
+          [AcessibilidadeSimbolo.CLOSED_CAPTION]:
             'Legendas fechadas disponíveis em apresentações e vídeos',
-          [SimboloAcessibilidade.RAMPA]:
+          [AcessibilidadeSimbolo.RAMPA]:
             'Rampas de acesso em todas as entradas do estabelecimento',
-          [SimboloAcessibilidade.ELEVADOR]:
+          [AcessibilidadeSimbolo.ELEVADOR]:
             'Elevadores adaptados com botões em braille e comando de voz',
-          [SimboloAcessibilidade.SINALIZACAO_TATIL]:
+          [AcessibilidadeSimbolo.SINALIZACAO_TATIL]:
             'Piso tátil para orientação de pessoas com deficiência visual',
-          [SimboloAcessibilidade.BANHEIRO_ACESSIVEL]:
+          [AcessibilidadeSimbolo.BANHEIRO_ACESSIVEL]:
             'Banheiros adaptados com barras de apoio e espaço para cadeirantes',
-          [SimboloAcessibilidade.ESTACIONAMENTO_ACESSIVEL]:
+          [AcessibilidadeSimbolo.ESTACIONAMENTO_ACESSIVEL]:
             'Vagas reservadas próximas à entrada principal',
-          [SimboloAcessibilidade.ATENDIMENTO_PRIORIZADO]:
+          [AcessibilidadeSimbolo.ATENDIMENTO_PRIORIZADO]:
             'Atendimento preferencial para pessoas com deficiência',
-          [SimboloAcessibilidade.ANIMAIS_DE_ASSISTENCIA_PERMITIDOS]:
+          [AcessibilidadeSimbolo.ANIMAIS_DE_ASSISTENCIA_PERMITIDOS]:
             'Permite entrada de cães-guia e animais de assistência',
-          [SimboloAcessibilidade.MOBILIARIO_ACESSIVEL]:
+          [AcessibilidadeSimbolo.MOBILIARIO_ACESSIVEL]:
             'Mobiliário adaptado com alturas adequadas',
-          [SimboloAcessibilidade.COMUNICACAO_SIMPLIFICADA]:
+          [AcessibilidadeSimbolo.COMUNICACAO_SIMPLIFICADA]:
             'Comunicação clara e simplificada para melhor compreensão'
         }
 

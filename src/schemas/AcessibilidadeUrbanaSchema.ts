@@ -1,4 +1,4 @@
-import { CategoriaAcessibilidadeUrbana, SimboloAcessibilidade } from '@/enums'
+import { AcessibilidadeSimbolo, AcessibilidadeUrbanaCategoria } from '@/enums'
 import { sanitizeContent } from '@/utils'
 import { z } from 'zod'
 import {
@@ -29,16 +29,16 @@ export const acessibilidadeUrbanaRecursoSchema = z.object({
     .transform((val) => val.trim().toUpperCase())
     .refine(
       (val) =>
-        Object.values(SimboloAcessibilidade).includes(
-          val as SimboloAcessibilidade
+        Object.values(AcessibilidadeSimbolo).includes(
+          val as AcessibilidadeSimbolo
         ),
       {
         message: `Símbolo inválido. Valores aceitos: ${Object.values(
-          SimboloAcessibilidade
+          AcessibilidadeSimbolo
         ).join(', ')}`
       }
     )
-    .transform((val) => val as SimboloAcessibilidade),
+    .transform((val) => val as AcessibilidadeSimbolo),
 
   descricao: z
     .string({ invalid_type_error: 'A descrição deve ser uma string.' })
@@ -85,16 +85,16 @@ export const createAcessibilidadeUrbanaSchema = z.object({
     .transform((val) => val.trim().toUpperCase())
     .refine(
       (val) =>
-        Object.values(CategoriaAcessibilidadeUrbana).includes(
-          val as CategoriaAcessibilidadeUrbana
+        Object.values(AcessibilidadeUrbanaCategoria).includes(
+          val as AcessibilidadeUrbanaCategoria
         ),
       {
         message: `Categoria inválida. Valores aceitos: ${Object.values(
-          CategoriaAcessibilidadeUrbana
+          AcessibilidadeUrbanaCategoria
         ).join(', ')}`
       }
     )
-    .transform((val) => val as CategoriaAcessibilidadeUrbana),
+    .transform((val) => val as AcessibilidadeUrbanaCategoria),
 
   endereco: enderecoSchema,
 

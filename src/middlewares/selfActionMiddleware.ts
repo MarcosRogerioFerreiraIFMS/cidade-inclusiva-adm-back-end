@@ -1,4 +1,4 @@
-import { HttpStatusCode, TipoUsuario } from '@/enums'
+import { HttpStatusCode, UsuarioTipo } from '@/enums'
 import type { AuthenticatedRequest } from '@/types'
 import type { NextFunction, Response } from 'express'
 
@@ -28,7 +28,7 @@ export const requireSelfOrAdmin = (
   const loggedUserId = req.user.id
 
   // Admin pode ver dados de qualquer usuário
-  if (req.user.tipo === TipoUsuario.ADMIN) {
+  if (req.user.tipo === UsuarioTipo.ADMIN) {
     next()
     return
   }

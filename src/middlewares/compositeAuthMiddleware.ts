@@ -1,4 +1,4 @@
-import { TipoRecurso, TipoUsuario } from '@/enums'
+import { TipoRecurso, UsuarioTipo } from '@/enums'
 import { authMiddleware, optionalAuthMiddleware } from './authMiddleware'
 import {
   requireAdmin,
@@ -39,7 +39,7 @@ export const adminOnly = [authMiddleware, requireAdmin]
  * - Middleware para operações específicas de usuários comuns
  * - Uso: Funcionalidades exclusivas de usuários não-admin
  */
-export const userOnly = [authMiddleware, requireRole([TipoUsuario.USUARIO])]
+export const userOnly = [authMiddleware, requireRole([UsuarioTipo.USUARIO])]
 
 /**
  *

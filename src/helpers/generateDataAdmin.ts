@@ -1,5 +1,5 @@
 import type { AdminCreateDTO } from '@/dtos/create'
-import { TipoUsuario } from '@/enums'
+import { UsuarioTipo } from '@/enums'
 import { hashPassword } from '@/utils'
 import type { Prisma } from '@prisma/client'
 import { generateDataFotoUsuarioCreate } from './generateDataFoto'
@@ -27,7 +27,7 @@ export async function generateDataAdminCreate({
     foto: generateDataFotoUsuarioCreate(foto),
     email,
     senha: hashedPassword,
-    tipo: TipoUsuario.ADMIN,
+    tipo: UsuarioTipo.ADMIN,
     endereco: endereco
       ? {
           create: {

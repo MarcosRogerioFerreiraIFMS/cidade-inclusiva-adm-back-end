@@ -1,4 +1,4 @@
-import type { CategoriaNoticia } from '@/enums'
+import type { NoticiaCategoria } from '@/enums'
 import type { FotoResponseDTO } from './FotoResponsesDTO'
 
 /**
@@ -19,7 +19,7 @@ export interface NoticiaResponseDTO {
   /** Data e hora de publicação da notícia */
   dataPublicacao: Date
   /** Categoria da notícia */
-  categoria: CategoriaNoticia
+  categoria: NoticiaCategoria
   /** Data e hora de criação do registro */
   criadoEm: Date
 }

@@ -20,9 +20,6 @@ bun.lock
 # temp
 temp/
 
-# vscode
-.vscode/
-
 # test
 coverage/
 

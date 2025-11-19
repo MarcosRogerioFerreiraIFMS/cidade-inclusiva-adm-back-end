@@ -1,5 +1,5 @@
 import type { UsuarioResponseDTO } from '@/dtos/response'
-import { HttpStatusCode, TipoUsuario } from '@/enums'
+import { HttpStatusCode, UsuarioTipo } from '@/enums'
 import type { IUsuarioAccess } from '@/interfaces/access'
 import type { IUsuarioService } from '@/interfaces/services'
 import {
@@ -171,7 +171,7 @@ export class UsuarioService implements IUsuarioService {
       'Usuário não encontrado'
     )
 
-    if (usuario.tipo === TipoUsuario.ADMIN) {
+    if (usuario.tipo === UsuarioTipo.ADMIN) {
       const activeAdminsCount = await this.usuarioRepository.countActiveAdmins()
 
       if (activeAdminsCount <= 1) {

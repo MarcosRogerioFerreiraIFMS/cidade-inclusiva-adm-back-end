@@ -1,8 +1,9 @@
 import type { MobilidadeCreateDTO } from '@/dtos/create'
-import type { MobilidadeUpdateDTO, StatusMobilidade } from '@/dtos/update'
+import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type { MobilidadeStatus } from '@/enums'
 import {
   createMobilidadeSchema,
-  statusMobilidadeSchema,
+  mobilidadeStatusSchema,
   updateMobilidadeSchema
 } from '@/schemas'
 
@@ -31,9 +32,9 @@ export function toUpdateMobilidadeDTO(input: unknown): MobilidadeUpdateDTO {
 /**
  * - Valida e tipa o status de mobilidade
  * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
- * @returns {StatusMobilidade} Objeto validado contendo o status
+ * @returns {MobilidadeStatus} Objeto validado contendo o status
  * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
  */
-export function toCreateMobilidadeStatusDTO(input: unknown): StatusMobilidade {
-  return statusMobilidadeSchema.parse(input)
+export function toCreateMobilidadeStatusDTO(input: unknown): MobilidadeStatus {
+  return mobilidadeStatusSchema.parse(input)
 }

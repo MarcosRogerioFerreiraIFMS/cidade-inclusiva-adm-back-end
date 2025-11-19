@@ -1,4 +1,4 @@
-import { HttpStatusCode, TipoEntidadeComentario, TipoUsuario } from '@/enums'
+import { HttpStatusCode, TipoEntidadeComentario, UsuarioTipo } from '@/enums'
 import type {
   IAcessibilidadeUrbanaAccess,
   IComentarioAccess,
@@ -106,7 +106,7 @@ export class ComentarioService implements IComentarioService {
       'Comentário não encontrado.'
     )
 
-    const isAdmin = user?.tipo === TipoUsuario.ADMIN
+    const isAdmin = user?.tipo === UsuarioTipo.ADMIN
     if (!comentario.visivel && !isAdmin) {
       throw new HttpError(
         'Comentário não encontrado.',
@@ -140,7 +140,7 @@ export class ComentarioService implements IComentarioService {
 
     const comentarioData = toUpdateComentarioDTO(data)
 
-    const isAdmin = user?.tipo === TipoUsuario.ADMIN
+    const isAdmin = user?.tipo === UsuarioTipo.ADMIN
     if (
       comentarioData.visivel !== undefined &&
       comentarioData.visivel !== null &&
@@ -194,7 +194,7 @@ export class ComentarioService implements IComentarioService {
     // Valida se a entidade existe antes de buscar comentários
     await this.validateEntityExists(tipoEntidade, entidadeId)
 
-    const isAdmin = user?.tipo === TipoUsuario.ADMIN
+    const isAdmin = user?.tipo === UsuarioTipo.ADMIN
     const includeInvisible = isAdmin
 
     let comentarios: ComentarioCompletions[] = []
@@ -332,7 +332,7 @@ export class ComentarioService implements IComentarioService {
     usuarioId: string,
     user: UsuarioCompletions | undefined
   ): Promise<ComentarioResponseDTO[]> {
-    const isAdmin = user?.tipo === TipoUsuario.ADMIN
+    const isAdmin = user?.tipo === UsuarioTipo.ADMIN
     const includeInvisible = isAdmin
 
     throwIfNotFound(

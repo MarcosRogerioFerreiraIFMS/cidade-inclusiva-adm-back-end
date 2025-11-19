@@ -1,4 +1,4 @@
-import type { StatusMobilidade } from '@/enums'
+import type { MobilidadeStatus } from '@/enums'
 
 /**
  * - DTO (Data Transfer Object) para resposta de mobilidade
@@ -11,7 +11,7 @@ export interface MobilidadeResponseDTO {
   longitude: number
   descricao: string
   dataRegistro: Date
-  status: StatusMobilidade
+  status: MobilidadeStatus
   criadoEm: Date
   atualizadoEm: Date
   usuario?: {

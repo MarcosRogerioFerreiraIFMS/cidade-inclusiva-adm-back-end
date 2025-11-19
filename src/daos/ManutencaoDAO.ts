@@ -1,6 +1,7 @@
 import { db } from '@/database/prisma'
 import type { ManutencaoCreateDTO } from '@/dtos/create'
 import type { ManutencaoUpdateDTO } from '@/dtos/update'
+import type { ManutencaoEspecialidadeTipo } from '@/enums'
 import {
   generateDataManutencaoCreate,
   generateDataManutencaoUpdate
@@ -229,7 +230,7 @@ export class ManutencaoDAO implements IManutencaoAccess {
       manutencaoExistente.especialidades &&
       manutencaoExistente.especialidades.length > 0
     ) {
-      await db.especialidadeManutencao.deleteMany({
+      await db.manutencaoEspecialidade.deleteMany({
         where: {
           id: { in: manutencaoExistente.especialidades.map((esp) => esp.id) }
         }
@@ -272,20 +273,18 @@ export class ManutencaoDAO implements IManutencaoAccess {
 
   /**
    * Busca manutenções por especialidade no banco de dados
-   * @param {string} especialidade - Nome da especialidade
+   * @param {ManutencaoEspecialidadeTipo} especialidade - Tipo da especialidade
    * @returns {Promise<ManutencaoCompletions[]>} Lista de manutenções com a especialidade
    */
   async findByEspecialidade(
-    especialidade: string
+    especialidade: ManutencaoEspecialidadeTipo
   ): Promise<ManutencaoCompletions[]> {
     return await db.manutencao.findMany({
       where: {
         deletadoEm: null,
         especialidades: {
           some: {
-            nome: {
-              contains: especialidade
-            }
+            tipo: especialidade
           }
         }
       },

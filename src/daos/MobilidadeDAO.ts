@@ -1,7 +1,7 @@
 import { db } from '@/database/prisma'
 import type { MobilidadeCreateDTO } from '@/dtos/create'
 import type { MobilidadeUpdateDTO } from '@/dtos/update'
-import type { StatusMobilidade } from '@/enums'
+import type { MobilidadeStatus } from '@/enums'
 import {
   generateDataMobilidadeCreate,
   generateDataMobilidadeUpdate
@@ -163,11 +163,11 @@ export class MobilidadeDAO implements IMobilidadeAccess {
 
   /**
    * Busca mobilidades por status
-   * @param {StatusMobilidade} status - Status das mobilidades
+   * @param {MobilidadeStatus} status - Status das mobilidades
    * @returns {Promise<MobilidadeCompletions[]>} Lista de mobilidades com o status especificado
    */
   async findByStatus(
-    status: StatusMobilidade
+    status: MobilidadeStatus
   ): Promise<MobilidadeCompletions[]> {
     return await db.mobilidade.findMany({
       where: { status, deletadoEm: null },

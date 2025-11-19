@@ -389,6 +389,8 @@ export class HandleError {
         return 'DIREITOS, BENEFICIOS, OPORTUNIDADES, TECNOLOGIA, TRABALHO, SAUDE, EDUCACAO, CULTURA, EVENTOS, ESPORTE, ACESSIBILIDADE, OUTROS'
       case 'tipoEntidade':
         return 'PROFISSIONAL, MOTORISTA, MANUTENCAO, ACESSIBILIDADE_URBANA'
+      case 'especialidades':
+        return 'CADEIRAS_DE_RODAS, PROTESES, ORTESES, ANDADORES, MULETAS, BENGALAS, SCOOTERS, OUTROS'
       default:
         return 'valores válidos'
     }

@@ -1,7 +1,7 @@
 import { db } from '@/database/prisma'
 import type { AdminCreateDTO, UsuarioCreateDTO } from '@/dtos/create'
 import type { UsuarioUpdateDTO } from '@/dtos/update'
-import { TipoUsuario } from '@/enums'
+import { UsuarioTipo } from '@/enums'
 import {
   generateDataAdminCreate,
   generateDataUsuarioCreate,
@@ -234,7 +234,7 @@ export class UsuarioDAO implements IUsuarioAccess {
    */
   async countActiveAdmins(): Promise<number> {
     return await db.usuario.count({
-      where: { tipo: TipoUsuario.ADMIN, deletadoEm: null }
+      where: { tipo: UsuarioTipo.ADMIN, deletadoEm: null }
     })
   }
 }

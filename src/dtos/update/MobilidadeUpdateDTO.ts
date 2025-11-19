@@ -1,4 +1,4 @@
-import type { statusMobilidadeSchema, updateMobilidadeSchema } from '@/schemas'
+import type { updateMobilidadeSchema } from '@/schemas'
 import type { z } from 'zod'
 
 /**
@@ -7,5 +7,3 @@ import type { z } from 'zod'
  * - Permite atualizações parciais dos campos de mobilidade
  */
 export type MobilidadeUpdateDTO = z.infer<typeof updateMobilidadeSchema>
-
-export type StatusMobilidade = z.infer<typeof statusMobilidadeSchema>

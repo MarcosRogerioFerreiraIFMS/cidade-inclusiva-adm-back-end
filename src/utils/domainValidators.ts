@@ -1,4 +1,4 @@
-import { CategoriaNoticia, EspecialidadeProfissional } from '@/enums'
+import { NoticiaCategoria, ProfissionalEspecialidade } from '@/enums'
 
 /**
  * Valida se um estado brasileiro é válido
@@ -180,8 +180,8 @@ export const validateBrazilianCEP = (cep: string): boolean => {
  * @returns {boolean} True se a categoria for válida, false caso contrário
  */
 export const validateNewsCategory = (category: string): boolean => {
-  return Object.values(CategoriaNoticia).includes(
-    category.toUpperCase() as CategoriaNoticia
+  return Object.values(NoticiaCategoria).includes(
+    category.toUpperCase() as NoticiaCategoria
   )
 }
 
@@ -191,8 +191,8 @@ export const validateNewsCategory = (category: string): boolean => {
  * @returns {boolean} True se a especialidade for válida, false caso contrário
  */
 export const validateProfessionalSpecialty = (specialty: string): boolean => {
-  return Object.values(EspecialidadeProfissional).includes(
-    specialty.toUpperCase() as EspecialidadeProfissional
+  return Object.values(ProfissionalEspecialidade).includes(
+    specialty.toUpperCase() as ProfissionalEspecialidade
   )
 }
 

@@ -1,4 +1,4 @@
-import type { TipoUsuario } from '@/enums'
+import type { UsuarioTipo } from '@/enums'
 import chalk from 'chalk'
 import type { SignOptions, VerifyOptions } from 'jsonwebtoken'
 import jwt, {
@@ -18,7 +18,7 @@ export interface JWTPayload {
   /** Email do usuário autenticado */
   email: string
   /** Tipo/perfil do usuário */
-  tipo: TipoUsuario
+  tipo: UsuarioTipo
   /** Timestamp de criação do token */
   iat?: number
   /** Timestamp de expiração do token */

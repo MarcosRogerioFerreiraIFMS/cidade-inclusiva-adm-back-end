@@ -1,4 +1,4 @@
-import { StatusMobilidade } from '@/enums'
+import { MobilidadeStatus } from '@/enums'
 import {
   DATE_ERROR_MESSAGES,
   isNotFutureDate,
@@ -56,16 +56,16 @@ export const createMobilidadeSchema = z.object({
     .refine(
       (val) => {
         if (!val) return true
-        return Object.values(StatusMobilidade).includes(val as StatusMobilidade)
+        return Object.values(MobilidadeStatus).includes(val as MobilidadeStatus)
       },
       {
         message: `Status inválido. Valores aceitos: ${Object.values(
-          StatusMobilidade
+          MobilidadeStatus
         ).join(', ')}`
       }
     )
     .transform((val) =>
-      val ? (val as StatusMobilidade) : StatusMobilidade.PENDENTE
+      val ? (val as MobilidadeStatus) : MobilidadeStatus.PENDENTE
     ),
 
   dataRegistro: z
@@ -100,17 +100,17 @@ export const updateMobilidadeSchema = createMobilidadeSchema.partial()
 /**
  * Schema de validação Zod para o campo status de mobilidade isoladamente
  */
-export const statusMobilidadeSchema = z
+export const mobilidadeStatusSchema = z
   .string({
     invalid_type_error: 'O status deve ser uma string.'
   })
   .transform((val) => val.trim().toUpperCase())
   .refine(
-    (val) => Object.values(StatusMobilidade).includes(val as StatusMobilidade),
+    (val) => Object.values(MobilidadeStatus).includes(val as MobilidadeStatus),
     {
       message: `Status inválido. Valores aceitos: ${Object.values(
-        StatusMobilidade
+        MobilidadeStatus
       ).join(', ')}`
     }
   )
-  .transform((val) => val as StatusMobilidade)
+  .transform((val) => val as MobilidadeStatus)

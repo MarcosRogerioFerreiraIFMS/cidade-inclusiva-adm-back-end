@@ -1,7 +1,7 @@
 import { db } from '@/database/prisma'
 import type { AcessibilidadeUrbanaCreateDTO } from '@/dtos/create'
 import type { AcessibilidadeUrbanaUpdateDTO } from '@/dtos/update'
-import type { CategoriaAcessibilidadeUrbana } from '@/enums'
+import type { AcessibilidadeUrbanaCategoria } from '@/enums'
 import {
   generateDataAcessibilidadeUrbanaCreate,
   generateDataAcessibilidadeUrbanaUpdate
@@ -283,7 +283,7 @@ export class AcessibilidadeUrbanaDAO implements IAcessibilidadeUrbanaAccess {
    * @returns {Promise<AcessibilidadeUrbanaCompletions[]>} Lista de acessibilidades urbanas
    */
   async findByCategoria(
-    categoria: CategoriaAcessibilidadeUrbana
+    categoria: AcessibilidadeUrbanaCategoria
   ): Promise<AcessibilidadeUrbanaCompletions[]> {
     return await db.acessibilidadeUrbana.findMany({
       where: {

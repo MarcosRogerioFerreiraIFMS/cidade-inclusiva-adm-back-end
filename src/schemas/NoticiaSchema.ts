@@ -1,4 +1,4 @@
-import { CategoriaNoticia } from '@/enums'
+import { NoticiaCategoria } from '@/enums'
 import {
   DATE_ERROR_MESSAGES,
   isNotFutureDate,
@@ -78,7 +78,7 @@ export const createNoticiaSchema = z.object({
     })
     .min(1, 'A categoria não pode estar vazia.')
     .transform((val) => val.trim().toUpperCase())
-    .pipe(z.nativeEnum(CategoriaNoticia)),
+    .pipe(z.nativeEnum(NoticiaCategoria)),
 
   dataPublicacao: z
     .union([

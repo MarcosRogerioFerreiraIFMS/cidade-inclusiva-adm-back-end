@@ -1,4 +1,4 @@
-import { EspecialidadeProfissional } from '@/enums'
+import { ProfissionalEspecialidade } from '@/enums'
 import { z } from 'zod'
 import {
   emailSchema,
@@ -30,16 +30,16 @@ export const createProfissionalSchema = z.object({
     .transform((val) => val.trim().toUpperCase())
     .refine(
       (val) =>
-        Object.values(EspecialidadeProfissional).includes(
-          val as EspecialidadeProfissional
+        Object.values(ProfissionalEspecialidade).includes(
+          val as ProfissionalEspecialidade
         ),
       {
         message: `Especialidade inválida. Valores aceitos: ${Object.values(
-          EspecialidadeProfissional
+          ProfissionalEspecialidade
         ).join(', ')}.`
       }
     )
-    .transform((val) => val as EspecialidadeProfissional)
+    .transform((val) => val as ProfissionalEspecialidade)
 })
 
 /**

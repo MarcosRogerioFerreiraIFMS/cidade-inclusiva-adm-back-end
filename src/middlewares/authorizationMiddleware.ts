@@ -2,7 +2,7 @@ import { ComentarioDependencies } from '@/dependencies/ComentarioDependencies'
 import { LikeDependencies } from '@/dependencies/LikeDependencies'
 import { MobilidadeDependencies } from '@/dependencies/MobilidadeDependencies'
 import { UsuarioDependencies } from '@/dependencies/UsuarioDependencies'
-import { HttpStatusCode, TipoRecurso, TipoUsuario } from '@/enums'
+import { HttpStatusCode, TipoRecurso, UsuarioTipo } from '@/enums'
 import type { AuthenticatedRequest } from '@/types'
 import type { NextFunction, Response } from 'express'
 
@@ -14,9 +14,9 @@ import type { NextFunction, Response } from 'express'
 
 /**
  * Middleware que requer roles específicos para acesso
- * @param {TipoUsuario[]} rolesPermitidos - Array de roles que podem acessar o recurso
+ * @param {UsuarioTipo[]} rolesPermitidos - Array de roles que podem acessar o recurso
  */
-export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
+export const requireRole = (rolesPermitidos: UsuarioTipo[]) => {
   return (
     req: AuthenticatedRequest,
     res: Response,
@@ -45,9 +45,9 @@ export const requireRole = (rolesPermitidos: TipoUsuario[]) => {
 
 /**
  * - Middleware que requer que o usuário seja administrador
- * - Atalho para requireRole([TipoUsuario.ADMIN])
+ * - Atalho para requireRole([UsuarioTipo.ADMIN])
  */
-export const requireAdmin = requireRole([TipoUsuario.ADMIN])
+export const requireAdmin = requireRole([UsuarioTipo.ADMIN])
 
 /**
  * - Middleware que valida se o usuário pode visualizar o recurso
@@ -79,7 +79,7 @@ export const requireOwnershipOrAdminForView = (tipoRecurso: TipoRecurso) => {
     }
 
     // Se for admin, pode visualizar qualquer recurso (incluindo outros admins)
-    if (req.user.tipo === TipoUsuario.ADMIN) {
+    if (req.user.tipo === UsuarioTipo.ADMIN) {
       next()
       return
     }
@@ -138,7 +138,7 @@ export const requireOwnershipOrAdmin = (tipoRecurso: TipoRecurso) => {
     }
 
     // Se for admin, verificar regras especiais
-    if (req.user.tipo === TipoUsuario.ADMIN) {
+    if (req.user.tipo === UsuarioTipo.ADMIN) {
       // Para operações em usuários, verificar se o alvo não é outro admin
       if (tipoRecurso === TipoRecurso.USUARIO) {
         try {
@@ -255,7 +255,7 @@ async function verifyOwnership(
  */
 async function verifyUserIsAdmin(userId: string): Promise<boolean> {
   const user = await UsuarioDependencies.dao.findById(userId)
-  return user?.tipo === TipoUsuario.ADMIN
+  return user?.tipo === UsuarioTipo.ADMIN
 }
 
 /**

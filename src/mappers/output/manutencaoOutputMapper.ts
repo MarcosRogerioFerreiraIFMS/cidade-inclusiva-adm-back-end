@@ -1,8 +1,8 @@
 import type { ManutencaoResponseDTO } from '@/dtos/response'
 import type { ManutencaoCompletions } from '@/types'
 import { toEnderecoResponseDTO } from './enderecoOutputMapper'
-import { toEspecialidadeManutencoesResponseDTO } from './EspecialidadeManutencaoOutputMapper'
 import { toFotosResponseDTO, toLogoResponseDTO } from './fotoOutputMappers'
+import { toManutencaoEspecialidadesResponseDTO } from './ManutencaoEspecialidadesOutputMapper'
 
 /**
  * - Converte dados de manutenção do banco para DTO de resposta
@@ -21,7 +21,7 @@ export function toManutencaoResponseDTO(
     endereco: toEnderecoResponseDTO(manutencao.endereco),
     fotos: toFotosResponseDTO(manutencao.fotos),
     logo: toLogoResponseDTO(manutencao.logo),
-    especialidades: toEspecialidadeManutencoesResponseDTO(
+    especialidades: toManutencaoEspecialidadesResponseDTO(
       manutencao.especialidades
     ),
     criadoEm: manutencao.criadoEm

@@ -42,8 +42,8 @@ export function generateDataManutencaoCreate({
       }
     },
     especialidades: {
-      create: especialidades.map((nome: string) => ({
-        nome
+      create: especialidades.map((tipo) => ({
+        tipo
       }))
     }
   }
@@ -156,8 +156,8 @@ export async function generateDataManutencaoUpdate(
     // Remove todas as especialidades existentes e cria as novas
     dataToUpdate.especialidades = {
       deleteMany: {},
-      create: especialidades.map((nome: string) => ({
-        nome
+      create: especialidades.map((tipo) => ({
+        tipo
       }))
     }
   }

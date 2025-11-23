@@ -27,7 +27,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -47,7 +46,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -65,7 +63,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -85,7 +82,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -103,7 +99,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -123,7 +118,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -156,7 +150,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -189,7 +182,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -234,7 +226,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }
@@ -255,7 +246,6 @@ export class MotoristaDAO implements IMotoristaAccess {
       include: {
         foto: true,
         veiculo: {
-          where: { deletadoEm: null },
           include: { fotos: true }
         }
       }

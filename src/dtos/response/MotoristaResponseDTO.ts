@@ -20,5 +20,4 @@ export interface MotoristaResponseDTO {
     fotos: FotoResponseDTO[]
   }
   criadoEm: Date
-  atualizadoEm: Date
 }

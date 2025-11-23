@@ -31,8 +31,7 @@ export function toMotoristaResponseDTO(
           }))
         }
       : undefined,
-    criadoEm: motorista.criadoEm,
-    atualizadoEm: motorista.atualizadoEm
+    criadoEm: motorista.criadoEm
   }
 }
 

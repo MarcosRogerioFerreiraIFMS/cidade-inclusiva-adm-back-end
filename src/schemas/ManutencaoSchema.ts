@@ -1,4 +1,5 @@
 import { ManutencaoEspecialidadeTipo } from '@/enums'
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
 import {
   emailSchema,
@@ -37,6 +38,7 @@ export const createManutencaoSchema = z.object({
           required_error: 'A especialidade é obrigatória.',
           invalid_type_error: 'A especialidade deve ser uma string.'
         })
+        .transform(sanitizeString)
         .transform((val) => val.trim().toUpperCase())
         .pipe(
           z.nativeEnum(ManutencaoEspecialidadeTipo, {
@@ -81,6 +83,7 @@ export const updateManutencaoSchema = createManutencaoSchema.partial().extend({
           required_error: 'A especialidade é obrigatória.',
           invalid_type_error: 'A especialidade deve ser uma string.'
         })
+        .transform(sanitizeString)
         .transform((val) => val.trim().toUpperCase())
         .pipe(
           z.nativeEnum(ManutencaoEspecialidadeTipo, {

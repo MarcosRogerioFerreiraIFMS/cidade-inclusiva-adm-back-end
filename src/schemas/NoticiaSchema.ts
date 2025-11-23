@@ -55,7 +55,7 @@ export const createNoticiaSchema = z.object({
 
   url: z
     .string({ invalid_type_error: 'A URL deve ser uma string.' })
-    .optional()
+    .transform(sanitizeString)
     .transform((val) => (val ? normalizeUrl(val.trim()) : val))
     .refine(
       (val) => {
@@ -67,7 +67,8 @@ export const createNoticiaSchema = z.object({
           'A URL fornecida não é válida. Certifique-se de usar um formato válido (ex: https://exemplo.com)'
       }
     )
-    .transform(transformUrl),
+    .transform(transformUrl)
+    .optional(),
 
   foto: fotoSchema,
 
@@ -77,6 +78,7 @@ export const createNoticiaSchema = z.object({
       invalid_type_error: 'A categoria deve ser uma string.'
     })
     .min(1, 'A categoria não pode estar vazia.')
+    .transform(sanitizeString)
     .transform((val) => val.trim().toUpperCase())
     .pipe(z.nativeEnum(NoticiaCategoria)),
 

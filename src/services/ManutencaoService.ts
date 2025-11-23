@@ -3,6 +3,7 @@ import type { IManutencaoAccess } from '@/interfaces/access'
 import type { IManutencaoService } from '@/interfaces/services'
 import {
   toCreateEmailDTO,
+  toCreateEspecialidadeManutencaoDTO,
   toCreateManutencaoDTO,
   toUpdateManutencaoDTO
 } from '@/mappers/input'
@@ -197,13 +198,12 @@ export class ManutencaoService implements IManutencaoService {
   async findByEspecialidade(
     especialidade: string
   ): Promise<ManutencaoResponseDTO[]> {
-    const manutencoes = await this.manutencaoRepository.findByEspecialidade(
-      especialidade
-    )
+    const especialidadeValidada =
+      toCreateEspecialidadeManutencaoDTO(especialidade)
 
-    if (!manutencoes || manutencoes.length === 0) {
-      return []
-    }
+    const manutencoes = await this.manutencaoRepository.findByEspecialidade(
+      especialidadeValidada
+    )
 
     return toManutencoesResponseDTO(manutencoes)
   }

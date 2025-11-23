@@ -1,5 +1,5 @@
 import { TipoEntidadeComentario } from '@/enums'
-import { sanitizeContent } from '@/utils'
+import { sanitizeContent, sanitizeString } from '@/utils'
 import { z } from 'zod'
 
 /** Comprimento mínimo permitido para conteúdo de comentários */
@@ -47,6 +47,7 @@ export const createComentarioSchema = z.object({
       invalid_type_error: 'O tipo de entidade deve ser uma string.'
     })
     .min(1, 'O tipo de entidade não pode estar vazio.')
+    .transform(sanitizeString)
     .transform((val) => val.trim().toUpperCase())
     .pipe(z.nativeEnum(TipoEntidadeComentario)),
 

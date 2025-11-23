@@ -3,6 +3,7 @@ import {
   DATE_ERROR_MESSAGES,
   isNotFutureDate,
   isValidDateString,
+  sanitizeContent,
   sanitizeString
 } from '@/utils'
 import { z } from 'zod'
@@ -39,7 +40,7 @@ export const createMobilidadeSchema = z.object({
       required_error: 'A descrição é obrigatória.',
       invalid_type_error: 'A descrição deve ser uma string.'
     })
-    .transform(sanitizeString)
+    .transform(sanitizeContent)
     .refine((val) => val.length >= DESCRICAO_MIN_LENGTH, {
       message: `A descrição deve ter pelo menos ${DESCRICAO_MIN_LENGTH} caracteres.`
     })
@@ -51,7 +52,7 @@ export const createMobilidadeSchema = z.object({
     .string({
       invalid_type_error: 'O status deve ser uma string.'
     })
-    .optional()
+    .transform(sanitizeString)
     .transform((val) => (val ? val.trim().toUpperCase() : val))
     .refine(
       (val) => {
@@ -66,7 +67,8 @@ export const createMobilidadeSchema = z.object({
     )
     .transform((val) =>
       val ? (val as MobilidadeStatus) : MobilidadeStatus.PENDENTE
-    ),
+    )
+    .optional(),
 
   dataRegistro: z
     .union([
@@ -104,6 +106,7 @@ export const mobilidadeStatusSchema = z
   .string({
     invalid_type_error: 'O status deve ser uma string.'
   })
+  .transform(sanitizeString)
   .transform((val) => val.trim().toUpperCase())
   .refine(
     (val) => Object.values(MobilidadeStatus).includes(val as MobilidadeStatus),

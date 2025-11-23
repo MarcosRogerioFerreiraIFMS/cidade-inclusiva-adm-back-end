@@ -48,17 +48,6 @@ export class VeiculoRepository implements IVeiculoAccess {
   }
 
   /**
-   * Busca um veículo por placa incluindo deletados
-   * @param {string} placa - Placa do veículo
-   * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
-   */
-  async findByPlacaIncludingDeleted(
-    placa: string
-  ): Promise<VeiculoCompletions | null> {
-    return await this.dao.findByPlacaIncludingDeleted(placa)
-  }
-
-  /**
    * Busca um veículo por ID do motorista
    * @param {string} motoristaId - ID do motorista
    * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
@@ -83,34 +72,12 @@ export class VeiculoRepository implements IVeiculoAccess {
   }
 
   /**
-   * Restaura e atualiza um veículo soft-deleted
-   * @param {string} id - ID do veículo a ser restaurado e atualizado
-   * @param {VeiculoCreateDTO} veiculoData - Dados do veículo para atualização
-   * @returns {Promise<VeiculoCompletions>} Veículo restaurado e atualizado
-   */
-  async restoreAndUpdate(
-    id: string,
-    veiculoData: VeiculoCreateDTO
-  ): Promise<VeiculoCompletions> {
-    return await this.dao.restoreAndUpdate(id, veiculoData)
-  }
-
-  /**
    * Remove um veículo do sistema
    * @param {string} id - ID único do veículo a ser removido
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
     return await this.dao.delete(id)
-  }
-
-  /**
-   * Restaura um veículo soft-deleted
-   * @param {string} id - ID único do veículo a ser restaurado
-   * @returns {Promise<VeiculoCompletions>} Veículo restaurado
-   */
-  async restore(id: string): Promise<VeiculoCompletions> {
-    return await this.dao.restore(id)
   }
 
   /**

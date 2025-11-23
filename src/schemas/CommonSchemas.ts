@@ -45,6 +45,7 @@ export const telefoneSchema = z
     required_error: 'O telefone é obrigatório.',
     invalid_type_error: 'O telefone deve ser uma string.'
   })
+  .transform(sanitizeString)
   .transform((val) => sanitizeTelefone(val.trim()))
   .refine((val) => validateBrazilianCellPhone(val), {
     message:
@@ -74,10 +75,6 @@ export const enderecoSchema = z.object(
       })
       .refine((val) => val.length <= 100, {
         message: 'O logradouro deve ter no máximo 100 caracteres.'
-      })
-      .refine((val) => /^[a-zA-ZÀ-ÿ0-9\s\-.,]+$/.test(val), {
-        message:
-          'O logradouro deve conter apenas letras, números, espaços, hífens, pontos e vírgulas.'
       }),
 
     numero: z
@@ -85,20 +82,18 @@ export const enderecoSchema = z.object(
         required_error: 'O número é obrigatório.',
         invalid_type_error: 'O número deve ser uma string.'
       })
+      .transform(sanitizeString)
       .transform((val) => val.trim())
       .refine((val) => val.length >= 1, {
         message: 'O número é obrigatório.'
       })
       .refine((val) => val.length <= 10, {
         message: 'O número deve ter no máximo 10 caracteres.'
-      })
-      .refine((val) => /^[0-9A-Za-z\s-/]+$/.test(val), {
-        message:
-          'O número deve conter apenas números, letras, espaços, hífens ou barras.'
       }),
 
     complemento: z
       .string({ invalid_type_error: 'O complemento deve ser uma string.' })
+      .transform(sanitizeString)
       .transform((val) => (val ? sanitizeString(val) : val))
       .refine((val) => !val || val.length <= 200, {
         message: 'O complemento deve ter no máximo 200 caracteres.'
@@ -116,9 +111,6 @@ export const enderecoSchema = z.object(
       })
       .refine((val) => val.length <= 100, {
         message: 'A cidade deve ter no máximo 100 caracteres.'
-      })
-      .refine((val) => /^[a-zA-ZÀ-ÿ\s-]+$/.test(val), {
-        message: 'A cidade deve conter apenas letras, espaços e hífens.'
       }),
 
     bairro: z
@@ -132,10 +124,6 @@ export const enderecoSchema = z.object(
       })
       .refine((val) => val.length <= 100, {
         message: 'O bairro deve ter no máximo 100 caracteres.'
-      })
-      .refine((val) => /^[a-zA-ZÀ-ÿ0-9\s\-.,]+$/.test(val), {
-        message:
-          'O bairro deve conter apenas letras, números, espaços, hífens, pontos e vírgulas.'
       }),
 
     cep: z
@@ -143,6 +131,7 @@ export const enderecoSchema = z.object(
         required_error: 'O CEP é obrigatório.',
         invalid_type_error: 'O CEP deve ser uma string.'
       })
+      .transform(sanitizeString)
       .transform((val) => val.replace(/\D/g, ''))
       .refine((val) => validateBrazilianCEP(val), {
         message:
@@ -168,6 +157,7 @@ export const enderecoSchema = z.object(
         required_error: 'O estado é obrigatório.',
         invalid_type_error: 'O estado deve ser uma string.'
       })
+      .transform(sanitizeString)
       .transform((val) => val.trim().toUpperCase())
       .refine((val) => val.length === 2, {
         message: 'O estado deve ter exatamente 2 caracteres (ex: SP, RJ).'
@@ -179,15 +169,13 @@ export const enderecoSchema = z.object(
 
     pais: z
       .string({ invalid_type_error: 'O país deve ser uma string.' })
+      .transform(sanitizeString)
       .transform((val) => (val ? sanitizeString(val) : 'Brasil'))
       .refine((val) => !val || val.length <= 50, {
         message: 'O país deve ter no máximo 50 caracteres.'
       })
-      .refine((val) => !val || /^[a-zA-ZÀ-ÿ\s]+$/.test(val), {
-        message: 'O país deve conter apenas letras e espaços.'
-      })
-      .optional()
       .default('Brasil')
+      .optional()
   },
   {
     required_error: 'O endereço é obrigatório.',
@@ -218,7 +206,6 @@ export const fotosArraySchema = z
   .array(baseFotoSchema, {
     invalid_type_error: 'O campo fotos deve ser uma lista de URLs.'
   })
-  .optional()
   .default([])
   .transform((fotos) => {
     // Remove duplicadas
@@ -228,10 +215,10 @@ export const fotosArraySchema = z
   .refine((fotos) => fotos.length <= MAX_FOTOS, {
     message: `Máximo de ${MAX_FOTOS} fotos permitidas.`
   })
+  .optional()
 
 export const logoSchema = z
   .string({ invalid_type_error: 'A URL do logo deve ser uma string.' })
-  .optional()
   .transform((val) => (val ? normalizeUrl(val.trim()) : val))
   .refine(
     async (val) => {
@@ -245,3 +232,4 @@ export const logoSchema = z
     }
   )
   .transform(transformUrl)
+  .optional()

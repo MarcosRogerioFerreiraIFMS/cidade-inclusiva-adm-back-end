@@ -1,4 +1,5 @@
 import { ProfissionalEspecialidade } from '@/enums'
+import { sanitizeString } from '@/utils'
 import { z } from 'zod'
 import {
   emailSchema,
@@ -27,6 +28,7 @@ export const createProfissionalSchema = z.object({
       invalid_type_error: 'A especialidade deve ser uma string.'
     })
     .min(1, 'A especialidade não pode estar vazia.')
+    .transform(sanitizeString)
     .transform((val) => val.trim().toUpperCase())
     .refine(
       (val) =>

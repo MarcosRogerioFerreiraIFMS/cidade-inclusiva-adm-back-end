@@ -152,7 +152,6 @@ model Veiculo {
   motoristaId  String    @unique
   criadoEm     DateTime  @default(now())
   atualizadoEm DateTime  @updatedAt
-  deletadoEm   DateTime?
   fotos        Foto[]
   motorista    Motorista @relation(fields: [motoristaId], references: [id], onDelete: Cascade)
 }

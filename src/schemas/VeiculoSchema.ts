@@ -29,10 +29,10 @@ export const createVeiculoSchema = z.object({
       required_error: 'A placa é obrigatória.',
       invalid_type_error: 'A placa deve ser uma string.'
     })
+    .transform(sanitizeString)
     .transform((val) => val.toUpperCase().replace(/[^A-Z0-9]/g, ''))
     .refine(
       (val) => {
-        // Valida formato da placa (padrão brasileiro antigo: AAA-9999 ou novo: AAA9A99)
         const placaAntigaRegex = /^[A-Z]{3}[0-9]{4}$/
         const placaNovaRegex = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/
         return placaAntigaRegex.test(val) || placaNovaRegex.test(val)
@@ -41,8 +41,10 @@ export const createVeiculoSchema = z.object({
         message:
           'A placa deve seguir o formato brasileiro (ex: ABC1234 ou ABC1D23).'
       }
-    ),
-
+    )
+    .transform((val) => {
+      return val.slice(0, 3) + '-' + val.slice(3)
+    }),
   marca: z
     .string({
       required_error: 'A marca é obrigatória.',

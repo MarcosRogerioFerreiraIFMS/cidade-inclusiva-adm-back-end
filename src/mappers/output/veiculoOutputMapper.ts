@@ -39,8 +39,7 @@ export function toVeiculoResponseDTO(
           foto: undefined
         },
     fotos: toFotosResponseDTO(veiculo.fotos),
-    criadoEm: veiculo.criadoEm,
-    atualizadoEm: veiculo.atualizadoEm
+    criadoEm: veiculo.criadoEm
   }
 }
 

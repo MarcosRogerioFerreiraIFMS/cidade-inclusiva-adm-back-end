@@ -29,7 +29,7 @@ export const requiredFields = {
     update: []
   },
   motorista: {
-    create: ['nome', 'cpf', 'email', 'telefone'],
+    create: ['nome', 'email', 'telefone'],
     update: []
   },
   veiculo: {

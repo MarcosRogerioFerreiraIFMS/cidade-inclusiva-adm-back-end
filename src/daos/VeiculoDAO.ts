@@ -39,7 +39,7 @@ export class VeiculoDAO implements IVeiculoAccess {
    */
   async findById(id: string): Promise<VeiculoCompletions | null> {
     return await db.veiculo.findFirst({
-      where: { id, deletadoEm: null },
+      where: { id },
       include: {
         motorista: {
           include: { foto: true }
@@ -55,25 +55,6 @@ export class VeiculoDAO implements IVeiculoAccess {
    * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
    */
   async findByPlaca(placa: string): Promise<VeiculoCompletions | null> {
-    return await db.veiculo.findFirst({
-      where: { placa, deletadoEm: null },
-      include: {
-        motorista: {
-          include: { foto: true }
-        },
-        fotos: true
-      }
-    })
-  }
-
-  /**
-   * Busca um veículo por placa incluindo deletados
-   * @param {string} placa - Placa do veículo
-   * @returns {Promise<VeiculoCompletions | null>} Veículo encontrado ou null
-   */
-  async findByPlacaIncludingDeleted(
-    placa: string
-  ): Promise<VeiculoCompletions | null> {
     return await db.veiculo.findFirst({
       where: { placa },
       include: {
@@ -94,7 +75,7 @@ export class VeiculoDAO implements IVeiculoAccess {
     motoristaId: string
   ): Promise<VeiculoCompletions | null> {
     return await db.veiculo.findFirst({
-      where: { motoristaId, deletadoEm: null },
+      where: { motoristaId },
       include: {
         motorista: {
           include: { foto: true }
@@ -114,14 +95,6 @@ export class VeiculoDAO implements IVeiculoAccess {
     id: string,
     data: VeiculoUpdateDTO
   ): Promise<VeiculoCompletions> {
-    const veiculoExistente = await db.veiculo.findFirst({
-      where: { id, deletadoEm: null }
-    })
-
-    if (!veiculoExistente) {
-      throw new Error('Veículo não encontrado ou já deletado.')
-    }
-
     const dataToUpdate = await generateDataVeiculoUpdate(data, id)
 
     const veiculo = await db.veiculo.update({
@@ -139,78 +112,13 @@ export class VeiculoDAO implements IVeiculoAccess {
   }
 
   /**
-   * Remove um veículo do banco de dados (soft delete)
+   * Remove um veículo do banco de dados
    * @param {string} id - ID único do veículo a ser removido
    * @returns {Promise<void>}
    */
   async delete(id: string): Promise<void> {
-    await db.veiculo.update({
-      where: { id },
-      data: { deletadoEm: new Date() }
-    })
-  }
-
-  /**
-   * Restaura um veículo soft-deleted
-   * @param {string} id - ID único do veículo a ser restaurado
-   * @returns {Promise<VeiculoCompletions>} Veículo restaurado
-   */
-  async restore(id: string): Promise<VeiculoCompletions> {
-    return await db.veiculo.update({
-      where: { id },
-      data: { deletadoEm: null },
-      include: {
-        motorista: {
-          include: { foto: true }
-        },
-        fotos: true
-      }
-    })
-  }
-
-  /**
-   * Restaura e atualiza um veículo soft-deleted
-   * @param {string} id - ID do veículo a ser restaurado e atualizado
-   * @param {VeiculoCreateDTO} veiculoData - Dados do veículo para atualização
-   * @returns {Promise<VeiculoCompletions>} Veículo restaurado e atualizado
-   */
-  async restoreAndUpdate(
-    id: string,
-    veiculoData: VeiculoCreateDTO
-  ): Promise<VeiculoCompletions> {
-    // Buscar veículo existente para verificar se tem fotos
-    const veiculoExistente = await db.veiculo.findUnique({
-      where: { id },
-      include: { fotos: true }
-    })
-
-    if (!veiculoExistente) {
-      throw new Error('Veículo não encontrado.')
-    }
-
-    // Deletar fotos antigas se existirem
-    if (veiculoExistente.fotos && veiculoExistente.fotos.length > 0) {
-      await db.foto.deleteMany({
-        where: {
-          id: { in: veiculoExistente.fotos.map((foto) => foto.id) }
-        }
-      })
-    }
-
-    const dataToUpdate = generateDataVeiculoCreate(veiculoData)
-
-    return await db.veiculo.update({
-      where: { id },
-      data: {
-        ...dataToUpdate,
-        deletadoEm: null
-      },
-      include: {
-        motorista: {
-          include: { foto: true }
-        },
-        fotos: true
-      }
+    await db.veiculo.delete({
+      where: { id }
     })
   }
 
@@ -221,7 +129,6 @@ export class VeiculoDAO implements IVeiculoAccess {
    */
   async findAll(): Promise<VeiculoCompletions[]> {
     return await db.veiculo.findMany({
-      where: { deletadoEm: null },
       orderBy: {
         criadoEm: 'desc'
       },

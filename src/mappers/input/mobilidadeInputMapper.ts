@@ -1,10 +1,14 @@
 import type { MobilidadeCreateDTO } from '@/dtos/create'
-import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type {
+  MobilidadeUpdateDTO,
+  MobilidadeUpdateStatusDTO
+} from '@/dtos/update'
 import type { MobilidadeStatus } from '@/enums'
 import {
   createMobilidadeSchema,
   mobilidadeStatusSchema,
-  updateMobilidadeSchema
+  updateMobilidadeSchema,
+  updateMobilidadeStatusSchema
 } from '@/schemas'
 
 /**
@@ -37,4 +41,18 @@ export function toUpdateMobilidadeDTO(input: unknown): MobilidadeUpdateDTO {
  */
 export function toCreateMobilidadeStatusDTO(input: unknown): MobilidadeStatus {
   return mobilidadeStatusSchema.parse(input)
+}
+
+/**
+ * - Converte dados não tipados para DTO de atualização de status de mobilidade
+ * - Aplica validação usando Zod schema e retorna dados tipados e validados
+ * - Usado exclusivamente por administradores
+ * @param {unknown} input - Dados de entrada não tipados (geralmente req.body)
+ * @returns {MobilidadeUpdateStatusDTO} DTO validado para atualização de status
+ * @throws {ZodError} Erro de validação se os dados não atenderem ao schema
+ */
+export function toUpdateMobilidadeStatusDTO(
+  input: unknown
+): MobilidadeUpdateStatusDTO {
+  return updateMobilidadeStatusSchema.parse(input)
 }

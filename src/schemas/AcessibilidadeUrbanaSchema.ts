@@ -14,6 +14,8 @@ import {
 const DESCRICAO_MIN_LENGTH = 3
 /** Comprimento máximo permitido para descrição de recurso */
 const DESCRICAO_MAX_LENGTH = 500
+/** Número máximo de recursos de acessibilidade urbana permitidos */
+const RECURSO_SIMBOLO_MAX_LENGTH = 14
 
 /**
  * - Schema de validação Zod para recurso de acessibilidade urbana
@@ -109,8 +111,8 @@ export const createAcessibilidadeUrbanaSchema = z.object({
       invalid_type_error: 'Os recursos devem ser um array.'
     })
     .default([])
-    .refine((recursos) => recursos.length <= 20, {
-      message: 'Não é possível adicionar mais de 20 recursos.'
+    .refine((recursos) => recursos.length <= RECURSO_SIMBOLO_MAX_LENGTH, {
+      message: `Não é possível adicionar mais de ${RECURSO_SIMBOLO_MAX_LENGTH} recursos.`
     })
     .transform((recursos) => {
       // Remover duplicatas baseado no símbolo

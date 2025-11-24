@@ -261,7 +261,14 @@ export const mobilidadeOperations = {
   findByUser: [...authenticated, requireSelfOrAdmin, validateUUID('usuarioId')],
 
   /** GET /mobilidades/status/:status - Requer autenticação para visualizar por status */
-  findByStatus: [...authenticated]
+  findByStatus: [...authenticated],
+
+  /** PATCH /mobilidades/:id/status - Apenas admins podem atualizar o status */
+  updateStatus: [
+    ...adminOnly,
+    validateUUID('id'),
+    validateRequiredBody([...requiredFields.mobilidade.updateStatus])
+  ]
 }
 
 /**

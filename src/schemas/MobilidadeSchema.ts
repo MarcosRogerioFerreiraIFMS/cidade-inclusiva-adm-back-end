@@ -117,3 +117,27 @@ export const mobilidadeStatusSchema = z
     }
   )
   .transform((val) => val as MobilidadeStatus)
+
+/**
+ * - Schema de validação Zod para atualização de status de mobilidade
+ * - Usado exclusivamente por administradores para alterar o status das mobilidades
+ */
+export const updateMobilidadeStatusSchema = z.object({
+  status: z
+    .string({
+      required_error: 'O status é obrigatório.',
+      invalid_type_error: 'O status deve ser uma string.'
+    })
+    .transform(sanitizeString)
+    .transform((val) => val.trim().toUpperCase())
+    .refine(
+      (val) =>
+        Object.values(MobilidadeStatus).includes(val as MobilidadeStatus),
+      {
+        message: `Status inválido. Valores aceitos: ${Object.values(
+          MobilidadeStatus
+        ).join(', ')}`
+      }
+    )
+    .transform((val) => val as MobilidadeStatus)
+})

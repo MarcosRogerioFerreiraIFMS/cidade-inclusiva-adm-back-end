@@ -80,4 +80,15 @@ MobilidadeRoutes.delete(
   MobilidadeDependencies.controller.delete
 )
 
+/**
+ * PATCH /mobilidades/:id/status - Atualiza apenas o status da mobilidade
+ * Requer autenticação e apenas administradores podem executar
+ */
+MobilidadeRoutes.patch(
+  '/:id/status',
+  modificationRateLimit,
+  ...mobilidadeOperations.updateStatus,
+  MobilidadeDependencies.controller.updateStatus
+)
+
 export { MobilidadeRoutes }

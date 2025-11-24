@@ -1,6 +1,9 @@
 import { db } from '@/database/prisma'
 import type { MobilidadeCreateDTO } from '@/dtos/create'
-import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type {
+  MobilidadeUpdateDTO,
+  MobilidadeUpdateStatusDTO
+} from '@/dtos/update'
 import type { MobilidadeStatus } from '@/enums'
 import {
   generateDataMobilidadeCreate,
@@ -80,6 +83,39 @@ export class MobilidadeDAO implements IMobilidadeAccess {
     const mobilidade = await db.mobilidade.update({
       where: { id },
       data: dataToUpdate,
+      include: {
+        usuario: {
+          where: { deletadoEm: null },
+          include: { foto: true }
+        }
+      }
+    })
+
+    return mobilidade
+  }
+
+  /**
+   * Atualiza apenas o status de uma mobilidade no banco de dados
+   * Disponível apenas para administradores
+   * @param {string} id - ID único da mobilidade
+   * @param {MobilidadeUpdateStatusDTO} data - Dados contendo o novo status
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade atualizada
+   */
+  async updateStatus(
+    id: string,
+    data: MobilidadeUpdateStatusDTO
+  ): Promise<MobilidadeCompletions> {
+    const mobilidadeExistente = await db.mobilidade.findFirst({
+      where: { id, deletadoEm: null }
+    })
+
+    if (!mobilidadeExistente) {
+      throw new Error('Mobilidade não encontrada ou já deletada.')
+    }
+
+    const mobilidade = await db.mobilidade.update({
+      where: { id },
+      data: { status: data.status },
       include: {
         usuario: {
           where: { deletadoEm: null },

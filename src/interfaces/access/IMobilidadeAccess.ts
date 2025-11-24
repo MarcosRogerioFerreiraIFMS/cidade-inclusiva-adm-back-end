@@ -1,5 +1,8 @@
 import type { MobilidadeCreateDTO } from '@/dtos/create'
-import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type {
+  MobilidadeUpdateDTO,
+  MobilidadeUpdateStatusDTO
+} from '@/dtos/update'
 import type { MobilidadeCompletions } from '@/types'
 
 /**
@@ -33,6 +36,18 @@ export interface IMobilidadeAccess {
    * @returns {Promise<MobilidadeCompletions>} Mobilidade atualizada com todas as relações
    */
   update(id: string, data: MobilidadeUpdateDTO): Promise<MobilidadeCompletions>
+
+  /**
+   * Atualiza apenas o status de uma mobilidade existente
+   * Disponível apenas para administradores
+   * @param {string} id - ID único da mobilidade a ser atualizada
+   * @param {MobilidadeUpdateStatusDTO} data - Dados contendo o novo status
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade atualizada com todas as relações
+   */
+  updateStatus(
+    id: string,
+    data: MobilidadeUpdateStatusDTO
+  ): Promise<MobilidadeCompletions>
 
   /**
    * Remove uma mobilidade do sistema

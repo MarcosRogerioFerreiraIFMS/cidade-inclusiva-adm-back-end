@@ -5,7 +5,8 @@ import type { IMobilidadeService } from '@/interfaces/services'
 import {
   toCreateMobilidadeDTO,
   toCreateMobilidadeStatusDTO,
-  toUpdateMobilidadeDTO
+  toUpdateMobilidadeDTO,
+  toUpdateMobilidadeStatusDTO
 } from '@/mappers/input'
 import {
   toMobilidadeResponseDTO,
@@ -107,6 +108,43 @@ export class MobilidadeService implements IMobilidadeService {
     const mobilidade = await this.mobilidadeRepository.update(
       id,
       toUpdateMobilidadeDTO(data)
+    )
+
+    return toMobilidadeResponseDTO(mobilidade)
+  }
+
+  /**
+   * Atualiza apenas o status de uma mobilidade existente:
+   * - Disponível apenas para administradores
+   * - Valida se a mobilidade existe antes de atualizar
+   * @param {string} id - ID único da mobilidade a ser atualizada
+   * @param {unknown} data - Dados contendo o novo status
+   * @param {UsuarioCompletions | undefined} user - Dados completos do administrador autenticado
+   * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade atualizada
+   * @throws {HttpError} Erro 404 se a mobilidade não for encontrada
+   * @throws {HttpError} Erro 401 se o usuário não estiver autenticado
+   */
+  async updateStatus(
+    id: string,
+    data: unknown,
+    user: UsuarioCompletions | undefined
+  ): Promise<MobilidadeResponseDTO> {
+    if (!user) {
+      throw new HttpError(
+        'Usuário não autenticado.',
+        HttpStatusCode.UNAUTHORIZED
+      )
+    }
+
+    // Verificar se a mobilidade existe
+    throwIfNotFound(
+      await this.mobilidadeRepository.findById(id),
+      'Mobilidade não encontrada.'
+    )
+
+    const mobilidade = await this.mobilidadeRepository.updateStatus(
+      id,
+      toUpdateMobilidadeStatusDTO(data)
     )
 
     return toMobilidadeResponseDTO(mobilidade)

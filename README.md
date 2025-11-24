@@ -6,11 +6,12 @@ O **Cidade Inclusiva - Painel Administrativo - API** é uma aplicação backend 
 
 O sistema tem como objetivo principal facilitar a inclusão social e a mobilidade urbana através de:
 
-- **🚍 Gestão de Transporte:** Controle de veículos, motoristas e rotas acessíveis
-- **♿ Acessibilidade Urbana:** Catalogação e monitoramento de locais acessíveis na cidade
-- **🔧 Manutenção:** Gerenciamento de solicitações e acompanhamento de reparos
-- **📰 Comunicação:** Sistema de notícias e informações relevantes
-- **👥 Comunidade:** Plataforma de comentários e interação entre usuários
+- **🚍 Gestão de Transporte:** Interface para controle de motoristas disponíveis e veículos adaptados
+- **♿ Acessibilidade Urbana:** Visualização e gerenciamento de locais acessíveis na cidade
+- **🗺️ Mapa Interativo:** Sistema de mapeamento em com Google Maps para visualização e gestão de pontos com ocorrências de mobilidade
+- **🔧 Manutenção:** Sistema de gerenciamento de oficinas especializadas
+- **📰 Comunicação:** Plataforma de notícias e informações relevantes para a comunidade
+- **👥 Comunidade:** Interface para comentários e interação entre usuários
 - **🏥 Profissionais:** Cadastro e gestão de profissionais especializados
 
 ## 📋 Informações do Projeto

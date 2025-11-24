@@ -26,7 +26,8 @@ export const requiredFields = {
   },
   mobilidade: {
     create: ['latitude', 'longitude', 'descricao'],
-    update: []
+    update: [],
+    updateStatus: ['status']
   },
   motorista: {
     create: ['nome', 'email', 'telefone'],

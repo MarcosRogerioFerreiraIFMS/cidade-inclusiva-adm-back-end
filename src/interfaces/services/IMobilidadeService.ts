@@ -40,6 +40,20 @@ export interface IMobilidadeService {
   ): Promise<MobilidadeResponseDTO>
 
   /**
+   * Atualiza apenas o status de uma mobilidade existente
+   * Disponível apenas para administradores
+   * @param {string} id - ID único da mobilidade a ser atualizada
+   * @param {unknown} data - Dados contendo o novo status
+   * @param {UsuarioCompletions | undefined} user - Dados completos do administrador autenticado
+   * @returns {Promise<MobilidadeResponseDTO>} Dados da mobilidade atualizada
+   */
+  updateStatus(
+    id: string,
+    data: unknown,
+    user: UsuarioCompletions | undefined
+  ): Promise<MobilidadeResponseDTO>
+
+  /**
    * Remove uma mobilidade do sistema
    * @param {string} id - ID único da mobilidade a ser removida
    * @param {UsuarioCompletions | undefined} user - Dados completos do usuário autenticado que está removendo

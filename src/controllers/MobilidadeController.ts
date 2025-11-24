@@ -58,6 +58,33 @@ export class MobilidadeController {
   }
 
   /**
+   * Atualiza apenas o status de uma mobilidade existente
+   * Disponível apenas para administradores
+   * @type {ControllerRequest<AuthenticatedRequest>}
+   */
+  updateStatus: ControllerRequest<AuthenticatedRequest> = async (
+    req,
+    res,
+    next
+  ) => {
+    try {
+      const { id } = req.params
+      const mobilidade = await this.mobilidadeService.updateStatus(
+        id,
+        req.body,
+        req.user
+      )
+      HandleSuccess.updated(
+        res,
+        mobilidade,
+        'Status da mobilidade atualizado com sucesso'
+      )
+    } catch (error: unknown) {
+      next(error)
+    }
+  }
+
+  /**
    * Remove uma mobilidade do sistema
    * @type {ControllerRequest<AuthenticatedRequest>}
    */

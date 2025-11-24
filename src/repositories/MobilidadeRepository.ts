@@ -1,5 +1,8 @@
 import type { MobilidadeCreateDTO } from '@/dtos/create'
-import type { MobilidadeUpdateDTO } from '@/dtos/update'
+import type {
+  MobilidadeUpdateDTO,
+  MobilidadeUpdateStatusDTO
+} from '@/dtos/update'
 import type { IMobilidadeAccess } from '@/interfaces/access'
 import type { MobilidadeCompletions } from '@/types'
 
@@ -53,6 +56,20 @@ export class MobilidadeRepository implements IMobilidadeAccess {
     data: MobilidadeUpdateDTO
   ): Promise<MobilidadeCompletions> {
     return await this.dao.update(id, data)
+  }
+
+  /**
+   * Atualiza apenas o status de uma mobilidade
+   * Disponível apenas para administradores
+   * @param {string} id - ID único da mobilidade
+   * @param {MobilidadeUpdateStatusDTO} data - Dados contendo o novo status
+   * @returns {Promise<MobilidadeCompletions>} Mobilidade atualizada
+   */
+  async updateStatus(
+    id: string,
+    data: MobilidadeUpdateStatusDTO
+  ): Promise<MobilidadeCompletions> {
+    return await this.dao.updateStatus(id, data)
   }
 
   /**
